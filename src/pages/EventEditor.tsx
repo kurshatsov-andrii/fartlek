@@ -82,17 +82,43 @@ const EventEditor = () => {
       const { error } = await supabase.from("events").update(payload).eq("id", id);
       if (error) { toast.error(error.message); setBusy(false); return; }
     }
-    // sync distances: simple replace
-    if (!isNew) await supabase.from("distances").delete().eq("event_id", eventId);
-    const distRows = distances.filter((d) => d.distance_km).map((d) => ({
+    // sync distances: update existing by id, insert new, delete removed
+    const valid = distances.filter((d) => d.distance_km);
+    const keepIds = valid.filter((d) => d.id).map((d) => d.id!);
+
+    // fetch existing to know what to delete
+    if (!isNew) {
+      const { data: existing } = await supabase.from("distances").select("id").eq("event_id", eventId);
+      const toDelete = (existing ?? []).map((e: any) => e.id).filter((eid: string) => !keepIds.includes(eid));
+      if (toDelete.length > 0) {
+        const { error: delErr } = await supabase.from("distances").delete().in("id", toDelete);
+        if (delErr) {
+          toast.error("Не вдалось видалити дистанцію (можливо, є реєстрації): " + delErr.message);
+          setBusy(false); return;
+        }
+      }
+    }
+
+    // update existing
+    for (const d of valid.filter((x) => x.id)) {
+      const { error: uErr } = await supabase.from("distances").update({
+        distance_km: parseFloat(d.distance_km),
+        name: d.name || null,
+        price: parseFloat(d.price) || 0,
+      }).eq("id", d.id!);
+      if (uErr) { toast.error(uErr.message); setBusy(false); return; }
+    }
+
+    // insert new
+    const newRows = valid.filter((x) => !x.id).map((d) => ({
       event_id: eventId,
       distance_km: parseFloat(d.distance_km),
       name: d.name || null,
       price: parseFloat(d.price) || 0,
     }));
-    if (distRows.length > 0) {
-      const { error: dErr } = await supabase.from("distances").insert(distRows);
-      if (dErr) { toast.error(dErr.message); setBusy(false); return; }
+    if (newRows.length > 0) {
+      const { error: iErr } = await supabase.from("distances").insert(newRows);
+      if (iErr) { toast.error(iErr.message); setBusy(false); return; }
     }
     toast.success("OK");
     setBusy(false);
