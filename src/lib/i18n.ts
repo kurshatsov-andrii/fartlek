@@ -86,7 +86,4 @@ export const translations: Record<Lang, Dict> = {
       loading: "Loading...",
     },
   },
-} as const;
-
-type DeepWritable<T> = { -readonly [K in keyof T]: T[K] extends object ? DeepWritable<T[K]> : T[K] };
-export type Dict = DeepWritable<typeof translations.uk>;
+};
