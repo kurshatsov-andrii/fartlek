@@ -263,6 +263,21 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_event_participants: {
+        Args: { _event_id: string }
+        Returns: {
+          bib_number: number
+          birth_year: number
+          city: string
+          club: string
+          distance_km: number
+          distance_name: string
+          full_name: string
+          gender: Database["public"]["Enums"]["gender_type"]
+          registration_id: string
+          user_id: string
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
