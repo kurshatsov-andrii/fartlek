@@ -20,6 +20,7 @@ export type Database = {
           distance_km: number
           event_id: string
           id: string
+          is_active: boolean
           max_participants: number | null
           name: string | null
           price: number
@@ -29,6 +30,7 @@ export type Database = {
           distance_km: number
           event_id: string
           id?: string
+          is_active?: boolean
           max_participants?: number | null
           name?: string | null
           price?: number
@@ -38,6 +40,7 @@ export type Database = {
           distance_km?: number
           event_id?: string
           id?: string
+          is_active?: boolean
           max_participants?: number | null
           name?: string | null
           price?: number
