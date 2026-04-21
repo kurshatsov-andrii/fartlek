@@ -278,6 +278,14 @@ export type Database = {
           user_id: string
         }[]
       }
+      get_public_stats: {
+        Args: never
+        Returns: {
+          cities_count: number
+          events_count: number
+          runners_count: number
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
