@@ -38,22 +38,33 @@ const OrganizerDashboard = () => {
   };
 
   const exportData = async (eventId: string, eventTitle: string, format: "csv" | "xlsx") => {
-    const { data } = await supabase.from("registrations")
-      .select("bib_number, payment_status, distances(distance_km, name), profiles!registrations_user_id_fkey(full_name, email, gender, birth_date, city, club)")
+    const { data: regs } = await supabase.from("registrations")
+      .select("user_id, bib_number, payment_status, distances(distance_km, name)")
       .eq("event_id", eventId)
       .order("bib_number", { ascending: true, nullsFirst: false });
-    const rows = (data ?? []).map((r: any) => ({
-      Bib: r.bib_number ?? "",
-      Name: r.profiles?.full_name ?? "",
-      Email: r.profiles?.email ?? "",
-      Gender: r.profiles?.gender ?? "",
-      BirthYear: r.profiles?.birth_date ? new Date(r.profiles.birth_date).getFullYear() : "",
-      City: r.profiles?.city ?? "",
-      Club: r.profiles?.club ?? "",
-      DistanceKm: r.distances?.distance_km ?? "",
-      DistanceName: r.distances?.name ?? "",
-      PaymentStatus: r.payment_status,
-    }));
+    const userIds = (regs ?? []).map((r: any) => r.user_id);
+    let profilesMap: Record<string, any> = {};
+    if (userIds.length > 0) {
+      const { data: profs } = await supabase.from("profiles")
+        .select("id, full_name, email, gender, birth_date, city, club")
+        .in("id", userIds);
+      profilesMap = Object.fromEntries((profs ?? []).map((p: any) => [p.id, p]));
+    }
+    const rows = (regs ?? []).map((r: any) => {
+      const p = profilesMap[r.user_id] ?? {};
+      return {
+        Bib: r.bib_number ?? "",
+        Name: p.full_name ?? "",
+        Email: p.email ?? "",
+        Gender: p.gender ?? "",
+        BirthYear: p.birth_date ? new Date(p.birth_date).getFullYear() : "",
+        City: p.city ?? "",
+        Club: p.club ?? "",
+        DistanceKm: r.distances?.distance_km ?? "",
+        DistanceName: r.distances?.name ?? "",
+        PaymentStatus: r.payment_status,
+      };
+    });
     const ws = XLSX.utils.json_to_sheet(rows);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Participants");
