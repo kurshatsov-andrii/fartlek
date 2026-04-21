@@ -23,7 +23,8 @@ const Ticket = () => {
     (async () => {
       const { data: reg } = await supabase
         .from("registrations")
-        .select(`*, events(*), distances(*), profiles!registrations_user_id_fkey(*)`)
+        .select(`*, events(*), distances(*)`)
+        .eq("user_id", user.id)
         .eq("id", id)
         .maybeSingle();
       if (reg?.qr_code_data) {
