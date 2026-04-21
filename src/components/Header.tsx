@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Moon, Sun, Globe, Activity, LogOut, User, LayoutDashboard, Ticket } from "lucide-react";
+import { Moon, Sun, Globe, Activity, LogOut, User, LayoutDashboard, Ticket, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useApp } from "@/contexts/AppContext";
 import { useAuth } from "@/hooks/useAuth";
@@ -9,7 +9,7 @@ import {
 
 export const Header = () => {
   const { lang, setLang, theme, toggleTheme, t } = useApp();
-  const { user, isOrganizer, signOut } = useAuth();
+  const { user, isOrganizer, isAdmin, signOut } = useAuth();
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-border/40 bg-background/80 backdrop-blur-lg">
@@ -52,6 +52,9 @@ export const Header = () => {
                 <DropdownMenuItem asChild><Link to="/my-events"><Ticket className="h-4 w-4" />{t.nav.myEvents}</Link></DropdownMenuItem>
                 {isOrganizer && (
                   <DropdownMenuItem asChild><Link to="/organizer"><LayoutDashboard className="h-4 w-4" />{t.nav.dashboard}</Link></DropdownMenuItem>
+                )}
+                {isAdmin && (
+                  <DropdownMenuItem asChild><Link to="/admin"><Shield className="h-4 w-4" />Адмін-панель</Link></DropdownMenuItem>
                 )}
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={signOut}><LogOut className="h-4 w-4" />{t.nav.logout}</DropdownMenuItem>
