@@ -42,7 +42,7 @@ const EventEditor = () => {
         event_time: ev.event_time.slice(0, 5), location: ev.location ?? "",
         image_url: ev.image_url ?? "", is_paid: ev.is_paid, status: ev.status,
       });
-      const { data: ds } = await supabase.from("distances").select("*").eq("event_id", id).order("distance_km");
+      const { data: ds } = await supabase.from("distances").select("*").eq("event_id", id).eq("is_active", true).order("distance_km");
       if (ds) setDistances(ds.map((d: any) => ({ id: d.id, distance_km: String(d.distance_km), name: d.name ?? "", price: String(d.price) })));
       setLoading(false);
     })();
@@ -82,18 +82,18 @@ const EventEditor = () => {
       const { error } = await supabase.from("events").update(payload).eq("id", id);
       if (error) { toast.error(error.message); setBusy(false); return; }
     }
-    // sync distances: update existing by id, insert new, delete removed
+    // sync distances: update existing by id, insert new, hide removed
     const valid = distances.filter((d) => d.distance_km);
     const keepIds = valid.filter((d) => d.id).map((d) => d.id!);
 
-    // fetch existing to know what to delete
+    // fetch existing active distances to know what to hide
     if (!isNew) {
-      const { data: existing } = await supabase.from("distances").select("id").eq("event_id", eventId);
-      const toDelete = (existing ?? []).map((e: any) => e.id).filter((eid: string) => !keepIds.includes(eid));
-      if (toDelete.length > 0) {
-        const { error: delErr } = await supabase.from("distances").delete().in("id", toDelete);
-        if (delErr) {
-          toast.error("Не вдалось видалити дистанцію (можливо, є реєстрації): " + delErr.message);
+      const { data: existing } = await supabase.from("distances").select("id").eq("event_id", eventId).eq("is_active", true);
+      const toHide = (existing ?? []).map((e: any) => e.id).filter((eid: string) => !keepIds.includes(eid));
+      if (toHide.length > 0) {
+        const { error: hideErr } = await supabase.from("distances").update({ is_active: false } as any).in("id", toHide);
+        if (hideErr) {
+          toast.error("Не вдалось прибрати дистанцію: " + hideErr.message);
           setBusy(false); return;
         }
       }
@@ -115,9 +115,10 @@ const EventEditor = () => {
       distance_km: parseFloat(d.distance_km),
       name: d.name || null,
       price: parseFloat(d.price) || 0,
+      is_active: true,
     }));
     if (newRows.length > 0) {
-      const { error: iErr } = await supabase.from("distances").insert(newRows);
+      const { error: iErr } = await supabase.from("distances").insert(newRows as any);
       if (iErr) { toast.error(iErr.message); setBusy(false); return; }
     }
     toast.success("OK");
