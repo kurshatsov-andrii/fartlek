@@ -20,19 +20,8 @@ const Participants = () => {
     (async () => {
       const { data: ev } = await supabase.from("events").select("title").eq("id", id).maybeSingle();
       setEventTitle(ev?.title ?? "");
-      const { data: regs } = await supabase.from("registrations")
-        .select("user_id, bib_number, distances(distance_km, name)")
-        .eq("event_id", id)
-        .order("bib_number", { ascending: true, nullsFirst: false });
-      const userIds = (regs ?? []).map((r: any) => r.user_id);
-      let profilesMap: Record<string, any> = {};
-      if (userIds.length > 0) {
-        const { data: profs } = await supabase.from("profiles")
-          .select("id, full_name, gender, birth_date, city, club")
-          .in("id", userIds);
-        profilesMap = Object.fromEntries((profs ?? []).map((p: any) => [p.id, p]));
-      }
-      setRows((regs ?? []).map((r: any) => ({ ...r, profiles: profilesMap[r.user_id] })));
+      const { data: participants } = await (supabase.rpc as any)("get_event_participants", { _event_id: id });
+      setRows(participants ?? []);
       setLoading(false);
     })();
   }, [id, user]);
@@ -70,12 +59,12 @@ const Participants = () => {
                 {rows.map((r, i) => (
                   <tr key={i} className="border-t border-border">
                     <td className="p-3 font-bold text-primary">{r.bib_number ?? "—"}</td>
-                    <td className="p-3">{r.profiles?.full_name ?? "—"}</td>
-                    <td className="p-3">{r.profiles?.gender ?? "—"}</td>
-                    <td className="p-3">{r.profiles?.birth_date ? new Date(r.profiles.birth_date).getFullYear() : "—"}</td>
-                    <td className="p-3">{r.profiles?.city ?? "—"}</td>
-                    <td className="p-3">{r.profiles?.club ?? "—"}</td>
-                    <td className="p-3">{r.distances?.distance_km}</td>
+                    <td className="p-3">{r.full_name ?? "—"}</td>
+                    <td className="p-3">{r.gender ?? "—"}</td>
+                    <td className="p-3">{r.birth_year ?? "—"}</td>
+                    <td className="p-3">{r.city ?? "—"}</td>
+                    <td className="p-3">{r.club ?? "—"}</td>
+                    <td className="p-3">{r.distance_km ?? "—"}</td>
                   </tr>
                 ))}
                 {rows.length === 0 && (
