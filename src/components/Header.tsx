@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Moon, Sun, Globe, Activity, LogOut, User, LayoutDashboard, Ticket } from "lucide-react";
+import { Moon, Sun, Globe, Activity, LogOut, User, LayoutDashboard, Ticket, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useApp } from "@/contexts/AppContext";
 import { useAuth } from "@/hooks/useAuth";
