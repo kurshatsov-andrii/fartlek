@@ -8,6 +8,7 @@ import { useApp } from "@/contexts/AppContext";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { startWayForPayCheckout } from "@/lib/wayforpay";
 
 interface EventRow {
   id: string; title: string; description: string | null; organizer_name: string;
@@ -25,7 +26,7 @@ const EventDetails = () => {
   const [distances, setDistances] = useState<DistanceRow[]>([]);
   const [participantsCount, setParticipantsCount] = useState(0);
   const [selectedDistance, setSelectedDistance] = useState<string>("");
-  const [registration, setRegistration] = useState<{ id: string } | null>(null);
+  const [registration, setRegistration] = useState<{ id: string; payment_status: string } | null>(null);
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState(false);
 
@@ -42,7 +43,7 @@ const EventDetails = () => {
       setParticipantsCount(count ?? 0);
       if (ds && ds.length > 0) setSelectedDistance(ds[0].id);
       if (user) {
-        const { data: reg } = await supabase.from("registrations").select("id").eq("event_id", id).eq("user_id", user.id).maybeSingle();
+        const { data: reg } = await supabase.from("registrations").select("id, payment_status").eq("event_id", id).eq("user_id", user.id).maybeSingle();
         if (reg) setRegistration(reg);
       }
       setLoading(false);
@@ -133,7 +134,20 @@ const EventDetails = () => {
                 {registration ? (
                   <>
                     <p className="text-sm text-muted-foreground">{t.events.alreadyRegistered}</p>
-                    <Button asChild className="w-full">
+                    {registration.payment_status === "pending" && (
+                      <Button
+                        className="w-full"
+                        onClick={async () => {
+                          setBusy(true);
+                          try { await startWayForPayCheckout(registration.id); }
+                          catch (e: any) { toast.error(e.message); setBusy(false); }
+                        }}
+                        disabled={busy}
+                      >
+                        {busy && <Loader2 className="h-4 w-4 animate-spin" />} Сплатити
+                      </Button>
+                    )}
+                    <Button asChild variant={registration.payment_status === "pending" ? "outline" : "default"} className="w-full">
                       <Link to={`/ticket/${registration.id}`}>{t.events.viewTicket}</Link>
                     </Button>
                   </>
