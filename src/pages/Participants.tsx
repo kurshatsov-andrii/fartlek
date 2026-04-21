@@ -20,11 +20,19 @@ const Participants = () => {
     (async () => {
       const { data: ev } = await supabase.from("events").select("title").eq("id", id).maybeSingle();
       setEventTitle(ev?.title ?? "");
-      const { data } = await supabase.from("registrations")
-        .select("bib_number, distances(distance_km, name), profiles!registrations_user_id_fkey(full_name, gender, birth_date, city, club)")
+      const { data: regs } = await supabase.from("registrations")
+        .select("user_id, bib_number, distances(distance_km, name)")
         .eq("event_id", id)
         .order("bib_number", { ascending: true, nullsFirst: false });
-      setRows(data ?? []);
+      const userIds = (regs ?? []).map((r: any) => r.user_id);
+      let profilesMap: Record<string, any> = {};
+      if (userIds.length > 0) {
+        const { data: profs } = await supabase.from("profiles")
+          .select("id, full_name, gender, birth_date, city, club")
+          .in("id", userIds);
+        profilesMap = Object.fromEntries((profs ?? []).map((p: any) => [p.id, p]));
+      }
+      setRows((regs ?? []).map((r: any) => ({ ...r, profiles: profilesMap[r.user_id] })));
       setLoading(false);
     })();
   }, [id, user]);
