@@ -5,7 +5,7 @@ export interface Dict {
   hero: {
     kicker: string; title: string; subtitle: string;
     ctaParticipant: string; ctaOrganizer: string;
-    stats: { events: string; runners: string; cities: string };
+    stats: { events: string; runners: string; cities: string; clubs: string };
   };
   events: {
     heading: string; sub: string; details: string; register: string;
