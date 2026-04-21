@@ -1,1 +1,4 @@
 project_id = "mjkjygzxwysbhgjtvobm"
+
+[functions.wayforpay-callback]
+verify_jwt = false
