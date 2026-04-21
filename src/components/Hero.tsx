@@ -20,18 +20,15 @@ export const Hero = () => {
 
   useEffect(() => {
     (async () => {
-      const [{ count: eventsCount }, { data: regs }, { data: evs }] = await Promise.all([
-        supabase.from("events").select("*", { count: "exact", head: true }).eq("status", "published"),
-        supabase.from("registrations").select("user_id"),
-        supabase.from("events").select("location").eq("status", "published"),
-      ]);
-      const uniqueRunners = new Set((regs ?? []).map((r: any) => r.user_id)).size;
-      const uniqueCities = new Set(
-        (evs ?? [])
-          .map((e: any) => (e.location ?? "").split(",")[0].trim().toLowerCase())
-          .filter(Boolean)
-      ).size;
-      setStats({ events: eventsCount ?? 0, runners: uniqueRunners, cities: uniqueCities });
+      const { data } = await (supabase.rpc as any)("get_public_stats");
+      const row = Array.isArray(data) ? data[0] : data;
+      if (row) {
+        setStats({
+          events: row.events_count ?? 0,
+          runners: row.runners_count ?? 0,
+          cities: row.cities_count ?? 0,
+        });
+      }
     })();
   }, []);
 
