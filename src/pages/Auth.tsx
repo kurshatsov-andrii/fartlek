@@ -17,6 +17,7 @@ const Auth = () => {
   const navigate = useNavigate();
   const [params] = useSearchParams();
   const initialRole = params.get("role") === "organizer" ? "organizer" : "participant";
+  const redirectTo = params.get("redirect") || "/";
   const [mode, setMode] = useState<Mode>("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -25,8 +26,8 @@ const Auth = () => {
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
-    if (!loading && user) navigate("/", { replace: true });
-  }, [user, loading, navigate]);
+    if (!loading && user) navigate(redirectTo, { replace: true });
+  }, [user, loading, navigate, redirectTo]);
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,7 +35,7 @@ const Auth = () => {
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     setBusy(false);
     if (error) toast.error(error.message);
-    else navigate("/", { replace: true });
+    else navigate(redirectTo, { replace: true });
   };
 
   const handleSignUp = async (e: React.FormEvent) => {
