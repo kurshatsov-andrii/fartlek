@@ -9,7 +9,7 @@ interface EventCard {
   id: string; title: string; description: string | null; organizer_name: string;
   event_date: string; event_time: string; location: string | null;
   image_url: string | null; is_paid: boolean;
-  distances: { distance_km: number; price: number }[];
+  distances: { distance_km: number; price: number; is_active?: boolean }[];
 }
 
 export const EventsSection = () => {
@@ -19,7 +19,7 @@ export const EventsSection = () => {
 
   useEffect(() => {
     supabase.from("events")
-      .select("*, distances(distance_km, price)")
+      .select("*, distances(distance_km, price, is_active)")
       .eq("status", "published")
       .order("event_date", { ascending: true })
       .then(({ data }) => { setEvents((data as any) ?? []); setLoading(false); });
@@ -31,7 +31,9 @@ export const EventsSection = () => {
     });
 
   const minPrice = (ev: EventCard) =>
-    ev.distances.length > 0 ? Math.min(...ev.distances.map((d) => d.price)) : 0;
+    activeDistances(ev).length > 0 ? Math.min(...activeDistances(ev).map((d) => d.price)) : 0;
+
+  const activeDistances = (ev: EventCard) => ev.distances.filter((d) => d.is_active !== false);
 
   return (
     <section id="events" className="relative py-24 sm:py-32">
@@ -73,7 +75,7 @@ export const EventsSection = () => {
                       </span>
                     </div>
                     <div className="absolute bottom-4 left-4 right-4 flex flex-wrap gap-1.5">
-                      {ev.distances.map((d, i) => (
+                      {activeDistances(ev).map((d, i) => (
                         <span key={i} className="rounded-md bg-background/95 px-2 py-1 text-xs font-bold text-foreground">
                           {d.distance_km} km
                         </span>

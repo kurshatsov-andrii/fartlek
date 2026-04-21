@@ -134,7 +134,7 @@ const OrganizerDashboard = () => {
                     </div>
                     <h3 className="font-display text-lg font-bold mt-1">{ev.title}</h3>
                     <p className="text-sm text-muted-foreground">
-                      {ev.distances?.length ?? 0} {t.events.distances.toLowerCase()} · {ev.registrations?.[0]?.count ?? 0} {t.events.participants.toLowerCase()}
+                      {ev.distances?.filter((d: any) => d.is_active !== false).length ?? 0} {t.events.distances.toLowerCase()} · {ev.registrations?.[0]?.count ?? 0} {t.events.participants.toLowerCase()}
                     </p>
                   </div>
                   <div className="flex flex-wrap gap-2">
