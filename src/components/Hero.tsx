@@ -1,11 +1,39 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight, User, Trophy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useApp } from "@/contexts/AppContext";
+import { supabase } from "@/integrations/supabase/client";
 import heroImg from "@/assets/hero-runners.jpg";
+
+const formatCount = (n: number) => {
+  if (n >= 1000) {
+    const k = n / 1000;
+    return (k >= 10 ? Math.floor(k) : Math.round(k * 10) / 10) + "k";
+  }
+  return String(n);
+};
 
 export const Hero = () => {
   const { t } = useApp();
+  const [stats, setStats] = useState({ events: 0, runners: 0, cities: 0 });
+
+  useEffect(() => {
+    (async () => {
+      const [{ count: eventsCount }, { data: regs }, { data: evs }] = await Promise.all([
+        supabase.from("events").select("*", { count: "exact", head: true }).eq("status", "published"),
+        supabase.from("registrations").select("user_id"),
+        supabase.from("events").select("location").eq("status", "published"),
+      ]);
+      const uniqueRunners = new Set((regs ?? []).map((r: any) => r.user_id)).size;
+      const uniqueCities = new Set(
+        (evs ?? [])
+          .map((e: any) => (e.location ?? "").split(",")[0].trim().toLowerCase())
+          .filter(Boolean)
+      ).size;
+      setStats({ events: eventsCount ?? 0, runners: uniqueRunners, cities: uniqueCities });
+    })();
+  }, []);
 
   return (
     <section className="relative overflow-hidden bg-secondary text-secondary-foreground">
@@ -63,9 +91,9 @@ export const Hero = () => {
 
           <dl className="mt-16 grid max-w-lg grid-cols-3 gap-6 border-t border-secondary-foreground/10 pt-8">
             {[
-              { v: "120+", l: t.hero.stats.events },
-              { v: "18k", l: t.hero.stats.runners },
-              { v: "32", l: t.hero.stats.cities },
+              { v: `${stats.events}`, l: t.hero.stats.events },
+              { v: formatCount(stats.runners), l: t.hero.stats.runners },
+              { v: `${stats.cities}`, l: t.hero.stats.cities },
             ].map((s) => (
               <div key={s.l}>
                 <dt className="font-display text-3xl font-bold text-primary sm:text-4xl">{s.v}</dt>
