@@ -73,15 +73,12 @@ const OrganizerDashboard = () => {
 
   const assignBibs = async (eventId: string) => {
     const { data: regs } = await supabase.from("registrations")
-      .select("id, distance_id, created_at")
+      .select("id, created_at")
       .eq("event_id", eventId)
-      .order("distance_id").order("created_at");
+      .order("created_at");
     if (!regs) return;
-    const counters = new Map<string, number>();
-    for (const r of regs) {
-      const next = (counters.get(r.distance_id) ?? 0) + 1;
-      counters.set(r.distance_id, next);
-      await supabase.from("registrations").update({ bib_number: next }).eq("id", r.id);
+    for (let index = 0; index < regs.length; index += 1) {
+      await supabase.from("registrations").update({ bib_number: 1000 + index }).eq("id", regs[index].id);
     }
     toast.success("OK");
   };
