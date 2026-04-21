@@ -113,7 +113,7 @@ export const translations: Record<Lang, Dict> = {
       title: "Run. Register. Conquer.",
       subtitle: "Fartlek Events — the registration platform for races, trails and competitions across Ukraine. QR start packs, instant results, clean protocols.",
       ctaParticipant: "Participant sign in", ctaOrganizer: "Organizer sign in",
-      stats: { events: "Events", runners: "Runners", cities: "Cities" },
+      stats: { events: "Events", runners: "Runners", cities: "Cities", clubs: "Clubs" },
     },
     events: {
       heading: "Upcoming events", sub: "Pick your start. Register in a minute.",
