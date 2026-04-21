@@ -14,16 +14,269 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      distances: {
+        Row: {
+          created_at: string
+          distance_km: number
+          event_id: string
+          id: string
+          max_participants: number | null
+          name: string | null
+          price: number
+        }
+        Insert: {
+          created_at?: string
+          distance_km: number
+          event_id: string
+          id?: string
+          max_participants?: number | null
+          name?: string | null
+          price?: number
+        }
+        Update: {
+          created_at?: string
+          distance_km?: number
+          event_id?: string
+          id?: string
+          max_participants?: number | null
+          name?: string | null
+          price?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "distances_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      events: {
+        Row: {
+          created_at: string
+          description: string | null
+          event_date: string
+          event_time: string
+          id: string
+          image_url: string | null
+          is_paid: boolean
+          location: string | null
+          organizer_id: string
+          organizer_name: string
+          status: Database["public"]["Enums"]["event_status"]
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          event_date: string
+          event_time: string
+          id?: string
+          image_url?: string | null
+          is_paid?: boolean
+          location?: string | null
+          organizer_id: string
+          organizer_name: string
+          status?: Database["public"]["Enums"]["event_status"]
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          event_date?: string
+          event_time?: string
+          id?: string
+          image_url?: string | null
+          is_paid?: boolean
+          location?: string | null
+          organizer_id?: string
+          organizer_name?: string
+          status?: Database["public"]["Enums"]["event_status"]
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      payments: {
+        Row: {
+          amount: number
+          created_at: string
+          currency: string
+          id: string
+          provider: Database["public"]["Enums"]["payment_provider_type"]
+          provider_order_id: string | null
+          provider_payment_id: string | null
+          registration_id: string
+          status: Database["public"]["Enums"]["payment_status_type"]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          currency?: string
+          id?: string
+          provider?: Database["public"]["Enums"]["payment_provider_type"]
+          provider_order_id?: string | null
+          provider_payment_id?: string | null
+          registration_id: string
+          status?: Database["public"]["Enums"]["payment_status_type"]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          currency?: string
+          id?: string
+          provider?: Database["public"]["Enums"]["payment_provider_type"]
+          provider_order_id?: string | null
+          provider_payment_id?: string | null
+          registration_id?: string
+          status?: Database["public"]["Enums"]["payment_status_type"]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payments_registration_id_fkey"
+            columns: ["registration_id"]
+            isOneToOne: false
+            referencedRelation: "registrations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          birth_date: string | null
+          city: string | null
+          club: string | null
+          created_at: string
+          email: string
+          full_name: string | null
+          gender: Database["public"]["Enums"]["gender_type"] | null
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          birth_date?: string | null
+          city?: string | null
+          club?: string | null
+          created_at?: string
+          email: string
+          full_name?: string | null
+          gender?: Database["public"]["Enums"]["gender_type"] | null
+          id: string
+          updated_at?: string
+        }
+        Update: {
+          birth_date?: string | null
+          city?: string | null
+          club?: string | null
+          created_at?: string
+          email?: string
+          full_name?: string | null
+          gender?: Database["public"]["Enums"]["gender_type"] | null
+          id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      registrations: {
+        Row: {
+          bib_number: number | null
+          created_at: string
+          distance_id: string
+          event_id: string
+          id: string
+          payment_status: Database["public"]["Enums"]["payment_status_type"]
+          qr_code_data: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          bib_number?: number | null
+          created_at?: string
+          distance_id: string
+          event_id: string
+          id?: string
+          payment_status?: Database["public"]["Enums"]["payment_status_type"]
+          qr_code_data?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          bib_number?: number | null
+          created_at?: string
+          distance_id?: string
+          event_id?: string
+          id?: string
+          payment_status?: Database["public"]["Enums"]["payment_status_type"]
+          qr_code_data?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "registrations_distance_id_fkey"
+            columns: ["distance_id"]
+            isOneToOne: false
+            referencedRelation: "distances"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "registrations_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "participant" | "organizer" | "admin"
+      event_status: "draft" | "published" | "cancelled" | "completed"
+      gender_type: "male" | "female" | "other"
+      payment_provider_type: "liqpay" | "stripe" | "free"
+      payment_status_type: "pending" | "paid" | "failed" | "refunded" | "free"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +403,12 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["participant", "organizer", "admin"],
+      event_status: ["draft", "published", "cancelled", "completed"],
+      gender_type: ["male", "female", "other"],
+      payment_provider_type: ["liqpay", "stripe", "free"],
+      payment_status_type: ["pending", "paid", "failed", "refunded", "free"],
+    },
   },
 } as const
