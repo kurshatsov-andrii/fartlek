@@ -87,11 +87,12 @@ export const Hero = () => {
             </Button>
           </div>
 
-          <dl className="mt-16 grid max-w-lg grid-cols-3 gap-6 border-t border-secondary-foreground/10 pt-8">
+          <dl className="mt-16 grid max-w-xl grid-cols-2 gap-6 border-t border-secondary-foreground/10 pt-8 sm:grid-cols-4">
             {[
               { v: `${stats.events}`, l: t.hero.stats.events },
               { v: formatCount(stats.runners), l: t.hero.stats.runners },
               { v: `${stats.cities}`, l: t.hero.stats.cities },
+              { v: `${stats.clubs}`, l: t.hero.stats.clubs },
             ].map((s) => (
               <div key={s.l}>
                 <dt className="font-display text-3xl font-bold text-primary sm:text-4xl">{s.v}</dt>
