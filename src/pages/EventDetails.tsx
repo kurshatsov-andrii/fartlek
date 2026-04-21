@@ -15,7 +15,7 @@ interface EventRow {
   event_date: string; event_time: string; location: string | null;
   image_url: string | null; is_paid: boolean; status: string;
 }
-interface DistanceRow { id: string; distance_km: number; name: string | null; price: number; }
+interface DistanceRow { id: string; distance_km: number; name: string | null; price: number; is_active?: boolean; }
 
 const EventDetails = () => {
   const { id } = useParams<{ id: string }>();
@@ -35,7 +35,7 @@ const EventDetails = () => {
     (async () => {
       const [{ data: ev }, { data: ds }, { count }] = await Promise.all([
         supabase.from("events").select("*").eq("id", id).maybeSingle(),
-        supabase.from("distances").select("*").eq("event_id", id).order("distance_km"),
+        supabase.from("distances").select("*").eq("event_id", id).eq("is_active", true).order("distance_km"),
         supabase.from("registrations").select("*", { count: "exact", head: true }).eq("event_id", id),
       ]);
       setEvent(ev);
