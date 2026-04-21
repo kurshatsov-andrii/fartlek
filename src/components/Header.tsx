@@ -9,7 +9,7 @@ import {
 
 export const Header = () => {
   const { lang, setLang, theme, toggleTheme, t } = useApp();
-  const { user, isOrganizer, signOut } = useAuth();
+  const { user, isOrganizer, isAdmin, signOut } = useAuth();
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-border/40 bg-background/80 backdrop-blur-lg">
