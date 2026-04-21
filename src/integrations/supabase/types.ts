@@ -282,6 +282,7 @@ export type Database = {
         Args: never
         Returns: {
           cities_count: number
+          clubs_count: number
           events_count: number
           runners_count: number
         }[]

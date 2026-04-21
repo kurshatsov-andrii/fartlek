@@ -16,7 +16,7 @@ const formatCount = (n: number) => {
 
 export const Hero = () => {
   const { t } = useApp();
-  const [stats, setStats] = useState({ events: 0, runners: 0, cities: 0 });
+  const [stats, setStats] = useState({ events: 0, runners: 0, cities: 0, clubs: 0 });
 
   useEffect(() => {
     (async () => {
@@ -27,6 +27,7 @@ export const Hero = () => {
           events: row.events_count ?? 0,
           runners: row.runners_count ?? 0,
           cities: row.cities_count ?? 0,
+          clubs: row.clubs_count ?? 0,
         });
       }
     })();
@@ -86,11 +87,12 @@ export const Hero = () => {
             </Button>
           </div>
 
-          <dl className="mt-16 grid max-w-lg grid-cols-3 gap-6 border-t border-secondary-foreground/10 pt-8">
+          <dl className="mt-16 grid max-w-xl grid-cols-2 gap-6 border-t border-secondary-foreground/10 pt-8 sm:grid-cols-4">
             {[
               { v: `${stats.events}`, l: t.hero.stats.events },
               { v: formatCount(stats.runners), l: t.hero.stats.runners },
               { v: `${stats.cities}`, l: t.hero.stats.cities },
+              { v: `${stats.clubs}`, l: t.hero.stats.clubs },
             ].map((s) => (
               <div key={s.l}>
                 <dt className="font-display text-3xl font-bold text-primary sm:text-4xl">{s.v}</dt>
