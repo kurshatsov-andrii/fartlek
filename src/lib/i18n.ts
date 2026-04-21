@@ -1,6 +1,31 @@
 export type Lang = "uk" | "en";
 
-export const translations = {
+export interface Dict {
+  nav: { events: string; organizer: string; login: string; signup: string };
+  hero: {
+    kicker: string;
+    title: string;
+    subtitle: string;
+    ctaParticipant: string;
+    ctaOrganizer: string;
+    stats: { events: string; runners: string; cities: string };
+  };
+  events: {
+    heading: string;
+    sub: string;
+    details: string;
+    register: string;
+    free: string;
+    paid: string;
+    distances: string;
+    organizer: string;
+    empty: string;
+  };
+  footer: { tagline: string; rights: string };
+  common: { backHome: string; loading: string };
+}
+
+export const translations: Record<Lang, Dict> = {
   uk: {
     nav: { events: "Події", organizer: "Організаторам", login: "Увійти", signup: "Реєстрація" },
     hero: {
