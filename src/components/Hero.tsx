@@ -16,7 +16,7 @@ const formatCount = (n: number) => {
 
 export const Hero = () => {
   const { t } = useApp();
-  const [stats, setStats] = useState({ events: 0, runners: 0, cities: 0 });
+  const [stats, setStats] = useState({ events: 0, runners: 0, cities: 0, clubs: 0 });
 
   useEffect(() => {
     (async () => {
@@ -27,6 +27,7 @@ export const Hero = () => {
           events: row.events_count ?? 0,
           runners: row.runners_count ?? 0,
           cities: row.cities_count ?? 0,
+          clubs: row.clubs_count ?? 0,
         });
       }
     })();
