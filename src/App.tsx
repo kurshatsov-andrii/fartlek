@@ -16,6 +16,9 @@ import MyEvents from "./pages/MyEvents.tsx";
 import Participants from "./pages/Participants.tsx";
 import OrganizerDashboard from "./pages/OrganizerDashboard.tsx";
 import EventEditor from "./pages/EventEditor.tsx";
+import PaymentSuccess from "./pages/PaymentSuccess.tsx";
+import PaymentFail from "./pages/PaymentFail.tsx";
+import Admin from "./pages/Admin.tsx";
 
 const queryClient = new QueryClient();
 
@@ -39,6 +42,9 @@ const App = () => (
               <Route path="/organizer" element={<OrganizerDashboard />} />
               <Route path="/organizer/events/new" element={<EventEditor />} />
               <Route path="/organizer/events/:id" element={<EventEditor />} />
+              <Route path="/payment/success" element={<PaymentSuccess />} />
+              <Route path="/payment/fail" element={<PaymentFail />} />
+              <Route path="/admin" element={<Admin />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>

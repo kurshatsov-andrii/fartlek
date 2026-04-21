@@ -1,0 +1,135 @@
+import { useEffect, useState } from "react";
+import { Navigate, Link } from "react-router-dom";
+import { Loader2, Shield, Calendar, Users, CreditCard } from "lucide-react";
+import { Header } from "@/components/Header";
+import { Footer } from "@/components/Footer";
+import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
+
+const Admin = () => {
+  const { user, isAdmin, loading } = useAuth();
+  const [events, setEvents] = useState<any[]>([]);
+  const [orders, setOrders] = useState<any[]>([]);
+  const [users, setUsers] = useState<any[]>([]);
+  const [busy, setBusy] = useState(false);
+
+  useEffect(() => {
+    if (!isAdmin) return;
+    (async () => {
+      const [{ data: ev }, { data: ord }, { data: us }] = await Promise.all([
+        supabase.from("events").select("*").order("created_at", { ascending: false }),
+        supabase.from("wayforpay_orders").select("*").order("created_at", { ascending: false }).limit(100),
+        supabase.from("profiles").select("id, email, full_name, city, club, created_at").order("created_at", { ascending: false }).limit(100),
+      ]);
+      setEvents(ev ?? []);
+      setOrders(ord ?? []);
+      setUsers(us ?? []);
+    })();
+  }, [isAdmin]);
+
+  if (loading) return <div className="min-h-screen flex items-center justify-center"><Loader2 className="h-8 w-8 animate-spin" /></div>;
+  if (!user) return <Navigate to="/auth?redirect=/admin" replace />;
+  if (!isAdmin) return <Navigate to="/" replace />;
+
+  const setEventStatus = async (id: string, status: string) => {
+    setBusy(true);
+    const { error } = await supabase.from("events").update({ status: status as any }).eq("id", id);
+    setBusy(false);
+    if (error) return toast.error(error.message);
+    setEvents((s) => s.map((e) => (e.id === id ? { ...e, status } : e)));
+    toast.success("Оновлено");
+  };
+
+  const grantOrganizer = async (userId: string) => {
+    const { error } = await supabase.from("user_roles").insert({ user_id: userId, role: "organizer" });
+    if (error) return toast.error(error.message);
+    toast.success("Роль organizer надано");
+  };
+
+  return (
+    <div className="min-h-screen flex flex-col bg-background">
+      <Header />
+      <main className="flex-1 container py-10">
+        <div className="flex items-center gap-3 mb-8">
+          <Shield className="h-7 w-7 text-primary" />
+          <h1 className="font-display text-3xl font-bold">Адмін-панель</h1>
+        </div>
+        <Tabs defaultValue="events" className="space-y-6">
+          <TabsList>
+            <TabsTrigger value="events"><Calendar className="h-4 w-4 mr-2" />Події ({events.length})</TabsTrigger>
+            <TabsTrigger value="payments"><CreditCard className="h-4 w-4 mr-2" />Платежі ({orders.length})</TabsTrigger>
+            <TabsTrigger value="users"><Users className="h-4 w-4 mr-2" />Користувачі ({users.length})</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="events" className="space-y-3">
+            {events.map((e) => (
+              <div key={e.id} className="bg-card p-4 rounded-xl flex items-center justify-between gap-4">
+                <div className="flex-1 min-w-0">
+                  <div className="font-semibold truncate">{e.title}</div>
+                  <div className="text-xs text-muted-foreground">{e.event_date} · {e.organizer_name} · {e.status}</div>
+                </div>
+                <div className="flex gap-2">
+                  <Button asChild size="sm" variant="outline"><Link to={`/events/${e.id}`}>Перегляд</Link></Button>
+                  {e.status !== "published" && <Button size="sm" disabled={busy} onClick={() => setEventStatus(e.id, "published")}>Опублікувати</Button>}
+                  {e.status !== "cancelled" && <Button size="sm" variant="destructive" disabled={busy} onClick={() => setEventStatus(e.id, "cancelled")}>Скасувати</Button>}
+                </div>
+              </div>
+            ))}
+          </TabsContent>
+
+          <TabsContent value="payments" className="space-y-2">
+            <div className="overflow-x-auto bg-card rounded-xl">
+              <table className="w-full text-sm">
+                <thead className="border-b">
+                  <tr className="text-left">
+                    <th className="p-3">Order</th><th className="p-3">Сума</th><th className="p-3">Статус</th><th className="p-3">Дата</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {orders.map((o) => (
+                    <tr key={o.id} className="border-b last:border-0">
+                      <td className="p-3 font-mono text-xs">{o.order_reference}</td>
+                      <td className="p-3">{o.amount} {o.currency}</td>
+                      <td className="p-3"><span className={`px-2 py-0.5 rounded text-xs ${o.status === "paid" ? "bg-primary/20 text-primary" : "bg-muted"}`}>{o.status}</span></td>
+                      <td className="p-3 text-xs text-muted-foreground">{new Date(o.created_at).toLocaleString("uk-UA")}</td>
+                    </tr>
+                  ))}
+                  {orders.length === 0 && <tr><td colSpan={4} className="p-6 text-center text-muted-foreground">Немає платежів</td></tr>}
+                </tbody>
+              </table>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="users" className="space-y-2">
+            <div className="overflow-x-auto bg-card rounded-xl">
+              <table className="w-full text-sm">
+                <thead className="border-b">
+                  <tr className="text-left">
+                    <th className="p-3">Email</th><th className="p-3">Ім'я</th><th className="p-3">Місто</th><th className="p-3">Клуб</th><th className="p-3"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {users.map((u) => (
+                    <tr key={u.id} className="border-b last:border-0">
+                      <td className="p-3">{u.email}</td>
+                      <td className="p-3">{u.full_name ?? "—"}</td>
+                      <td className="p-3">{u.city ?? "—"}</td>
+                      <td className="p-3">{u.club ?? "—"}</td>
+                      <td className="p-3"><Button size="sm" variant="outline" onClick={() => grantOrganizer(u.id)}>+ organizer</Button></td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </TabsContent>
+        </Tabs>
+      </main>
+      <Footer />
+    </div>
+  );
+};
+
+export default Admin;
