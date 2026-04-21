@@ -1,0 +1,211 @@
+import { useEffect, useState } from "react";
+import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
+import { ArrowLeft, Loader2, Plus, X, Upload } from "lucide-react";
+import { Header } from "@/components/Header";
+import { Footer } from "@/components/Footer";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Switch } from "@/components/ui/switch";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useApp } from "@/contexts/AppContext";
+import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
+
+interface DistanceForm { id?: string; distance_km: string; name: string; price: string; }
+
+const EventEditor = () => {
+  const { id } = useParams<{ id: string }>();
+  const isNew = !id || id === "new";
+  const { t } = useApp();
+  const { user, isOrganizer, loading: authLoading } = useAuth();
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(!isNew);
+  const [busy, setBusy] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [form, setForm] = useState({
+    title: "", description: "", organizer_name: "",
+    event_date: "", event_time: "", location: "",
+    image_url: "", is_paid: false, status: "draft",
+  });
+  const [distances, setDistances] = useState<DistanceForm[]>([{ distance_km: "10", name: "", price: "0" }]);
+
+  useEffect(() => {
+    if (isNew || !user) return;
+    (async () => {
+      const { data: ev } = await supabase.from("events").select("*").eq("id", id).maybeSingle();
+      if (ev) setForm({
+        title: ev.title, description: ev.description ?? "",
+        organizer_name: ev.organizer_name, event_date: ev.event_date,
+        event_time: ev.event_time.slice(0, 5), location: ev.location ?? "",
+        image_url: ev.image_url ?? "", is_paid: ev.is_paid, status: ev.status,
+      });
+      const { data: ds } = await supabase.from("distances").select("*").eq("event_id", id).order("distance_km");
+      if (ds) setDistances(ds.map((d: any) => ({ id: d.id, distance_km: String(d.distance_km), name: d.name ?? "", price: String(d.price) })));
+      setLoading(false);
+    })();
+  }, [id, isNew, user]);
+
+  const uploadImage = async (file: File) => {
+    if (!user) return;
+    setUploading(true);
+    const ext = file.name.split(".").pop();
+    const path = `${user.id}/${Date.now()}.${ext}`;
+    const { error } = await supabase.storage.from("event-images").upload(path, file);
+    if (error) { toast.error(error.message); setUploading(false); return; }
+    const { data } = supabase.storage.from("event-images").getPublicUrl(path);
+    setForm({ ...form, image_url: data.publicUrl });
+    setUploading(false);
+  };
+
+  const save = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!user) return;
+    setBusy(true);
+    const payload = {
+      ...form,
+      organizer_id: user.id,
+      status: form.status as any,
+      event_time: form.event_time + ":00",
+      image_url: form.image_url || null,
+      location: form.location || null,
+      description: form.description || null,
+    };
+    let eventId = id!;
+    if (isNew) {
+      const { data, error } = await supabase.from("events").insert(payload).select("id").single();
+      if (error) { toast.error(error.message); setBusy(false); return; }
+      eventId = data.id;
+    } else {
+      const { error } = await supabase.from("events").update(payload).eq("id", id);
+      if (error) { toast.error(error.message); setBusy(false); return; }
+    }
+    // sync distances: simple replace
+    if (!isNew) await supabase.from("distances").delete().eq("event_id", eventId);
+    const distRows = distances.filter((d) => d.distance_km).map((d) => ({
+      event_id: eventId,
+      distance_km: parseFloat(d.distance_km),
+      name: d.name || null,
+      price: parseFloat(d.price) || 0,
+    }));
+    if (distRows.length > 0) {
+      const { error: dErr } = await supabase.from("distances").insert(distRows);
+      if (dErr) { toast.error(dErr.message); setBusy(false); return; }
+    }
+    toast.success("OK");
+    setBusy(false);
+    navigate("/organizer");
+  };
+
+  if (authLoading) return null;
+  if (!user) return <Navigate to="/auth?role=organizer" replace />;
+  if (!isOrganizer) return <Navigate to="/" replace />;
+
+  return (
+    <div className="min-h-screen flex flex-col bg-background">
+      <Header />
+      <main className="flex-1 container max-w-3xl py-10">
+        <Link to="/organizer" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-6">
+          <ArrowLeft className="h-4 w-4" /> {t.organizer.backToDashboard}
+        </Link>
+        <h1 className="font-display text-3xl font-bold mb-6">{isNew ? t.organizer.createEvent : t.organizer.edit}</h1>
+
+        {loading ? (
+          <div className="flex justify-center py-20"><Loader2 className="h-6 w-6 animate-spin" /></div>
+        ) : (
+          <form onSubmit={save} className="space-y-6 bg-card p-6 rounded-2xl shadow-card">
+            <div className="space-y-2">
+              <Label>{t.organizer.title} *</Label>
+              <Input required value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} />
+            </div>
+            <div className="space-y-2">
+              <Label>{t.events.organizer} *</Label>
+              <Input required value={form.organizer_name} onChange={(e) => setForm({ ...form, organizer_name: e.target.value })} />
+            </div>
+            <div className="grid sm:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label>{t.organizer.date} *</Label>
+                <Input type="date" required value={form.event_date} onChange={(e) => setForm({ ...form, event_date: e.target.value })} />
+              </div>
+              <div className="space-y-2">
+                <Label>{t.organizer.time} *</Label>
+                <Input type="time" required value={form.event_time} onChange={(e) => setForm({ ...form, event_time: e.target.value })} />
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label>{t.organizer.location}</Label>
+              <Input value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} />
+            </div>
+            <div className="space-y-2">
+              <Label>{t.organizer.description}</Label>
+              <Textarea rows={5} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
+            </div>
+            <div className="space-y-2">
+              <Label>{t.organizer.image}</Label>
+              <div className="flex items-center gap-3">
+                {form.image_url && <img src={form.image_url} alt="" className="h-16 w-16 rounded object-cover" />}
+                <label className="inline-flex items-center gap-2 cursor-pointer rounded-md border border-input bg-background px-4 py-2 text-sm hover:bg-accent hover:text-accent-foreground transition-base">
+                  {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
+                  Upload
+                  <input type="file" accept="image/*" className="hidden" onChange={(e) => e.target.files?.[0] && uploadImage(e.target.files[0])} />
+                </label>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between rounded-md border border-border p-4">
+              <Label htmlFor="paid" className="cursor-pointer">{t.organizer.isPaid}</Label>
+              <Switch id="paid" checked={form.is_paid} onCheckedChange={(v) => setForm({ ...form, is_paid: v })} />
+            </div>
+
+            <div className="space-y-2">
+              <Label>{t.organizer.status}</Label>
+              <Select value={form.status} onValueChange={(v) => setForm({ ...form, status: v })}>
+                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="draft">{t.organizer.draft}</SelectItem>
+                  <SelectItem value="published">{t.organizer.published}</SelectItem>
+                  <SelectItem value="cancelled">{t.organizer.cancelled}</SelectItem>
+                  <SelectItem value="completed">{t.organizer.completed}</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-3">
+              <Label>{t.organizer.distances} *</Label>
+              {distances.map((d, i) => (
+                <div key={i} className="grid grid-cols-12 gap-2">
+                  <Input className="col-span-3" type="number" step="0.1" placeholder="km" value={d.distance_km}
+                    onChange={(e) => { const c = [...distances]; c[i].distance_km = e.target.value; setDistances(c); }} />
+                  <Input className="col-span-5" placeholder={t.organizer.distanceName} value={d.name}
+                    onChange={(e) => { const c = [...distances]; c[i].name = e.target.value; setDistances(c); }} />
+                  <Input className="col-span-3" type="number" step="1" placeholder="₴" value={d.price}
+                    onChange={(e) => { const c = [...distances]; c[i].price = e.target.value; setDistances(c); }} />
+                  <Button type="button" variant="ghost" size="icon" className="col-span-1"
+                    onClick={() => setDistances(distances.filter((_, k) => k !== i))}>
+                    <X className="h-4 w-4" />
+                  </Button>
+                </div>
+              ))}
+              <Button type="button" variant="outline" size="sm"
+                onClick={() => setDistances([...distances, { distance_km: "", name: "", price: "0" }])}>
+                <Plus className="h-4 w-4" /> {t.organizer.addDistance}
+              </Button>
+            </div>
+
+            <div className="flex gap-3 pt-4 border-t border-border">
+              <Button type="submit" disabled={busy} className="flex-1">
+                {busy && <Loader2 className="h-4 w-4 animate-spin" />} {t.organizer.save}
+              </Button>
+              <Button type="button" variant="outline" onClick={() => navigate("/organizer")}>{t.organizer.cancel}</Button>
+            </div>
+          </form>
+        )}
+      </main>
+      <Footer />
+    </div>
+  );
+};
+
+export default EventEditor;

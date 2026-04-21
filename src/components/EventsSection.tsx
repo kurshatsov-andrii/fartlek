@@ -1,18 +1,37 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Calendar, MapPin, ArrowUpRight } from "lucide-react";
+import { Calendar, MapPin, ArrowUpRight, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useApp } from "@/contexts/AppContext";
-import { SAMPLE_EVENTS } from "@/data/events";
+import { supabase } from "@/integrations/supabase/client";
+
+interface EventCard {
+  id: string; title: string; description: string | null; organizer_name: string;
+  event_date: string; event_time: string; location: string | null;
+  image_url: string | null; is_paid: boolean;
+  distances: { distance_km: number; price: number }[];
+}
 
 export const EventsSection = () => {
   const { t, lang } = useApp();
+  const [events, setEvents] = useState<EventCard[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    supabase.from("events")
+      .select("*, distances(distance_km, price)")
+      .eq("status", "published")
+      .order("event_date", { ascending: true })
+      .then(({ data }) => { setEvents((data as any) ?? []); setLoading(false); });
+  }, []);
 
   const fmtDate = (iso: string) =>
     new Date(iso).toLocaleDateString(lang === "uk" ? "uk-UA" : "en-US", {
-      day: "numeric",
-      month: "long",
-      year: "numeric",
+      day: "numeric", month: "long", year: "numeric",
     });
+
+  const minPrice = (ev: EventCard) =>
+    ev.distances.length > 0 ? Math.min(...ev.distances.map((d) => d.price)) : 0;
 
   return (
     <section id="events" className="relative py-24 sm:py-32">
@@ -29,74 +48,57 @@ export const EventsSection = () => {
           </div>
         </div>
 
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {SAMPLE_EVENTS.map((ev, idx) => (
-            <article
-              key={ev.id}
-              className="group relative flex flex-col overflow-hidden rounded-2xl bg-card shadow-card transition-bounce hover:-translate-y-2 hover:shadow-elevated animate-fade-in-up"
-              style={{ animationDelay: `${idx * 80}ms` }}
-            >
-              <div className="relative aspect-[4/3] overflow-hidden">
-                <img
-                  src={ev.image}
-                  alt={ev.title[lang]}
-                  loading="lazy"
-                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
-                />
-                <div className="absolute inset-0 card-overlay" />
-                <div className="absolute top-4 left-4">
-                  <span
-                    className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wider backdrop-blur ${
-                      ev.isPaid
-                        ? "bg-primary text-primary-foreground"
-                        : "bg-accent text-accent-foreground"
-                    }`}
-                  >
-                    {ev.isPaid ? `${ev.price} ₴` : t.events.free}
-                  </span>
-                </div>
-                <div className="absolute bottom-4 left-4 right-4 flex flex-wrap gap-1.5">
-                  {ev.distances.map((d) => (
-                    <span
-                      key={d}
-                      className="rounded-md bg-background/95 px-2 py-1 text-xs font-bold text-foreground"
-                    >
-                      {d} km
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              <div className="flex flex-1 flex-col p-6">
-                <h3 className="font-display text-xl font-bold leading-tight">{ev.title[lang]}</h3>
-                <div className="mt-3 flex flex-col gap-1.5 text-sm text-muted-foreground">
-                  <div className="flex items-center gap-2">
-                    <Calendar className="h-4 w-4 text-primary" />
-                    {fmtDate(ev.date)}
+        {loading ? (
+          <div className="flex justify-center py-20"><Loader2 className="h-6 w-6 animate-spin" /></div>
+        ) : events.length === 0 ? (
+          <div className="text-center py-20 bg-card rounded-2xl">
+            <p className="text-muted-foreground">{t.events.empty}</p>
+          </div>
+        ) : (
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {events.map((ev, idx) => {
+              const price = minPrice(ev);
+              return (
+                <article key={ev.id} className="group relative flex flex-col overflow-hidden rounded-2xl bg-card shadow-card transition-bounce hover:-translate-y-2 hover:shadow-elevated animate-fade-in-up" style={{ animationDelay: `${idx * 80}ms` }}>
+                  <div className="relative aspect-[4/3] overflow-hidden bg-muted">
+                    {ev.image_url ? (
+                      <img src={ev.image_url} alt={ev.title} loading="lazy" className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                    ) : (
+                      <div className="h-full w-full bg-gradient-hero" />
+                    )}
+                    <div className="absolute inset-0 card-overlay" />
+                    <div className="absolute top-4 left-4">
+                      <span className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wider backdrop-blur ${ev.is_paid ? "bg-primary text-primary-foreground" : "bg-accent text-accent-foreground"}`}>
+                        {ev.is_paid ? `${price} ₴` : t.events.free}
+                      </span>
+                    </div>
+                    <div className="absolute bottom-4 left-4 right-4 flex flex-wrap gap-1.5">
+                      {ev.distances.map((d, i) => (
+                        <span key={i} className="rounded-md bg-background/95 px-2 py-1 text-xs font-bold text-foreground">
+                          {d.distance_km} km
+                        </span>
+                      ))}
+                    </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <MapPin className="h-4 w-4 text-primary" />
-                    {ev.location[lang]}
+                  <div className="flex flex-1 flex-col p-6">
+                    <h3 className="font-display text-xl font-bold leading-tight">{ev.title}</h3>
+                    <div className="mt-3 flex flex-col gap-1.5 text-sm text-muted-foreground">
+                      <div className="flex items-center gap-2"><Calendar className="h-4 w-4 text-primary" />{fmtDate(ev.event_date)}</div>
+                      {ev.location && <div className="flex items-center gap-2"><MapPin className="h-4 w-4 text-primary" />{ev.location}</div>}
+                    </div>
+                    {ev.description && <p className="mt-4 text-sm text-muted-foreground line-clamp-2">{ev.description}</p>}
+                    <div className="mt-6 flex items-center gap-2 pt-4 border-t border-border">
+                      <Button asChild className="flex-1"><Link to={`/events/${ev.id}`}>{t.events.register}</Link></Button>
+                      <Button asChild variant="outline" size="icon" aria-label={t.events.details}>
+                        <Link to={`/events/${ev.id}`}><ArrowUpRight className="h-4 w-4" /></Link>
+                      </Button>
+                    </div>
                   </div>
-                </div>
-                <p className="mt-4 text-sm text-muted-foreground line-clamp-2">
-                  {ev.description[lang]}
-                </p>
-
-                <div className="mt-6 flex items-center gap-2 pt-4 border-t border-border">
-                  <Button asChild className="flex-1">
-                    <Link to={`/events/${ev.id}`}>{t.events.register}</Link>
-                  </Button>
-                  <Button asChild variant="outline" size="icon" aria-label={t.events.details}>
-                    <Link to={`/events/${ev.id}`}>
-                      <ArrowUpRight className="h-4 w-4" />
-                    </Link>
-                  </Button>
-                </div>
-              </div>
-            </article>
-          ))}
-        </div>
+                </article>
+              );
+            })}
+          </div>
+        )}
       </div>
     </section>
   );
