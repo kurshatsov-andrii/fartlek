@@ -258,6 +258,53 @@ export type Database = {
         }
         Relationships: []
       }
+      wayforpay_orders: {
+        Row: {
+          amount: number
+          created_at: string
+          currency: string
+          id: string
+          order_reference: string
+          raw_callback: Json | null
+          registration_id: string
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          currency?: string
+          id?: string
+          order_reference: string
+          raw_callback?: Json | null
+          registration_id: string
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          currency?: string
+          id?: string
+          order_reference?: string
+          raw_callback?: Json | null
+          registration_id?: string
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "wayforpay_orders_registration_id_fkey"
+            columns: ["registration_id"]
+            isOneToOne: false
+            referencedRelation: "registrations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
