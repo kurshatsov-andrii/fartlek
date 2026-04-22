@@ -31,7 +31,9 @@ const EventEditor = () => {
     event_date: "", event_time: "", location: "",
     image_url: "", is_paid: false, payment_url: "", status: "draft",
     category: "run" as EventCategory,
+    results_pdf_url: "",
   });
+  const [uploadingResults, setUploadingResults] = useState(false);
   const [distances, setDistances] = useState<DistanceForm[]>([{ distance_km: "10", name: "", price: "0", bib_start: "" }]);
 
   useEffect(() => {
@@ -46,6 +48,7 @@ const EventEditor = () => {
         payment_url: (ev as any).payment_url ?? "",
         status: ev.status,
         category: ((ev as any).category ?? "run") as EventCategory,
+        results_pdf_url: (ev as any).results_pdf_url ?? "",
       });
       const { data: ds } = await supabase.from("distances").select("*").eq("event_id", id).eq("is_active", true).order("distance_km");
       if (ds) setDistances(ds.map((d: any) => ({ id: d.id, distance_km: String(d.distance_km), name: d.name ?? "", price: String(d.price), bib_start: d.bib_start != null ? String(d.bib_start) : "" })));
@@ -63,6 +66,24 @@ const EventEditor = () => {
     const { data } = supabase.storage.from("event-images").getPublicUrl(path);
     setForm({ ...form, image_url: data.publicUrl });
     setUploading(false);
+  };
+
+  const uploadResults = async (file: File) => {
+    if (!user || isNew) return;
+    if (file.type !== "application/pdf") { toast.error(t.events.resultsInvalidType); return; }
+    if (file.size > 20 * 1024 * 1024) { toast.error(t.events.resultsTooBig); return; }
+    setUploadingResults(true);
+    const path = `${id}/results-${Date.now()}.pdf`;
+    const { error } = await supabase.storage.from("event-results").upload(path, file, { contentType: "application/pdf", upsert: true });
+    if (error) { toast.error(error.message); setUploadingResults(false); return; }
+    const { data } = supabase.storage.from("event-results").getPublicUrl(path);
+    setForm((f) => ({ ...f, results_pdf_url: data.publicUrl }));
+    setUploadingResults(false);
+    toast.success(t.events.resultsUploaded);
+  };
+
+  const removeResults = () => {
+    setForm((f) => ({ ...f, results_pdf_url: "" }));
   };
 
   const save = async (e: React.FormEvent) => {
