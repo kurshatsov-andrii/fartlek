@@ -36,17 +36,23 @@ const EventDetails = () => {
   useEffect(() => {
     if (!id) return;
     (async () => {
-      const [{ data: ev }, { data: ds }, { count }] = await Promise.all([
-        supabase.from("events").select("*").eq("id", id).maybeSingle(),
-        supabase.from("distances").select("*").eq("event_id", id).eq("is_active", true).order("distance_km"),
-        supabase.from("registrations").select("*", { count: "exact", head: true }).eq("event_id", id),
+      const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
+      const { data: ev } = await supabase
+        .from("events")
+        .select("*")
+        .eq(isUuid ? "id" : "slug", id)
+        .maybeSingle();
+      if (!ev) { setLoading(false); return; }
+      setEvent(ev as EventRow);
+      const [{ data: ds }, { count }] = await Promise.all([
+        supabase.from("distances").select("*").eq("event_id", ev.id).eq("is_active", true).order("distance_km"),
+        supabase.from("registrations").select("*", { count: "exact", head: true }).eq("event_id", ev.id),
       ]);
-      setEvent(ev);
       setDistances(ds ?? []);
       setParticipantsCount(count ?? 0);
       if (ds && ds.length > 0) setSelectedDistance(ds[0].id);
       if (user) {
-        const { data: reg } = await supabase.from("registrations").select("id, payment_status").eq("event_id", id).eq("user_id", user.id).maybeSingle();
+        const { data: reg } = await supabase.from("registrations").select("id, payment_status").eq("event_id", ev.id).eq("user_id", user.id).maybeSingle();
         if (reg) setRegistration(reg);
       }
       setLoading(false);
