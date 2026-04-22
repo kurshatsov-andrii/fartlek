@@ -131,6 +131,7 @@ const Participants = () => {
                         <th className="p-3 font-semibold">{t.profile.club}</th>
                         {isPaid && <th className="p-3 font-semibold text-center">{lang === "uk" ? "Оплата" : "Payment"}</th>}
                         {isPaid && isOrganizer && <th className="p-3 font-semibold text-center">{lang === "uk" ? "Квитанція" : "Receipt"}</th>}
+                        {isOrganizer && <th className="p-3 font-semibold text-center">{lang === "uk" ? "Дії" : "Actions"}</th>}
                       </tr>
                     </thead>
                     <tbody>
