@@ -63,22 +63,19 @@ export const EventsSection = () => {
 
         <div className="mb-10 flex flex-wrap gap-2">
           {(["all", ...EVENT_CATEGORIES] as const).map((cat) => {
-            const isActive = activeCat === cat;
             const label = cat === "all" ? t.categories.all : t.categories[cat];
+            const baseCls = "rounded-full border px-4 py-2 text-sm font-semibold uppercase tracking-wider transition-base border-border bg-card text-foreground hover:border-primary hover:text-primary";
+            if (cat === "all") {
+              return (
+                <Link key={cat} to="/category" className={baseCls}>
+                  {label}
+                </Link>
+              );
+            }
             return (
-              <button
-                key={cat}
-                type="button"
-                onClick={() => setActiveCat(cat)}
-                className={cn(
-                  "rounded-full border px-4 py-2 text-sm font-semibold uppercase tracking-wider transition-base",
-                  isActive
-                    ? "border-primary bg-primary text-primary-foreground shadow-card"
-                    : "border-border bg-card text-foreground hover:border-primary hover:text-primary"
-                )}
-              >
+              <Link key={cat} to={`/category/${cat}`} className={baseCls}>
                 {label}
-              </button>
+              </Link>
             );
           })}
         </div>
