@@ -118,7 +118,7 @@ export const EventsSection = () => {
                       <div className="flex items-center gap-2"><Calendar className="h-4 w-4 text-primary" />{fmtDate(ev.event_date)}</div>
                       {ev.location && <div className="flex items-center gap-2"><MapPin className="h-4 w-4 text-primary" />{ev.location}</div>}
                     </div>
-                    {ev.description && <p className="mt-4 text-sm text-muted-foreground line-clamp-2">{ev.description}</p>}
+                    
                     <div className="mt-6 flex items-center gap-2 pt-4 border-t border-border">
                       <Button asChild className="flex-1"><Link to={`/events/${ev.slug ?? ev.id}`}>{t.events.register}</Link></Button>
                       <Button asChild variant="outline" size="icon" aria-label={t.events.details}>
