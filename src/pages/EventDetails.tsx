@@ -1,19 +1,22 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { Calendar, MapPin, Users, Loader2, ArrowLeft, UserCircle2 } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { SEO } from "@/components/SEO";
 import { Button } from "@/components/ui/button";
 import { useApp } from "@/contexts/AppContext";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { startWayForPayCheckout } from "@/lib/wayforpay";
+import { buildEventSeo } from "@/lib/seo";
+import type { EventCategory } from "@/lib/i18n";
 
 interface EventRow {
-  id: string; title: string; description: string | null; organizer_name: string;
+  id: string; slug: string | null; title: string; description: string | null; organizer_name: string;
   event_date: string; event_time: string; location: string | null;
-  image_url: string | null; is_paid: boolean; status: string;
+  image_url: string | null; is_paid: boolean; status: string; category: EventCategory;
 }
 interface DistanceRow { id: string; distance_km: number; name: string | null; price: number; is_active?: boolean; }
 
@@ -33,17 +36,23 @@ const EventDetails = () => {
   useEffect(() => {
     if (!id) return;
     (async () => {
-      const [{ data: ev }, { data: ds }, { count }] = await Promise.all([
-        supabase.from("events").select("*").eq("id", id).maybeSingle(),
-        supabase.from("distances").select("*").eq("event_id", id).eq("is_active", true).order("distance_km"),
-        supabase.from("registrations").select("*", { count: "exact", head: true }).eq("event_id", id),
+      const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
+      const { data: ev } = await supabase
+        .from("events")
+        .select("*")
+        .eq(isUuid ? "id" : "slug", id)
+        .maybeSingle();
+      if (!ev) { setLoading(false); return; }
+      setEvent(ev as EventRow);
+      const [{ data: ds }, { count }] = await Promise.all([
+        supabase.from("distances").select("*").eq("event_id", ev.id).eq("is_active", true).order("distance_km"),
+        supabase.from("registrations").select("*", { count: "exact", head: true }).eq("event_id", ev.id),
       ]);
-      setEvent(ev);
       setDistances(ds ?? []);
       setParticipantsCount(count ?? 0);
       if (ds && ds.length > 0) setSelectedDistance(ds[0].id);
       if (user) {
-        const { data: reg } = await supabase.from("registrations").select("id, payment_status").eq("event_id", id).eq("user_id", user.id).maybeSingle();
+        const { data: reg } = await supabase.from("registrations").select("id, payment_status").eq("event_id", ev.id).eq("user_id", user.id).maybeSingle();
         if (reg) setRegistration(reg);
       }
       setLoading(false);
@@ -104,8 +113,40 @@ const EventDetails = () => {
     day: "numeric", month: "long", year: "numeric",
   });
 
+  const seo = buildEventSeo({
+    title: event.title,
+    city: event.location,
+    isoDate: event.event_date,
+    organizer: event.organizer_name,
+    distancesKm: distances.map((d) => d.distance_km),
+    lang,
+  });
+
+  const canonical = `/events/${event.slug ?? event.id}`;
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "SportsEvent",
+    name: event.title,
+    startDate: `${event.event_date}T${event.event_time}`,
+    eventStatus: "https://schema.org/EventScheduled",
+    eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
+    location: event.location ? { "@type": "Place", name: event.location, address: event.location } : undefined,
+    image: event.image_url || undefined,
+    description: event.description || seo.description,
+    organizer: { "@type": "Organization", name: event.organizer_name },
+    offers: distances.map((d) => ({
+      "@type": "Offer",
+      name: `${d.distance_km} km${d.name ? ` — ${d.name}` : ""}`,
+      price: event.is_paid ? d.price : 0,
+      priceCurrency: "UAH",
+      availability: "https://schema.org/InStock",
+      url: `${window.location.origin}${canonical}`,
+    })),
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-background">
+      <SEO title={seo.title} description={seo.description} canonical={canonical} image={event.image_url ?? undefined} jsonLd={jsonLd} />
       <Header />
       <main className="flex-1">
         {event.image_url && (

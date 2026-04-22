@@ -8,7 +8,7 @@ import { EVENT_CATEGORIES, type EventCategory } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
 interface EventCard {
-  id: string; title: string; description: string | null; organizer_name: string;
+  id: string; slug: string | null; title: string; description: string | null; organizer_name: string;
   event_date: string; event_time: string; location: string | null;
   image_url: string | null; is_paid: boolean;
   category: EventCategory;
@@ -23,7 +23,7 @@ export const EventsSection = () => {
 
   useEffect(() => {
     supabase.from("events")
-      .select("*, distances(distance_km, price, is_active)")
+      .select("id, slug, title, description, organizer_name, event_date, event_time, location, image_url, is_paid, category, distances(distance_km, price, is_active)")
       .eq("status", "published")
       .order("event_date", { ascending: true })
       .then(({ data }) => { setEvents((data as any) ?? []); setLoading(false); });
@@ -95,7 +95,7 @@ export const EventsSection = () => {
               const price = minPrice(ev);
               return (
                 <article key={ev.id} className="group relative flex flex-col overflow-hidden rounded-2xl bg-card shadow-card transition-bounce hover:-translate-y-2 hover:shadow-elevated animate-fade-in-up" style={{ animationDelay: `${idx * 80}ms` }}>
-                  <Link to={`/events/${ev.id}`} className="relative aspect-[4/3] overflow-hidden bg-muted block" aria-label={ev.title}>
+                  <Link to={`/events/${ev.slug ?? ev.id}`} className="relative aspect-[4/3] overflow-hidden bg-muted block" aria-label={ev.title}>
                     {ev.image_url ? (
                       <img src={ev.image_url} alt={ev.title} loading="lazy" className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" />
                     ) : (
@@ -123,9 +123,9 @@ export const EventsSection = () => {
                     </div>
                     {ev.description && <p className="mt-4 text-sm text-muted-foreground line-clamp-2">{ev.description}</p>}
                     <div className="mt-6 flex items-center gap-2 pt-4 border-t border-border">
-                      <Button asChild className="flex-1"><Link to={`/events/${ev.id}`}>{t.events.register}</Link></Button>
+                      <Button asChild className="flex-1"><Link to={`/events/${ev.slug ?? ev.id}`}>{t.events.register}</Link></Button>
                       <Button asChild variant="outline" size="icon" aria-label={t.events.details}>
-                        <Link to={`/events/${ev.id}`}><ArrowUpRight className="h-4 w-4" /></Link>
+                        <Link to={`/events/${ev.slug ?? ev.id}`}><ArrowUpRight className="h-4 w-4" /></Link>
                       </Button>
                     </div>
                   </div>

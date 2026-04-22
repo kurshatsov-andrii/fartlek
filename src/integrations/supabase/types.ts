@@ -68,6 +68,7 @@ export type Database = {
           location: string | null
           organizer_id: string
           organizer_name: string
+          slug: string | null
           status: Database["public"]["Enums"]["event_status"]
           title: string
           updated_at: string
@@ -84,6 +85,7 @@ export type Database = {
           location?: string | null
           organizer_id: string
           organizer_name: string
+          slug?: string | null
           status?: Database["public"]["Enums"]["event_status"]
           title: string
           updated_at?: string
@@ -100,6 +102,7 @@ export type Database = {
           location?: string | null
           organizer_id?: string
           organizer_name?: string
+          slug?: string | null
           status?: Database["public"]["Enums"]["event_status"]
           title?: string
           updated_at?: string
@@ -347,6 +350,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      slugify: { Args: { _input: string }; Returns: string }
     }
     Enums: {
       app_role: "participant" | "organizer" | "admin"
