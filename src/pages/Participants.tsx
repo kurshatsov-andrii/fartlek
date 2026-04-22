@@ -42,37 +42,58 @@ const Participants = () => {
 
         {loading ? (
           <div className="flex justify-center py-20"><Loader2 className="h-6 w-6 animate-spin" /></div>
+        ) : rows.length === 0 ? (
+          <div className="mt-6 bg-card rounded-2xl shadow-card p-8 text-center text-muted-foreground">—</div>
         ) : (
-          <div className="mt-6 bg-card rounded-2xl shadow-card overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead className="bg-muted/50 text-left">
-                <tr>
-                  <th className="p-3 font-semibold">#</th>
-                  <th className="p-3 font-semibold">{t.auth.fullName}</th>
-                  <th className="p-3 font-semibold">{t.profile.gender}</th>
-                  <th className="p-3 font-semibold">Year</th>
-                  <th className="p-3 font-semibold">{t.profile.city}</th>
-                  <th className="p-3 font-semibold">{t.profile.club}</th>
-                  <th className="p-3 font-semibold">km</th>
-                </tr>
-              </thead>
-              <tbody>
-                {rows.map((r, i) => (
-                  <tr key={i} className="border-t border-border">
-                    <td className="p-3 font-bold text-primary">{r.bib_number ?? "—"}</td>
-                    <td className="p-3">{r.full_name ?? "—"}</td>
-                    <td className="p-3">{r.gender ?? "—"}</td>
-                    <td className="p-3">{r.birth_year ?? "—"}</td>
-                    <td className="p-3">{r.city ?? "—"}</td>
-                    <td className="p-3">{r.club ?? "—"}</td>
-                    <td className="p-3">{r.distance_km ?? "—"}</td>
-                  </tr>
-                ))}
-                {rows.length === 0 && (
-                  <tr><td colSpan={7} className="p-8 text-center text-muted-foreground">—</td></tr>
-                )}
-              </tbody>
-            </table>
+          <div className="mt-6 space-y-8">
+            {Object.entries(
+              rows.reduce<Record<string, any[]>>((acc, r) => {
+                const key = `${r.distance_km ?? "—"}`;
+                (acc[key] ||= []).push(r);
+                return acc;
+              }, {})
+            )
+              .sort((a, b) => Number(a[0]) - Number(b[0]))
+              .map(([km, list]) => (
+                <div key={km} className="bg-card rounded-2xl shadow-card overflow-x-auto">
+                  <div className="flex items-center justify-between px-4 py-3 border-b border-border">
+                    <h2 className="font-display text-xl font-bold">
+                      {km} {lang === "uk" ? "км" : "km"}
+                    </h2>
+                    <span className="text-sm text-muted-foreground">{list.length}</span>
+                  </div>
+                  <table className="w-full text-sm">
+                    <thead className="bg-muted/50 text-left">
+                      <tr>
+                        <th className="p-3 font-semibold">#</th>
+                        <th className="p-3 font-semibold">{t.auth.fullName}</th>
+                        <th className="p-3 font-semibold">{t.profile.gender}</th>
+                        <th className="p-3 font-semibold">{lang === "uk" ? "Рік" : "Year"}</th>
+                        <th className="p-3 font-semibold">{t.profile.city}</th>
+                        <th className="p-3 font-semibold">{t.profile.club}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {list.map((r, i) => (
+                        <tr key={i} className="border-t border-border">
+                          <td className="p-3 font-bold text-primary">{r.bib_number ?? "—"}</td>
+                          <td className="p-3">{r.full_name ?? "—"}</td>
+                          <td className="p-3">
+                            {r.gender === "male"
+                              ? lang === "uk" ? "чоловік" : "male"
+                              : r.gender === "female"
+                              ? lang === "uk" ? "жінка" : "female"
+                              : r.gender ?? "—"}
+                          </td>
+                          <td className="p-3">{r.birth_year ?? "—"}</td>
+                          <td className="p-3">{r.city ?? "—"}</td>
+                          <td className="p-3">{r.club ?? "—"}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              ))}
           </div>
         )}
       </main>
