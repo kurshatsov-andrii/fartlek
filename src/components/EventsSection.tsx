@@ -1,14 +1,17 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { Calendar, MapPin, ArrowUpRight, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useApp } from "@/contexts/AppContext";
 import { supabase } from "@/integrations/supabase/client";
+import { EVENT_CATEGORIES, type EventCategory } from "@/lib/i18n";
+import { cn } from "@/lib/utils";
 
 interface EventCard {
   id: string; title: string; description: string | null; organizer_name: string;
   event_date: string; event_time: string; location: string | null;
   image_url: string | null; is_paid: boolean;
+  category: EventCategory;
   distances: { distance_km: number; price: number; is_active?: boolean }[];
 }
 
@@ -16,6 +19,7 @@ export const EventsSection = () => {
   const { t, lang } = useApp();
   const [events, setEvents] = useState<EventCard[]>([]);
   const [loading, setLoading] = useState(true);
+  const [activeCat, setActiveCat] = useState<EventCategory | "all">("all");
 
   useEffect(() => {
     supabase.from("events")
@@ -24,6 +28,11 @@ export const EventsSection = () => {
       .order("event_date", { ascending: true })
       .then(({ data }) => { setEvents((data as any) ?? []); setLoading(false); });
   }, []);
+
+  const filtered = useMemo(
+    () => activeCat === "all" ? events : events.filter((e) => e.category === activeCat),
+    [events, activeCat]
+  );
 
   const fmtDate = (iso: string) =>
     new Date(iso).toLocaleDateString(lang === "uk" ? "uk-UA" : "en-US", {
