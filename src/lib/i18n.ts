@@ -164,7 +164,7 @@ export const translations: Record<Lang, Dict> = {
       clubOptional: "optional",
     },
     ticket: {
-      title: "Start ticket", bib: "Bib", download: "Download QR",
+      title: "Start ticket", bib: "Bib", download: "Download PDF",
       qrHint: "Show this QR code at the start", status: "Payment status",
       paid: "Paid", pending: "Pending payment", free: "Free entry",
     },
