@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { Calendar, MapPin, Users, Loader2, ArrowLeft, UserCircle2 } from "lucide-react";
+import { Calendar, MapPin, Users, Loader2, ArrowLeft, UserCircle2, FileText } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { SEO } from "@/components/SEO";
@@ -17,6 +17,7 @@ interface EventRow {
   id: string; slug: string | null; title: string; description: string | null; organizer_name: string;
   event_date: string; event_time: string; location: string | null;
   image_url: string | null; is_paid: boolean; payment_url: string | null; status: string; category: EventCategory;
+  results_pdf_url: string | null;
 }
 interface DistanceRow { id: string; distance_km: number; name: string | null; price: number; is_active?: boolean; }
 
@@ -179,6 +180,27 @@ const EventDetails = () => {
               </div>
               {event.description && (
                 <div className="prose prose-sm max-w-none text-foreground whitespace-pre-wrap">{event.description}</div>
+              )}
+
+              {event.status === "completed" && (
+                <div className="rounded-2xl border border-border bg-card p-6 space-y-3">
+                  <h3 className="font-display text-xl font-bold flex items-center gap-2">
+                    <FileText className="h-5 w-5 text-primary" />
+                    {t.events.resultsTitle}
+                  </h3>
+                  {event.results_pdf_url ? (
+                    <>
+                      <p className="text-sm text-muted-foreground">{t.events.resultsHint}</p>
+                      <Button asChild>
+                        <a href={event.results_pdf_url} target="_blank" rel="noopener noreferrer">
+                          <FileText className="h-4 w-4" /> {t.events.downloadResults}
+                        </a>
+                      </Button>
+                    </>
+                  ) : (
+                    <p className="text-sm text-muted-foreground">{t.events.resultsNone}</p>
+                  )}
+                </div>
               )}
             </div>
 

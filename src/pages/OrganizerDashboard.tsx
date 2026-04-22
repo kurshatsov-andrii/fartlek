@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, Navigate } from "react-router-dom";
-import { Plus, Edit, Trash2, Users, Loader2, Download } from "lucide-react";
+import { Plus, Edit, Trash2, Users, Loader2, Download, FileText } from "lucide-react";
 import * as XLSX from "xlsx";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
@@ -142,6 +142,13 @@ const OrganizerDashboard = () => {
                     </Button>
                     
                     <Button onClick={() => exportData(ev.id, ev.title)} variant="outline" size="sm"><Download className="h-4 w-4" /> XLSX</Button>
+                    {ev.results_pdf_url && (
+                      <Button asChild variant="outline" size="sm">
+                        <a href={ev.results_pdf_url} target="_blank" rel="noopener noreferrer">
+                          <FileText className="h-4 w-4" /> {t.events.results}
+                        </a>
+                      </Button>
+                    )}
                     <Button asChild variant="outline" size="sm">
                       <Link to={`/organizer/events/${ev.id}`}><Edit className="h-4 w-4" /></Link>
                     </Button>
