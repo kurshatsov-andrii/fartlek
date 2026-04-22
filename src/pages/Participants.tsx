@@ -80,6 +80,7 @@ const Participants = () => {
                         <th className="p-3 font-semibold">{lang === "uk" ? "Рік" : "Year"}</th>
                         <th className="p-3 font-semibold">{t.profile.city}</th>
                         <th className="p-3 font-semibold">{t.profile.club}</th>
+                        {isPaid && <th className="p-3 font-semibold text-center">{lang === "uk" ? "Оплата" : "Payment"}</th>}
                       </tr>
                     </thead>
                     <tbody>
@@ -97,6 +98,15 @@ const Participants = () => {
                           <td className="p-3">{r.birth_year ?? "—"}</td>
                           <td className="p-3">{r.city ?? "—"}</td>
                           <td className="p-3">{r.club ?? "—"}</td>
+                          {isPaid && (
+                            <td className="p-3 text-center">
+                              {r.payment_status === "paid" ? (
+                                <CheckCircle2 className="h-5 w-5 text-green-500 inline" />
+                              ) : (
+                                <XCircle className="h-5 w-5 text-destructive inline" />
+                              )}
+                            </td>
+                          )}
                         </tr>
                       ))}
                     </tbody>
