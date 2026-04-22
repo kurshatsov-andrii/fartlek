@@ -35,6 +35,8 @@ export const Hero = () => {
     })();
   }, []);
 
+  if (user) return null;
+
   return (
     <section className="relative overflow-hidden bg-secondary text-secondary-foreground">
       <div className="absolute inset-0 z-0">
