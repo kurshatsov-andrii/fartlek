@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
-import { ArrowLeft, Loader2, CheckCircle2, XCircle } from "lucide-react";
+import { ArrowLeft, Loader2, CheckCircle2, XCircle, FileText, RotateCcw } from "lucide-react";
+import { toast } from "sonner";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { Button } from "@/components/ui/button";
 import { useApp } from "@/contexts/AppContext";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
@@ -14,27 +16,59 @@ const Participants = () => {
   const [rows, setRows] = useState<any[]>([]);
   const [eventTitle, setEventTitle] = useState("");
   const [isPaid, setIsPaid] = useState(false);
+  const [isOrganizer, setIsOrganizer] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [busyId, setBusyId] = useState<string | null>(null);
 
-  useEffect(() => {
+  const load = async () => {
     if (!id || !user) return;
-    (async () => {
-      const { data: ev } = await supabase.from("events").select("title, is_paid").eq("id", id).maybeSingle();
-      setEventTitle(ev?.title ?? "");
-      setIsPaid(!!ev?.is_paid);
-      const [{ data: participants }, { data: regs }] = await Promise.all([
-        (supabase.rpc as any)("get_event_participants", { _event_id: id }),
-        supabase.from("registrations").select("id, payment_status").eq("event_id", id),
-      ]);
-      const statusMap = new Map<string, string>((regs ?? []).map((r: any) => [r.id, r.payment_status]));
-      const merged = (participants ?? []).map((p: any) => ({
-        ...p,
-        payment_status: statusMap.get(p.registration_id),
-      }));
-      setRows(merged);
-      setLoading(false);
-    })();
-  }, [id, user]);
+    const { data: ev } = await supabase
+      .from("events")
+      .select("title, is_paid, organizer_id")
+      .eq("id", id)
+      .maybeSingle();
+    setEventTitle(ev?.title ?? "");
+    setIsPaid(!!ev?.is_paid);
+    setIsOrganizer(ev?.organizer_id === user.id);
+    const { data: participants } = await (supabase.rpc as any)("get_event_participants", { _event_id: id });
+    setRows(participants ?? []);
+    setLoading(false);
+  };
+
+  useEffect(() => { load(); /* eslint-disable-next-line */ }, [id, user]);
+
+  const openReceipt = async (path: string) => {
+    const { data, error } = await supabase.storage
+      .from("payment-receipts")
+      .createSignedUrl(path, 60 * 10);
+    if (error || !data?.signedUrl) { toast.error(error?.message ?? "Error"); return; }
+    window.open(data.signedUrl, "_blank", "noopener,noreferrer");
+  };
+
+  const revoke = async (regId: string) => {
+    const reason = window.prompt(lang === "uk" ? "Причина відхилення (необов'язково):" : "Reason (optional):") ?? "";
+    setBusyId(regId);
+    const { error } = await supabase
+      .from("registrations")
+      .update({ payment_status: "pending", receipt_revoked_reason: reason || "—", receipt_confirmed_at: null })
+      .eq("id", regId);
+    setBusyId(null);
+    if (error) { toast.error(error.message); return; }
+    toast.success("OK");
+    load();
+  };
+
+  const confirm = async (regId: string) => {
+    setBusyId(regId);
+    const { error } = await supabase
+      .from("registrations")
+      .update({ payment_status: "paid", receipt_confirmed_at: new Date().toISOString(), receipt_revoked_reason: null })
+      .eq("id", regId);
+    setBusyId(null);
+    if (error) { toast.error(error.message); return; }
+    toast.success("OK");
+    load();
+  };
 
   if (authLoading) return null;
   if (!user) return <Navigate to={`/auth?redirect=/events/${id}/participants`} replace />;
@@ -81,11 +115,12 @@ const Participants = () => {
                         <th className="p-3 font-semibold">{t.profile.city}</th>
                         <th className="p-3 font-semibold">{t.profile.club}</th>
                         {isPaid && <th className="p-3 font-semibold text-center">{lang === "uk" ? "Оплата" : "Payment"}</th>}
+                        {isPaid && isOrganizer && <th className="p-3 font-semibold text-center">{lang === "uk" ? "Квитанція" : "Receipt"}</th>}
                       </tr>
                     </thead>
                     <tbody>
-                      {list.map((r, i) => (
-                        <tr key={i} className="border-t border-border">
+                      {list.map((r) => (
+                        <tr key={r.registration_id} className="border-t border-border">
                           <td className="p-3 font-bold text-primary">{r.bib_number ?? "—"}</td>
                           <td className="p-3">{r.full_name ?? "—"}</td>
                           <td className="p-3">
@@ -105,6 +140,28 @@ const Participants = () => {
                               ) : (
                                 <XCircle className="h-5 w-5 text-destructive inline" />
                               )}
+                            </td>
+                          )}
+                          {isPaid && isOrganizer && (
+                            <td className="p-3">
+                              <div className="flex items-center justify-center gap-1">
+                                {r.receipt_url ? (
+                                  <Button size="sm" variant="ghost" onClick={() => openReceipt(r.receipt_url)} title={lang === "uk" ? "Переглянути" : "View"}>
+                                    <FileText className="h-4 w-4" />
+                                  </Button>
+                                ) : (
+                                  <span className="text-xs text-muted-foreground">—</span>
+                                )}
+                                {r.payment_status === "paid" ? (
+                                  <Button size="sm" variant="ghost" onClick={() => revoke(r.registration_id)} disabled={busyId === r.registration_id} title={lang === "uk" ? "Відхилити" : "Revoke"}>
+                                    {busyId === r.registration_id ? <Loader2 className="h-4 w-4 animate-spin" /> : <RotateCcw className="h-4 w-4 text-destructive" />}
+                                  </Button>
+                                ) : r.receipt_url ? (
+                                  <Button size="sm" variant="ghost" onClick={() => confirm(r.registration_id)} disabled={busyId === r.registration_id} title={lang === "uk" ? "Підтвердити" : "Confirm"}>
+                                    {busyId === r.registration_id ? <Loader2 className="h-4 w-4 animate-spin" /> : <CheckCircle2 className="h-4 w-4 text-green-500" />}
+                                  </Button>
+                                ) : null}
+                              </div>
                             </td>
                           )}
                         </tr>

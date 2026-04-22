@@ -3,7 +3,8 @@ import { Link, useParams, Navigate } from "react-router-dom";
 import QRCode from "qrcode";
 import { jsPDF } from "jspdf";
 import html2canvas from "html2canvas";
-import { Download, Loader2, ArrowLeft } from "lucide-react";
+import { Download, Loader2, ArrowLeft, Upload, FileCheck2, ExternalLink } from "lucide-react";
+import { toast } from "sonner";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -18,7 +19,10 @@ const Ticket = () => {
   const [data, setData] = useState<any>(null);
   const [qrUrl, setQrUrl] = useState<string>("");
   const [loading, setLoading] = useState(true);
+  const [uploadingReceipt, setUploadingReceipt] = useState(false);
+  const [receiptViewUrl, setReceiptViewUrl] = useState<string>("");
   const cardRef = useRef<HTMLDivElement>(null);
+  const fileRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (!id || !user) return;
@@ -57,6 +61,59 @@ const Ticket = () => {
       setLoading(false);
     })();
   }, [id, user]);
+
+  // Generate a signed URL whenever we have a stored receipt
+  useEffect(() => {
+    if (!data?.receipt_url) { setReceiptViewUrl(""); return; }
+    (async () => {
+      const { data: signed } = await supabase.storage
+        .from("payment-receipts")
+        .createSignedUrl(data.receipt_url, 60 * 10);
+      setReceiptViewUrl(signed?.signedUrl ?? "");
+    })();
+  }, [data?.receipt_url]);
+
+  const onPickReceipt = () => fileRef.current?.click();
+
+  const onReceiptChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    if (!file || !data || !user) return;
+
+    const allowed = ["image/jpeg", "image/png", "image/webp", "application/pdf"];
+    if (!allowed.includes(file.type)) { toast.error(t.ticket.receiptInvalidType); return; }
+    if (file.size > 10 * 1024 * 1024) { toast.error(t.ticket.receiptTooBig); return; }
+
+    setUploadingReceipt(true);
+    try {
+      const ext = file.name.split(".").pop()?.toLowerCase() || (file.type === "application/pdf" ? "pdf" : "jpg");
+      const path = `${user.id}/${data.id}-${Date.now()}.${ext}`;
+      const { error: upErr } = await supabase.storage
+        .from("payment-receipts")
+        .upload(path, file, { contentType: file.type, upsert: false });
+      if (upErr) throw upErr;
+
+      // Cleanup previous file (best effort)
+      if (data.receipt_url && data.receipt_url !== path) {
+        await supabase.storage.from("payment-receipts").remove([data.receipt_url]);
+      }
+
+      const { data: updated, error: updErr } = await supabase
+        .from("registrations")
+        .update({ receipt_url: path })
+        .eq("id", data.id)
+        .select(`*, events(*), distances(*)`)
+        .single();
+      if (updErr) throw updErr;
+
+      setData(updated);
+      toast.success(t.ticket.receiptUploaded);
+    } catch (err: any) {
+      toast.error(err.message ?? t.common.error);
+    } finally {
+      setUploadingReceipt(false);
+    }
+  };
 
   if (authLoading) return null;
   if (!user) return <Navigate to="/auth" replace />;
@@ -128,6 +185,53 @@ const Ticket = () => {
             </Button>
           </div>
         </div>
+
+        {data.payment_status !== "free" && (
+          <div className="mt-6 bg-card rounded-2xl shadow-card p-6 space-y-4">
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <h2 className="font-display text-lg font-bold">{t.ticket.receiptTitle}</h2>
+                <p className="text-sm text-muted-foreground mt-1">{t.ticket.receiptHint}</p>
+              </div>
+              {data.receipt_url && (
+                <FileCheck2 className="h-6 w-6 text-green-600 dark:text-green-500 shrink-0" />
+              )}
+            </div>
+
+            {data.receipt_revoked_reason && (
+              <div className="rounded-md border border-destructive/40 bg-destructive/10 text-destructive text-sm p-3">
+                {t.ticket.receiptRevoked}
+                <div className="mt-1 opacity-80">«{data.receipt_revoked_reason}»</div>
+              </div>
+            )}
+
+            <input
+              ref={fileRef}
+              type="file"
+              accept="image/jpeg,image/png,image/webp,application/pdf"
+              className="hidden"
+              onChange={onReceiptChange}
+            />
+
+            <div className="flex flex-wrap gap-2">
+              <Button onClick={onPickReceipt} disabled={uploadingReceipt} variant={data.receipt_url ? "outline" : "default"}>
+                {uploadingReceipt ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
+                {uploadingReceipt
+                  ? t.ticket.receiptUploading
+                  : data.receipt_url
+                  ? t.ticket.receiptReplace
+                  : t.ticket.receiptUpload}
+              </Button>
+              {data.receipt_url && receiptViewUrl && (
+                <Button asChild variant="ghost">
+                  <a href={receiptViewUrl} target="_blank" rel="noopener noreferrer">
+                    <ExternalLink className="h-4 w-4" /> {t.ticket.receiptView}
+                  </a>
+                </Button>
+              )}
+            </div>
+          </div>
+        )}
       </main>
       <Footer />
     </div>
