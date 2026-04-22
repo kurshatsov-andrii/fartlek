@@ -23,14 +23,18 @@ const Ticket = () => {
     (async () => {
       const { data: reg } = await supabase
         .from("registrations")
-        .select(`*, events(*), distances(*), profiles:profiles!registrations_user_id_fkey(full_name, email)`)
+        .select(`*, events(*), distances(*)`)
         .eq("user_id", user.id)
         .eq("id", id)
         .maybeSingle();
       if (reg) {
+        const { data: prof } = await supabase
+          .from("profiles")
+          .select("full_name, email")
+          .eq("id", user.id)
+          .maybeSingle();
         const ev = (reg as any).events;
         const dist = (reg as any).distances;
-        const prof = (reg as any).profiles;
         const payload = JSON.stringify({
           rid: reg.id,
           bib: reg.bib_number,
