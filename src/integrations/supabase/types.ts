@@ -210,6 +210,10 @@ export type Database = {
           id: string
           payment_status: Database["public"]["Enums"]["payment_status_type"]
           qr_code_data: string | null
+          receipt_confirmed_at: string | null
+          receipt_revoked_reason: string | null
+          receipt_uploaded_at: string | null
+          receipt_url: string | null
           updated_at: string
           user_id: string
         }
@@ -221,6 +225,10 @@ export type Database = {
           id?: string
           payment_status?: Database["public"]["Enums"]["payment_status_type"]
           qr_code_data?: string | null
+          receipt_confirmed_at?: string | null
+          receipt_revoked_reason?: string | null
+          receipt_uploaded_at?: string | null
+          receipt_url?: string | null
           updated_at?: string
           user_id: string
         }
@@ -232,6 +240,10 @@ export type Database = {
           id?: string
           payment_status?: Database["public"]["Enums"]["payment_status_type"]
           qr_code_data?: string | null
+          receipt_confirmed_at?: string | null
+          receipt_revoked_reason?: string | null
+          receipt_uploaded_at?: string | null
+          receipt_url?: string | null
           updated_at?: string
           user_id?: string
         }
@@ -336,6 +348,10 @@ export type Database = {
           distance_name: string
           full_name: string
           gender: Database["public"]["Enums"]["gender_type"]
+          payment_status: Database["public"]["Enums"]["payment_status_type"]
+          receipt_confirmed_at: string
+          receipt_uploaded_at: string
+          receipt_url: string
           registration_id: string
           user_id: string
         }[]
