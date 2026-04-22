@@ -21,6 +21,7 @@ import PaymentFail from "./pages/PaymentFail.tsx";
 import Admin from "./pages/Admin.tsx";
 import CategoryPage from "./pages/CategoryPage.tsx";
 import CategoriesIndex from "./pages/CategoriesIndex.tsx";
+import Contacts from "./pages/Contacts.tsx";
 
 const queryClient = new QueryClient();
 
