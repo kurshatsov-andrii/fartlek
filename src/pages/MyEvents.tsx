@@ -41,6 +41,7 @@ const MyEvents = () => {
         ) : (
           <div className="mt-8 grid gap-4">
             {regs.map((r) => {
+              if (!r.events || !r.distances) return null;
               const isCompleted = r.events.status === "completed";
               const isCancelled = r.events.status === "cancelled";
               const isUpcoming = !isCompleted && !isCancelled && new Date(r.events.event_date) >= new Date(new Date().toDateString());
