@@ -135,11 +135,6 @@ const EventDetails = () => {
               <div className="text-sm text-muted-foreground">
                 {t.events.organizer}: <span className="text-foreground font-medium">{event.organizer_name}</span>
               </div>
-              <Button asChild variant="outline">
-                <Link to={`/events/${event.id}/participants`}>
-                  <Users className="h-4 w-4" /> {t.events.participants}
-                </Link>
-              </Button>
             </div>
 
             <aside className="lg:col-span-1">
