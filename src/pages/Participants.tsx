@@ -10,7 +10,7 @@ import { supabase } from "@/integrations/supabase/client";
 
 const Participants = () => {
   const { id } = useParams<{ id: string }>();
-  const { t } = useApp();
+  const { t, lang } = useApp();
   const { user, loading: authLoading } = useAuth();
   const [rows, setRows] = useState<any[]>([]);
   const [eventTitle, setEventTitle] = useState("");
