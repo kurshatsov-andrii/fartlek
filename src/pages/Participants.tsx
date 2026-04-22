@@ -180,6 +180,21 @@ const Participants = () => {
                               </div>
                             </td>
                           )}
+                          {isOrganizer && (
+                            <td className="p-3">
+                              <div className="flex items-center justify-center">
+                                <Button
+                                  size="sm"
+                                  variant="ghost"
+                                  onClick={() => removeParticipant(r.registration_id, r.full_name)}
+                                  disabled={busyId === r.registration_id}
+                                  title={lang === "uk" ? "Видалити учасника" : "Remove participant"}
+                                >
+                                  {busyId === r.registration_id ? <Loader2 className="h-4 w-4 animate-spin" /> : <Trash2 className="h-4 w-4 text-destructive" />}
+                                </Button>
+                              </div>
+                            </td>
+                          )}
                         </tr>
                       ))}
                     </tbody>
