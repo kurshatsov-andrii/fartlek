@@ -38,49 +38,86 @@ const OrganizerDashboard = () => {
   };
 
   const exportData = async (eventId: string, eventTitle: string, format: "csv" | "xlsx") => {
-    const { data: regs } = await supabase.from("registrations")
-      .select("user_id, bib_number, payment_status, distances(distance_km, name)")
-      .eq("event_id", eventId)
-      .order("bib_number", { ascending: true, nullsFirst: false });
-    const userIds = (regs ?? []).map((r: any) => r.user_id);
-    let profilesMap: Record<string, any> = {};
-    if (userIds.length > 0) {
-      const { data: profs } = await supabase.from("profiles")
-        .select("id, full_name, email, gender, birth_date, city, club")
-        .in("id", userIds);
-      profilesMap = Object.fromEntries((profs ?? []).map((p: any) => [p.id, p]));
+    try {
+      const { data: regs, error: regErr } = await supabase.from("registrations")
+        .select("user_id, bib_number, payment_status, distances(distance_km, name)")
+        .eq("event_id", eventId)
+        .order("bib_number", { ascending: true, nullsFirst: false });
+      if (regErr) throw regErr;
+      if (!regs || regs.length === 0) {
+        toast.info(lang === "uk" ? "Немає учасників для експорту" : "No participants to export");
+        return;
+      }
+      const userIds = regs.map((r: any) => r.user_id);
+      let profilesMap: Record<string, any> = {};
+      if (userIds.length > 0) {
+        const { data: profs } = await supabase.from("profiles")
+          .select("id, full_name, email, gender, birth_date, city, club")
+          .in("id", userIds);
+        profilesMap = Object.fromEntries((profs ?? []).map((p: any) => [p.id, p]));
+      }
+      const rows = regs.map((r: any) => {
+        const p = profilesMap[r.user_id] ?? {};
+        return {
+          Bib: r.bib_number ?? "",
+          Name: p.full_name ?? "",
+          Email: p.email ?? "",
+          Gender: p.gender ?? "",
+          BirthYear: p.birth_date ? new Date(p.birth_date).getFullYear() : "",
+          City: p.city ?? "",
+          Club: p.club ?? "",
+          DistanceKm: r.distances?.distance_km ?? "",
+          DistanceName: r.distances?.name ?? "",
+          PaymentStatus: r.payment_status,
+        };
+      });
+      const safeName = eventTitle.replace(/[^a-z0-9]+/gi, "_") || "event";
+      if (format === "csv") {
+        const ws = XLSX.utils.json_to_sheet(rows);
+        const csv = XLSX.utils.sheet_to_csv(ws);
+        const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8;" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `${safeName}_participants.csv`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      } else {
+        const ws = XLSX.utils.json_to_sheet(rows);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Participants");
+        XLSX.writeFile(wb, `${safeName}_participants.xlsx`);
+      }
+      toast.success("OK");
+    } catch (e: any) {
+      toast.error(e.message ?? String(e));
     }
-    const rows = (regs ?? []).map((r: any) => {
-      const p = profilesMap[r.user_id] ?? {};
-      return {
-        Bib: r.bib_number ?? "",
-        Name: p.full_name ?? "",
-        Email: p.email ?? "",
-        Gender: p.gender ?? "",
-        BirthYear: p.birth_date ? new Date(p.birth_date).getFullYear() : "",
-        City: p.city ?? "",
-        Club: p.club ?? "",
-        DistanceKm: r.distances?.distance_km ?? "",
-        DistanceName: r.distances?.name ?? "",
-        PaymentStatus: r.payment_status,
-      };
-    });
-    const ws = XLSX.utils.json_to_sheet(rows);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Participants");
-    XLSX.writeFile(wb, `${eventTitle.replace(/[^a-z0-9]+/gi, "_")}_participants.${format}`, { bookType: format });
   };
 
   const assignBibs = async (eventId: string) => {
-    const { data: regs } = await supabase.from("registrations")
-      .select("id, created_at")
-      .eq("event_id", eventId)
-      .order("created_at");
-    if (!regs) return;
-    for (let index = 0; index < regs.length; index += 1) {
-      await supabase.from("registrations").update({ bib_number: 1000 + index }).eq("id", regs[index].id);
+    try {
+      const { data: regs, error } = await supabase.from("registrations")
+        .select("id, created_at")
+        .eq("event_id", eventId)
+        .order("created_at");
+      if (error) throw error;
+      if (!regs || regs.length === 0) {
+        toast.info(lang === "uk" ? "Немає учасників" : "No participants");
+        return;
+      }
+      const updates = regs.map((r, index) =>
+        supabase.from("registrations").update({ bib_number: 1000 + index }).eq("id", r.id)
+      );
+      const results = await Promise.all(updates);
+      const failed = results.find((r) => r.error);
+      if (failed?.error) throw failed.error;
+      toast.success("OK");
+      refresh();
+    } catch (e: any) {
+      toast.error(e.message ?? String(e));
     }
-    toast.success("OK");
   };
 
   if (authLoading) return null;
