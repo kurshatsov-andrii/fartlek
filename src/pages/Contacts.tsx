@@ -1,4 +1,5 @@
-import { Mail, Phone, Send, MapPin } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Mail, Phone, Send, MapPin, ArrowLeft } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { SEO } from "@/components/SEO";
@@ -16,6 +17,9 @@ const Contacts = () => {
       <SEO title={seo.title} description={seo.description} canonical="/contacts" />
       <Header />
       <main className="flex-1 container py-12 sm:py-16">
+        <Link to="/" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-6">
+          <ArrowLeft className="h-4 w-4" /> {lang === "uk" ? "До списку подій" : "Back to events"}
+        </Link>
         <h1 className="font-display text-4xl sm:text-5xl font-bold tracking-tight">
           {lang === "uk" ? "Контакти" : "Contacts"}
         </h1>
