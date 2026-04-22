@@ -13,15 +13,25 @@ const Participants = () => {
   const { user, loading: authLoading } = useAuth();
   const [rows, setRows] = useState<any[]>([]);
   const [eventTitle, setEventTitle] = useState("");
+  const [isPaid, setIsPaid] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!id || !user) return;
     (async () => {
-      const { data: ev } = await supabase.from("events").select("title").eq("id", id).maybeSingle();
+      const { data: ev } = await supabase.from("events").select("title, is_paid").eq("id", id).maybeSingle();
       setEventTitle(ev?.title ?? "");
-      const { data: participants } = await (supabase.rpc as any)("get_event_participants", { _event_id: id });
-      setRows(participants ?? []);
+      setIsPaid(!!ev?.is_paid);
+      const [{ data: participants }, { data: regs }] = await Promise.all([
+        (supabase.rpc as any)("get_event_participants", { _event_id: id }),
+        supabase.from("registrations").select("id, payment_status").eq("event_id", id),
+      ]);
+      const statusMap = new Map<string, string>((regs ?? []).map((r: any) => [r.id, r.payment_status]));
+      const merged = (participants ?? []).map((p: any) => ({
+        ...p,
+        payment_status: statusMap.get(p.registration_id),
+      }));
+      setRows(merged);
       setLoading(false);
     })();
   }, [id, user]);
