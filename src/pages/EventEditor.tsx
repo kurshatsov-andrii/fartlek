@@ -263,6 +263,16 @@ const EventEditor = () => {
                     </Button>
                   )}
                 </div>
+                <div className="pt-3 border-t border-border space-y-1.5">
+                  <Label className="text-sm">{t.events.resultsExternalUrl}</Label>
+                  <p className="text-xs text-muted-foreground">{t.events.resultsExternalHint}</p>
+                  <Input
+                    type="url"
+                    placeholder="https://..."
+                    value={form.results_url}
+                    onChange={(e) => setForm({ ...form, results_url: e.target.value })}
+                  />
+                </div>
               </div>
             )}
 
