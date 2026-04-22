@@ -15,7 +15,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
-interface DistanceForm { id?: string; distance_km: string; name: string; price: string; }
+interface DistanceForm { id?: string; distance_km: string; name: string; price: string; bib_start: string; }
 
 const EventEditor = () => {
   const { id } = useParams<{ id: string }>();
@@ -32,7 +32,7 @@ const EventEditor = () => {
     image_url: "", is_paid: false, payment_url: "", status: "draft",
     category: "run" as EventCategory,
   });
-  const [distances, setDistances] = useState<DistanceForm[]>([{ distance_km: "10", name: "", price: "0" }]);
+  const [distances, setDistances] = useState<DistanceForm[]>([{ distance_km: "10", name: "", price: "0", bib_start: "" }]);
 
   useEffect(() => {
     if (isNew || !user) return;
@@ -48,7 +48,7 @@ const EventEditor = () => {
         category: ((ev as any).category ?? "run") as EventCategory,
       });
       const { data: ds } = await supabase.from("distances").select("*").eq("event_id", id).eq("is_active", true).order("distance_km");
-      if (ds) setDistances(ds.map((d: any) => ({ id: d.id, distance_km: String(d.distance_km), name: d.name ?? "", price: String(d.price) })));
+      if (ds) setDistances(ds.map((d: any) => ({ id: d.id, distance_km: String(d.distance_km), name: d.name ?? "", price: String(d.price), bib_start: d.bib_start != null ? String(d.bib_start) : "" })));
       setLoading(false);
     })();
   }, [id, isNew, user]);
@@ -112,7 +112,8 @@ const EventEditor = () => {
         distance_km: parseFloat(d.distance_km),
         name: d.name || null,
         price: parseFloat(d.price) || 0,
-      }).eq("id", d.id!);
+        bib_start: d.bib_start ? parseInt(d.bib_start, 10) : null,
+      } as any).eq("id", d.id!);
       if (uErr) { toast.error(uErr.message); setBusy(false); return; }
     }
 
@@ -122,6 +123,7 @@ const EventEditor = () => {
       distance_km: parseFloat(d.distance_km),
       name: d.name || null,
       price: parseFloat(d.price) || 0,
+      bib_start: d.bib_start ? parseInt(d.bib_start, 10) : null,
       is_active: true,
     }));
     if (newRows.length > 0) {
@@ -232,14 +234,23 @@ const EventEditor = () => {
 
             <div className="space-y-3">
               <Label>{t.organizer.distances} *</Label>
+              <div className="hidden sm:grid grid-cols-12 gap-2 px-1 text-xs text-muted-foreground">
+                <span className="col-span-2">{t.organizer.distanceKm}</span>
+                <span className="col-span-5">{t.organizer.distanceName}</span>
+                <span className="col-span-2">{t.organizer.distancePrice}</span>
+                <span className="col-span-2">{t.organizer.bibStart}</span>
+                <span className="col-span-1" />
+              </div>
               {distances.map((d, i) => (
                 <div key={i} className="grid grid-cols-12 gap-2">
-                  <Input className="col-span-3" type="number" step="0.1" placeholder="km" value={d.distance_km}
+                  <Input className="col-span-2" type="number" step="0.1" placeholder="км" value={d.distance_km}
                     onChange={(e) => { const c = [...distances]; c[i].distance_km = e.target.value; setDistances(c); }} />
                   <Input className="col-span-5" placeholder={t.organizer.distanceName} value={d.name}
                     onChange={(e) => { const c = [...distances]; c[i].name = e.target.value; setDistances(c); }} />
-                  <Input className="col-span-3" type="number" step="1" placeholder="₴" value={d.price}
+                  <Input className="col-span-2" type="number" step="1" placeholder="₴" value={d.price}
                     onChange={(e) => { const c = [...distances]; c[i].price = e.target.value; setDistances(c); }} />
+                  <Input className="col-span-2" type="number" step="1" placeholder="1001" value={d.bib_start}
+                    onChange={(e) => { const c = [...distances]; c[i].bib_start = e.target.value; setDistances(c); }} />
                   <Button type="button" variant="ghost" size="icon" className="col-span-1"
                     onClick={() => setDistances(distances.filter((_, k) => k !== i))}>
                     <X className="h-4 w-4" />
@@ -247,7 +258,7 @@ const EventEditor = () => {
                 </div>
               ))}
               <Button type="button" variant="outline" size="sm"
-                onClick={() => setDistances([...distances, { distance_km: "", name: "", price: "0" }])}>
+                onClick={() => setDistances([...distances, { distance_km: "", name: "", price: "0", bib_start: "" }])}>
                 <Plus className="h-4 w-4" /> {t.organizer.addDistance}
               </Button>
             </div>
