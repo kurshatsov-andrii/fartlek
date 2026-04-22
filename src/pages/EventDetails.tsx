@@ -44,12 +44,12 @@ const EventDetails = () => {
         .maybeSingle();
       if (!ev) { setLoading(false); return; }
       setEvent(ev as EventRow);
-      const [{ data: ds }, { count }] = await Promise.all([
+      const [{ data: ds }, { data: cnt }] = await Promise.all([
         supabase.from("distances").select("*").eq("event_id", ev.id).eq("is_active", true).order("distance_km"),
-        supabase.from("registrations").select("*", { count: "exact", head: true }).eq("event_id", ev.id),
+        supabase.rpc("get_event_participants_count", { _event_id: ev.id }),
       ]);
       setDistances(ds ?? []);
-      setParticipantsCount(count ?? 0);
+      setParticipantsCount((cnt as number) ?? 0);
       if (ds && ds.length > 0) setSelectedDistance(ds[0].id);
       if (user) {
         const { data: reg } = await supabase.from("registrations").select("id, payment_status").eq("event_id", ev.id).eq("user_id", user.id).maybeSingle();
