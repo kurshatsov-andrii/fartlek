@@ -82,30 +82,6 @@ const OrganizerDashboard = () => {
     }
   };
 
-  const assignBibs = async (eventId: string) => {
-    try {
-      const { data: regs, error } = await supabase.from("registrations")
-        .select("id, created_at")
-        .eq("event_id", eventId)
-        .order("created_at");
-      if (error) throw error;
-      if (!regs || regs.length === 0) {
-        toast.info(lang === "uk" ? "Немає учасників" : "No participants");
-        return;
-      }
-      const updates = regs.map((r, index) =>
-        supabase.from("registrations").update({ bib_number: 1000 + index }).eq("id", r.id)
-      );
-      const results = await Promise.all(updates);
-      const failed = results.find((r) => r.error);
-      if (failed?.error) throw failed.error;
-      toast.success("OK");
-      refresh();
-    } catch (e: any) {
-      toast.error(e.message ?? String(e));
-    }
-  };
-
   if (authLoading) return null;
   if (!user) return <Navigate to="/auth?role=organizer" replace />;
   if (!isOrganizer) return (
@@ -164,7 +140,7 @@ const OrganizerDashboard = () => {
                     <Button asChild variant="outline" size="sm">
                       <Link to={`/events/${ev.id}/participants`}><Users className="h-4 w-4" /> {t.events.participants}</Link>
                     </Button>
-                    <Button onClick={() => assignBibs(ev.id)} variant="outline" size="sm">{t.organizer.assignBibs}</Button>
+                    
                     <Button onClick={() => exportData(ev.id, ev.title)} variant="outline" size="sm"><Download className="h-4 w-4" /> XLSX</Button>
                     <Button asChild variant="outline" size="sm">
                       <Link to={`/organizer/events/${ev.id}`}><Edit className="h-4 w-4" /></Link>
