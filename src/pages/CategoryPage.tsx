@@ -25,21 +25,22 @@ const CategoryPage = () => {
   const [loading, setLoading] = useState(true);
 
   const isValid = (EVENT_CATEGORIES as readonly string[]).includes(category ?? "");
+  const cat = (isValid ? category : "run") as EventCategory;
 
   useEffect(() => {
     if (!isValid) return;
     supabase.from("events")
       .select("id, slug, title, description, organizer_name, event_date, event_time, location, image_url, is_paid, category, distances(distance_km, price, is_active)")
       .eq("status", "published")
-      .eq("category", category as EventCategory)
+      .eq("category", cat)
       .order("event_date", { ascending: true })
       .then(({ data }) => { setEvents((data as any) ?? []); setLoading(false); });
-  }, [category, isValid]);
+  }, [cat, isValid]);
+
+  const seo = useMemo(() => categorySeo(cat, lang), [cat, lang]);
 
   if (!isValid) return <Navigate to="/" replace />;
 
-  const cat = category as EventCategory;
-  const seo = useMemo(() => categorySeo(cat, lang), [cat, lang]);
   const heading = t.categories[cat];
 
   const jsonLd = {
