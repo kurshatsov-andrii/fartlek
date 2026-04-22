@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Moon, Sun, Globe, Activity, LogOut, User, LayoutDashboard, Ticket, Shield } from "lucide-react";
+import { Activity, LogOut, User, LayoutDashboard, Ticket, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useApp } from "@/contexts/AppContext";
 import { useAuth } from "@/hooks/useAuth";
@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 export const Header = () => {
-  const { lang, setLang, theme, toggleTheme, t } = useApp();
+  const { t } = useApp();
   const { user, isOrganizer, isAdmin, signOut } = useAuth();
 
   return (
@@ -33,13 +33,6 @@ export const Header = () => {
         </nav>
 
         <div className="flex items-center gap-1.5">
-          <Button variant="ghost" size="icon" onClick={() => setLang(lang === "uk" ? "en" : "uk")} aria-label="Toggle language" className="h-9 w-9">
-            <Globe className="h-4 w-4" />
-          </Button>
-          <span className="text-xs font-semibold uppercase text-muted-foreground w-6 text-center">{lang}</span>
-          <Button variant="ghost" size="icon" onClick={toggleTheme} aria-label="Toggle theme" className="h-9 w-9">
-            {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-          </Button>
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
