@@ -15,12 +15,10 @@ export const Header = () => {
   return (
     <header className="sticky top-0 z-40 w-full border-b border-border/40 bg-background/80 backdrop-blur-lg">
       <div className="container flex h-16 items-center justify-between">
-        <Link to="/" className="flex items-center gap-2 group">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-hero shadow-glow transition-bounce group-hover:scale-110">
-            <Activity className="h-5 w-5 text-primary-foreground" strokeWidth={2.5} />
-          </div>
+        <Link to="/" className="flex items-center gap-3 group">
+          <img src={logoFartlek} alt="Фартлек" className="h-10 w-10 rounded-full object-cover shadow-glow transition-bounce group-hover:scale-110" />
           <span className="font-display text-xl font-bold tracking-tight">
-            Fartlek<span className="text-primary">.</span>
+            Фартлек<span className="text-primary">.</span>
           </span>
         </Link>
 
