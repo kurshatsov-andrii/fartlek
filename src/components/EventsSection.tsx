@@ -50,7 +50,9 @@ export const EventsSection = () => {
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between mb-14">
           <div className="max-w-2xl">
             <div className="text-xs font-semibold uppercase tracking-wider text-primary mb-3">
-              {String(new Date().getFullYear())} — {String(new Date().getFullYear() + 1)} season
+              {lang === "uk"
+                ? `Сезон ${new Date().getFullYear()} — ${new Date().getFullYear() + 1}`
+                : `${new Date().getFullYear()} — ${new Date().getFullYear() + 1} season`}
             </div>
             <h2 className="font-display text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl">
               {t.events.heading}
