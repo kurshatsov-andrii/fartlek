@@ -1,7 +1,7 @@
 export type Lang = "uk" | "en";
 
 export interface Dict {
-  nav: { events: string; organizer: string; login: string; signup: string; dashboard: string; profile: string; logout: string; myEvents: string };
+  nav: { events: string; organizer: string; login: string; signup: string; dashboard: string; profile: string; logout: string; myEvents: string; contacts: string };
   hero: {
     kicker: string; title: string; subtitle: string;
     ctaParticipant: string; ctaOrganizer: string;
@@ -57,7 +57,7 @@ export type EventCategory = typeof EVENT_CATEGORIES[number];
 
 export const translations: Record<Lang, Dict> = {
   uk: {
-    nav: { events: "Події", organizer: "Організаторам", login: "Увійти", signup: "Реєстрація", dashboard: "Панель", profile: "Профіль", logout: "Вийти", myEvents: "Мої події" },
+    nav: { events: "Події", organizer: "Організаторам", login: "Увійти", signup: "Реєстрація", dashboard: "Панель", profile: "Профіль", logout: "Вийти", myEvents: "Мої події", contacts: "Контакти" },
     hero: {
       kicker: "Спортивні події нового покоління",
       title: "Біжи. Реєструйся. Перемагай.",
@@ -124,7 +124,7 @@ export const translations: Record<Lang, Dict> = {
     },
   },
   en: {
-    nav: { events: "Events", organizer: "For organizers", login: "Sign in", signup: "Sign up", dashboard: "Dashboard", profile: "Profile", logout: "Sign out", myEvents: "My events" },
+    nav: { events: "Events", organizer: "For organizers", login: "Sign in", signup: "Sign up", dashboard: "Dashboard", profile: "Profile", logout: "Sign out", myEvents: "My events", contacts: "Contacts" },
     hero: {
       kicker: "Next-generation sports events",
       title: "Run. Register. Conquer.",

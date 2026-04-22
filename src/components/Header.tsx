@@ -29,6 +29,7 @@ export const Header = () => {
           ) : (
             <Link to="/auth?role=organizer" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-base">{t.nav.organizer}</Link>
           )}
+          <Link to="/contacts" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-base">{t.nav.contacts}</Link>
         </nav>
 
         <div className="flex items-center gap-1.5">

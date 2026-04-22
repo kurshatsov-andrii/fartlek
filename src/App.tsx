@@ -21,6 +21,7 @@ import PaymentFail from "./pages/PaymentFail.tsx";
 import Admin from "./pages/Admin.tsx";
 import CategoryPage from "./pages/CategoryPage.tsx";
 import CategoriesIndex from "./pages/CategoriesIndex.tsx";
+import Contacts from "./pages/Contacts.tsx";
 
 const queryClient = new QueryClient();
 
@@ -49,6 +50,7 @@ const App = () => (
               <Route path="/payment/success" element={<PaymentSuccess />} />
               <Route path="/payment/fail" element={<PaymentFail />} />
               <Route path="/admin" element={<Admin />} />
+              <Route path="/contacts" element={<Contacts />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
