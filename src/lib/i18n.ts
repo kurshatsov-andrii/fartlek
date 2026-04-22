@@ -73,7 +73,7 @@ export const translations: Record<Lang, Dict> = {
       forgotPassword: "Забули пароль?", resetPassword: "Відновлення пароля", sendResetLink: "Надіслати посилання",
       newPassword: "Новий пароль", updatePassword: "Оновити пароль",
       haveAccount: "Вже є акаунт?", noAccount: "Ще не маєш акаунту?",
-      signInTitle: "З поверненням", signUpTitle: "Створи акаунт",
+      signInTitle: "Вхід", signUpTitle: "Створи акаунт",
       signInSub: "Увійди, щоб реєструватись на події", signUpSub: "Хвилина — і ти в системі",
       successSignUp: "Акаунт створено! Можеш увійти.",
       successReset: "Перевір email — посилання надіслано.",
