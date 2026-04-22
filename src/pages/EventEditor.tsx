@@ -68,6 +68,7 @@ const EventEditor = () => {
   const save = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user) return;
+    if (!form.image_url) { toast.error("Додай фото обкладинки"); return; }
     setBusy(true);
     const payload = {
       ...form,
@@ -176,7 +177,7 @@ const EventEditor = () => {
               <Textarea rows={5} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
             </div>
             <div className="space-y-2">
-              <Label>{t.organizer.image}</Label>
+              <Label>{t.organizer.image} *</Label>
               <div className="flex items-center gap-3">
                 {form.image_url && <img src={form.image_url} alt="" className="h-16 w-16 rounded object-cover" />}
                 <label className="inline-flex items-center gap-2 cursor-pointer rounded-md border border-input bg-background px-4 py-2 text-sm hover:bg-accent hover:text-accent-foreground transition-base">
