@@ -160,6 +160,11 @@ const EventDetails = () => {
                     <Button asChild variant={registration.payment_status === "pending" ? "outline" : "default"} className="w-full">
                       <Link to={`/ticket/${registration.id}`}>{t.events.viewTicket}</Link>
                     </Button>
+                    <Button asChild variant="outline" className="w-full">
+                      <Link to={`/events/${event.id}/participants`}>
+                        <Users className="h-4 w-4" /> {t.events.participants}
+                      </Link>
+                    </Button>
                   </>
                 ) : (
                   <>
