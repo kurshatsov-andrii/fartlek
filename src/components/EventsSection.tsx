@@ -62,7 +62,7 @@ export const EventsSection = () => {
               const price = minPrice(ev);
               return (
                 <article key={ev.id} className="group relative flex flex-col overflow-hidden rounded-2xl bg-card shadow-card transition-bounce hover:-translate-y-2 hover:shadow-elevated animate-fade-in-up" style={{ animationDelay: `${idx * 80}ms` }}>
-                  <div className="relative aspect-[4/3] overflow-hidden bg-muted">
+                  <Link to={`/events/${ev.id}`} className="relative aspect-[4/3] overflow-hidden bg-muted block" aria-label={ev.title}>
                     {ev.image_url ? (
                       <img src={ev.image_url} alt={ev.title} loading="lazy" className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" />
                     ) : (
@@ -81,7 +81,7 @@ export const EventsSection = () => {
                         </span>
                       ))}
                     </div>
-                  </div>
+                  </Link>
                   <div className="flex flex-1 flex-col p-6">
                     <h3 className="font-display text-xl font-bold leading-tight">{ev.title}</h3>
                     <div className="mt-3 flex flex-col gap-1.5 text-sm text-muted-foreground">
