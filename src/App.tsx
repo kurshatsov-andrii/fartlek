@@ -20,6 +20,7 @@ import PaymentSuccess from "./pages/PaymentSuccess.tsx";
 import PaymentFail from "./pages/PaymentFail.tsx";
 import Admin from "./pages/Admin.tsx";
 import CategoryPage from "./pages/CategoryPage.tsx";
+import CategoriesIndex from "./pages/CategoriesIndex.tsx";
 
 const queryClient = new QueryClient();
 
@@ -37,6 +38,7 @@ const App = () => (
               <Route path="/reset-password" element={<ResetPassword />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/my-events" element={<MyEvents />} />
+              <Route path="/category" element={<CategoriesIndex />} />
               <Route path="/category/:category" element={<CategoryPage />} />
               <Route path="/events/:id" element={<EventDetails />} />
               <Route path="/events/:id/participants" element={<Participants />} />
