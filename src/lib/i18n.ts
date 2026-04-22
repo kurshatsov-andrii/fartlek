@@ -98,7 +98,7 @@ export const translations: Record<Lang, Dict> = {
       clubOptional: "необов'язково",
     },
     ticket: {
-      title: "Стартовий квиток", bib: "Номер", download: "Завантажити QR",
+      title: "Стартовий квиток", bib: "Номер", download: "Завантажити PDF",
       qrHint: "Покажи цей QR-код на старті", status: "Статус оплати",
       paid: "Оплачено", pending: "Очікує оплати", free: "Безкоштовна участь",
     },
@@ -164,7 +164,7 @@ export const translations: Record<Lang, Dict> = {
       clubOptional: "optional",
     },
     ticket: {
-      title: "Start ticket", bib: "Bib", download: "Download QR",
+      title: "Start ticket", bib: "Bib", download: "Download PDF",
       qrHint: "Show this QR code at the start", status: "Payment status",
       paid: "Paid", pending: "Pending payment", free: "Free entry",
     },
