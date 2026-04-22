@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 export const Header = () => {
-  const { lang, setLang, theme, toggleTheme, t } = useApp();
+  const { t } = useApp();
   const { user, isOrganizer, isAdmin, signOut } = useAuth();
 
   return (
