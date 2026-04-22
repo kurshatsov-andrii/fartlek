@@ -17,6 +17,7 @@ const formatCount = (n: number) => {
 
 export const Hero = () => {
   const { t } = useApp();
+  const { user } = useAuth();
   const [stats, setStats] = useState({ events: 0, runners: 0, cities: 0, clubs: 0 });
 
   useEffect(() => {
