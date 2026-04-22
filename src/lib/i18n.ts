@@ -14,6 +14,11 @@ export interface Dict {
     description: string; location: string; selectDistance: string;
     confirmRegister: string; alreadyRegistered: string; viewTicket: string;
     backToEvents: string;
+    completedHeading: string; completedSub: string; completedEmpty: string;
+    results: string; resultsTitle: string; resultsHint: string; resultsNone: string;
+    downloadResults: string; uploadResults: string; uploadingResults: string;
+    replaceResults: string; resultsUploaded: string; resultsRemoved: string;
+    resultsInvalidType: string; resultsTooBig: string;
   };
   auth: {
     signIn: string; signUp: string; email: string; password: string; fullName: string;
