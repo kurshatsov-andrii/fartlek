@@ -140,7 +140,7 @@ const OrganizerDashboard = () => {
                     <Button asChild variant="outline" size="sm">
                       <Link to={`/events/${ev.id}/participants`}><Users className="h-4 w-4" /> {t.events.participants}</Link>
                     </Button>
-                    <Button onClick={() => assignBibs(ev.id)} variant="outline" size="sm">{t.organizer.assignBibs}</Button>
+                    
                     <Button onClick={() => exportData(ev.id, ev.title)} variant="outline" size="sm"><Download className="h-4 w-4" /> XLSX</Button>
                     <Button asChild variant="outline" size="sm">
                       <Link to={`/organizer/events/${ev.id}`}><Edit className="h-4 w-4" /></Link>
