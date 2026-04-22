@@ -60,9 +60,9 @@ const CategoryPage = () => {
       <SEO title={seo.title} description={seo.description} canonical={`/category/${cat}`} jsonLd={jsonLd} />
       <Header />
       <main className="flex-1 container py-12 sm:py-16">
-        <Link to="/#events" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-6">
+        <a href="/#events" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-6">
           <ArrowLeft className="h-4 w-4" /> {t.events.backToEvents}
-        </Link>
+        </a>
         <h1 className="font-display text-4xl sm:text-5xl font-bold tracking-tight">{heading}</h1>
         <p className="mt-3 text-muted-foreground max-w-2xl">{seo.description}</p>
 
