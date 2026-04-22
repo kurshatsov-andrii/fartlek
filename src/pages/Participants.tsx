@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
-import { ArrowLeft, Loader2 } from "lucide-react";
+import { ArrowLeft, Loader2, CheckCircle2, XCircle } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { useApp } from "@/contexts/AppContext";
@@ -13,15 +13,25 @@ const Participants = () => {
   const { user, loading: authLoading } = useAuth();
   const [rows, setRows] = useState<any[]>([]);
   const [eventTitle, setEventTitle] = useState("");
+  const [isPaid, setIsPaid] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!id || !user) return;
     (async () => {
-      const { data: ev } = await supabase.from("events").select("title").eq("id", id).maybeSingle();
+      const { data: ev } = await supabase.from("events").select("title, is_paid").eq("id", id).maybeSingle();
       setEventTitle(ev?.title ?? "");
-      const { data: participants } = await (supabase.rpc as any)("get_event_participants", { _event_id: id });
-      setRows(participants ?? []);
+      setIsPaid(!!ev?.is_paid);
+      const [{ data: participants }, { data: regs }] = await Promise.all([
+        (supabase.rpc as any)("get_event_participants", { _event_id: id }),
+        supabase.from("registrations").select("id, payment_status").eq("event_id", id),
+      ]);
+      const statusMap = new Map<string, string>((regs ?? []).map((r: any) => [r.id, r.payment_status]));
+      const merged = (participants ?? []).map((p: any) => ({
+        ...p,
+        payment_status: statusMap.get(p.registration_id),
+      }));
+      setRows(merged);
       setLoading(false);
     })();
   }, [id, user]);
@@ -70,6 +80,7 @@ const Participants = () => {
                         <th className="p-3 font-semibold">{lang === "uk" ? "Рік" : "Year"}</th>
                         <th className="p-3 font-semibold">{t.profile.city}</th>
                         <th className="p-3 font-semibold">{t.profile.club}</th>
+                        {isPaid && <th className="p-3 font-semibold text-center">{lang === "uk" ? "Оплата" : "Payment"}</th>}
                       </tr>
                     </thead>
                     <tbody>
@@ -87,6 +98,15 @@ const Participants = () => {
                           <td className="p-3">{r.birth_year ?? "—"}</td>
                           <td className="p-3">{r.city ?? "—"}</td>
                           <td className="p-3">{r.club ?? "—"}</td>
+                          {isPaid && (
+                            <td className="p-3 text-center">
+                              {r.payment_status === "paid" ? (
+                                <CheckCircle2 className="h-5 w-5 text-green-500 inline" />
+                              ) : (
+                                <XCircle className="h-5 w-5 text-destructive inline" />
+                              )}
+                            </td>
+                          )}
                         </tr>
                       ))}
                     </tbody>
