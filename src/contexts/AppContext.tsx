@@ -15,29 +15,22 @@ interface AppContextValue {
 const AppContext = createContext<AppContextValue | undefined>(undefined);
 
 export const AppProvider = ({ children }: { children: ReactNode }) => {
-  const [lang, setLangState] = useState<Lang>(() => (localStorage.getItem("fe.lang") as Lang) || "uk");
-  const [theme, setThemeState] = useState<Theme>(() => {
-    const saved = localStorage.getItem("fe.theme") as Theme | null;
-    if (saved) return saved;
-    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-  });
+  const lang: Lang = "uk";
+  const theme: Theme = "dark";
 
   useEffect(() => {
-    document.documentElement.classList.toggle("dark", theme === "dark");
-    localStorage.setItem("fe.theme", theme);
-  }, [theme]);
-
-  useEffect(() => {
-    document.documentElement.lang = lang;
-    localStorage.setItem("fe.lang", lang);
-  }, [lang]);
+    document.documentElement.classList.add("dark");
+    document.documentElement.lang = "uk";
+    localStorage.setItem("fe.theme", "dark");
+    localStorage.setItem("fe.lang", "uk");
+  }, []);
 
   const value: AppContextValue = {
     lang,
-    setLang: setLangState,
+    setLang: () => {},
     theme,
-    setTheme: setThemeState,
-    toggleTheme: () => setThemeState((p) => (p === "dark" ? "light" : "dark")),
+    setTheme: () => {},
+    toggleTheme: () => {},
     t: translations[lang],
   };
 
