@@ -50,6 +50,7 @@ const App = () => (
               <Route path="/payment/success" element={<PaymentSuccess />} />
               <Route path="/payment/fail" element={<PaymentFail />} />
               <Route path="/admin" element={<Admin />} />
+              <Route path="/contacts" element={<Contacts />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
