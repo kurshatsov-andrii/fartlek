@@ -68,6 +68,7 @@ const EventEditor = () => {
   const save = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user) return;
+    if (!form.image_url) { toast.error("Додай фото обкладинки"); return; }
     setBusy(true);
     const payload = {
       ...form,
