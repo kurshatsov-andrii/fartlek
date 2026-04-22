@@ -262,6 +262,9 @@ const EventEditor = () => {
                 </div>
               </div>
             )}
+
+            <div className="space-y-2">
+              <Label>{t.organizer.status}</Label>
               <Select value={form.status} onValueChange={(v) => setForm({ ...form, status: v })}>
                 <SelectTrigger><SelectValue /></SelectTrigger>
                 <SelectContent>
