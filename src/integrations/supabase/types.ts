@@ -16,6 +16,7 @@ export type Database = {
     Tables: {
       distances: {
         Row: {
+          bib_start: number | null
           created_at: string
           distance_km: number
           event_id: string
@@ -26,6 +27,7 @@ export type Database = {
           price: number
         }
         Insert: {
+          bib_start?: number | null
           created_at?: string
           distance_km: number
           event_id: string
@@ -36,6 +38,7 @@ export type Database = {
           price?: number
         }
         Update: {
+          bib_start?: number | null
           created_at?: string
           distance_km?: number
           event_id?: string
