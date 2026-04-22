@@ -12,7 +12,7 @@ import { supabase } from "@/integrations/supabase/client";
 const Participants = () => {
   const { id } = useParams<{ id: string }>();
   const { t, lang } = useApp();
-  const { user, loading: authLoading } = useAuth();
+  const { user, loading: authLoading, isAdmin } = useAuth();
   const [rows, setRows] = useState<any[]>([]);
   const [eventTitle, setEventTitle] = useState("");
   const [isPaid, setIsPaid] = useState(false);
@@ -29,7 +29,7 @@ const Participants = () => {
       .maybeSingle();
     setEventTitle(ev?.title ?? "");
     setIsPaid(!!ev?.is_paid);
-    setIsOrganizer(ev?.organizer_id === user.id);
+    setIsOrganizer(ev?.organizer_id === user.id || isAdmin);
     const { data: participants } = await (supabase.rpc as any)("get_event_participants", { _event_id: id });
     setRows(participants ?? []);
     setLoading(false);
