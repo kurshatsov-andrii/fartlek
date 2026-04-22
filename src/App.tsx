@@ -19,6 +19,7 @@ import EventEditor from "./pages/EventEditor.tsx";
 import PaymentSuccess from "./pages/PaymentSuccess.tsx";
 import PaymentFail from "./pages/PaymentFail.tsx";
 import Admin from "./pages/Admin.tsx";
+import CategoryPage from "./pages/CategoryPage.tsx";
 
 const queryClient = new QueryClient();
 
@@ -36,6 +37,7 @@ const App = () => (
               <Route path="/reset-password" element={<ResetPassword />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/my-events" element={<MyEvents />} />
+              <Route path="/category/:category" element={<CategoryPage />} />
               <Route path="/events/:id" element={<EventDetails />} />
               <Route path="/events/:id/participants" element={<Participants />} />
               <Route path="/ticket/:id" element={<Ticket />} />
