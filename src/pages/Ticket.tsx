@@ -185,6 +185,53 @@ const Ticket = () => {
             </Button>
           </div>
         </div>
+
+        {data.payment_status !== "free" && (
+          <div className="mt-6 bg-card rounded-2xl shadow-card p-6 space-y-4">
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <h2 className="font-display text-lg font-bold">{t.ticket.receiptTitle}</h2>
+                <p className="text-sm text-muted-foreground mt-1">{t.ticket.receiptHint}</p>
+              </div>
+              {data.receipt_url && (
+                <FileCheck2 className="h-6 w-6 text-green-600 dark:text-green-500 shrink-0" />
+              )}
+            </div>
+
+            {data.receipt_revoked_reason && (
+              <div className="rounded-md border border-destructive/40 bg-destructive/10 text-destructive text-sm p-3">
+                {t.ticket.receiptRevoked}
+                <div className="mt-1 opacity-80">«{data.receipt_revoked_reason}»</div>
+              </div>
+            )}
+
+            <input
+              ref={fileRef}
+              type="file"
+              accept="image/jpeg,image/png,image/webp,application/pdf"
+              className="hidden"
+              onChange={onReceiptChange}
+            />
+
+            <div className="flex flex-wrap gap-2">
+              <Button onClick={onPickReceipt} disabled={uploadingReceipt} variant={data.receipt_url ? "outline" : "default"}>
+                {uploadingReceipt ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
+                {uploadingReceipt
+                  ? t.ticket.receiptUploading
+                  : data.receipt_url
+                  ? t.ticket.receiptReplace
+                  : t.ticket.receiptUpload}
+              </Button>
+              {data.receipt_url && receiptViewUrl && (
+                <Button asChild variant="ghost">
+                  <a href={receiptViewUrl} target="_blank" rel="noopener noreferrer">
+                    <ExternalLink className="h-4 w-4" /> {t.ticket.receiptView}
+                  </a>
+                </Button>
+              )}
+            </div>
+          </div>
+        )}
       </main>
       <Footer />
     </div>
