@@ -35,7 +35,6 @@ export const Hero = () => {
     })();
   }, []);
 
-  return (
   if (user) return null;
 
   return (
