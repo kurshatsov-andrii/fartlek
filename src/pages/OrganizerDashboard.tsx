@@ -82,30 +82,6 @@ const OrganizerDashboard = () => {
     }
   };
 
-  const assignBibs = async (eventId: string) => {
-    try {
-      const { data: regs, error } = await supabase.from("registrations")
-        .select("id, created_at")
-        .eq("event_id", eventId)
-        .order("created_at");
-      if (error) throw error;
-      if (!regs || regs.length === 0) {
-        toast.info(lang === "uk" ? "Немає учасників" : "No participants");
-        return;
-      }
-      const updates = regs.map((r, index) =>
-        supabase.from("registrations").update({ bib_number: 1000 + index }).eq("id", r.id)
-      );
-      const results = await Promise.all(updates);
-      const failed = results.find((r) => r.error);
-      if (failed?.error) throw failed.error;
-      toast.success("OK");
-      refresh();
-    } catch (e: any) {
-      toast.error(e.message ?? String(e));
-    }
-  };
-
   if (authLoading) return null;
   if (!user) return <Navigate to="/auth?role=organizer" replace />;
   if (!isOrganizer) return (
