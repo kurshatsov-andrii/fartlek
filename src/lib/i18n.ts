@@ -37,7 +37,7 @@ export interface Dict {
     dashboard: string; createEvent: string; myEvents: string; participants: string;
     title: string; description: string; date: string; time: string; location: string;
     distances: string; addDistance: string; distanceKm: string; distanceName: string;
-    distancePrice: string; image: string; isPaid: string; status: string;
+    distancePrice: string; image: string; isPaid: string; paymentUrl: string; status: string;
     draft: string; published: string; cancelled: string; completed: string;
     save: string; cancel: string; edit: string; delete: string; export: string;
     exportCsv: string; exportXlsx: string; backToDashboard: string;
@@ -105,9 +105,9 @@ export const translations: Record<Lang, Dict> = {
     organizer: {
       dashboard: "Панель організатора", createEvent: "Створити подію", myEvents: "Мої події",
       participants: "Учасники", title: "Назва", description: "Опис", date: "Дата", time: "Час",
-      location: "Місце", distances: "Дистанції", addDistance: "+ Додати дистанцію",
+      location: "Місто та місце", distances: "Дистанції", addDistance: "+ Додати дистанцію",
       distanceKm: "Кілометри", distanceName: "Назва (необов'язково)", distancePrice: "Ціна (₴)",
-      image: "Фото обкладинки", isPaid: "Платна подія", status: "Статус",
+      image: "Фото обкладинки", isPaid: "Платна подія", paymentUrl: "Посилання на оплату", status: "Статус",
       draft: "Чернетка", published: "Опубліковано", cancelled: "Скасовано", completed: "Завершено",
       save: "Зберегти", cancel: "Скасувати", edit: "Редагувати", delete: "Видалити",
       export: "Експорт", exportCsv: "Експорт CSV", exportXlsx: "Експорт Excel",
@@ -171,9 +171,9 @@ export const translations: Record<Lang, Dict> = {
     organizer: {
       dashboard: "Organizer dashboard", createEvent: "Create event", myEvents: "My events",
       participants: "Participants", title: "Title", description: "Description", date: "Date", time: "Time",
-      location: "Location", distances: "Distances", addDistance: "+ Add distance",
+      location: "City & venue", distances: "Distances", addDistance: "+ Add distance",
       distanceKm: "Kilometers", distanceName: "Name (optional)", distancePrice: "Price (UAH)",
-      image: "Cover image", isPaid: "Paid event", status: "Status",
+      image: "Cover image", isPaid: "Paid event", paymentUrl: "Payment link", status: "Status",
       draft: "Draft", published: "Published", cancelled: "Cancelled", completed: "Completed",
       save: "Save", cancel: "Cancel", edit: "Edit", delete: "Delete",
       export: "Export", exportCsv: "Export CSV", exportXlsx: "Export Excel",

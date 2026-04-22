@@ -16,7 +16,7 @@ import type { EventCategory } from "@/lib/i18n";
 interface EventRow {
   id: string; slug: string | null; title: string; description: string | null; organizer_name: string;
   event_date: string; event_time: string; location: string | null;
-  image_url: string | null; is_paid: boolean; status: string; category: EventCategory;
+  image_url: string | null; is_paid: boolean; payment_url: string | null; status: string; category: EventCategory;
 }
 interface DistanceRow { id: string; distance_km: number; name: string | null; price: number; is_active?: boolean; }
 
@@ -90,6 +90,9 @@ const EventDetails = () => {
     setBusy(false);
     if (error) { toast.error(error.message); return; }
     toast.success("OK");
+    if (isPaidReg && event.payment_url) {
+      window.open(event.payment_url, "_blank", "noopener,noreferrer");
+    }
     navigate(`/ticket/${reg.id}`);
   };
 
@@ -186,17 +189,23 @@ const EventDetails = () => {
                   <>
                     <p className="text-sm text-muted-foreground">{t.events.alreadyRegistered}</p>
                     {registration.payment_status === "pending" && (
-                      <Button
-                        className="w-full"
-                        onClick={async () => {
-                          setBusy(true);
-                          try { await startWayForPayCheckout(registration.id); }
-                          catch (e: any) { toast.error(e.message); setBusy(false); }
-                        }}
-                        disabled={busy}
-                      >
-                        {busy && <Loader2 className="h-4 w-4 animate-spin" />} Сплатити
-                      </Button>
+                      event.payment_url ? (
+                        <Button asChild className="w-full">
+                          <a href={event.payment_url} target="_blank" rel="noopener noreferrer">Сплатити</a>
+                        </Button>
+                      ) : (
+                        <Button
+                          className="w-full"
+                          onClick={async () => {
+                            setBusy(true);
+                            try { await startWayForPayCheckout(registration.id); }
+                            catch (e: any) { toast.error(e.message); setBusy(false); }
+                          }}
+                          disabled={busy}
+                        >
+                          {busy && <Loader2 className="h-4 w-4 animate-spin" />} Сплатити
+                        </Button>
+                      )
                     )}
                     <Button asChild variant={registration.payment_status === "pending" ? "outline" : "default"} className="w-full">
                       <Link to={`/ticket/${registration.id}`}>{t.events.viewTicket}</Link>

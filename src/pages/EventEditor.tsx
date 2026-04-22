@@ -29,7 +29,7 @@ const EventEditor = () => {
   const [form, setForm] = useState({
     title: "", description: "", organizer_name: "",
     event_date: "", event_time: "", location: "",
-    image_url: "", is_paid: false, status: "draft",
+    image_url: "", is_paid: false, payment_url: "", status: "draft",
     category: "run" as EventCategory,
   });
   const [distances, setDistances] = useState<DistanceForm[]>([{ distance_km: "10", name: "", price: "0" }]);
@@ -42,7 +42,9 @@ const EventEditor = () => {
         title: ev.title, description: ev.description ?? "",
         organizer_name: ev.organizer_name, event_date: ev.event_date,
         event_time: ev.event_time.slice(0, 5), location: ev.location ?? "",
-        image_url: ev.image_url ?? "", is_paid: ev.is_paid, status: ev.status,
+        image_url: ev.image_url ?? "", is_paid: ev.is_paid,
+        payment_url: (ev as any).payment_url ?? "",
+        status: ev.status,
         category: ((ev as any).category ?? "run") as EventCategory,
       });
       const { data: ds } = await supabase.from("distances").select("*").eq("event_id", id).eq("is_active", true).order("distance_km");
@@ -73,9 +75,10 @@ const EventEditor = () => {
       status: form.status as any,
       event_time: form.event_time + ":00",
       image_url: form.image_url || null,
-      location: form.location || null,
+      location: form.location,
       description: form.description || null,
-    };
+      payment_url: form.is_paid ? (form.payment_url || null) : null,
+    } as any;
     let eventId = id!;
     if (isNew) {
       const { data, error } = await supabase.from("events").insert(payload).select("id").single();
@@ -165,8 +168,8 @@ const EventEditor = () => {
               </div>
             </div>
             <div className="space-y-2">
-              <Label>{t.organizer.location}</Label>
-              <Input value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} />
+              <Label>{t.organizer.location} *</Label>
+              <Input required value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} />
             </div>
             <div className="space-y-2">
               <Label>{t.organizer.description}</Label>
@@ -188,6 +191,18 @@ const EventEditor = () => {
               <Label htmlFor="paid" className="cursor-pointer">{t.organizer.isPaid}</Label>
               <Switch id="paid" checked={form.is_paid} onCheckedChange={(v) => setForm({ ...form, is_paid: v })} />
             </div>
+
+            {form.is_paid && (
+              <div className="space-y-2">
+                <Label>{t.organizer.paymentUrl}</Label>
+                <Input
+                  type="url"
+                  placeholder="https://..."
+                  value={form.payment_url}
+                  onChange={(e) => setForm({ ...form, payment_url: e.target.value })}
+                />
+              </div>
+            )}
 
             <div className="space-y-2">
               <Label>{t.organizer.status}</Label>

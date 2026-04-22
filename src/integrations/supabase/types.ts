@@ -68,6 +68,7 @@ export type Database = {
           location: string | null
           organizer_id: string
           organizer_name: string
+          payment_url: string | null
           slug: string | null
           status: Database["public"]["Enums"]["event_status"]
           title: string
@@ -85,6 +86,7 @@ export type Database = {
           location?: string | null
           organizer_id: string
           organizer_name: string
+          payment_url?: string | null
           slug?: string | null
           status?: Database["public"]["Enums"]["event_status"]
           title: string
@@ -102,6 +104,7 @@ export type Database = {
           location?: string | null
           organizer_id?: string
           organizer_name?: string
+          payment_url?: string | null
           slug?: string | null
           status?: Database["public"]["Enums"]["event_status"]
           title?: string
