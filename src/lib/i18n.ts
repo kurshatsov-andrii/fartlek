@@ -46,7 +46,14 @@ export interface Dict {
   };
   footer: { tagline: string; rights: string };
   common: { backHome: string; loading: string; required: string; error: string };
+  categories: {
+    label: string; all: string;
+    run: string; half_marathon: string; marathon: string; ultra: string; trail: string; ocr: string; online: string;
+  };
 }
+
+export const EVENT_CATEGORIES = ["run", "half_marathon", "marathon", "ultra", "trail", "ocr", "online"] as const;
+export type EventCategory = typeof EVENT_CATEGORIES[number];
 
 export const translations: Record<Lang, Dict> = {
   uk: {
@@ -110,6 +117,11 @@ export const translations: Record<Lang, Dict> = {
     },
     footer: { tagline: "Створено для бігунів і організаторів.", rights: "Усі права захищено." },
     common: { backHome: "На головну", loading: "Завантаження...", required: "Обов'язкове поле", error: "Сталася помилка" },
+    categories: {
+      label: "Категорія", all: "Всі",
+      run: "Забіги", half_marathon: "Напівмарафони", marathon: "Марафони",
+      ultra: "Ультра", trail: "Трейл", ocr: "OCR", online: "Онлайн",
+    },
   },
   en: {
     nav: { events: "Events", organizer: "For organizers", login: "Sign in", signup: "Sign up", dashboard: "Dashboard", profile: "Profile", logout: "Sign out", myEvents: "My events" },
@@ -171,5 +183,10 @@ export const translations: Record<Lang, Dict> = {
     },
     footer: { tagline: "Built for runners and organizers.", rights: "All rights reserved." },
     common: { backHome: "Back home", loading: "Loading...", required: "Required field", error: "An error occurred" },
+    categories: {
+      label: "Category", all: "All",
+      run: "Runs", half_marathon: "Half marathons", marathon: "Marathons",
+      ultra: "Ultra", trail: "Trail", ocr: "OCR", online: "Online",
+    },
   },
 };

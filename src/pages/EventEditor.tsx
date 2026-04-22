@@ -10,6 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useApp } from "@/contexts/AppContext";
+import { EVENT_CATEGORIES, type EventCategory } from "@/lib/i18n";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -29,6 +30,7 @@ const EventEditor = () => {
     title: "", description: "", organizer_name: "",
     event_date: "", event_time: "", location: "",
     image_url: "", is_paid: false, status: "draft",
+    category: "run" as EventCategory,
   });
   const [distances, setDistances] = useState<DistanceForm[]>([{ distance_km: "10", name: "", price: "0" }]);
 
@@ -41,6 +43,7 @@ const EventEditor = () => {
         organizer_name: ev.organizer_name, event_date: ev.event_date,
         event_time: ev.event_time.slice(0, 5), location: ev.location ?? "",
         image_url: ev.image_url ?? "", is_paid: ev.is_paid, status: ev.status,
+        category: ((ev as any).category ?? "run") as EventCategory,
       });
       const { data: ds } = await supabase.from("distances").select("*").eq("event_id", id).eq("is_active", true).order("distance_km");
       if (ds) setDistances(ds.map((d: any) => ({ id: d.id, distance_km: String(d.distance_km), name: d.name ?? "", price: String(d.price) })));
@@ -195,6 +198,18 @@ const EventEditor = () => {
                   <SelectItem value="published">{t.organizer.published}</SelectItem>
                   <SelectItem value="cancelled">{t.organizer.cancelled}</SelectItem>
                   <SelectItem value="completed">{t.organizer.completed}</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label>{t.categories.label} *</Label>
+              <Select value={form.category} onValueChange={(v) => setForm({ ...form, category: v as EventCategory })}>
+                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  {EVENT_CATEGORIES.map((c) => (
+                    <SelectItem key={c} value={c}>{t.categories[c]}</SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>

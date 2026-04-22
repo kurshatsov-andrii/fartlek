@@ -1,14 +1,17 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { Calendar, MapPin, ArrowUpRight, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useApp } from "@/contexts/AppContext";
 import { supabase } from "@/integrations/supabase/client";
+import { EVENT_CATEGORIES, type EventCategory } from "@/lib/i18n";
+import { cn } from "@/lib/utils";
 
 interface EventCard {
   id: string; title: string; description: string | null; organizer_name: string;
   event_date: string; event_time: string; location: string | null;
   image_url: string | null; is_paid: boolean;
+  category: EventCategory;
   distances: { distance_km: number; price: number; is_active?: boolean }[];
 }
 
@@ -16,6 +19,7 @@ export const EventsSection = () => {
   const { t, lang } = useApp();
   const [events, setEvents] = useState<EventCard[]>([]);
   const [loading, setLoading] = useState(true);
+  const [activeCat, setActiveCat] = useState<EventCategory | "all">("all");
 
   useEffect(() => {
     supabase.from("events")
@@ -24,6 +28,11 @@ export const EventsSection = () => {
       .order("event_date", { ascending: true })
       .then(({ data }) => { setEvents((data as any) ?? []); setLoading(false); });
   }, []);
+
+  const filtered = useMemo(
+    () => activeCat === "all" ? events : events.filter((e) => e.category === activeCat),
+    [events, activeCat]
+  );
 
   const fmtDate = (iso: string) =>
     new Date(iso).toLocaleDateString(lang === "uk" ? "uk-UA" : "en-US", {
@@ -50,15 +59,37 @@ export const EventsSection = () => {
           </div>
         </div>
 
+        <div className="mb-10 flex flex-wrap gap-2">
+          {(["all", ...EVENT_CATEGORIES] as const).map((cat) => {
+            const isActive = activeCat === cat;
+            const label = cat === "all" ? t.categories.all : t.categories[cat];
+            return (
+              <button
+                key={cat}
+                type="button"
+                onClick={() => setActiveCat(cat)}
+                className={cn(
+                  "rounded-full border px-4 py-2 text-sm font-semibold uppercase tracking-wider transition-base",
+                  isActive
+                    ? "border-primary bg-primary text-primary-foreground shadow-card"
+                    : "border-border bg-card text-foreground hover:border-primary hover:text-primary"
+                )}
+              >
+                {label}
+              </button>
+            );
+          })}
+        </div>
+
         {loading ? (
           <div className="flex justify-center py-20"><Loader2 className="h-6 w-6 animate-spin" /></div>
-        ) : events.length === 0 ? (
+        ) : filtered.length === 0 ? (
           <div className="text-center py-20 bg-card rounded-2xl">
             <p className="text-muted-foreground">{t.events.empty}</p>
           </div>
         ) : (
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {events.map((ev, idx) => {
+            {filtered.map((ev, idx) => {
               const price = minPrice(ev);
               return (
                 <article key={ev.id} className="group relative flex flex-col overflow-hidden rounded-2xl bg-card shadow-card transition-bounce hover:-translate-y-2 hover:shadow-elevated animate-fade-in-up" style={{ animationDelay: `${idx * 80}ms` }}>
