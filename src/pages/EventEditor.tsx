@@ -229,8 +229,39 @@ const EventEditor = () => {
               </div>
             )}
 
-            <div className="space-y-2">
-              <Label>{t.organizer.status}</Label>
+            {!isNew && (
+              <div className="space-y-2 rounded-md border border-border p-4">
+                <Label>{t.events.resultsTitle}</Label>
+                <p className="text-xs text-muted-foreground">{t.events.resultsHint}</p>
+                <div className="flex flex-wrap items-center gap-3 pt-1">
+                  {form.results_pdf_url && (
+                    <a
+                      href={form.results_pdf_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm text-primary hover:underline inline-flex items-center gap-1.5"
+                    >
+                      <Upload className="h-4 w-4 rotate-180" /> {t.events.downloadResults}
+                    </a>
+                  )}
+                  <label className="inline-flex items-center gap-2 cursor-pointer rounded-md border border-input bg-background px-4 py-2 text-sm hover:bg-accent hover:text-accent-foreground transition-base">
+                    {uploadingResults ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
+                    {form.results_pdf_url ? t.events.replaceResults : t.events.uploadResults}
+                    <input
+                      type="file"
+                      accept="application/pdf"
+                      className="hidden"
+                      onChange={(e) => e.target.files?.[0] && uploadResults(e.target.files[0])}
+                    />
+                  </label>
+                  {form.results_pdf_url && (
+                    <Button type="button" variant="ghost" size="sm" onClick={removeResults}>
+                      <X className="h-4 w-4" /> {t.organizer.delete}
+                    </Button>
+                  )}
+                </div>
+              </div>
+            )}
               <Select value={form.status} onValueChange={(v) => setForm({ ...form, status: v })}>
                 <SelectTrigger><SelectValue /></SelectTrigger>
                 <SelectContent>
