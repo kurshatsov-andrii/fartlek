@@ -32,6 +32,9 @@ export interface Dict {
   ticket: {
     title: string; bib: string; download: string; qrHint: string; status: string;
     paid: string; pending: string; free: string;
+    receiptTitle: string; receiptHint: string; receiptUpload: string; receiptUploading: string;
+    receiptReplace: string; receiptUploaded: string; receiptView: string; receiptInvalidType: string;
+    receiptTooBig: string; receiptRevoked: string;
   };
   organizer: {
     dashboard: string; createEvent: string; myEvents: string; participants: string;
