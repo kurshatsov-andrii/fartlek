@@ -334,6 +334,10 @@ export type Database = {
           user_id: string
         }[]
       }
+      get_event_participants_count: {
+        Args: { _event_id: string }
+        Returns: number
+      }
       get_public_stats: {
         Args: never
         Returns: {
