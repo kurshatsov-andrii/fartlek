@@ -95,6 +95,29 @@ const Auth = () => {
             <span className="font-display text-xl font-bold">Фартлек</span>
           </Link>
 
+          {mode !== "forgot" && (
+            <div className="grid grid-cols-2 gap-1 rounded-lg border border-border bg-muted/30 p-1">
+              <button
+                type="button"
+                onClick={() => setMode("signin")}
+                className={`rounded-md px-4 py-2 text-sm font-semibold transition-base ${
+                  mode === "signin" ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                {t.auth.signIn}
+              </button>
+              <button
+                type="button"
+                onClick={() => setMode("signup")}
+                className={`rounded-md px-4 py-2 text-sm font-semibold transition-base ${
+                  mode === "signup" ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                {t.auth.signUp}
+              </button>
+            </div>
+          )}
+
           {mode === "signin" && (
             <>
               <div>
