@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { Calendar, MapPin, Users, Loader2, ArrowLeft } from "lucide-react";
+import { Calendar, MapPin, Users, Loader2, ArrowLeft, UserCircle2 } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
