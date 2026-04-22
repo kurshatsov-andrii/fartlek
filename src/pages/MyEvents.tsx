@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, Navigate } from "react-router-dom";
-import { Loader2, QrCode, Calendar, FileText } from "lucide-react";
+import { Loader2, QrCode, Calendar, FileText, Users } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -80,6 +80,9 @@ const MyEvents = () => {
                         </a>
                       </Button>
                     )}
+                    <Button asChild variant="outline">
+                      <Link to={`/events/${r.event_id}/participants`}><Users className="h-4 w-4" /> {t.events.participants}</Link>
+                    </Button>
                     <Button asChild variant="outline">
                       <Link to={`/ticket/${r.id}`}><QrCode className="h-4 w-4" /> {t.events.viewTicket}</Link>
                     </Button>
