@@ -81,7 +81,7 @@ export const EventsSection = () => {
                         </span>
                       ))}
                     </div>
-                  </div>
+                  </Link>
                   <div className="flex flex-1 flex-col p-6">
                     <h3 className="font-display text-xl font-bold leading-tight">{ev.title}</h3>
                     <div className="mt-3 flex flex-col gap-1.5 text-sm text-muted-foreground">
