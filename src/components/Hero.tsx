@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { ArrowRight, User, Trophy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useApp } from "@/contexts/AppContext";
+import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import heroImg from "@/assets/hero-runners.jpg";
 
@@ -16,6 +17,7 @@ const formatCount = (n: number) => {
 
 export const Hero = () => {
   const { t } = useApp();
+  const { user } = useAuth();
   const [stats, setStats] = useState({ events: 0, runners: 0, cities: 0, clubs: 0 });
 
   useEffect(() => {
@@ -66,26 +68,28 @@ export const Hero = () => {
             {t.hero.subtitle}
           </p>
 
-          <div className="mt-10 flex flex-col gap-3 sm:flex-row">
-            <Button asChild size="lg" className="group h-14 px-8 text-base shadow-glow">
-              <Link to="/auth?role=participant">
-                <User className="mr-2 h-5 w-5" />
-                {t.hero.ctaParticipant}
-                <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
-              </Link>
-            </Button>
-            <Button
-              asChild
-              size="lg"
-              variant="outline"
-              className="h-14 px-8 text-base border-secondary-foreground/20 bg-transparent text-secondary-foreground hover:bg-secondary-foreground/10 hover:text-secondary-foreground"
-            >
-              <Link to="/auth?role=organizer">
-                <Trophy className="mr-2 h-5 w-5" />
-                {t.hero.ctaOrganizer}
-              </Link>
-            </Button>
-          </div>
+          {!user && (
+            <div className="mt-10 flex flex-col gap-3 sm:flex-row">
+              <Button asChild size="lg" className="group h-14 px-8 text-base shadow-glow">
+                <Link to="/auth?role=participant">
+                  <User className="mr-2 h-5 w-5" />
+                  {t.hero.ctaParticipant}
+                  <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
+                </Link>
+              </Button>
+              <Button
+                asChild
+                size="lg"
+                variant="outline"
+                className="h-14 px-8 text-base border-secondary-foreground/20 bg-transparent text-secondary-foreground hover:bg-secondary-foreground/10 hover:text-secondary-foreground"
+              >
+                <Link to="/auth?role=organizer">
+                  <Trophy className="mr-2 h-5 w-5" />
+                  {t.hero.ctaOrganizer}
+                </Link>
+              </Button>
+            </div>
+          )}
 
           <dl className="mt-16 grid max-w-xl grid-cols-2 gap-6 border-t border-secondary-foreground/10 pt-8 sm:grid-cols-4">
             {[
