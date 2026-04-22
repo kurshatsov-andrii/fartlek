@@ -100,6 +100,7 @@ const EventEditor = () => {
       location: form.location,
       description: form.description || null,
       payment_url: form.is_paid ? (form.payment_url || null) : null,
+      results_pdf_url: form.results_pdf_url || null,
     } as any;
     let eventId = id!;
     if (isNew) {
