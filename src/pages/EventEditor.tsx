@@ -202,6 +202,18 @@ const EventEditor = () => {
               </Select>
             </div>
 
+            <div className="space-y-2">
+              <Label>{t.categories.label} *</Label>
+              <Select value={form.category} onValueChange={(v) => setForm({ ...form, category: v as EventCategory })}>
+                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  {EVENT_CATEGORIES.map((c) => (
+                    <SelectItem key={c} value={c}>{t.categories[c]}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
             <div className="space-y-3">
               <Label>{t.organizer.distances} *</Label>
               {distances.map((d, i) => (
