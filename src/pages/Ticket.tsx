@@ -96,7 +96,7 @@ const Ticket = () => {
         <Link to="/my-events" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-6">
           <ArrowLeft className="h-4 w-4" /> {t.nav.myEvents}
         </Link>
-        <div className="bg-card rounded-3xl shadow-elevated overflow-hidden">
+        <div ref={cardRef} className="bg-card rounded-3xl shadow-elevated overflow-hidden">
           <div className="bg-gradient-hero p-8 text-primary-foreground">
             <div className="text-xs font-semibold uppercase tracking-wider opacity-80">{t.ticket.title}</div>
             <h1 className="font-display text-3xl font-bold mt-2 leading-tight">{ev.title}</h1>
