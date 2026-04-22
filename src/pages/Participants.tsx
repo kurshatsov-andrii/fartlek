@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
-import { ArrowLeft, Loader2, CheckCircle2, XCircle, FileText, RotateCcw } from "lucide-react";
+import { ArrowLeft, Loader2, CheckCircle2, XCircle, FileText, RotateCcw, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
