@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import { Activity, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
+import logoFartlek from "@/assets/logo-fartlek.jpg";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -72,11 +73,9 @@ const Auth = () => {
     <div className="min-h-screen grid lg:grid-cols-2 bg-background">
       <div className="hidden lg:flex relative bg-gradient-hero p-12 flex-col justify-between text-primary-foreground overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_20%,hsl(0_0%_0%/0.4),transparent)]" />
-        <Link to="/" className="relative flex items-center gap-2 group w-fit">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-background/20 backdrop-blur">
-            <Activity className="h-5 w-5" strokeWidth={2.5} />
-          </div>
-          <span className="font-display text-2xl font-bold">Fartlek<span className="opacity-70">.</span></span>
+        <Link to="/" className="relative flex items-center gap-3 group w-fit">
+          <img src={logoFartlek} alt="Фартлек" className="h-10 w-10 rounded-full object-cover shadow-glow transition-bounce group-hover:scale-110" />
+          <span className="font-display text-2xl font-bold">Фартлек</span>
         </Link>
         <div className="relative">
           <h2 className="font-display text-5xl font-bold leading-tight mb-4">
@@ -91,11 +90,9 @@ const Auth = () => {
 
       <div className="flex items-center justify-center p-6 sm:p-12">
         <div className="w-full max-w-md space-y-6">
-          <Link to="/" className="lg:hidden flex items-center gap-2 mb-8">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-hero">
-              <Activity className="h-5 w-5 text-primary-foreground" strokeWidth={2.5} />
-            </div>
-            <span className="font-display text-xl font-bold">Fartlek<span className="text-primary">.</span></span>
+          <Link to="/" className="lg:hidden flex items-center gap-3 mb-8">
+            <img src={logoFartlek} alt="Фартлек" className="h-9 w-9 rounded-full object-cover" />
+            <span className="font-display text-xl font-bold">Фартлек</span>
           </Link>
 
           {mode === "signin" && (
