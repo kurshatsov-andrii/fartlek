@@ -1,7 +1,7 @@
 export type Lang = "uk" | "en";
 
 export interface Dict {
-  nav: { events: string; organizer: string; login: string; signup: string; dashboard: string; profile: string; logout: string; myEvents: string };
+  nav: { events: string; organizer: string; login: string; signup: string; dashboard: string; profile: string; logout: string; myEvents: string; contacts: string };
   hero: {
     kicker: string; title: string; subtitle: string;
     ctaParticipant: string; ctaOrganizer: string;
