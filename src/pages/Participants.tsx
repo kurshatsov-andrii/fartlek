@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
-import { ArrowLeft, Loader2, CheckCircle2, XCircle, FileText, RotateCcw } from "lucide-react";
+import { ArrowLeft, Loader2, CheckCircle2, XCircle, FileText, RotateCcw, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
@@ -70,6 +70,21 @@ const Participants = () => {
     load();
   };
 
+  const removeParticipant = async (regId: string, name: string) => {
+    const ok = window.confirm(
+      lang === "uk"
+        ? `Видалити учасника${name ? ` «${name}»` : ""}? Цю дію не можна скасувати.`
+        : `Delete participant${name ? ` "${name}"` : ""}? This cannot be undone.`
+    );
+    if (!ok) return;
+    setBusyId(regId);
+    const { error } = await supabase.from("registrations").delete().eq("id", regId);
+    setBusyId(null);
+    if (error) { toast.error(error.message); return; }
+    toast.success(lang === "uk" ? "Учасника видалено" : "Participant removed");
+    load();
+  };
+
   if (authLoading) return null;
   if (!user) return <Navigate to={`/auth?redirect=/events/${id}/participants`} replace />;
 
@@ -116,6 +131,7 @@ const Participants = () => {
                         <th className="p-3 font-semibold">{t.profile.club}</th>
                         {isPaid && <th className="p-3 font-semibold text-center">{lang === "uk" ? "Оплата" : "Payment"}</th>}
                         {isPaid && isOrganizer && <th className="p-3 font-semibold text-center">{lang === "uk" ? "Квитанція" : "Receipt"}</th>}
+                        {isOrganizer && <th className="p-3 font-semibold text-center">{lang === "uk" ? "Дії" : "Actions"}</th>}
                       </tr>
                     </thead>
                     <tbody>
@@ -161,6 +177,21 @@ const Participants = () => {
                                     {busyId === r.registration_id ? <Loader2 className="h-4 w-4 animate-spin" /> : <CheckCircle2 className="h-4 w-4 text-green-500" />}
                                   </Button>
                                 ) : null}
+                              </div>
+                            </td>
+                          )}
+                          {isOrganizer && (
+                            <td className="p-3">
+                              <div className="flex items-center justify-center">
+                                <Button
+                                  size="sm"
+                                  variant="ghost"
+                                  onClick={() => removeParticipant(r.registration_id, r.full_name)}
+                                  disabled={busyId === r.registration_id}
+                                  title={lang === "uk" ? "Видалити учасника" : "Remove participant"}
+                                >
+                                  {busyId === r.registration_id ? <Loader2 className="h-4 w-4 animate-spin" /> : <Trash2 className="h-4 w-4 text-destructive" />}
+                                </Button>
                               </div>
                             </td>
                           )}
