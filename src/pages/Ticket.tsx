@@ -18,6 +18,7 @@ const Ticket = () => {
   const [data, setData] = useState<any>(null);
   const [qrUrl, setQrUrl] = useState<string>("");
   const [loading, setLoading] = useState(true);
+  const cardRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!id || !user) return;
