@@ -13,6 +13,7 @@ interface CompletedEvent {
   location: string | null;
   image_url: string | null;
   results_pdf_url: string | null;
+  results_url: string | null;
 }
 
 export const CompletedEventsSection = () => {
@@ -23,7 +24,7 @@ export const CompletedEventsSection = () => {
   useEffect(() => {
     supabase
       .from("events")
-      .select("id, slug, title, event_date, location, image_url, results_pdf_url")
+      .select("id, slug, title, event_date, location, image_url, results_pdf_url, results_url")
       .eq("status", "completed")
       .order("event_date", { ascending: false })
       .limit(12)
@@ -113,7 +114,13 @@ export const CompletedEventsSection = () => {
                   {ev.results_pdf_url ? (
                     <Button asChild size="sm" variant="outline" className="w-full">
                       <a href={ev.results_pdf_url} target="_blank" rel="noopener noreferrer">
-                        <FileText className="h-4 w-4" /> {t.events.results}
+                        <FileText className="h-4 w-4" /> {t.events.downloadResults}
+                      </a>
+                    </Button>
+                  ) : ev.results_url ? (
+                    <Button asChild size="sm" variant="outline" className="w-full">
+                      <a href={ev.results_url} target="_blank" rel="noopener noreferrer">
+                        <FileText className="h-4 w-4" /> {t.events.openResults}
                       </a>
                     </Button>
                   ) : (

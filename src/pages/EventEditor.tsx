@@ -32,6 +32,7 @@ const EventEditor = () => {
     image_url: "", is_paid: false, payment_url: "", status: "draft",
     category: "run" as EventCategory,
     results_pdf_url: "",
+    results_url: "",
   });
   const [uploadingResults, setUploadingResults] = useState(false);
   const [distances, setDistances] = useState<DistanceForm[]>([{ distance_km: "10", name: "", price: "0", bib_start: "" }]);
@@ -49,6 +50,7 @@ const EventEditor = () => {
         status: ev.status,
         category: ((ev as any).category ?? "run") as EventCategory,
         results_pdf_url: (ev as any).results_pdf_url ?? "",
+        results_url: (ev as any).results_url ?? "",
       });
       const { data: ds } = await supabase.from("distances").select("*").eq("event_id", id).eq("is_active", true).order("distance_km");
       if (ds) setDistances(ds.map((d: any) => ({ id: d.id, distance_km: String(d.distance_km), name: d.name ?? "", price: String(d.price), bib_start: d.bib_start != null ? String(d.bib_start) : "" })));
@@ -101,6 +103,7 @@ const EventEditor = () => {
       description: form.description || null,
       payment_url: form.is_paid ? (form.payment_url || null) : null,
       results_pdf_url: form.results_pdf_url || null,
+      results_url: form.results_url || null,
     } as any;
     let eventId = id!;
     if (isNew) {
@@ -259,6 +262,16 @@ const EventEditor = () => {
                       <X className="h-4 w-4" /> {t.organizer.delete}
                     </Button>
                   )}
+                </div>
+                <div className="pt-3 border-t border-border space-y-1.5">
+                  <Label className="text-sm">{t.events.resultsExternalUrl}</Label>
+                  <p className="text-xs text-muted-foreground">{t.events.resultsExternalHint}</p>
+                  <Input
+                    type="url"
+                    placeholder="https://..."
+                    value={form.results_url}
+                    onChange={(e) => setForm({ ...form, results_url: e.target.value })}
+                  />
                 </div>
               </div>
             )}

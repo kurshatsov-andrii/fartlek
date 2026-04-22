@@ -19,6 +19,8 @@ export interface Dict {
     downloadResults: string; uploadResults: string; uploadingResults: string;
     replaceResults: string; resultsUploaded: string; resultsRemoved: string;
     resultsInvalidType: string; resultsTooBig: string;
+    resultsExternalUrl: string; resultsExternalHint: string; openResults: string;
+    resultsOr: string;
   };
   auth: {
     signIn: string; signUp: string; email: string; password: string; fullName: string;
@@ -97,6 +99,10 @@ export const translations: Record<Lang, Dict> = {
       resultsRemoved: "Протокол видалено",
       resultsInvalidType: "Дозволено лише PDF.",
       resultsTooBig: "Файл завеликий — максимум 20 МБ.",
+      resultsExternalUrl: "Посилання на сайт з результатами",
+      resultsExternalHint: "Якщо результати на іншому сайті — встав сюди посилання. Використовується, якщо PDF не завантажений.",
+      openResults: "Відкрити результати",
+      resultsOr: "або",
     },
     auth: {
       signIn: "Вхід", signUp: "Реєстрація", email: "Email", password: "Пароль", fullName: "Повне ім'я",
@@ -188,6 +194,10 @@ export const translations: Record<Lang, Dict> = {
       resultsRemoved: "Protocol removed",
       resultsInvalidType: "Only PDF is allowed.",
       resultsTooBig: "File too big — max 20 MB.",
+      resultsExternalUrl: "Link to results website",
+      resultsExternalHint: "If results are hosted elsewhere — paste the link. Used when no PDF is uploaded.",
+      openResults: "Open results",
+      resultsOr: "or",
     },
     auth: {
       signIn: "Sign in", signUp: "Sign up", email: "Email", password: "Password", fullName: "Full name",
