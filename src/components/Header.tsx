@@ -18,7 +18,7 @@ export const Header = () => {
         <Link to="/" className="flex items-center gap-3 group">
           <img src={logoFartlek} alt="Фартлек" className="h-10 w-10 rounded-full object-cover shadow-glow transition-bounce group-hover:scale-110" />
           <span className="font-display text-xl font-bold tracking-tight">
-            Фартлек<span className="text-primary">.</span>
+            Фартлек
           </span>
         </Link>
 
