@@ -128,13 +128,14 @@ const EventDetails = () => {
                 <div className="flex items-center gap-2"><Calendar className="h-4 w-4 text-primary" />{fmtDate} · {event.event_time.slice(0, 5)}</div>
                 {event.location && <div className="flex items-center gap-2"><MapPin className="h-4 w-4 text-primary" />{event.location}</div>}
                 <div className="flex items-center gap-2"><Users className="h-4 w-4 text-primary" />{participantsCount} {t.events.participants.toLowerCase()}</div>
+                <div className="flex items-center gap-2">
+                  <span className="text-muted-foreground">{t.events.organizer}:</span>
+                  <span className="font-medium">{event.organizer_name}</span>
+                </div>
               </div>
               {event.description && (
                 <div className="prose prose-sm max-w-none text-foreground whitespace-pre-wrap">{event.description}</div>
               )}
-              <div className="text-sm text-muted-foreground">
-                {t.events.organizer}: <span className="text-foreground font-medium">{event.organizer_name}</span>
-              </div>
             </div>
 
             <aside className="lg:col-span-1">
