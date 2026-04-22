@@ -23,6 +23,9 @@ const CategoriesIndex = () => {
       <SEO title={seo.title} description={seo.description} canonical="/category" />
       <Header />
       <main className="flex-1 container py-12 sm:py-16">
+        <a href="/#events" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-6">
+          <ArrowLeft className="h-4 w-4" /> {t.events.backToEvents}
+        </a>
         <h1 className="font-display text-4xl sm:text-5xl font-bold tracking-tight">
           {lang === "uk" ? "Категорії подій" : "Event categories"}
         </h1>
