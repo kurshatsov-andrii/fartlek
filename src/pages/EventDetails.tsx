@@ -113,8 +113,40 @@ const EventDetails = () => {
     day: "numeric", month: "long", year: "numeric",
   });
 
+  const seo = buildEventSeo({
+    title: event.title,
+    city: event.location,
+    isoDate: event.event_date,
+    organizer: event.organizer_name,
+    distancesKm: distances.map((d) => d.distance_km),
+    lang,
+  });
+
+  const canonical = `/events/${event.slug ?? event.id}`;
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "SportsEvent",
+    name: event.title,
+    startDate: `${event.event_date}T${event.event_time}`,
+    eventStatus: "https://schema.org/EventScheduled",
+    eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
+    location: event.location ? { "@type": "Place", name: event.location, address: event.location } : undefined,
+    image: event.image_url || undefined,
+    description: event.description || seo.description,
+    organizer: { "@type": "Organization", name: event.organizer_name },
+    offers: distances.map((d) => ({
+      "@type": "Offer",
+      name: `${d.distance_km} km${d.name ? ` — ${d.name}` : ""}`,
+      price: event.is_paid ? d.price : 0,
+      priceCurrency: "UAH",
+      availability: "https://schema.org/InStock",
+      url: `${window.location.origin}${canonical}`,
+    })),
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-background">
+      <SEO title={seo.title} description={seo.description} canonical={canonical} image={event.image_url ?? undefined} jsonLd={jsonLd} />
       <Header />
       <main className="flex-1">
         {event.image_url && (
