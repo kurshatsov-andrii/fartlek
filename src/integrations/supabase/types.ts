@@ -57,6 +57,7 @@ export type Database = {
       }
       events: {
         Row: {
+          category: Database["public"]["Enums"]["event_category"]
           created_at: string
           description: string | null
           event_date: string
@@ -72,6 +73,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          category?: Database["public"]["Enums"]["event_category"]
           created_at?: string
           description?: string | null
           event_date: string
@@ -87,6 +89,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          category?: Database["public"]["Enums"]["event_category"]
           created_at?: string
           description?: string | null
           event_date?: string
@@ -347,6 +350,14 @@ export type Database = {
     }
     Enums: {
       app_role: "participant" | "organizer" | "admin"
+      event_category:
+        | "run"
+        | "half_marathon"
+        | "marathon"
+        | "ultra"
+        | "trail"
+        | "ocr"
+        | "online"
       event_status: "draft" | "published" | "cancelled" | "completed"
       gender_type: "male" | "female" | "other"
       payment_provider_type: "liqpay" | "stripe" | "free"
@@ -479,6 +490,15 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["participant", "organizer", "admin"],
+      event_category: [
+        "run",
+        "half_marathon",
+        "marathon",
+        "ultra",
+        "trail",
+        "ocr",
+        "online",
+      ],
       event_status: ["draft", "published", "cancelled", "completed"],
       gender_type: ["male", "female", "other"],
       payment_provider_type: ["liqpay", "stripe", "free"],
