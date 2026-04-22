@@ -1,6 +1,7 @@
 import { Header } from "@/components/Header";
 import { Hero } from "@/components/Hero";
 import { EventsSection } from "@/components/EventsSection";
+import { CompletedEventsSection } from "@/components/CompletedEventsSection";
 import { Footer } from "@/components/Footer";
 import { SEO } from "@/components/SEO";
 import { useApp } from "@/contexts/AppContext";
@@ -23,6 +24,7 @@ const Index = () => {
       <main className="flex-1">
         <Hero />
         <EventsSection />
+        <CompletedEventsSection />
       </main>
       <Footer />
     </div>
