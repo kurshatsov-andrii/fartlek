@@ -1,19 +1,22 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { Calendar, MapPin, Users, Loader2, ArrowLeft, UserCircle2 } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { SEO } from "@/components/SEO";
 import { Button } from "@/components/ui/button";
 import { useApp } from "@/contexts/AppContext";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { startWayForPayCheckout } from "@/lib/wayforpay";
+import { buildEventSeo } from "@/lib/seo";
+import type { EventCategory } from "@/lib/i18n";
 
 interface EventRow {
-  id: string; title: string; description: string | null; organizer_name: string;
+  id: string; slug: string | null; title: string; description: string | null; organizer_name: string;
   event_date: string; event_time: string; location: string | null;
-  image_url: string | null; is_paid: boolean; status: string;
+  image_url: string | null; is_paid: boolean; status: string; category: EventCategory;
 }
 interface DistanceRow { id: string; distance_km: number; name: string | null; price: number; is_active?: boolean; }
 
