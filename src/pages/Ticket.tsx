@@ -62,6 +62,59 @@ const Ticket = () => {
     })();
   }, [id, user]);
 
+  // Generate a signed URL whenever we have a stored receipt
+  useEffect(() => {
+    if (!data?.receipt_url) { setReceiptViewUrl(""); return; }
+    (async () => {
+      const { data: signed } = await supabase.storage
+        .from("payment-receipts")
+        .createSignedUrl(data.receipt_url, 60 * 10);
+      setReceiptViewUrl(signed?.signedUrl ?? "");
+    })();
+  }, [data?.receipt_url]);
+
+  const onPickReceipt = () => fileRef.current?.click();
+
+  const onReceiptChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    if (!file || !data || !user) return;
+
+    const allowed = ["image/jpeg", "image/png", "image/webp", "application/pdf"];
+    if (!allowed.includes(file.type)) { toast.error(t.ticket.receiptInvalidType); return; }
+    if (file.size > 10 * 1024 * 1024) { toast.error(t.ticket.receiptTooBig); return; }
+
+    setUploadingReceipt(true);
+    try {
+      const ext = file.name.split(".").pop()?.toLowerCase() || (file.type === "application/pdf" ? "pdf" : "jpg");
+      const path = `${user.id}/${data.id}-${Date.now()}.${ext}`;
+      const { error: upErr } = await supabase.storage
+        .from("payment-receipts")
+        .upload(path, file, { contentType: file.type, upsert: false });
+      if (upErr) throw upErr;
+
+      // Cleanup previous file (best effort)
+      if (data.receipt_url && data.receipt_url !== path) {
+        await supabase.storage.from("payment-receipts").remove([data.receipt_url]);
+      }
+
+      const { data: updated, error: updErr } = await supabase
+        .from("registrations")
+        .update({ receipt_url: path })
+        .eq("id", data.id)
+        .select(`*, events(*), distances(*)`)
+        .single();
+      if (updErr) throw updErr;
+
+      setData(updated);
+      toast.success(t.ticket.receiptUploaded);
+    } catch (err: any) {
+      toast.error(err.message ?? t.common.error);
+    } finally {
+      setUploadingReceipt(false);
+    }
+  };
+
   if (authLoading) return null;
   if (!user) return <Navigate to="/auth" replace />;
 
