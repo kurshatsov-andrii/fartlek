@@ -142,9 +142,9 @@ const OrganizerDashboard = () => {
                     </Button>
                     
                     <Button onClick={() => exportData(ev.id, ev.title)} variant="outline" size="sm"><Download className="h-4 w-4" /> XLSX</Button>
-                    {ev.results_pdf_url && (
+                    {(ev.results_pdf_url || ev.results_url) && (
                       <Button asChild variant="outline" size="sm">
-                        <a href={ev.results_pdf_url} target="_blank" rel="noopener noreferrer">
+                        <a href={ev.results_pdf_url || ev.results_url} target="_blank" rel="noopener noreferrer">
                           <FileText className="h-4 w-4" /> {t.events.results}
                         </a>
                       </Button>

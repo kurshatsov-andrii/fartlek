@@ -189,14 +189,25 @@ const EventDetails = () => {
                     <FileText className="h-5 w-5 text-primary" />
                     {t.events.resultsTitle}
                   </h3>
-                  {event.results_pdf_url ? (
+                  {event.results_pdf_url || event.results_url ? (
                     <>
                       <p className="text-sm text-muted-foreground">{t.events.resultsHint}</p>
-                      <Button asChild>
-                        <a href={event.results_pdf_url} target="_blank" rel="noopener noreferrer">
-                          <FileText className="h-4 w-4" /> {t.events.downloadResults}
-                        </a>
-                      </Button>
+                      <div className="flex flex-wrap gap-2">
+                        {event.results_pdf_url && (
+                          <Button asChild>
+                            <a href={event.results_pdf_url} target="_blank" rel="noopener noreferrer">
+                              <FileText className="h-4 w-4" /> {t.events.downloadResults}
+                            </a>
+                          </Button>
+                        )}
+                        {event.results_url && (
+                          <Button asChild variant={event.results_pdf_url ? "outline" : "default"}>
+                            <a href={event.results_url} target="_blank" rel="noopener noreferrer">
+                              <FileText className="h-4 w-4" /> {t.events.openResults}
+                            </a>
+                          </Button>
+                        )}
+                      </div>
                     </>
                   ) : (
                     <p className="text-sm text-muted-foreground">{t.events.resultsNone}</p>
