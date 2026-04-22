@@ -73,6 +73,7 @@ export type Database = {
           organizer_name: string
           payment_url: string | null
           results_pdf_url: string | null
+          results_url: string | null
           slug: string | null
           status: Database["public"]["Enums"]["event_status"]
           title: string
@@ -92,6 +93,7 @@ export type Database = {
           organizer_name: string
           payment_url?: string | null
           results_pdf_url?: string | null
+          results_url?: string | null
           slug?: string | null
           status?: Database["public"]["Enums"]["event_status"]
           title: string
@@ -111,6 +113,7 @@ export type Database = {
           organizer_name?: string
           payment_url?: string | null
           results_pdf_url?: string | null
+          results_url?: string | null
           slug?: string | null
           status?: Database["public"]["Enums"]["event_status"]
           title?: string
