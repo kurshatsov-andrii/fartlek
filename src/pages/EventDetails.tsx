@@ -54,6 +54,20 @@ const EventDetails = () => {
     if (!user) { navigate(`/auth?redirect=/events/${id}`); return; }
     if (!selectedDistance || !event) return;
     setBusy(true);
+    // Require complete profile before registering
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("full_name, birth_date, gender, city")
+      .eq("id", user.id)
+      .maybeSingle();
+    const profileComplete =
+      !!profile?.full_name?.trim() && !!profile?.birth_date && !!profile?.gender && !!profile?.city?.trim();
+    if (!profileComplete) {
+      setBusy(false);
+      toast.error(t.profile.requiredToRegister);
+      navigate(`/profile?redirect=/events/${id}`);
+      return;
+    }
     const dist = distances.find((d) => d.id === selectedDistance)!;
     const isPaidReg = event.is_paid && dist.price > 0;
     const qrPayload = JSON.stringify({ e: event.id, u: user.id, d: dist.id, t: Date.now() });
