@@ -135,11 +135,6 @@ const EventDetails = () => {
               <div className="text-sm text-muted-foreground">
                 {t.events.organizer}: <span className="text-foreground font-medium">{event.organizer_name}</span>
               </div>
-              <Button asChild variant="outline">
-                <Link to={`/events/${event.id}/participants`}>
-                  <Users className="h-4 w-4" /> {t.events.participants}
-                </Link>
-              </Button>
             </div>
 
             <aside className="lg:col-span-1">
@@ -188,6 +183,11 @@ const EventDetails = () => {
                     </div>
                     <Button onClick={register} className="w-full" disabled={busy || !selectedDistance}>
                       {busy && <Loader2 className="h-4 w-4 animate-spin" />} {t.events.confirmRegister}
+                    </Button>
+                    <Button asChild variant="outline" className="w-full">
+                      <Link to={`/events/${event.id}/participants`}>
+                        <Users className="h-4 w-4" /> {t.events.participants}
+                      </Link>
                     </Button>
                   </>
                 )}
