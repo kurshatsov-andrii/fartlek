@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import { Loader2 } from "lucide-react";
+import { Loader2, Eye, EyeOff } from "lucide-react";
 import logoFartlek from "@/assets/logo-fartlek.jpg";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -25,6 +25,7 @@ const Auth = () => {
   const [fullName, setFullName] = useState("");
   const [role, setRole] = useState<"participant" | "organizer">(initialRole);
   const [busy, setBusy] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     if (!loading && user) navigate(redirectTo, { replace: true });
@@ -131,7 +132,12 @@ const Auth = () => {
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="password">{t.auth.password}</Label>
-                  <Input id="password" type="password" required value={password} onChange={(e) => setPassword(e.target.value)} />
+                  <div className="relative">
+                    <Input id="password" type={showPassword ? "text" : "password"} required value={password} onChange={(e) => setPassword(e.target.value)} className="pr-10" />
+                    <button type="button" onClick={() => setShowPassword((v) => !v)} className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground" aria-label={showPassword ? "Сховати пароль" : "Показати пароль"}>
+                      {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    </button>
+                  </div>
                 </div>
                 <Button type="submit" className="w-full" disabled={busy}>
                   {busy && <Loader2 className="h-4 w-4 animate-spin" />} {t.auth.signIn}
@@ -182,7 +188,12 @@ const Auth = () => {
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="password2">{t.auth.password}</Label>
-                  <Input id="password2" type="password" required minLength={6} value={password} onChange={(e) => setPassword(e.target.value)} />
+                  <div className="relative">
+                    <Input id="password2" type={showPassword ? "text" : "password"} required minLength={6} value={password} onChange={(e) => setPassword(e.target.value)} className="pr-10" />
+                    <button type="button" onClick={() => setShowPassword((v) => !v)} className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground" aria-label={showPassword ? "Сховати пароль" : "Показати пароль"}>
+                      {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    </button>
+                  </div>
                 </div>
                 <Button type="submit" className="w-full" disabled={busy}>
                   {busy && <Loader2 className="h-4 w-4 animate-spin" />} {t.auth.signUp}
