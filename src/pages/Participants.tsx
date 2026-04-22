@@ -70,6 +70,21 @@ const Participants = () => {
     load();
   };
 
+  const removeParticipant = async (regId: string, name: string) => {
+    const ok = window.confirm(
+      lang === "uk"
+        ? `Видалити учасника${name ? ` «${name}»` : ""}? Цю дію не можна скасувати.`
+        : `Delete participant${name ? ` "${name}"` : ""}? This cannot be undone.`
+    );
+    if (!ok) return;
+    setBusyId(regId);
+    const { error } = await supabase.from("registrations").delete().eq("id", regId);
+    setBusyId(null);
+    if (error) { toast.error(error.message); return; }
+    toast.success(lang === "uk" ? "Учасника видалено" : "Participant removed");
+    load();
+  };
+
   if (authLoading) return null;
   if (!user) return <Navigate to={`/auth?redirect=/events/${id}/participants`} replace />;
 
