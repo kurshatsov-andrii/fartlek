@@ -14,6 +14,11 @@ export interface Dict {
     description: string; location: string; selectDistance: string;
     confirmRegister: string; alreadyRegistered: string; viewTicket: string;
     backToEvents: string;
+    completedHeading: string; completedSub: string; completedEmpty: string;
+    results: string; resultsTitle: string; resultsHint: string; resultsNone: string;
+    downloadResults: string; uploadResults: string; uploadingResults: string;
+    replaceResults: string; resultsUploaded: string; resultsRemoved: string;
+    resultsInvalidType: string; resultsTooBig: string;
   };
   auth: {
     signIn: string; signUp: string; email: string; password: string; fullName: string;
@@ -77,6 +82,21 @@ export const translations: Record<Lang, Dict> = {
       selectDistance: "Обери дистанцію", confirmRegister: "Підтвердити реєстрацію",
       alreadyRegistered: "Ти вже зареєстрований", viewTicket: "Переглянути квиток",
       backToEvents: "До списку подій",
+      completedHeading: "Завершені події",
+      completedSub: "Архів подій з протоколами результатів.",
+      completedEmpty: "Поки що немає завершених подій",
+      results: "Результати",
+      resultsTitle: "Протокол результатів",
+      resultsHint: "Завантаж PDF з офіційними результатами — учасники зможуть його переглянути.",
+      resultsNone: "Протокол ще не завантажено.",
+      downloadResults: "Завантажити PDF",
+      uploadResults: "Завантажити протокол",
+      uploadingResults: "Завантаження...",
+      replaceResults: "Замінити протокол",
+      resultsUploaded: "Протокол завантажено",
+      resultsRemoved: "Протокол видалено",
+      resultsInvalidType: "Дозволено лише PDF.",
+      resultsTooBig: "Файл завеликий — максимум 20 МБ.",
     },
     auth: {
       signIn: "Вхід", signUp: "Реєстрація", email: "Email", password: "Пароль", fullName: "Повне ім'я",
@@ -153,6 +173,21 @@ export const translations: Record<Lang, Dict> = {
       selectDistance: "Select a distance", confirmRegister: "Confirm registration",
       alreadyRegistered: "You're already registered", viewTicket: "View ticket",
       backToEvents: "Back to events",
+      completedHeading: "Past events",
+      completedSub: "Archive of finished events with result protocols.",
+      completedEmpty: "No completed events yet",
+      results: "Results",
+      resultsTitle: "Results protocol",
+      resultsHint: "Upload a PDF with official results — participants will be able to view it.",
+      resultsNone: "Protocol not uploaded yet.",
+      downloadResults: "Download PDF",
+      uploadResults: "Upload protocol",
+      uploadingResults: "Uploading...",
+      replaceResults: "Replace protocol",
+      resultsUploaded: "Protocol uploaded",
+      resultsRemoved: "Protocol removed",
+      resultsInvalidType: "Only PDF is allowed.",
+      resultsTooBig: "File too big — max 20 MB.",
     },
     auth: {
       signIn: "Sign in", signUp: "Sign up", email: "Email", password: "Password", fullName: "Full name",

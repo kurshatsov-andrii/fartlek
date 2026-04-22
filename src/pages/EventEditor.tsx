@@ -31,7 +31,9 @@ const EventEditor = () => {
     event_date: "", event_time: "", location: "",
     image_url: "", is_paid: false, payment_url: "", status: "draft",
     category: "run" as EventCategory,
+    results_pdf_url: "",
   });
+  const [uploadingResults, setUploadingResults] = useState(false);
   const [distances, setDistances] = useState<DistanceForm[]>([{ distance_km: "10", name: "", price: "0", bib_start: "" }]);
 
   useEffect(() => {
@@ -46,6 +48,7 @@ const EventEditor = () => {
         payment_url: (ev as any).payment_url ?? "",
         status: ev.status,
         category: ((ev as any).category ?? "run") as EventCategory,
+        results_pdf_url: (ev as any).results_pdf_url ?? "",
       });
       const { data: ds } = await supabase.from("distances").select("*").eq("event_id", id).eq("is_active", true).order("distance_km");
       if (ds) setDistances(ds.map((d: any) => ({ id: d.id, distance_km: String(d.distance_km), name: d.name ?? "", price: String(d.price), bib_start: d.bib_start != null ? String(d.bib_start) : "" })));
@@ -65,6 +68,24 @@ const EventEditor = () => {
     setUploading(false);
   };
 
+  const uploadResults = async (file: File) => {
+    if (!user || isNew) return;
+    if (file.type !== "application/pdf") { toast.error(t.events.resultsInvalidType); return; }
+    if (file.size > 20 * 1024 * 1024) { toast.error(t.events.resultsTooBig); return; }
+    setUploadingResults(true);
+    const path = `${id}/results-${Date.now()}.pdf`;
+    const { error } = await supabase.storage.from("event-results").upload(path, file, { contentType: "application/pdf", upsert: true });
+    if (error) { toast.error(error.message); setUploadingResults(false); return; }
+    const { data } = supabase.storage.from("event-results").getPublicUrl(path);
+    setForm((f) => ({ ...f, results_pdf_url: data.publicUrl }));
+    setUploadingResults(false);
+    toast.success(t.events.resultsUploaded);
+  };
+
+  const removeResults = () => {
+    setForm((f) => ({ ...f, results_pdf_url: "" }));
+  };
+
   const save = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user) return;
@@ -79,6 +100,7 @@ const EventEditor = () => {
       location: form.location,
       description: form.description || null,
       payment_url: form.is_paid ? (form.payment_url || null) : null,
+      results_pdf_url: form.results_pdf_url || null,
     } as any;
     let eventId = id!;
     if (isNew) {
@@ -204,6 +226,40 @@ const EventEditor = () => {
                   value={form.payment_url}
                   onChange={(e) => setForm({ ...form, payment_url: e.target.value })}
                 />
+              </div>
+            )}
+
+            {!isNew && (
+              <div className="space-y-2 rounded-md border border-border p-4">
+                <Label>{t.events.resultsTitle}</Label>
+                <p className="text-xs text-muted-foreground">{t.events.resultsHint}</p>
+                <div className="flex flex-wrap items-center gap-3 pt-1">
+                  {form.results_pdf_url && (
+                    <a
+                      href={form.results_pdf_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm text-primary hover:underline inline-flex items-center gap-1.5"
+                    >
+                      <Upload className="h-4 w-4 rotate-180" /> {t.events.downloadResults}
+                    </a>
+                  )}
+                  <label className="inline-flex items-center gap-2 cursor-pointer rounded-md border border-input bg-background px-4 py-2 text-sm hover:bg-accent hover:text-accent-foreground transition-base">
+                    {uploadingResults ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
+                    {form.results_pdf_url ? t.events.replaceResults : t.events.uploadResults}
+                    <input
+                      type="file"
+                      accept="application/pdf"
+                      className="hidden"
+                      onChange={(e) => e.target.files?.[0] && uploadResults(e.target.files[0])}
+                    />
+                  </label>
+                  {form.results_pdf_url && (
+                    <Button type="button" variant="ghost" size="sm" onClick={removeResults}>
+                      <X className="h-4 w-4" /> {t.organizer.delete}
+                    </Button>
+                  )}
+                </div>
               </div>
             )}
 
