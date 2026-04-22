@@ -24,6 +24,12 @@ export const Header = () => {
 
         <nav className="hidden md:flex items-center gap-8">
           <Link to="/#events" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-base">{t.nav.events}</Link>
+          {user && (
+            <>
+              <Link to="/profile" className="hidden lg:inline text-sm font-medium text-muted-foreground hover:text-foreground transition-base">{t.nav.profile}</Link>
+              <Link to="/my-events" className="hidden lg:inline text-sm font-medium text-muted-foreground hover:text-foreground transition-base">{t.nav.myEvents}</Link>
+            </>
+          )}
           {isOrganizer ? (
             <Link to="/organizer" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-base">{t.nav.dashboard}</Link>
           ) : (
