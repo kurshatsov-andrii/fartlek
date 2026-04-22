@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useParams, Navigate } from "react-router-dom";
 import QRCode from "qrcode";
 import { jsPDF } from "jspdf";
+import html2canvas from "html2canvas";
 import { Download, Loader2, ArrowLeft } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
@@ -17,6 +18,7 @@ const Ticket = () => {
   const [data, setData] = useState<any>(null);
   const [qrUrl, setQrUrl] = useState<string>("");
   const [loading, setLoading] = useState(true);
+  const cardRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!id || !user) return;
@@ -59,98 +61,21 @@ const Ticket = () => {
   if (authLoading) return null;
   if (!user) return <Navigate to="/auth" replace />;
 
-  const downloadPdf = () => {
-    if (!data || !qrUrl) return;
-    const ev = data.events;
-    const dist = data.distances;
-    const fmtDate = new Date(ev.event_date).toLocaleDateString(lang === "uk" ? "uk-UA" : "en-US", { day: "numeric", month: "long", year: "numeric" });
-    const time = ev.event_time.slice(0, 5);
-    const statusLabel = data.payment_status === "paid" ? t.ticket.paid : data.payment_status === "free" ? t.ticket.free : t.ticket.pending;
-
-    // A6 landscape-ish card: 148 x 105 mm
-    const doc = new jsPDF({ orientation: "landscape", unit: "mm", format: [105, 148] });
-    const W = 148, H = 105;
-
-    // Header background — orange gradient simulation (solid orange w/ darker left, lighter right via 2 rects)
-    const headerH = 38;
-    // Base orange
-    doc.setFillColor(234, 88, 12); // primary orange
-    doc.rect(0, 0, W, headerH, "F");
-    // Right gradient band (yellow-ish)
-    for (let i = 0; i < 60; i++) {
-      const r = 234 + Math.round((250 - 234) * (i / 60));
-      const g = 88 + Math.round((204 - 88) * (i / 60));
-      const b = 12 + Math.round((21 - 12) * (i / 60));
-      doc.setFillColor(r, g, b);
-      doc.rect(W - 60 + i, 0, 1.2, headerH, "F");
-    }
-
-    // Header text
-    doc.setTextColor(255, 255, 255);
-    doc.setFont("helvetica", "normal");
-    doc.setFontSize(8);
-    doc.text(t.ticket.title.toUpperCase(), 10, 10);
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(20);
-    doc.text(ev.title, 10, 20, { maxWidth: W - 20 });
-    doc.setFont("helvetica", "normal");
-    doc.setFontSize(9);
-    doc.text(`${fmtDate} · ${time}`, 10, 30);
-
-    // Body background
-    doc.setFillColor(20, 20, 22);
-    doc.rect(0, headerH, W, H - headerH, "F");
-
-    // QR code
-    const qrSize = 48;
-    const qrX = 8, qrY = headerH + 8;
-    // White frame
-    doc.setFillColor(255, 255, 255);
-    doc.roundedRect(qrX - 2, qrY - 2, qrSize + 4, qrSize + 4, 2, 2, "F");
-    doc.addImage(qrUrl, "PNG", qrX, qrY, qrSize, qrSize);
-
-    // Right column
-    const colX = qrX + qrSize + 10;
-    let y = headerH + 12;
-
-    doc.setTextColor(160, 160, 170);
-    doc.setFontSize(7);
-    doc.text(t.ticket.bib.toUpperCase(), colX, y);
-    y += 10;
-    doc.setTextColor(234, 88, 12);
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(28);
-    doc.text(String(data.bib_number ?? "—"), colX, y);
-
-    y += 8;
-    doc.setTextColor(160, 160, 170);
-    doc.setFont("helvetica", "normal");
-    doc.setFontSize(7);
-    doc.text(t.events.distances.toUpperCase(), colX, y);
-    y += 5;
-    doc.setTextColor(240, 240, 245);
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(10);
-    doc.text(`${dist.distance_km} km${dist.name ? ` · ${dist.name}` : ""}`, colX, y, { maxWidth: W - colX - 8 });
-
-    y += 8;
-    doc.setTextColor(160, 160, 170);
-    doc.setFont("helvetica", "normal");
-    doc.setFontSize(7);
-    doc.text(t.ticket.status.toUpperCase(), colX, y);
-    y += 5;
-    if (data.payment_status === "pending") doc.setTextColor(234, 179, 8);
-    else doc.setTextColor(34, 197, 94);
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(9);
-    doc.text(statusLabel, colX, y);
-
-    // Hint
-    doc.setTextColor(140, 140, 150);
-    doc.setFont("helvetica", "normal");
-    doc.setFontSize(7);
-    doc.text(t.ticket.qrHint, qrX, qrY + qrSize + 8, { maxWidth: W - qrX - 8 });
-
+  const downloadPdf = async () => {
+    if (!data || !qrUrl || !cardRef.current) return;
+    const canvas = await html2canvas(cardRef.current, {
+      scale: 2,
+      backgroundColor: "#ffffff",
+      useCORS: true,
+    });
+    const imgData = canvas.toDataURL("image/png");
+    // Match aspect ratio of the rendered card
+    const pxW = canvas.width;
+    const pxH = canvas.height;
+    const pdfW = 148; // mm (A6 width)
+    const pdfH = (pxH / pxW) * pdfW;
+    const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: [pdfW, pdfH] });
+    doc.addImage(imgData, "PNG", 0, 0, pdfW, pdfH);
     doc.save(`fartlek-ticket-${data.bib_number ?? id}.pdf`);
   };
 
@@ -171,7 +96,7 @@ const Ticket = () => {
         <Link to="/my-events" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-6">
           <ArrowLeft className="h-4 w-4" /> {t.nav.myEvents}
         </Link>
-        <div className="bg-card rounded-3xl shadow-elevated overflow-hidden">
+        <div ref={cardRef} className="bg-card rounded-3xl shadow-elevated overflow-hidden">
           <div className="bg-gradient-hero p-8 text-primary-foreground">
             <div className="text-xs font-semibold uppercase tracking-wider opacity-80">{t.ticket.title}</div>
             <h1 className="font-display text-3xl font-bold mt-2 leading-tight">{ev.title}</h1>
