@@ -59,15 +59,37 @@ export const EventsSection = () => {
           </div>
         </div>
 
+        <div className="mb-10 flex flex-wrap gap-2">
+          {(["all", ...EVENT_CATEGORIES] as const).map((cat) => {
+            const isActive = activeCat === cat;
+            const label = cat === "all" ? t.categories.all : t.categories[cat];
+            return (
+              <button
+                key={cat}
+                type="button"
+                onClick={() => setActiveCat(cat)}
+                className={cn(
+                  "rounded-full border px-4 py-2 text-sm font-semibold uppercase tracking-wider transition-base",
+                  isActive
+                    ? "border-primary bg-primary text-primary-foreground shadow-card"
+                    : "border-border bg-card text-foreground hover:border-primary hover:text-primary"
+                )}
+              >
+                {label}
+              </button>
+            );
+          })}
+        </div>
+
         {loading ? (
           <div className="flex justify-center py-20"><Loader2 className="h-6 w-6 animate-spin" /></div>
-        ) : events.length === 0 ? (
+        ) : filtered.length === 0 ? (
           <div className="text-center py-20 bg-card rounded-2xl">
             <p className="text-muted-foreground">{t.events.empty}</p>
           </div>
         ) : (
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {events.map((ev, idx) => {
+            {filtered.map((ev, idx) => {
               const price = minPrice(ev);
               return (
                 <article key={ev.id} className="group relative flex flex-col overflow-hidden rounded-2xl bg-card shadow-card transition-bounce hover:-translate-y-2 hover:shadow-elevated animate-fade-in-up" style={{ animationDelay: `${idx * 80}ms` }}>
