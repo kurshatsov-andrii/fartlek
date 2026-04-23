@@ -243,6 +243,9 @@ const Admin = () => {
                         <td className="p-3">{u.full_name ?? "—"}</td>
                         <td className="p-3">{u.city ?? "—"}</td>
                         <td className="p-3">{u.club ?? "—"}</td>
+                        <td className="p-3 whitespace-nowrap text-muted-foreground">
+                          {u.created_at ? new Date(u.created_at).toLocaleDateString("uk-UA", { day: "2-digit", month: "2-digit", year: "numeric" }) : "—"}
+                        </td>
                         <td className="p-3">
                           <div className="flex flex-wrap gap-1">
                             {userRoles.length === 0 ? (
