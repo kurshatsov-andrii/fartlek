@@ -141,10 +141,16 @@ const Participants = () => {
                           <td className="p-3">{r.full_name ?? "—"}</td>
                           <td className="p-3">
                             {r.gender === "male"
-                              ? lang === "uk" ? "чоловік" : "male"
+                              ? t.profile.male
                               : r.gender === "female"
-                              ? lang === "uk" ? "жінка" : "female"
-                              : r.gender ?? "—"}
+                              ? t.profile.female
+                              : r.gender === "boy"
+                              ? t.profile.boy
+                              : r.gender === "girl"
+                              ? t.profile.girl
+                              : r.gender === "other"
+                              ? t.profile.other
+                              : "—"}
                           </td>
                           <td className="p-3">{r.birth_year ?? "—"}</td>
                           <td className="p-3">{r.city ?? "—"}</td>
