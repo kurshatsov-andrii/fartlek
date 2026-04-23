@@ -17,7 +17,7 @@ const MyEvents = () => {
   useEffect(() => {
     if (!user) return;
     supabase.from("registrations")
-      .select("*, events(*), distances(*)")
+      .select("*, events(*), distances(*), athletes(full_name, is_self)")
       .eq("user_id", user.id)
       .order("created_at", { ascending: false })
       .then(({ data }) => { setRegs(data ?? []); setLoading(false); });
