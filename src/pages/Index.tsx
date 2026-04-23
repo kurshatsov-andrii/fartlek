@@ -6,9 +6,11 @@ import { CompletedEventsSection } from "@/components/CompletedEventsSection";
 import { Footer } from "@/components/Footer";
 import { SEO } from "@/components/SEO";
 import { useApp } from "@/contexts/AppContext";
+import { useAuth } from "@/hooks/useAuth";
 
 const Index = () => {
   const { lang } = useApp();
+  const { user } = useAuth();
   const seo = lang === "uk"
     ? {
         title: "Fartlek Events — реєстрація на забіги в Україні",
@@ -24,7 +26,7 @@ const Index = () => {
       <Header />
       <main className="flex-1">
         <Hero />
-        <VideoTutorialSection />
+        {!user && <VideoTutorialSection />}
         <EventsSection />
         <CompletedEventsSection />
       </main>
