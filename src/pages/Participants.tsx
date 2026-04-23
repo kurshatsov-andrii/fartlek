@@ -111,7 +111,61 @@ const Participants = () => {
     load();
   };
 
-  // Unique values for filters
+  // Recipients = those without a confirmed (green check) payment.
+  // Two groups: no receipt uploaded → payment-reminder; receipt uploaded but not yet confirmed → receipt-reminder.
+  const reminderTargets = useMemo(() => {
+    return rows
+      .filter((r) => r.email && r.payment_status !== "paid")
+      .map((r) => ({
+        email: r.email as string,
+        name: (r.full_name as string) ?? "",
+        registration_id: r.registration_id as string,
+        kind: r.receipt_url ? "receipt" : "payment",
+        amount: distancePriceMap[String(r.distance_km)] ?? 0,
+      }));
+  }, [rows, distancePriceMap]);
+
+  const pendingPaymentCount = reminderTargets.filter((r) => r.kind === "payment").length;
+  const pendingReceiptCount = reminderTargets.filter((r) => r.kind === "receipt").length;
+
+  const sendReminders = async () => {
+    if (!id || reminderTargets.length === 0) return;
+    setSendingReminders(true);
+    const ticketBase = `${window.location.origin}/ticket/`;
+    let ok = 0;
+    let fail = 0;
+    for (const t of reminderTargets) {
+      const templateName = t.kind === "receipt" ? "receipt-reminder" : "payment-reminder";
+      const templateData: Record<string, any> = {
+        name: t.name?.split(" ")[0] || t.name,
+        eventTitle,
+        ticketUrl: `${ticketBase}${t.registration_id}`,
+      };
+      if (t.kind === "payment" && t.amount > 0) templateData.amount = t.amount;
+      const { error } = await supabase.functions.invoke("send-transactional-email", {
+        body: {
+          templateName,
+          recipientEmail: t.email,
+          idempotencyKey: `reminder-${t.kind}-${t.registration_id}-${new Date().toISOString().slice(0, 10)}`,
+          templateData,
+        },
+      });
+      if (error) fail++;
+      else ok++;
+    }
+    setSendingReminders(false);
+    setReminderOpen(false);
+    if (ok > 0) {
+      toast.success(
+        lang === "uk"
+          ? `Надіслано ${ok} нагадувань${fail ? `, ${fail} не вдалося` : ""}`
+          : `Sent ${ok} reminders${fail ? `, ${fail} failed` : ""}`
+      );
+    } else if (fail > 0) {
+      toast.error(lang === "uk" ? "Не вдалося надіслати нагадування" : "Failed to send reminders");
+    }
+  };
+
   const years = useMemo(
     () => Array.from(new Set(rows.map((r) => r.birth_year).filter(Boolean))).sort((a: any, b: any) => b - a),
     [rows]
