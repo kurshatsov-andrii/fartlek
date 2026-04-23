@@ -139,19 +139,86 @@ const Admin = () => {
               <table className="w-full text-sm">
                 <thead className="border-b">
                   <tr className="text-left">
-                    <th className="p-3">Email</th><th className="p-3">Ім'я</th><th className="p-3">Місто</th><th className="p-3">Клуб</th><th className="p-3"></th>
+                    <th className="p-3">Email</th>
+                    <th className="p-3">Ім'я</th>
+                    <th className="p-3">Місто</th>
+                    <th className="p-3">Клуб</th>
+                    <th className="p-3">Ролі</th>
+                    <th className="p-3 text-right">Керування ролями</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {users.map((u) => (
-                    <tr key={u.id} className="border-b last:border-0">
-                      <td className="p-3">{u.email}</td>
-                      <td className="p-3">{u.full_name ?? "—"}</td>
-                      <td className="p-3">{u.city ?? "—"}</td>
-                      <td className="p-3">{u.club ?? "—"}</td>
-                      <td className="p-3"><Button size="sm" variant="outline" onClick={() => grantOrganizer(u.id)}>+ organizer</Button></td>
+                  {users.map((u) => {
+                    const userRoles = rolesByUser[u.id] ?? [];
+                    const hasOrganizer = userRoles.includes("organizer");
+                    const hasAdmin = userRoles.includes("admin");
+                    const isSelf = u.id === user.id;
+                    return (
+                      <tr key={u.id} className="border-b last:border-0 align-top">
+                        <td className="p-3">{u.email}</td>
+                        <td className="p-3">{u.full_name ?? "—"}</td>
+                        <td className="p-3">{u.city ?? "—"}</td>
+                        <td className="p-3">{u.club ?? "—"}</td>
+                        <td className="p-3">
+                          <div className="flex flex-wrap gap-1">
+                            {userRoles.length === 0 ? (
+                              <span className="text-xs text-muted-foreground">Учасник</span>
+                            ) : (
+                              userRoles.map((r) => (
+                                <span
+                                  key={r}
+                                  className={`px-2 py-0.5 rounded text-xs ${
+                                    r === "admin"
+                                      ? "bg-destructive/20 text-destructive"
+                                      : r === "organizer"
+                                      ? "bg-primary/20 text-primary"
+                                      : "bg-muted"
+                                  }`}
+                                >
+                                  {ROLE_LABEL[r]}
+                                </span>
+                              ))
+                            )}
+                          </div>
+                        </td>
+                        <td className="p-3">
+                          <div className="flex flex-wrap gap-2 justify-end">
+                            {hasOrganizer ? (
+                              <Button size="sm" variant="outline" onClick={() => revokeRole(u.id, "organizer")}>
+                                − Організатор
+                              </Button>
+                            ) : (
+                              <Button size="sm" variant="outline" onClick={() => grantRole(u.id, "organizer")}>
+                                + Організатор
+                              </Button>
+                            )}
+                            {hasAdmin ? (
+                              <Button
+                                size="sm"
+                                variant="destructive"
+                                disabled={isSelf}
+                                title={isSelf ? "Не можна зняти роль із себе" : undefined}
+                                onClick={() => revokeRole(u.id, "admin")}
+                              >
+                                − Адмін
+                              </Button>
+                            ) : (
+                              <Button size="sm" onClick={() => grantRole(u.id, "admin")}>
+                                + Адмін
+                              </Button>
+                            )}
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                  {users.length === 0 && (
+                    <tr>
+                      <td colSpan={6} className="p-6 text-center text-muted-foreground">
+                        Немає користувачів
+                      </td>
                     </tr>
-                  ))}
+                  )}
                 </tbody>
               </table>
             </div>
