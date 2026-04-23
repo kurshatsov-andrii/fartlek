@@ -25,6 +25,9 @@ const Participants = () => {
   const [isOrganizer, setIsOrganizer] = useState(false);
   const [loading, setLoading] = useState(true);
   const [busyId, setBusyId] = useState<string | null>(null);
+  const [distancePriceMap, setDistancePriceMap] = useState<Record<string, number>>({});
+  const [reminderOpen, setReminderOpen] = useState(false);
+  const [sendingReminders, setSendingReminders] = useState(false);
 
   // Filters
   const [fGender, setFGender] = useState<string>("all");
@@ -44,6 +47,15 @@ const Participants = () => {
     setEventTitle(ev?.title ?? "");
     setIsPaid(!!ev?.is_paid);
     setIsOrganizer(ev?.organizer_id === user.id || isAdmin);
+    const { data: dists } = await supabase
+      .from("distances")
+      .select("distance_km, price")
+      .eq("event_id", id);
+    const priceMap: Record<string, number> = {};
+    (dists ?? []).forEach((d: any) => {
+      priceMap[String(d.distance_km)] = Number(d.price ?? 0);
+    });
+    setDistancePriceMap(priceMap);
     const { data: participants } = await (supabase.rpc as any)("get_event_participants", { _event_id: id });
     setRows(participants ?? []);
     setLoading(false);
