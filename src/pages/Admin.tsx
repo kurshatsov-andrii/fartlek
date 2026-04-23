@@ -38,6 +38,14 @@ const Admin = () => {
     ? events
     : events.filter((e) => e.status === eventStatusFilter);
 
+  const ROLE_PRIORITY: Record<AppRole | "none", number> = { admin: 0, organizer: 1, participant: 2, none: 3 };
+  const topRole = (uid: string): AppRole | "none" => {
+    const rs = rolesByUser[uid] ?? [];
+    if (rs.includes("admin")) return "admin";
+    if (rs.includes("organizer")) return "organizer";
+    if (rs.includes("participant")) return "participant";
+    return "none";
+  };
   const visibleUsers = users
     .filter((u) => {
       if (roleFilter === "all") return true;
@@ -46,6 +54,8 @@ const Admin = () => {
       return rs.includes(roleFilter);
     })
     .sort((a, b) => {
+      const roleDiff = ROLE_PRIORITY[topRole(a.id)] - ROLE_PRIORITY[topRole(b.id)];
+      if (roleDiff !== 0) return roleDiff;
       const ta = new Date(a.created_at ?? 0).getTime();
       const tb = new Date(b.created_at ?? 0).getTime();
       return userSort === "newest" ? tb - ta : ta - tb;
