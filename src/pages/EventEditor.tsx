@@ -311,16 +311,35 @@ const EventEditor = () => {
                 <span className="col-span-1" />
               </div>
               {distances.map((d, i) => (
-                <div key={i} className="grid grid-cols-12 gap-2">
-                  <Input className="col-span-2" type="number" step="0.1" placeholder="км" value={d.distance_km}
-                    onChange={(e) => { const c = [...distances]; c[i].distance_km = e.target.value; setDistances(c); }} />
-                  <Input className="col-span-5" placeholder={t.organizer.distanceName} value={d.name}
-                    onChange={(e) => { const c = [...distances]; c[i].name = e.target.value; setDistances(c); }} />
-                  <Input className="col-span-2" type="number" step="1" placeholder="₴" value={d.price}
-                    onChange={(e) => { const c = [...distances]; c[i].price = e.target.value; setDistances(c); }} />
-                  <Input className="col-span-2" type="number" step="1" placeholder="1001" value={d.bib_start}
-                    onChange={(e) => { const c = [...distances]; c[i].bib_start = e.target.value; setDistances(c); }} />
-                  <Button type="button" variant="ghost" size="icon" className="col-span-1"
+                <div key={i} className="rounded-lg border border-border p-3 sm:p-0 sm:border-0 sm:grid sm:grid-cols-12 sm:gap-2 space-y-3 sm:space-y-0">
+                  <div className="flex items-center justify-between sm:hidden">
+                    <span className="text-sm font-medium text-muted-foreground">#{i + 1}</span>
+                    <Button type="button" variant="ghost" size="sm"
+                      onClick={() => setDistances(distances.filter((_, k) => k !== i))}>
+                      <X className="h-4 w-4" /> {t.organizer.cancel}
+                    </Button>
+                  </div>
+                  <div className="sm:col-span-2 space-y-1">
+                    <Label className="sm:hidden text-xs text-muted-foreground">{t.organizer.distanceKm}</Label>
+                    <Input type="number" step="0.1" placeholder="км" value={d.distance_km}
+                      onChange={(e) => { const c = [...distances]; c[i].distance_km = e.target.value; setDistances(c); }} />
+                  </div>
+                  <div className="sm:col-span-5 space-y-1">
+                    <Label className="sm:hidden text-xs text-muted-foreground">{t.organizer.distanceName}</Label>
+                    <Input placeholder={t.organizer.distanceName} value={d.name}
+                      onChange={(e) => { const c = [...distances]; c[i].name = e.target.value; setDistances(c); }} />
+                  </div>
+                  <div className="sm:col-span-2 space-y-1">
+                    <Label className="sm:hidden text-xs text-muted-foreground">{t.organizer.distancePrice}</Label>
+                    <Input type="number" step="1" placeholder="₴" value={d.price}
+                      onChange={(e) => { const c = [...distances]; c[i].price = e.target.value; setDistances(c); }} />
+                  </div>
+                  <div className="sm:col-span-2 space-y-1">
+                    <Label className="sm:hidden text-xs text-muted-foreground">{t.organizer.bibStart}</Label>
+                    <Input type="number" step="1" placeholder="1001" value={d.bib_start}
+                      onChange={(e) => { const c = [...distances]; c[i].bib_start = e.target.value; setDistances(c); }} />
+                  </div>
+                  <Button type="button" variant="ghost" size="icon" className="hidden sm:inline-flex sm:col-span-1"
                     onClick={() => setDistances(distances.filter((_, k) => k !== i))}>
                     <X className="h-4 w-4" />
                   </Button>
