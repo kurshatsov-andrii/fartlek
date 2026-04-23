@@ -25,6 +25,17 @@ const Admin = () => {
   const [rolesByUser, setRolesByUser] = useState<Record<string, AppRole[]>>({});
   const [busy, setBusy] = useState(false);
   const [roleFilter, setRoleFilter] = useState<"all" | AppRole>("all");
+  const [eventStatusFilter, setEventStatusFilter] = useState<"all" | "published" | "cancelled" | "completed" | "draft">("all");
+
+  const STATUS_LABEL: Record<string, string> = {
+    published: "Опубліковано",
+    cancelled: "Скасовано",
+    completed: "Завершено",
+    draft: "Чернетка",
+  };
+  const visibleEvents = eventStatusFilter === "all"
+    ? events
+    : events.filter((e) => e.status === eventStatusFilter);
 
   const ROLE_PRIORITY: Record<AppRole | "none", number> = { admin: 0, organizer: 1, participant: 2, none: 3 };
   const topRole = (uid: string): AppRole | "none" => {
@@ -114,19 +125,44 @@ const Admin = () => {
           </TabsList>
 
           <TabsContent value="events" className="space-y-3">
-            {events.map((e) => (
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="text-sm text-muted-foreground mr-1">Сортувати за статусом:</span>
+              {([
+                { v: "all", label: `Усі (${events.length})` },
+                { v: "published", label: `Опубліковані (${events.filter(e => e.status === "published").length})` },
+                { v: "cancelled", label: `Скасовані (${events.filter(e => e.status === "cancelled").length})` },
+                { v: "completed", label: `Завершені (${events.filter(e => e.status === "completed").length})` },
+                { v: "draft", label: `Чернетки (${events.filter(e => e.status === "draft").length})` },
+              ] as const).map((opt) => (
+                <Button
+                  key={opt.v}
+                  size="sm"
+                  variant={eventStatusFilter === opt.v ? "default" : "outline"}
+                  onClick={() => setEventStatusFilter(opt.v)}
+                >
+                  {opt.label}
+                </Button>
+              ))}
+            </div>
+            {visibleEvents.map((e) => (
               <div key={e.id} className="bg-card p-4 rounded-xl flex items-center justify-between gap-4">
                 <div className="flex-1 min-w-0">
                   <div className="font-semibold truncate">{e.title}</div>
-                  <div className="text-xs text-muted-foreground">{e.event_date} · {e.organizer_name} · {e.status}</div>
+                  <div className="text-xs text-muted-foreground">
+                    {e.event_date} · {e.organizer_name} · {STATUS_LABEL[e.status] ?? e.status}
+                  </div>
                 </div>
                 <div className="flex gap-2">
                   <Button asChild size="sm" variant="outline"><Link to={`/events/${e.id}`}>Перегляд</Link></Button>
                   {e.status !== "published" && <Button size="sm" disabled={busy} onClick={() => setEventStatus(e.id, "published")}>Опублікувати</Button>}
+                  {e.status !== "completed" && <Button size="sm" variant="secondary" disabled={busy} onClick={() => setEventStatus(e.id, "completed")}>Завершити</Button>}
                   {e.status !== "cancelled" && <Button size="sm" variant="destructive" disabled={busy} onClick={() => setEventStatus(e.id, "cancelled")}>Скасувати</Button>}
                 </div>
               </div>
             ))}
+            {visibleEvents.length === 0 && (
+              <div className="bg-card p-6 rounded-xl text-center text-muted-foreground">Немає подій</div>
+            )}
           </TabsContent>
 
           <TabsContent value="payments" className="space-y-2">
