@@ -60,6 +60,13 @@ export interface Dict {
     label: string; all: string;
     run: string; half_marathon: string; marathon: string; ultra: string; trail: string; ocr: string; online: string;
   };
+  athletes: {
+    sectionTitle: string; sectionHint: string;
+    addTitle: string; editTitle: string; addBtn: string; formHint: string;
+    self: string; deleteConfirm: string; cannotDeleteSelf: string; deleted: string;
+    pickerLabel: string; pickerHint: string; addNew: string;
+    alreadyRegistered: string; registeringAs: string;
+  };
 }
 
 export const EVENT_CATEGORIES = ["run", "half_marathon", "marathon", "ultra", "trail", "ocr", "online"] as const;
