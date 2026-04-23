@@ -39,6 +39,16 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
 
 export const useApp = () => {
   const ctx = useContext(AppContext);
-  if (!ctx) throw new Error("useApp must be used within AppProvider");
+  if (!ctx) {
+    // Safe fallback to avoid blank screen if a consumer renders before provider mounts
+    return {
+      lang: "uk" as Lang,
+      setLang: () => {},
+      theme: "dark" as Theme,
+      setTheme: () => {},
+      toggleTheme: () => {},
+      t: translations.uk,
+    };
+  }
   return ctx;
 };
