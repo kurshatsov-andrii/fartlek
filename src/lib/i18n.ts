@@ -33,7 +33,7 @@ export interface Dict {
   };
   profile: {
     title: string; sub: string; birthDate: string; gender: string; city: string; club: string;
-    male: string; female: string; other: string; save: string; saved: string;
+    male: string; female: string; other: string; boy: string; girl: string; save: string; saved: string;
     requiredBanner: string; requiredToRegister: string; fillRequired: string; clubOptional: string;
   };
   ticket: {
@@ -120,7 +120,7 @@ export const translations: Record<Lang, Dict> = {
     profile: {
       title: "Мій профіль", sub: "Дані автоматично підставляються при реєстрації на події",
       birthDate: "Дата народження", gender: "Стать", city: "Місто", club: "Клуб",
-      male: "Чоловік", female: "Жінка", other: "Інше", save: "Зберегти", saved: "Збережено",
+      male: "Чоловік", female: "Жінка", other: "Інше", boy: "Дитина — хлопчик", girl: "Дитина — дівчинка", save: "Зберегти", saved: "Збережено",
       requiredBanner: "Заповни профіль, щоб реєструватись на події. Усі поля обов'язкові, окрім клубу.",
       requiredToRegister: "Спочатку заповни профіль — це обов'язково для реєстрації на події.",
       fillRequired: "Заповни всі обов'язкові поля",
@@ -215,7 +215,7 @@ export const translations: Record<Lang, Dict> = {
     profile: {
       title: "My profile", sub: "Data is auto-filled when you register for events",
       birthDate: "Birth date", gender: "Gender", city: "City", club: "Club",
-      male: "Male", female: "Female", other: "Other", save: "Save", saved: "Saved",
+      male: "Male", female: "Female", other: "Other", boy: "Child — boy", girl: "Child — girl", save: "Save", saved: "Saved",
       requiredBanner: "Complete your profile to register for events. All fields are required except club.",
       requiredToRegister: "Please complete your profile first — it's required to register for events.",
       fillRequired: "Please fill all required fields",

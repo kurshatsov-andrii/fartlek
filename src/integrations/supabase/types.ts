@@ -395,7 +395,7 @@ export type Database = {
         | "ocr"
         | "online"
       event_status: "draft" | "published" | "cancelled" | "completed"
-      gender_type: "male" | "female" | "other"
+      gender_type: "male" | "female" | "other" | "boy" | "girl"
       payment_provider_type: "liqpay" | "stripe" | "free"
       payment_status_type: "pending" | "paid" | "failed" | "refunded" | "free"
     }
@@ -536,7 +536,7 @@ export const Constants = {
         "online",
       ],
       event_status: ["draft", "published", "cancelled", "completed"],
-      gender_type: ["male", "female", "other"],
+      gender_type: ["male", "female", "other", "boy", "girl"],
       payment_provider_type: ["liqpay", "stripe", "free"],
       payment_status_type: ["pending", "paid", "failed", "refunded", "free"],
     },

@@ -110,6 +110,8 @@ const Profile = () => {
                     <SelectContent>
                       <SelectItem value="male">{t.profile.male}</SelectItem>
                       <SelectItem value="female">{t.profile.female}</SelectItem>
+                      <SelectItem value="boy">{t.profile.boy}</SelectItem>
+                      <SelectItem value="girl">{t.profile.girl}</SelectItem>
                       <SelectItem value="other">{t.profile.other}</SelectItem>
                     </SelectContent>
                   </Select>
