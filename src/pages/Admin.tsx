@@ -9,24 +9,39 @@ import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
+type AppRole = "participant" | "organizer" | "admin";
+
+const ROLE_LABEL: Record<AppRole, string> = {
+  participant: "Учасник",
+  organizer: "Організатор",
+  admin: "Адміністратор",
+};
+
 const Admin = () => {
   const { user, isAdmin, loading } = useAuth();
   const [events, setEvents] = useState<any[]>([]);
   const [orders, setOrders] = useState<any[]>([]);
   const [users, setUsers] = useState<any[]>([]);
+  const [rolesByUser, setRolesByUser] = useState<Record<string, AppRole[]>>({});
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
     if (!isAdmin) return;
     (async () => {
-      const [{ data: ev }, { data: ord }, { data: us }] = await Promise.all([
+      const [{ data: ev }, { data: ord }, { data: us }, { data: rs }] = await Promise.all([
         supabase.from("events").select("*").order("created_at", { ascending: false }),
         supabase.from("wayforpay_orders").select("*").order("created_at", { ascending: false }).limit(100),
         supabase.from("profiles").select("id, email, full_name, city, club, created_at").order("created_at", { ascending: false }).limit(100),
+        supabase.from("user_roles").select("user_id, role"),
       ]);
       setEvents(ev ?? []);
       setOrders(ord ?? []);
       setUsers(us ?? []);
+      const map: Record<string, AppRole[]> = {};
+      (rs ?? []).forEach((r: any) => {
+        map[r.user_id] = [...(map[r.user_id] ?? []), r.role as AppRole];
+      });
+      setRolesByUser(map);
     })();
   }, [isAdmin]);
 
@@ -43,10 +58,26 @@ const Admin = () => {
     toast.success("Оновлено");
   };
 
-  const grantOrganizer = async (userId: string) => {
-    const { error } = await supabase.from("user_roles").insert({ user_id: userId, role: "organizer" });
+  const grantRole = async (userId: string, role: AppRole) => {
+    if ((rolesByUser[userId] ?? []).includes(role)) return;
+    const { error } = await supabase.from("user_roles").insert({ user_id: userId, role });
     if (error) return toast.error(error.message);
-    toast.success("Роль organizer надано");
+    setRolesByUser((s) => ({ ...s, [userId]: [...(s[userId] ?? []), role] }));
+    toast.success(`Роль «${ROLE_LABEL[role]}» надано`);
+  };
+
+  const revokeRole = async (userId: string, role: AppRole) => {
+    if (role === "admin" && userId === user.id) {
+      return toast.error("Не можна зняти роль адміністратора з самого себе");
+    }
+    const { error } = await supabase
+      .from("user_roles")
+      .delete()
+      .eq("user_id", userId)
+      .eq("role", role);
+    if (error) return toast.error(error.message);
+    setRolesByUser((s) => ({ ...s, [userId]: (s[userId] ?? []).filter((r) => r !== role) }));
+    toast.success(`Роль «${ROLE_LABEL[role]}» знято`);
   };
 
   return (
