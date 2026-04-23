@@ -25,6 +25,7 @@ const Admin = () => {
   const [rolesByUser, setRolesByUser] = useState<Record<string, AppRole[]>>({});
   const [busy, setBusy] = useState(false);
   const [roleFilter, setRoleFilter] = useState<"all" | AppRole>("all");
+  const [userSort, setUserSort] = useState<"newest" | "oldest">("newest");
   const [eventStatusFilter, setEventStatusFilter] = useState<"all" | "published" | "cancelled" | "completed" | "draft">("all");
 
   const STATUS_LABEL: Record<string, string> = {
@@ -37,14 +38,6 @@ const Admin = () => {
     ? events
     : events.filter((e) => e.status === eventStatusFilter);
 
-  const ROLE_PRIORITY: Record<AppRole | "none", number> = { admin: 0, organizer: 1, participant: 2, none: 3 };
-  const topRole = (uid: string): AppRole | "none" => {
-    const rs = rolesByUser[uid] ?? [];
-    if (rs.includes("admin")) return "admin";
-    if (rs.includes("organizer")) return "organizer";
-    if (rs.includes("participant")) return "participant";
-    return "none";
-  };
   const visibleUsers = users
     .filter((u) => {
       if (roleFilter === "all") return true;
@@ -52,7 +45,11 @@ const Admin = () => {
       if (roleFilter === "participant") return rs.length === 0 || rs.includes("participant");
       return rs.includes(roleFilter);
     })
-    .sort((a, b) => ROLE_PRIORITY[topRole(a.id)] - ROLE_PRIORITY[topRole(b.id)]);
+    .sort((a, b) => {
+      const ta = new Date(a.created_at ?? 0).getTime();
+      const tb = new Date(b.created_at ?? 0).getTime();
+      return userSort === "newest" ? tb - ta : ta - tb;
+    });
 
   useEffect(() => {
     if (!isAdmin) return;
@@ -206,6 +203,20 @@ const Admin = () => {
                   {opt.label}
                 </Button>
               ))}
+              <span className="text-sm text-muted-foreground ml-3 mr-1">Сортувати за датою:</span>
+              {([
+                { v: "newest", label: "Спочатку нові" },
+                { v: "oldest", label: "Спочатку старі" },
+              ] as const).map((opt) => (
+                <Button
+                  key={opt.v}
+                  size="sm"
+                  variant={userSort === opt.v ? "default" : "outline"}
+                  onClick={() => setUserSort(opt.v)}
+                >
+                  {opt.label}
+                </Button>
+              ))}
             </div>
             <div className="overflow-x-auto bg-card rounded-xl">
               <table className="w-full text-sm">
@@ -215,6 +226,7 @@ const Admin = () => {
                     <th className="p-3">Ім'я</th>
                     <th className="p-3">Місто</th>
                     <th className="p-3">Клуб</th>
+                    <th className="p-3">Дата реєстрації</th>
                     <th className="p-3">Ролі</th>
                     <th className="p-3 text-right">Керування ролями</th>
                   </tr>
@@ -231,6 +243,9 @@ const Admin = () => {
                         <td className="p-3">{u.full_name ?? "—"}</td>
                         <td className="p-3">{u.city ?? "—"}</td>
                         <td className="p-3">{u.club ?? "—"}</td>
+                        <td className="p-3 whitespace-nowrap text-muted-foreground">
+                          {u.created_at ? new Date(u.created_at).toLocaleDateString("uk-UA", { day: "2-digit", month: "2-digit", year: "numeric" }) : "—"}
+                        </td>
                         <td className="p-3">
                           <div className="flex flex-wrap gap-1">
                             {userRoles.length === 0 ? (
@@ -286,7 +301,7 @@ const Admin = () => {
                   })}
                   {visibleUsers.length === 0 && (
                     <tr>
-                      <td colSpan={6} className="p-6 text-center text-muted-foreground">
+                      <td colSpan={7} className="p-6 text-center text-muted-foreground">
                         Немає користувачів
                       </td>
                     </tr>
