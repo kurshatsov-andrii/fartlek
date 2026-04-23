@@ -203,6 +203,20 @@ const Admin = () => {
                   {opt.label}
                 </Button>
               ))}
+              <span className="text-sm text-muted-foreground ml-3 mr-1">Сортувати за датою:</span>
+              {([
+                { v: "newest", label: "Спочатку нові" },
+                { v: "oldest", label: "Спочатку старі" },
+              ] as const).map((opt) => (
+                <Button
+                  key={opt.v}
+                  size="sm"
+                  variant={userSort === opt.v ? "default" : "outline"}
+                  onClick={() => setUserSort(opt.v)}
+                >
+                  {opt.label}
+                </Button>
+              ))}
             </div>
             <div className="overflow-x-auto bg-card rounded-xl">
               <table className="w-full text-sm">
@@ -212,6 +226,7 @@ const Admin = () => {
                     <th className="p-3">Ім'я</th>
                     <th className="p-3">Місто</th>
                     <th className="p-3">Клуб</th>
+                    <th className="p-3">Дата реєстрації</th>
                     <th className="p-3">Ролі</th>
                     <th className="p-3 text-right">Керування ролями</th>
                   </tr>
