@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useApp } from "@/contexts/AppContext";
 import { supabase } from "@/integrations/supabase/client";
+import { translateAuthError } from "@/lib/authErrors";
 import { toast } from "sonner";
 
 const ResetPassword = () => {
@@ -19,7 +20,7 @@ const ResetPassword = () => {
     setBusy(true);
     const { error } = await supabase.auth.updateUser({ password });
     setBusy(false);
-    if (error) toast.error(error.message);
+    if (error) toast.error(translateAuthError(error));
     else {
       toast.success(t.auth.successUpdate);
       navigate("/", { replace: true });
