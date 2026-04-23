@@ -210,11 +210,29 @@ const Participants = () => {
         <Link to={`/events/${id}`} className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-6">
           <ArrowLeft className="h-4 w-4" /> {t.events.backToEvents}
         </Link>
-        <h1 className="font-display text-3xl font-bold">{t.events.participants}</h1>
-        <p className="text-muted-foreground mt-1">
-          {eventTitle} · {filteredRows.length}
-          {filteredRows.length !== rows.length && <span className="text-muted-foreground/70"> / {rows.length}</span>}
-        </p>
+        <div className="flex flex-wrap items-start justify-between gap-3">
+          <div>
+            <h1 className="font-display text-3xl font-bold">{t.events.participants}</h1>
+            <p className="text-muted-foreground mt-1">
+              {eventTitle} · {filteredRows.length}
+              {filteredRows.length !== rows.length && <span className="text-muted-foreground/70"> / {rows.length}</span>}
+            </p>
+          </div>
+          {isOrganizer && isPaid && reminderTargets.length > 0 && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setReminderOpen(true)}
+              className="gap-2"
+            >
+              <Bell className="h-4 w-4" />
+              {lang === "uk" ? "Надіслати нагадування" : "Send reminders"}
+              <span className="ml-1 inline-flex items-center justify-center rounded-full bg-primary text-primary-foreground text-xs h-5 min-w-5 px-1.5">
+                {reminderTargets.length}
+              </span>
+            </Button>
+          )}
+        </div>
 
         {!loading && rows.length > 0 && (
           <div className="mt-6 bg-card rounded-2xl shadow-card p-4 flex flex-wrap gap-3 items-end">
