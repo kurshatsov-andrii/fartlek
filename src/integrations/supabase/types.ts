@@ -528,6 +528,7 @@ export type Database = {
           club: string
           distance_km: number
           distance_name: string
+          email: string
           full_name: string
           gender: Database["public"]["Enums"]["gender_type"]
           payment_status: Database["public"]["Enums"]["payment_status_type"]
