@@ -9,6 +9,7 @@ import { useApp } from "@/contexts/AppContext";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
+import { translateAuthError } from "@/lib/authErrors";
 import { toast } from "sonner";
 
 type Mode = "signin" | "signup" | "forgot";
@@ -37,7 +38,7 @@ const Auth = () => {
     setBusy(true);
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     setBusy(false);
-    if (error) toast.error(error.message);
+    if (error) toast.error(translateAuthError(error));
     else navigate(redirectTo, { replace: true });
   };
 
@@ -53,7 +54,7 @@ const Auth = () => {
       },
     });
     setBusy(false);
-    if (error) toast.error(error.message);
+    if (error) toast.error(translateAuthError(error));
     else {
       toast.success(t.auth.successSignUp);
       setMode("signin");
@@ -67,7 +68,7 @@ const Auth = () => {
       redirectTo: `${window.location.origin}/reset-password`,
     });
     setBusy(false);
-    if (error) toast.error(error.message);
+    if (error) toast.error(translateAuthError(error));
     else toast.success(t.auth.successReset);
   };
 
@@ -133,7 +134,7 @@ const Auth = () => {
                     redirect_uri: `${window.location.origin}${redirectTo}`,
                   });
                   if (result.error) {
-                    toast.error(result.error.message);
+                    toast.error(translateAuthError(result.error));
                     setBusy(false);
                   }
                 }}
