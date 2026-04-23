@@ -2,3 +2,6 @@ project_id = "mjkjygzxwysbhgjtvobm"
 
 [functions.wayforpay-callback]
 verify_jwt = false
+
+[functions.telegram-notify-registration]
+verify_jwt = false
