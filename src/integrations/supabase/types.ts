@@ -14,6 +14,53 @@ export type Database = {
   }
   public: {
     Tables: {
+      athletes: {
+        Row: {
+          birth_date: string
+          city: string
+          club: string | null
+          created_at: string
+          full_name: string
+          gender: Database["public"]["Enums"]["gender_type"]
+          id: string
+          is_self: boolean
+          owner_id: string
+          updated_at: string
+        }
+        Insert: {
+          birth_date: string
+          city: string
+          club?: string | null
+          created_at?: string
+          full_name: string
+          gender: Database["public"]["Enums"]["gender_type"]
+          id?: string
+          is_self?: boolean
+          owner_id: string
+          updated_at?: string
+        }
+        Update: {
+          birth_date?: string
+          city?: string
+          club?: string | null
+          created_at?: string
+          full_name?: string
+          gender?: Database["public"]["Enums"]["gender_type"]
+          id?: string
+          is_self?: boolean
+          owner_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "athletes_owner_id_fkey"
+            columns: ["owner_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       distances: {
         Row: {
           bib_start: number | null
@@ -209,6 +256,7 @@ export type Database = {
       }
       registrations: {
         Row: {
+          athlete_id: string | null
           bib_number: number | null
           created_at: string
           distance_id: string
@@ -224,6 +272,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          athlete_id?: string | null
           bib_number?: number | null
           created_at?: string
           distance_id: string
@@ -239,6 +288,7 @@ export type Database = {
           user_id: string
         }
         Update: {
+          athlete_id?: string | null
           bib_number?: number | null
           created_at?: string
           distance_id?: string
@@ -254,6 +304,13 @@ export type Database = {
           user_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "registrations_athlete_id_fkey"
+            columns: ["athlete_id"]
+            isOneToOne: false
+            referencedRelation: "athletes"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "registrations_distance_id_fkey"
             columns: ["distance_id"]

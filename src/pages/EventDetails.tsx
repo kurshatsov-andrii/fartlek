@@ -5,6 +5,9 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { SEO } from "@/components/SEO";
 import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { AthleteFormDialog, Athlete } from "@/components/AthleteFormDialog";
 import { useApp } from "@/contexts/AppContext";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
@@ -34,6 +37,28 @@ const EventDetails = () => {
   const [registration, setRegistration] = useState<{ id: string; payment_status: string } | null>(null);
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState(false);
+  const [athletes, setAthletes] = useState<Athlete[]>([]);
+  const [selectedAthlete, setSelectedAthlete] = useState<string>("");
+  const [athleteRegs, setAthleteRegs] = useState<Set<string>>(new Set()); // `${athleteId}:${distanceId}` already registered
+  const [athleteDialogOpen, setAthleteDialogOpen] = useState(false);
+
+  const reloadAthletes = async (uid: string, eventId: string) => {
+    const { data: ats } = await supabase.from("athletes").select("*").eq("owner_id", uid)
+      .order("is_self", { ascending: false }).order("created_at");
+    const list = (ats ?? []) as Athlete[];
+    setAthletes(list);
+    if (list.length > 0 && !selectedAthlete) {
+      setSelectedAthlete(list.find((a) => a.is_self)?.id ?? list[0].id);
+    }
+    // Existing registrations of these athletes for this event
+    if (list.length > 0) {
+      const { data: regs } = await supabase.from("registrations")
+        .select("athlete_id, distance_id")
+        .eq("event_id", eventId)
+        .in("athlete_id", list.map((a) => a.id));
+      setAthleteRegs(new Set((regs ?? []).map((r: any) => `${r.athlete_id}:${r.distance_id}`)));
+    }
+  };
 
   useEffect(() => {
     if (!id) return;
@@ -56,16 +81,20 @@ const EventDetails = () => {
       if (user) {
         const { data: reg } = await supabase.from("registrations").select("id, payment_status").eq("event_id", ev.id).eq("user_id", user.id).maybeSingle();
         if (reg) setRegistration(reg);
+        await reloadAthletes(user.id, ev.id);
       }
       setLoading(false);
     })();
   }, [id, user]);
 
+  const isAlreadyRegistered = !!selectedAthlete && !!selectedDistance &&
+    athleteRegs.has(`${selectedAthlete}:${selectedDistance}`);
+
   const register = async () => {
     if (!user) { navigate(`/auth?redirect=/events/${id}`); return; }
     if (!selectedDistance || !event) return;
     setBusy(true);
-    // Require complete profile before registering
+    // Require complete profile (self-athlete) before registering
     const { data: profile } = await supabase
       .from("profiles")
       .select("full_name, birth_date, gender, city")
@@ -79,12 +108,23 @@ const EventDetails = () => {
       navigate(`/profile?redirect=/events/${id}`);
       return;
     }
+    if (!selectedAthlete) {
+      setBusy(false);
+      toast.error(t.profile.fillRequired);
+      return;
+    }
+    if (isAlreadyRegistered) {
+      setBusy(false);
+      toast.error(t.athletes.alreadyRegistered);
+      return;
+    }
     const dist = distances.find((d) => d.id === selectedDistance)!;
     const isPaidReg = event.is_paid && dist.price > 0;
-    const qrPayload = JSON.stringify({ e: event.id, u: user.id, d: dist.id, t: Date.now() });
+    const qrPayload = JSON.stringify({ e: event.id, u: user.id, a: selectedAthlete, d: dist.id, t: Date.now() });
     const { data: reg, error } = await supabase.from("registrations").insert({
       event_id: event.id,
       user_id: user.id,
+      athlete_id: selectedAthlete,
       distance_id: dist.id,
       payment_status: isPaidReg ? "pending" : "free",
       qr_code_data: qrPayload,
@@ -218,73 +258,110 @@ const EventDetails = () => {
 
             <aside className="lg:col-span-1">
               <div className="sticky top-24 bg-card p-6 rounded-2xl shadow-card space-y-4">
-                <h3 className="font-display text-lg font-bold">{t.events.selectDistance}</h3>
-                {registration ? (
-                  <>
-                    <p className="text-sm text-muted-foreground">{t.events.alreadyRegistered}</p>
-                    {registration.payment_status === "pending" && (
-                      event.payment_url ? (
-                        <Button asChild className="w-full">
-                          <a href={event.payment_url} target="_blank" rel="noopener noreferrer">Сплатити</a>
-                        </Button>
-                      ) : (
-                        <Button
-                          className="w-full"
-                          onClick={async () => {
-                            setBusy(true);
-                            try { await startWayForPayCheckout(registration.id); }
-                            catch (e: any) { toast.error(e.message); setBusy(false); }
-                          }}
-                          disabled={busy}
-                        >
-                          {busy && <Loader2 className="h-4 w-4 animate-spin" />} Сплатити
-                        </Button>
-                      )
-                    )}
-                    <Button asChild variant={registration.payment_status === "pending" ? "outline" : "default"} className="w-full">
-                      <Link to={`/ticket/${registration.id}`}>{t.events.viewTicket}</Link>
-                    </Button>
-                    <Button asChild variant="outline" className="w-full">
-                      <Link to={`/events/${event.id}/participants`}>
-                        <Users className="h-4 w-4" /> {t.events.participants}
-                      </Link>
-                    </Button>
-                  </>
-                ) : (
-                  <>
-                    <div className="space-y-2">
-                      {distances.map((d) => (
-                        <button
-                          key={d.id}
-                          type="button"
-                          onClick={() => setSelectedDistance(d.id)}
-                          className={`w-full text-left rounded-md border-2 px-4 py-3 transition-base ${selectedDistance === d.id ? "border-primary bg-primary/10" : "border-border hover:border-primary/40"}`}
-                        >
-                          <div className="flex items-center justify-between">
-                            <div>
-                              <div className="font-bold">{d.distance_km} km</div>
-                              {d.name && <div className="text-xs text-muted-foreground">{d.name}</div>}
-                            </div>
-                            <div className="text-sm font-semibold">{event.is_paid && d.price > 0 ? `${d.price} ₴` : t.events.free}</div>
-                          </div>
-                        </button>
-                      ))}
-                      {distances.length === 0 && <p className="text-sm text-muted-foreground">—</p>}
+                {registration && (
+                  <div className="rounded-xl border border-primary/40 bg-primary/10 p-3 space-y-2 text-sm">
+                    <p className="text-foreground">{t.events.alreadyRegistered}</p>
+                    <div className="flex flex-col gap-2">
+                      {registration.payment_status === "pending" && (
+                        event.payment_url ? (
+                          <Button asChild size="sm" className="w-full">
+                            <a href={event.payment_url} target="_blank" rel="noopener noreferrer">Сплатити</a>
+                          </Button>
+                        ) : (
+                          <Button
+                            size="sm"
+                            className="w-full"
+                            onClick={async () => {
+                              setBusy(true);
+                              try { await startWayForPayCheckout(registration.id); }
+                              catch (e: any) { toast.error(e.message); setBusy(false); }
+                            }}
+                            disabled={busy}
+                          >
+                            {busy && <Loader2 className="h-4 w-4 animate-spin" />} Сплатити
+                          </Button>
+                        )
+                      )}
+                      <Button asChild size="sm" variant="outline" className="w-full">
+                        <Link to={`/ticket/${registration.id}`}>{t.events.viewTicket}</Link>
+                      </Button>
                     </div>
-                    <Button onClick={register} className="w-full" disabled={busy || !selectedDistance}>
-                      {busy && <Loader2 className="h-4 w-4 animate-spin" />} {t.events.confirmRegister}
-                    </Button>
-                    <Button asChild variant="outline" className="w-full">
-                      <Link to={`/events/${event.id}/participants`}>
-                        <Users className="h-4 w-4" /> {t.events.participants}
-                      </Link>
-                    </Button>
-                  </>
+                  </div>
                 )}
+
+                <h3 className="font-display text-lg font-bold">{t.events.selectDistance}</h3>
+
+                {user && athletes.length > 0 && (
+                  <div className="space-y-2">
+                    <Label>{t.athletes.pickerLabel}</Label>
+                    <Select value={selectedAthlete} onValueChange={setSelectedAthlete}>
+                      <SelectTrigger><SelectValue /></SelectTrigger>
+                      <SelectContent>
+                        {athletes.map((a) => (
+                          <SelectItem key={a.id} value={a.id}>
+                            {a.full_name}{a.is_self ? ` (${t.athletes.self})` : ""}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <Button type="button" variant="ghost" size="sm" className="w-full" onClick={() => setAthleteDialogOpen(true)}>
+                      {t.athletes.addNew}
+                    </Button>
+                  </div>
+                )}
+
+                <div className="space-y-2">
+                  {distances.map((d) => (
+                    <button
+                      key={d.id}
+                      type="button"
+                      onClick={() => setSelectedDistance(d.id)}
+                      className={`w-full text-left rounded-md border-2 px-4 py-3 transition-base ${selectedDistance === d.id ? "border-primary bg-primary/10" : "border-border hover:border-primary/40"}`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <div className="font-bold">{d.distance_km} km</div>
+                          {d.name && <div className="text-xs text-muted-foreground">{d.name}</div>}
+                        </div>
+                        <div className="text-sm font-semibold">{event.is_paid && d.price > 0 ? `${d.price} ₴` : t.events.free}</div>
+                      </div>
+                    </button>
+                  ))}
+                  {distances.length === 0 && <p className="text-sm text-muted-foreground">—</p>}
+                </div>
+
+                {isAlreadyRegistered && (
+                  <p className="text-xs text-destructive">{t.athletes.alreadyRegistered}</p>
+                )}
+
+                <Button
+                  onClick={register}
+                  className="w-full"
+                  disabled={busy || !selectedDistance || (!!user && !selectedAthlete) || isAlreadyRegistered}
+                >
+                  {busy && <Loader2 className="h-4 w-4 animate-spin" />} {t.events.confirmRegister}
+                </Button>
+                <Button asChild variant="outline" className="w-full">
+                  <Link to={`/events/${event.id}/participants`}>
+                    <Users className="h-4 w-4" /> {t.events.participants}
+                  </Link>
+                </Button>
               </div>
             </aside>
           </div>
         </div>
+
+        {user && (
+          <AthleteFormDialog
+            open={athleteDialogOpen}
+            onOpenChange={setAthleteDialogOpen}
+            ownerId={user.id}
+            onSaved={async (a) => {
+              await reloadAthletes(user.id, event.id);
+              setSelectedAthlete(a.id);
+            }}
+          />
+        )}
       </main>
       <Footer />
     </div>

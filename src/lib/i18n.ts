@@ -60,6 +60,13 @@ export interface Dict {
     label: string; all: string;
     run: string; half_marathon: string; marathon: string; ultra: string; trail: string; ocr: string; online: string;
   };
+  athletes: {
+    sectionTitle: string; sectionHint: string;
+    addTitle: string; editTitle: string; addBtn: string; formHint: string;
+    self: string; deleteConfirm: string; cannotDeleteSelf: string; deleted: string;
+    pickerLabel: string; pickerHint: string; addNew: string;
+    alreadyRegistered: string; registeringAs: string;
+  };
 }
 
 export const EVENT_CATEGORIES = ["run", "half_marathon", "marathon", "ultra", "trail", "ocr", "online"] as const;
@@ -161,6 +168,23 @@ export const translations: Record<Lang, Dict> = {
       run: "Забіги", half_marathon: "Напівмарафони", marathon: "Марафони",
       ultra: "Ультра", trail: "Трейл", ocr: "OCR", online: "Онлайн",
     },
+    athletes: {
+      sectionTitle: "Мої учасники",
+      sectionHint: "Додай дітей або інших людей, яких ти реєструєш на змагання. Один акаунт — багато учасників.",
+      addTitle: "Новий учасник",
+      editTitle: "Редагувати учасника",
+      addBtn: "+ Додати учасника",
+      formHint: "Заповни дані людини, яку реєструватимеш на забіги.",
+      self: "Я",
+      deleteConfirm: "Видалити учасника? Усі його реєстрації також буде видалено.",
+      cannotDeleteSelf: "Профіль «Я» видалити не можна — він синхронізований з твоїм акаунтом.",
+      deleted: "Учасника видалено",
+      pickerLabel: "Кого реєструємо?",
+      pickerHint: "Можна зареєструвати себе, дитину або іншу людину.",
+      addNew: "+ Додати нового учасника",
+      alreadyRegistered: "Цей учасник вже зареєстрований на цю дистанцію",
+      registeringAs: "Реєструємо",
+    },
   },
   en: {
     nav: { events: "Events", organizer: "For organizers", login: "Sign in", signup: "Sign up", dashboard: "Dashboard", profile: "Profile", logout: "Sign out", myEvents: "My events", contacts: "Contacts" },
@@ -255,6 +279,23 @@ export const translations: Record<Lang, Dict> = {
       label: "Category", all: "All",
       run: "Runs", half_marathon: "Half marathons", marathon: "Marathons",
       ultra: "Ultra", trail: "Trail", ocr: "OCR", online: "Online",
+    },
+    athletes: {
+      sectionTitle: "My athletes",
+      sectionHint: "Add children or other people you register for races. One account — many athletes.",
+      addTitle: "New athlete",
+      editTitle: "Edit athlete",
+      addBtn: "+ Add athlete",
+      formHint: "Fill in the details of the person you'll register for races.",
+      self: "Me",
+      deleteConfirm: "Delete this athlete? All their registrations will be deleted too.",
+      cannotDeleteSelf: "The «Me» profile can't be deleted — it's synced with your account.",
+      deleted: "Athlete deleted",
+      pickerLabel: "Who are we registering?",
+      pickerHint: "You can register yourself, a child, or anyone else.",
+      addNew: "+ Add new athlete",
+      alreadyRegistered: "This athlete is already registered for this distance",
+      registeringAs: "Registering",
     },
   },
 };
