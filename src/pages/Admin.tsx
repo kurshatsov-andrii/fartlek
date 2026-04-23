@@ -24,6 +24,24 @@ const Admin = () => {
   const [users, setUsers] = useState<any[]>([]);
   const [rolesByUser, setRolesByUser] = useState<Record<string, AppRole[]>>({});
   const [busy, setBusy] = useState(false);
+  const [roleFilter, setRoleFilter] = useState<"all" | AppRole>("all");
+
+  const ROLE_PRIORITY: Record<AppRole | "none", number> = { admin: 0, organizer: 1, participant: 2, none: 3 };
+  const topRole = (uid: string): AppRole | "none" => {
+    const rs = rolesByUser[uid] ?? [];
+    if (rs.includes("admin")) return "admin";
+    if (rs.includes("organizer")) return "organizer";
+    if (rs.includes("participant")) return "participant";
+    return "none";
+  };
+  const visibleUsers = users
+    .filter((u) => {
+      if (roleFilter === "all") return true;
+      const rs = rolesByUser[u.id] ?? [];
+      if (roleFilter === "participant") return rs.length === 0 || rs.includes("participant");
+      return rs.includes(roleFilter);
+    })
+    .sort((a, b) => ROLE_PRIORITY[topRole(a.id)] - ROLE_PRIORITY[topRole(b.id)]);
 
   useEffect(() => {
     if (!isAdmin) return;
