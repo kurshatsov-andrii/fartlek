@@ -5,6 +5,9 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { SEO } from "@/components/SEO";
 import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { AthleteFormDialog, Athlete } from "@/components/AthleteFormDialog";
 import { useApp } from "@/contexts/AppContext";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
@@ -34,6 +37,28 @@ const EventDetails = () => {
   const [registration, setRegistration] = useState<{ id: string; payment_status: string } | null>(null);
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState(false);
+  const [athletes, setAthletes] = useState<Athlete[]>([]);
+  const [selectedAthlete, setSelectedAthlete] = useState<string>("");
+  const [athleteRegs, setAthleteRegs] = useState<Set<string>>(new Set()); // `${athleteId}:${distanceId}` already registered
+  const [athleteDialogOpen, setAthleteDialogOpen] = useState(false);
+
+  const reloadAthletes = async (uid: string, eventId: string) => {
+    const { data: ats } = await supabase.from("athletes").select("*").eq("owner_id", uid)
+      .order("is_self", { ascending: false }).order("created_at");
+    const list = (ats ?? []) as Athlete[];
+    setAthletes(list);
+    if (list.length > 0 && !selectedAthlete) {
+      setSelectedAthlete(list.find((a) => a.is_self)?.id ?? list[0].id);
+    }
+    // Existing registrations of these athletes for this event
+    if (list.length > 0) {
+      const { data: regs } = await supabase.from("registrations")
+        .select("athlete_id, distance_id")
+        .eq("event_id", eventId)
+        .in("athlete_id", list.map((a) => a.id));
+      setAthleteRegs(new Set((regs ?? []).map((r: any) => `${r.athlete_id}:${r.distance_id}`)));
+    }
+  };
 
   useEffect(() => {
     if (!id) return;
@@ -56,16 +81,20 @@ const EventDetails = () => {
       if (user) {
         const { data: reg } = await supabase.from("registrations").select("id, payment_status").eq("event_id", ev.id).eq("user_id", user.id).maybeSingle();
         if (reg) setRegistration(reg);
+        await reloadAthletes(user.id, ev.id);
       }
       setLoading(false);
     })();
   }, [id, user]);
 
+  const isAlreadyRegistered = !!selectedAthlete && !!selectedDistance &&
+    athleteRegs.has(`${selectedAthlete}:${selectedDistance}`);
+
   const register = async () => {
     if (!user) { navigate(`/auth?redirect=/events/${id}`); return; }
     if (!selectedDistance || !event) return;
     setBusy(true);
-    // Require complete profile before registering
+    // Require complete profile (self-athlete) before registering
     const { data: profile } = await supabase
       .from("profiles")
       .select("full_name, birth_date, gender, city")
@@ -79,12 +108,23 @@ const EventDetails = () => {
       navigate(`/profile?redirect=/events/${id}`);
       return;
     }
+    if (!selectedAthlete) {
+      setBusy(false);
+      toast.error(t.profile.fillRequired);
+      return;
+    }
+    if (isAlreadyRegistered) {
+      setBusy(false);
+      toast.error(t.athletes.alreadyRegistered);
+      return;
+    }
     const dist = distances.find((d) => d.id === selectedDistance)!;
     const isPaidReg = event.is_paid && dist.price > 0;
-    const qrPayload = JSON.stringify({ e: event.id, u: user.id, d: dist.id, t: Date.now() });
+    const qrPayload = JSON.stringify({ e: event.id, u: user.id, a: selectedAthlete, d: dist.id, t: Date.now() });
     const { data: reg, error } = await supabase.from("registrations").insert({
       event_id: event.id,
       user_id: user.id,
+      athlete_id: selectedAthlete,
       distance_id: dist.id,
       payment_status: isPaidReg ? "pending" : "free",
       qr_code_data: qrPayload,
