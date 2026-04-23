@@ -8,3 +8,6 @@ verify_jwt = false
 
 [functions.telegram-notify-signup]
 verify_jwt = false
+
+[functions.process-email-queue]
+verify_jwt = true
