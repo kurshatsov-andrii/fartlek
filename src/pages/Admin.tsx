@@ -301,7 +301,7 @@ const Admin = () => {
                   })}
                   {visibleUsers.length === 0 && (
                     <tr>
-                      <td colSpan={6} className="p-6 text-center text-muted-foreground">
+                      <td colSpan={7} className="p-6 text-center text-muted-foreground">
                         Немає користувачів
                       </td>
                     </tr>
