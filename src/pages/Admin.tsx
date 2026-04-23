@@ -9,24 +9,39 @@ import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
+type AppRole = "participant" | "organizer" | "admin";
+
+const ROLE_LABEL: Record<AppRole, string> = {
+  participant: "Учасник",
+  organizer: "Організатор",
+  admin: "Адміністратор",
+};
+
 const Admin = () => {
   const { user, isAdmin, loading } = useAuth();
   const [events, setEvents] = useState<any[]>([]);
   const [orders, setOrders] = useState<any[]>([]);
   const [users, setUsers] = useState<any[]>([]);
+  const [rolesByUser, setRolesByUser] = useState<Record<string, AppRole[]>>({});
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
     if (!isAdmin) return;
     (async () => {
-      const [{ data: ev }, { data: ord }, { data: us }] = await Promise.all([
+      const [{ data: ev }, { data: ord }, { data: us }, { data: rs }] = await Promise.all([
         supabase.from("events").select("*").order("created_at", { ascending: false }),
         supabase.from("wayforpay_orders").select("*").order("created_at", { ascending: false }).limit(100),
         supabase.from("profiles").select("id, email, full_name, city, club, created_at").order("created_at", { ascending: false }).limit(100),
+        supabase.from("user_roles").select("user_id, role"),
       ]);
       setEvents(ev ?? []);
       setOrders(ord ?? []);
       setUsers(us ?? []);
+      const map: Record<string, AppRole[]> = {};
+      (rs ?? []).forEach((r: any) => {
+        map[r.user_id] = [...(map[r.user_id] ?? []), r.role as AppRole];
+      });
+      setRolesByUser(map);
     })();
   }, [isAdmin]);
 
@@ -43,10 +58,26 @@ const Admin = () => {
     toast.success("Оновлено");
   };
 
-  const grantOrganizer = async (userId: string) => {
-    const { error } = await supabase.from("user_roles").insert({ user_id: userId, role: "organizer" });
+  const grantRole = async (userId: string, role: AppRole) => {
+    if ((rolesByUser[userId] ?? []).includes(role)) return;
+    const { error } = await supabase.from("user_roles").insert({ user_id: userId, role });
     if (error) return toast.error(error.message);
-    toast.success("Роль organizer надано");
+    setRolesByUser((s) => ({ ...s, [userId]: [...(s[userId] ?? []), role] }));
+    toast.success(`Роль «${ROLE_LABEL[role]}» надано`);
+  };
+
+  const revokeRole = async (userId: string, role: AppRole) => {
+    if (role === "admin" && userId === user.id) {
+      return toast.error("Не можна зняти роль адміністратора з самого себе");
+    }
+    const { error } = await supabase
+      .from("user_roles")
+      .delete()
+      .eq("user_id", userId)
+      .eq("role", role);
+    if (error) return toast.error(error.message);
+    setRolesByUser((s) => ({ ...s, [userId]: (s[userId] ?? []).filter((r) => r !== role) }));
+    toast.success(`Роль «${ROLE_LABEL[role]}» знято`);
   };
 
   return (
@@ -108,19 +139,86 @@ const Admin = () => {
               <table className="w-full text-sm">
                 <thead className="border-b">
                   <tr className="text-left">
-                    <th className="p-3">Email</th><th className="p-3">Ім'я</th><th className="p-3">Місто</th><th className="p-3">Клуб</th><th className="p-3"></th>
+                    <th className="p-3">Email</th>
+                    <th className="p-3">Ім'я</th>
+                    <th className="p-3">Місто</th>
+                    <th className="p-3">Клуб</th>
+                    <th className="p-3">Ролі</th>
+                    <th className="p-3 text-right">Керування ролями</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {users.map((u) => (
-                    <tr key={u.id} className="border-b last:border-0">
-                      <td className="p-3">{u.email}</td>
-                      <td className="p-3">{u.full_name ?? "—"}</td>
-                      <td className="p-3">{u.city ?? "—"}</td>
-                      <td className="p-3">{u.club ?? "—"}</td>
-                      <td className="p-3"><Button size="sm" variant="outline" onClick={() => grantOrganizer(u.id)}>+ organizer</Button></td>
+                  {users.map((u) => {
+                    const userRoles = rolesByUser[u.id] ?? [];
+                    const hasOrganizer = userRoles.includes("organizer");
+                    const hasAdmin = userRoles.includes("admin");
+                    const isSelf = u.id === user.id;
+                    return (
+                      <tr key={u.id} className="border-b last:border-0 align-top">
+                        <td className="p-3">{u.email}</td>
+                        <td className="p-3">{u.full_name ?? "—"}</td>
+                        <td className="p-3">{u.city ?? "—"}</td>
+                        <td className="p-3">{u.club ?? "—"}</td>
+                        <td className="p-3">
+                          <div className="flex flex-wrap gap-1">
+                            {userRoles.length === 0 ? (
+                              <span className="text-xs text-muted-foreground">Учасник</span>
+                            ) : (
+                              userRoles.map((r) => (
+                                <span
+                                  key={r}
+                                  className={`px-2 py-0.5 rounded text-xs ${
+                                    r === "admin"
+                                      ? "bg-destructive/20 text-destructive"
+                                      : r === "organizer"
+                                      ? "bg-primary/20 text-primary"
+                                      : "bg-muted"
+                                  }`}
+                                >
+                                  {ROLE_LABEL[r]}
+                                </span>
+                              ))
+                            )}
+                          </div>
+                        </td>
+                        <td className="p-3">
+                          <div className="flex flex-wrap gap-2 justify-end">
+                            {hasOrganizer ? (
+                              <Button size="sm" variant="outline" onClick={() => revokeRole(u.id, "organizer")}>
+                                − Організатор
+                              </Button>
+                            ) : (
+                              <Button size="sm" variant="outline" onClick={() => grantRole(u.id, "organizer")}>
+                                + Організатор
+                              </Button>
+                            )}
+                            {hasAdmin ? (
+                              <Button
+                                size="sm"
+                                variant="destructive"
+                                disabled={isSelf}
+                                title={isSelf ? "Не можна зняти роль із себе" : undefined}
+                                onClick={() => revokeRole(u.id, "admin")}
+                              >
+                                − Адмін
+                              </Button>
+                            ) : (
+                              <Button size="sm" onClick={() => grantRole(u.id, "admin")}>
+                                + Адмін
+                              </Button>
+                            )}
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                  {users.length === 0 && (
+                    <tr>
+                      <td colSpan={6} className="p-6 text-center text-muted-foreground">
+                        Немає користувачів
+                      </td>
                     </tr>
-                  ))}
+                  )}
                 </tbody>
               </table>
             </div>
