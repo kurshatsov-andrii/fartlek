@@ -184,7 +184,7 @@ const Admin = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {users.map((u) => {
+                  {visibleUsers.map((u) => {
                     const userRoles = rolesByUser[u.id] ?? [];
                     const hasOrganizer = userRoles.includes("organizer");
                     const hasAdmin = userRoles.includes("admin");
