@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
-import { Loader2, AlertCircle } from "lucide-react";
+import { Loader2, AlertCircle, Pencil, Trash2, UserCircle2 } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { AthleteFormDialog, Athlete } from "@/components/AthleteFormDialog";
 import { useApp } from "@/contexts/AppContext";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
@@ -23,13 +24,23 @@ const Profile = () => {
   const [form, setForm] = useState({
     full_name: "", birth_date: "", gender: "", city: "", club: "", email: "",
   });
+  const [athletes, setAthletes] = useState<Athlete[]>([]);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [editing, setEditing] = useState<Athlete | null>(null);
 
   const isComplete =
     !!form.full_name.trim() && !!form.birth_date && !!form.gender && !!form.city.trim();
 
+  const reloadAthletes = async (uid: string) => {
+    const { data } = await supabase.from("athletes").select("*").eq("owner_id", uid)
+      .order("is_self", { ascending: false }).order("created_at");
+    setAthletes((data ?? []) as Athlete[]);
+  };
+
   useEffect(() => {
     if (!user) return;
-    supabase.from("profiles").select("*").eq("id", user.id).maybeSingle().then(({ data }) => {
+    (async () => {
+      const { data } = await supabase.from("profiles").select("*").eq("id", user.id).maybeSingle();
       if (data) {
         setForm({
           full_name: data.full_name ?? "",
@@ -40,8 +51,9 @@ const Profile = () => {
           email: data.email,
         });
       }
+      await reloadAthletes(user.id);
       setLoading(false);
-    });
+    })();
   }, [user]);
 
   if (authLoading) return null;
@@ -61,6 +73,7 @@ const Profile = () => {
       city: form.city.trim(),
       club: form.club.trim() || null,
     }).eq("id", user.id);
+    if (!error) await reloadAthletes(user.id);
     setBusy(false);
     if (error) {
       toast.error(error.message);
@@ -69,6 +82,18 @@ const Profile = () => {
     toast.success(t.profile.saved);
     if (redirectTo) navigate(redirectTo, { replace: true });
   };
+
+  const deleteAthlete = async (a: Athlete) => {
+    if (a.is_self) { toast.error(t.athletes.cannotDeleteSelf); return; }
+    if (!window.confirm(t.athletes.deleteConfirm)) return;
+    const { error } = await supabase.from("athletes").delete().eq("id", a.id);
+    if (error) { toast.error(error.message); return; }
+    toast.success(t.athletes.deleted);
+    await reloadAthletes(user.id);
+  };
+
+  const openAdd = () => { setEditing(null); setDialogOpen(true); };
+  const openEdit = (a: Athlete) => { setEditing(a); setDialogOpen(true); };
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
@@ -133,6 +158,59 @@ const Profile = () => {
                 {busy && <Loader2 className="h-4 w-4 animate-spin" />} {t.profile.save}
               </Button>
             </form>
+
+            <section className="mt-10">
+              <div className="flex items-end justify-between gap-4 flex-wrap">
+                <div>
+                  <h2 className="font-display text-2xl font-bold">{t.athletes.sectionTitle}</h2>
+                  <p className="text-muted-foreground text-sm mt-1">{t.athletes.sectionHint}</p>
+                </div>
+                <Button onClick={openAdd} disabled={!isComplete}>{t.athletes.addBtn}</Button>
+              </div>
+              <div className="mt-4 grid gap-3">
+                {athletes.map((a) => (
+                  <div key={a.id} className="bg-card p-4 rounded-xl shadow-card flex items-center justify-between gap-4">
+                    <div className="flex items-center gap-3 min-w-0">
+                      <UserCircle2 className="h-8 w-8 text-primary shrink-0" />
+                      <div className="min-w-0">
+                        <div className="font-semibold flex items-center gap-2 flex-wrap">
+                          {a.full_name}
+                          {a.is_self && (
+                            <span className="text-[10px] font-bold uppercase tracking-wider bg-primary/15 text-primary px-2 py-0.5 rounded-full">
+                              {t.athletes.self}
+                            </span>
+                          )}
+                        </div>
+                        <div className="text-xs text-muted-foreground">
+                          {new Date(a.birth_date).getFullYear()} · {a.city}{a.club ? ` · ${a.club}` : ""}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex gap-1 shrink-0">
+                      <Button size="icon" variant="ghost" onClick={() => openEdit(a)}>
+                        <Pencil className="h-4 w-4" />
+                      </Button>
+                      {!a.is_self && (
+                        <Button size="icon" variant="ghost" onClick={() => deleteAthlete(a)}>
+                          <Trash2 className="h-4 w-4 text-destructive" />
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                ))}
+                {athletes.length === 0 && (
+                  <p className="text-sm text-muted-foreground py-6 text-center">—</p>
+                )}
+              </div>
+            </section>
+
+            <AthleteFormDialog
+              open={dialogOpen}
+              onOpenChange={setDialogOpen}
+              ownerId={user.id}
+              athlete={editing}
+              onSaved={() => reloadAthletes(user.id)}
+            />
           </>
         )}
       </main>
