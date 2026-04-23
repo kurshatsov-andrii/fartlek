@@ -25,6 +25,17 @@ const Admin = () => {
   const [rolesByUser, setRolesByUser] = useState<Record<string, AppRole[]>>({});
   const [busy, setBusy] = useState(false);
   const [roleFilter, setRoleFilter] = useState<"all" | AppRole>("all");
+  const [eventStatusFilter, setEventStatusFilter] = useState<"all" | "published" | "cancelled" | "completed" | "draft">("all");
+
+  const STATUS_LABEL: Record<string, string> = {
+    published: "Опубліковано",
+    cancelled: "Скасовано",
+    completed: "Завершено",
+    draft: "Чернетка",
+  };
+  const visibleEvents = eventStatusFilter === "all"
+    ? events
+    : events.filter((e) => e.status === eventStatusFilter);
 
   const ROLE_PRIORITY: Record<AppRole | "none", number> = { admin: 0, organizer: 1, participant: 2, none: 3 };
   const topRole = (uid: string): AppRole | "none" => {
