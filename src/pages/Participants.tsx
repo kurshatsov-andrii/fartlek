@@ -1,12 +1,16 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
-import { ArrowLeft, Loader2, CheckCircle2, XCircle, FileText, RotateCcw, Trash2, X } from "lucide-react";
+import { ArrowLeft, Loader2, CheckCircle2, XCircle, FileText, RotateCcw, Trash2, X, Bell } from "lucide-react";
 import { toast } from "sonner";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
+  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { useApp } from "@/contexts/AppContext";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
@@ -21,6 +25,9 @@ const Participants = () => {
   const [isOrganizer, setIsOrganizer] = useState(false);
   const [loading, setLoading] = useState(true);
   const [busyId, setBusyId] = useState<string | null>(null);
+  const [distancePriceMap, setDistancePriceMap] = useState<Record<string, number>>({});
+  const [reminderOpen, setReminderOpen] = useState(false);
+  const [sendingReminders, setSendingReminders] = useState(false);
 
   // Filters
   const [fGender, setFGender] = useState<string>("all");
@@ -40,6 +47,15 @@ const Participants = () => {
     setEventTitle(ev?.title ?? "");
     setIsPaid(!!ev?.is_paid);
     setIsOrganizer(ev?.organizer_id === user.id || isAdmin);
+    const { data: dists } = await supabase
+      .from("distances")
+      .select("distance_km, price")
+      .eq("event_id", id);
+    const priceMap: Record<string, number> = {};
+    (dists ?? []).forEach((d: any) => {
+      priceMap[String(d.distance_km)] = Number(d.price ?? 0);
+    });
+    setDistancePriceMap(priceMap);
     const { data: participants } = await (supabase.rpc as any)("get_event_participants", { _event_id: id });
     setRows(participants ?? []);
     setLoading(false);
@@ -95,7 +111,61 @@ const Participants = () => {
     load();
   };
 
-  // Unique values for filters
+  // Recipients = those without a confirmed (green check) payment.
+  // Two groups: no receipt uploaded → payment-reminder; receipt uploaded but not yet confirmed → receipt-reminder.
+  const reminderTargets = useMemo(() => {
+    return rows
+      .filter((r) => r.email && r.payment_status !== "paid")
+      .map((r) => ({
+        email: r.email as string,
+        name: (r.full_name as string) ?? "",
+        registration_id: r.registration_id as string,
+        kind: r.receipt_url ? "receipt" : "payment",
+        amount: distancePriceMap[String(r.distance_km)] ?? 0,
+      }));
+  }, [rows, distancePriceMap]);
+
+  const pendingPaymentCount = reminderTargets.filter((r) => r.kind === "payment").length;
+  const pendingReceiptCount = reminderTargets.filter((r) => r.kind === "receipt").length;
+
+  const sendReminders = async () => {
+    if (!id || reminderTargets.length === 0) return;
+    setSendingReminders(true);
+    const ticketBase = `${window.location.origin}/ticket/`;
+    let ok = 0;
+    let fail = 0;
+    for (const t of reminderTargets) {
+      const templateName = t.kind === "receipt" ? "receipt-reminder" : "payment-reminder";
+      const templateData: Record<string, any> = {
+        name: t.name?.split(" ")[0] || t.name,
+        eventTitle,
+        ticketUrl: `${ticketBase}${t.registration_id}`,
+      };
+      if (t.kind === "payment" && t.amount > 0) templateData.amount = t.amount;
+      const { error } = await supabase.functions.invoke("send-transactional-email", {
+        body: {
+          templateName,
+          recipientEmail: t.email,
+          idempotencyKey: `reminder-${t.kind}-${t.registration_id}-${new Date().toISOString().slice(0, 10)}`,
+          templateData,
+        },
+      });
+      if (error) fail++;
+      else ok++;
+    }
+    setSendingReminders(false);
+    setReminderOpen(false);
+    if (ok > 0) {
+      toast.success(
+        lang === "uk"
+          ? `Надіслано ${ok} нагадувань${fail ? `, ${fail} не вдалося` : ""}`
+          : `Sent ${ok} reminders${fail ? `, ${fail} failed` : ""}`
+      );
+    } else if (fail > 0) {
+      toast.error(lang === "uk" ? "Не вдалося надіслати нагадування" : "Failed to send reminders");
+    }
+  };
+
   const years = useMemo(
     () => Array.from(new Set(rows.map((r) => r.birth_year).filter(Boolean))).sort((a: any, b: any) => b - a),
     [rows]
@@ -140,11 +210,29 @@ const Participants = () => {
         <Link to={`/events/${id}`} className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-6">
           <ArrowLeft className="h-4 w-4" /> {t.events.backToEvents}
         </Link>
-        <h1 className="font-display text-3xl font-bold">{t.events.participants}</h1>
-        <p className="text-muted-foreground mt-1">
-          {eventTitle} · {filteredRows.length}
-          {filteredRows.length !== rows.length && <span className="text-muted-foreground/70"> / {rows.length}</span>}
-        </p>
+        <div className="flex flex-wrap items-start justify-between gap-3">
+          <div>
+            <h1 className="font-display text-3xl font-bold">{t.events.participants}</h1>
+            <p className="text-muted-foreground mt-1">
+              {eventTitle} · {filteredRows.length}
+              {filteredRows.length !== rows.length && <span className="text-muted-foreground/70"> / {rows.length}</span>}
+            </p>
+          </div>
+          {isOrganizer && isPaid && reminderTargets.length > 0 && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setReminderOpen(true)}
+              className="gap-2"
+            >
+              <Bell className="h-4 w-4" />
+              {lang === "uk" ? "Надіслати нагадування" : "Send reminders"}
+              <span className="ml-1 inline-flex items-center justify-center rounded-full bg-primary text-primary-foreground text-xs h-5 min-w-5 px-1.5">
+                {reminderTargets.length}
+              </span>
+            </Button>
+          )}
+        </div>
 
         {!loading && rows.length > 0 && (
           <div className="mt-6 bg-card rounded-2xl shadow-card p-4 flex flex-wrap gap-3 items-end">
@@ -329,6 +417,52 @@ const Participants = () => {
           </div>
         )}
       </main>
+      <AlertDialog open={reminderOpen} onOpenChange={setReminderOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              {lang === "uk" ? "Надіслати нагадування?" : "Send reminders?"}
+            </AlertDialogTitle>
+            <AlertDialogDescription asChild>
+              <div className="space-y-2 text-sm">
+                <p>
+                  {lang === "uk"
+                    ? `Лист отримають ${reminderTargets.length} учасник(ів) без підтвердженої оплати:`
+                    : `${reminderTargets.length} participant(s) without confirmed payment will receive an email:`}
+                </p>
+                <ul className="list-disc pl-5 space-y-1 text-muted-foreground">
+                  {pendingPaymentCount > 0 && (
+                    <li>
+                      <strong>{pendingPaymentCount}</strong>{" "}
+                      {lang === "uk"
+                        ? "— нагадування про оплату (ще не завантажили квитанцію)"
+                        : "— payment reminder (no receipt uploaded)"}
+                    </li>
+                  )}
+                  {pendingReceiptCount > 0 && (
+                    <li>
+                      <strong>{pendingReceiptCount}</strong>{" "}
+                      {lang === "uk"
+                        ? "— нагадування завантажити квитанцію (очікує підтвердження)"
+                        : "— receipt reminder (awaiting confirmation)"}
+                    </li>
+                  )}
+                </ul>
+              </div>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={sendingReminders}>
+              {lang === "uk" ? "Скасувати" : "Cancel"}
+            </AlertDialogCancel>
+            <AlertDialogAction onClick={sendReminders} disabled={sendingReminders}>
+              {sendingReminders ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : lang === "uk" ? "Надіслати" : "Send"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
       <Footer />
     </div>
   );

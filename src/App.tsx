@@ -22,6 +22,7 @@ import Admin from "./pages/Admin.tsx";
 import CategoryPage from "./pages/CategoryPage.tsx";
 import CategoriesIndex from "./pages/CategoriesIndex.tsx";
 import Contacts from "./pages/Contacts.tsx";
+import Unsubscribe from "./pages/Unsubscribe.tsx";
 
 const queryClient = new QueryClient();
 
@@ -51,6 +52,7 @@ const App = () => (
               <Route path="/payment/fail" element={<PaymentFail />} />
               <Route path="/admin" element={<Admin />} />
               <Route path="/contacts" element={<Contacts />} />
+              <Route path="/unsubscribe" element={<Unsubscribe />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
