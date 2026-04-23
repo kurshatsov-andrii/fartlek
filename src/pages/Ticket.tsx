@@ -29,7 +29,7 @@ const Ticket = () => {
     (async () => {
       const { data: reg } = await supabase
         .from("registrations")
-        .select(`*, events(*), distances(*)`)
+        .select(`*, events(*), distances(*), athletes(full_name, birth_date, gender, city, club)`)
         .eq("user_id", user.id)
         .eq("id", id)
         .maybeSingle();
@@ -41,6 +41,8 @@ const Ticket = () => {
           .maybeSingle();
         const ev = (reg as any).events;
         const dist = (reg as any).distances;
+        const ath = (reg as any).athletes;
+        const displayName = ath?.full_name ?? prof?.full_name;
         const payload = JSON.stringify({
           rid: reg.id,
           bib: reg.bib_number,
@@ -51,7 +53,7 @@ const Ticket = () => {
           distance_km: dist?.distance_km,
           distance_name: dist?.name,
           status: reg.payment_status,
-          name: prof?.full_name,
+          name: displayName,
           email: prof?.email,
         });
         const url = await QRCode.toDataURL(payload, { width: 600, margin: 1, color: { dark: "#0a0a0a", light: "#ffffff" } });
@@ -164,6 +166,12 @@ const Ticket = () => {
               {qrUrl && <img src={qrUrl} alt="QR" className="w-56 h-56 rounded-xl border-4 border-foreground" />}
             </div>
             <div className="space-y-4">
+              {data.athletes?.full_name && (
+                <div>
+                  <div className="text-xs uppercase text-muted-foreground tracking-wider">{t.athletes.registeringAs}</div>
+                  <div className="font-bold text-lg">{data.athletes.full_name}</div>
+                </div>
+              )}
               <div>
                 <div className="text-xs uppercase text-muted-foreground tracking-wider">{t.ticket.bib}</div>
                 <div className="font-display text-5xl font-bold text-primary">{data.bib_number ?? "—"}</div>

@@ -67,10 +67,15 @@ const MyEvents = () => {
                         </span>
                       )}
                     </div>
-                    <div className="text-sm text-muted-foreground flex items-center gap-2 mt-1">
+                    <div className="text-sm text-muted-foreground flex items-center gap-2 mt-1 flex-wrap">
                       <Calendar className="h-4 w-4 text-primary" />
                       {new Date(r.events.event_date).toLocaleDateString(lang === "uk" ? "uk-UA" : "en-US")}
                       · {r.distances.distance_km} km
+                      {r.athletes?.full_name && !r.athletes.is_self && (
+                        <span className="inline-flex items-center rounded-full bg-accent/20 text-accent-foreground px-2 py-0.5 text-[11px] font-semibold">
+                          {r.athletes.full_name}
+                        </span>
+                      )}
                     </div>
                   </div>
                   <div className="flex flex-col sm:flex-row gap-2 sm:items-center shrink-0">
