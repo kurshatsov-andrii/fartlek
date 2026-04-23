@@ -24,6 +24,24 @@ const Admin = () => {
   const [users, setUsers] = useState<any[]>([]);
   const [rolesByUser, setRolesByUser] = useState<Record<string, AppRole[]>>({});
   const [busy, setBusy] = useState(false);
+  const [roleFilter, setRoleFilter] = useState<"all" | AppRole>("all");
+
+  const ROLE_PRIORITY: Record<AppRole | "none", number> = { admin: 0, organizer: 1, participant: 2, none: 3 };
+  const topRole = (uid: string): AppRole | "none" => {
+    const rs = rolesByUser[uid] ?? [];
+    if (rs.includes("admin")) return "admin";
+    if (rs.includes("organizer")) return "organizer";
+    if (rs.includes("participant")) return "participant";
+    return "none";
+  };
+  const visibleUsers = users
+    .filter((u) => {
+      if (roleFilter === "all") return true;
+      const rs = rolesByUser[u.id] ?? [];
+      if (roleFilter === "participant") return rs.length === 0 || rs.includes("participant");
+      return rs.includes(roleFilter);
+    })
+    .sort((a, b) => ROLE_PRIORITY[topRole(a.id)] - ROLE_PRIORITY[topRole(b.id)]);
 
   useEffect(() => {
     if (!isAdmin) return;
@@ -134,7 +152,25 @@ const Admin = () => {
             </div>
           </TabsContent>
 
-          <TabsContent value="users" className="space-y-2">
+          <TabsContent value="users" className="space-y-3">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="text-sm text-muted-foreground mr-1">Сортувати за роллю:</span>
+              {([
+                { v: "all", label: "Усі" },
+                { v: "admin", label: "Адміністратори" },
+                { v: "organizer", label: "Організатори" },
+                { v: "participant", label: "Учасники" },
+              ] as const).map((opt) => (
+                <Button
+                  key={opt.v}
+                  size="sm"
+                  variant={roleFilter === opt.v ? "default" : "outline"}
+                  onClick={() => setRoleFilter(opt.v)}
+                >
+                  {opt.label}
+                </Button>
+              ))}
+            </div>
             <div className="overflow-x-auto bg-card rounded-xl">
               <table className="w-full text-sm">
                 <thead className="border-b">
@@ -148,7 +184,7 @@ const Admin = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {users.map((u) => {
+                  {visibleUsers.map((u) => {
                     const userRoles = rolesByUser[u.id] ?? [];
                     const hasOrganizer = userRoles.includes("organizer");
                     const hasAdmin = userRoles.includes("admin");
@@ -212,7 +248,7 @@ const Admin = () => {
                       </tr>
                     );
                   })}
-                  {users.length === 0 && (
+                  {visibleUsers.length === 0 && (
                     <tr>
                       <td colSpan={6} className="p-6 text-center text-muted-foreground">
                         Немає користувачів
