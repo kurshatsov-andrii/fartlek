@@ -1,10 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
-import { ArrowLeft, Loader2, CheckCircle2, XCircle, FileText, RotateCcw, Trash2 } from "lucide-react";
+import { ArrowLeft, Loader2, CheckCircle2, XCircle, FileText, RotateCcw, Trash2, X } from "lucide-react";
 import { toast } from "sonner";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useApp } from "@/contexts/AppContext";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
@@ -19,6 +21,14 @@ const Participants = () => {
   const [isOrganizer, setIsOrganizer] = useState(false);
   const [loading, setLoading] = useState(true);
   const [busyId, setBusyId] = useState<string | null>(null);
+
+  // Filters
+  const [fGender, setFGender] = useState<string>("all");
+  const [fYear, setFYear] = useState<string>("all");
+  const [fCity, setFCity] = useState<string>("all");
+  const [fClub, setFClub] = useState<string>("all");
+  const [fPayment, setFPayment] = useState<string>("all");
+  const [search, setSearch] = useState("");
 
   const load = async () => {
     if (!id || !user) return;
@@ -85,6 +95,41 @@ const Participants = () => {
     load();
   };
 
+  // Unique values for filters
+  const years = useMemo(
+    () => Array.from(new Set(rows.map((r) => r.birth_year).filter(Boolean))).sort((a: any, b: any) => b - a),
+    [rows]
+  );
+  const cities = useMemo(
+    () => Array.from(new Set(rows.map((r) => r.city).filter(Boolean))).sort() as string[],
+    [rows]
+  );
+  const clubs = useMemo(
+    () => Array.from(new Set(rows.map((r) => r.club).filter(Boolean))).sort() as string[],
+    [rows]
+  );
+
+  const filteredRows = useMemo(() => {
+    return rows.filter((r) => {
+      if (fGender !== "all" && r.gender !== fGender) return false;
+      if (fYear !== "all" && String(r.birth_year ?? "") !== fYear) return false;
+      if (fCity !== "all" && (r.city ?? "") !== fCity) return false;
+      if (fClub !== "all" && (r.club ?? "") !== fClub) return false;
+      if (isPaid && fPayment !== "all" && r.payment_status !== fPayment) return false;
+      if (search.trim()) {
+        const q = search.trim().toLowerCase();
+        if (!String(r.full_name ?? "").toLowerCase().includes(q)) return false;
+      }
+      return true;
+    });
+  }, [rows, fGender, fYear, fCity, fClub, fPayment, isPaid, search]);
+
+  const resetFilters = () => {
+    setFGender("all"); setFYear("all"); setFCity("all"); setFClub("all"); setFPayment("all"); setSearch("");
+  };
+  const hasActiveFilters =
+    fGender !== "all" || fYear !== "all" || fCity !== "all" || fClub !== "all" || fPayment !== "all" || search.trim() !== "";
+
   if (authLoading) return null;
   if (!user) return <Navigate to={`/auth?redirect=/events/${id}/participants`} replace />;
 
@@ -96,16 +141,90 @@ const Participants = () => {
           <ArrowLeft className="h-4 w-4" /> {t.events.backToEvents}
         </Link>
         <h1 className="font-display text-3xl font-bold">{t.events.participants}</h1>
-        <p className="text-muted-foreground mt-1">{eventTitle} · {rows.length}</p>
+        <p className="text-muted-foreground mt-1">
+          {eventTitle} · {filteredRows.length}
+          {filteredRows.length !== rows.length && <span className="text-muted-foreground/70"> / {rows.length}</span>}
+        </p>
+
+        {!loading && rows.length > 0 && (
+          <div className="mt-6 bg-card rounded-2xl shadow-card p-4 flex flex-wrap gap-3 items-end">
+            <div className="flex-1 min-w-[180px]">
+              <label className="text-xs text-muted-foreground mb-1 block">{lang === "uk" ? "Пошук за іменем" : "Search by name"}</label>
+              <Input value={search} onChange={(e) => setSearch(e.target.value)} placeholder={lang === "uk" ? "Ім'я..." : "Name..."} />
+            </div>
+            <div className="min-w-[140px]">
+              <label className="text-xs text-muted-foreground mb-1 block">{t.profile.gender}</label>
+              <Select value={fGender} onValueChange={setFGender}>
+                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">{lang === "uk" ? "Усі" : "All"}</SelectItem>
+                  <SelectItem value="male">{t.profile.male}</SelectItem>
+                  <SelectItem value="female">{t.profile.female}</SelectItem>
+                  <SelectItem value="boy">{t.profile.boy}</SelectItem>
+                  <SelectItem value="girl">{t.profile.girl}</SelectItem>
+                  <SelectItem value="other">{t.profile.other}</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="min-w-[120px]">
+              <label className="text-xs text-muted-foreground mb-1 block">{lang === "uk" ? "Рік" : "Year"}</label>
+              <Select value={fYear} onValueChange={setFYear}>
+                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">{lang === "uk" ? "Усі" : "All"}</SelectItem>
+                  {years.map((y: any) => <SelectItem key={y} value={String(y)}>{y}</SelectItem>)}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="min-w-[160px]">
+              <label className="text-xs text-muted-foreground mb-1 block">{t.profile.city}</label>
+              <Select value={fCity} onValueChange={setFCity}>
+                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">{lang === "uk" ? "Усі" : "All"}</SelectItem>
+                  {cities.map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="min-w-[160px]">
+              <label className="text-xs text-muted-foreground mb-1 block">{t.profile.club}</label>
+              <Select value={fClub} onValueChange={setFClub}>
+                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">{lang === "uk" ? "Усі" : "All"}</SelectItem>
+                  {clubs.map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}
+                </SelectContent>
+              </Select>
+            </div>
+            {isPaid && (
+              <div className="min-w-[160px]">
+                <label className="text-xs text-muted-foreground mb-1 block">{lang === "uk" ? "Оплата" : "Payment"}</label>
+                <Select value={fPayment} onValueChange={setFPayment}>
+                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">{lang === "uk" ? "Усі" : "All"}</SelectItem>
+                    <SelectItem value="paid">{lang === "uk" ? "Оплачено" : "Paid"}</SelectItem>
+                    <SelectItem value="pending">{lang === "uk" ? "Не оплачено" : "Unpaid"}</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
+            {hasActiveFilters && (
+              <Button variant="ghost" size="sm" onClick={resetFilters} className="gap-1">
+                <X className="h-4 w-4" /> {lang === "uk" ? "Скинути" : "Reset"}
+              </Button>
+            )}
+          </div>
+        )}
 
         {loading ? (
           <div className="flex justify-center py-20"><Loader2 className="h-6 w-6 animate-spin" /></div>
-        ) : rows.length === 0 ? (
+        ) : filteredRows.length === 0 ? (
           <div className="mt-6 bg-card rounded-2xl shadow-card p-8 text-center text-muted-foreground">—</div>
         ) : (
           <div className="mt-6 space-y-8">
             {Object.entries(
-              rows.reduce<Record<string, any[]>>((acc, r) => {
+              filteredRows.reduce<Record<string, any[]>>((acc, r) => {
                 const key = `${r.distance_km ?? "—"}`;
                 (acc[key] ||= []).push(r);
                 return acc;
