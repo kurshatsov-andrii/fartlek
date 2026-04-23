@@ -248,7 +248,7 @@ const Admin = () => {
                       </tr>
                     );
                   })}
-                  {users.length === 0 && (
+                  {visibleUsers.length === 0 && (
                     <tr>
                       <td colSpan={6} className="p-6 text-center text-muted-foreground">
                         Немає користувачів
