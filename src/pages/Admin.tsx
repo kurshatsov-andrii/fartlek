@@ -134,7 +134,25 @@ const Admin = () => {
             </div>
           </TabsContent>
 
-          <TabsContent value="users" className="space-y-2">
+          <TabsContent value="users" className="space-y-3">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="text-sm text-muted-foreground mr-1">Сортувати за роллю:</span>
+              {([
+                { v: "all", label: "Усі" },
+                { v: "admin", label: "Адміністратори" },
+                { v: "organizer", label: "Організатори" },
+                { v: "participant", label: "Учасники" },
+              ] as const).map((opt) => (
+                <Button
+                  key={opt.v}
+                  size="sm"
+                  variant={roleFilter === opt.v ? "default" : "outline"}
+                  onClick={() => setRoleFilter(opt.v)}
+                >
+                  {opt.label}
+                </Button>
+              ))}
+            </div>
             <div className="overflow-x-auto bg-card rounded-xl">
               <table className="w-full text-sm">
                 <thead className="border-b">
