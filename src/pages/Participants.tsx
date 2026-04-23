@@ -417,6 +417,52 @@ const Participants = () => {
           </div>
         )}
       </main>
+      <AlertDialog open={reminderOpen} onOpenChange={setReminderOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              {lang === "uk" ? "Надіслати нагадування?" : "Send reminders?"}
+            </AlertDialogTitle>
+            <AlertDialogDescription asChild>
+              <div className="space-y-2 text-sm">
+                <p>
+                  {lang === "uk"
+                    ? `Лист отримають ${reminderTargets.length} учасник(ів) без підтвердженої оплати:`
+                    : `${reminderTargets.length} participant(s) without confirmed payment will receive an email:`}
+                </p>
+                <ul className="list-disc pl-5 space-y-1 text-muted-foreground">
+                  {pendingPaymentCount > 0 && (
+                    <li>
+                      <strong>{pendingPaymentCount}</strong>{" "}
+                      {lang === "uk"
+                        ? "— нагадування про оплату (ще не завантажили квитанцію)"
+                        : "— payment reminder (no receipt uploaded)"}
+                    </li>
+                  )}
+                  {pendingReceiptCount > 0 && (
+                    <li>
+                      <strong>{pendingReceiptCount}</strong>{" "}
+                      {lang === "uk"
+                        ? "— нагадування завантажити квитанцію (очікує підтвердження)"
+                        : "— receipt reminder (awaiting confirmation)"}
+                    </li>
+                  )}
+                </ul>
+              </div>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={sendingReminders}>
+              {lang === "uk" ? "Скасувати" : "Cancel"}
+            </AlertDialogCancel>
+            <AlertDialogAction onClick={sendReminders} disabled={sendingReminders}>
+              {sendingReminders ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : lang === "uk" ? "Надіслати" : "Send"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
       <Footer />
     </div>
   );
