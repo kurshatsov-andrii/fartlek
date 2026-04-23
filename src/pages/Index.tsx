@@ -26,7 +26,7 @@ const Index = () => {
       <Header />
       <main className="flex-1">
         <Hero />
-        <VideoTutorialSection />
+        {!user && <VideoTutorialSection />}
         <EventsSection />
         <CompletedEventsSection />
       </main>
