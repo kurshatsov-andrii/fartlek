@@ -5,3 +5,6 @@ verify_jwt = false
 
 [functions.telegram-notify-registration]
 verify_jwt = false
+
+[functions.telegram-notify-signup]
+verify_jwt = false
