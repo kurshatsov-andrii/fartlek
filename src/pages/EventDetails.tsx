@@ -356,6 +356,7 @@ const EventDetails = () => {
                   </Link>
                 </Button>
               </div>
+              )}
             </aside>
           </div>
         </div>
