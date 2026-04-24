@@ -36,7 +36,7 @@ const Profile = () => {
     // Strip all non-digits, drop leading 38 if present
     let digits = raw.replace(/\D/g, "");
     if (digits.startsWith("38")) digits = digits.slice(2);
-    digits = digits.slice(0, 9);
+    digits = digits.slice(0, 10);
     let out = "+38";
     if (digits.length === 0) return out;
     out += " (" + digits.slice(0, 3);
@@ -44,7 +44,7 @@ const Profile = () => {
     out += ")";
     if (digits.length > 3) out += " " + digits.slice(3, 6);
     if (digits.length > 6) out += "-" + digits.slice(6, 8);
-    if (digits.length > 8) out += "-" + digits.slice(8);
+    if (digits.length > 8) out += "-" + digits.slice(8, 10);
     return out;
   };
 
