@@ -233,6 +233,7 @@ const Admin = () => {
                 <thead className="border-b">
                   <tr className="text-left">
                     <th className="p-3">Email</th>
+                    <th className="p-3">Телефон</th>
                     <th className="p-3">Ім'я</th>
                     <th className="p-3">Місто</th>
                     <th className="p-3">Клуб</th>
