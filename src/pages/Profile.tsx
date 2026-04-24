@@ -44,7 +44,7 @@ const Profile = () => {
     out += ")";
     if (digits.length > 3) out += " " + digits.slice(3, 6);
     if (digits.length > 6) out += "-" + digits.slice(6, 8);
-    if (digits.length > 8) out += "-" + digits.slice(8, 9);
+    if (digits.length > 8) out += "-" + digits.slice(8);
     return out;
   };
 
