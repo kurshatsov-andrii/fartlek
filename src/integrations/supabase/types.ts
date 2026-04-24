@@ -315,6 +315,7 @@ export type Database = {
           full_name: string | null
           gender: Database["public"]["Enums"]["gender_type"] | null
           id: string
+          phone: string | null
           updated_at: string
         }
         Insert: {
@@ -326,6 +327,7 @@ export type Database = {
           full_name?: string | null
           gender?: Database["public"]["Enums"]["gender_type"] | null
           id: string
+          phone?: string | null
           updated_at?: string
         }
         Update: {
@@ -337,6 +339,7 @@ export type Database = {
           full_name?: string | null
           gender?: Database["public"]["Enums"]["gender_type"] | null
           id?: string
+          phone?: string | null
           updated_at?: string
         }
         Relationships: []
@@ -532,6 +535,7 @@ export type Database = {
           full_name: string
           gender: Database["public"]["Enums"]["gender_type"]
           payment_status: Database["public"]["Enums"]["payment_status_type"]
+          phone: string
           receipt_confirmed_at: string
           receipt_uploaded_at: string
           receipt_url: string
