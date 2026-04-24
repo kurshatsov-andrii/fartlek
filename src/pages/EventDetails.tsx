@@ -257,6 +257,15 @@ const EventDetails = () => {
             </div>
 
             <aside className="lg:col-span-1">
+              {event.status === "completed" ? (
+                <div className="sticky top-24 bg-card p-6 rounded-2xl shadow-card space-y-4">
+                  <Button asChild variant="outline" className="w-full">
+                    <Link to={`/events/${event.id}/participants`}>
+                      <Users className="h-4 w-4" /> {t.events.participants}
+                    </Link>
+                  </Button>
+                </div>
+              ) : (
               <div className="sticky top-24 bg-card p-6 rounded-2xl shadow-card space-y-4">
                 {registration && (
                   <div className="rounded-xl border border-primary/40 bg-primary/10 p-3 space-y-2 text-sm">
@@ -347,6 +356,7 @@ const EventDetails = () => {
                   </Link>
                 </Button>
               </div>
+              )}
             </aside>
           </div>
         </div>
