@@ -122,7 +122,7 @@ const Participants = () => {
         name: (r.full_name as string) ?? "",
         registration_id: r.registration_id as string,
         kind: r.receipt_url ? "receipt" : "payment",
-        amount: distancePriceMap[String(r.distance_km)] ?? 0,
+        amount: distancePriceMap[`${r.distance_km}|${r.distance_name ?? ""}`] ?? 0,
       }));
   }, [rows, distancePriceMap]);
 
