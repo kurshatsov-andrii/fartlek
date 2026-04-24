@@ -204,7 +204,7 @@ const EventDetails = () => {
           <Link to="/#events" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-6">
             <ArrowLeft className="h-4 w-4" /> {t.events.backToEvents}
           </Link>
-          <div className="grid lg:grid-cols-3 gap-8">
+          <div className={event.status === "completed" ? "grid lg:grid-cols-3 gap-8" : "grid lg:grid-cols-3 gap-8"}>
             <div className="lg:col-span-2 space-y-6">
               <span className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wider ${event.is_paid ? "bg-primary text-primary-foreground" : "bg-accent text-accent-foreground"}`}>
                 {event.is_paid ? t.events.paid : t.events.free}
@@ -222,9 +222,11 @@ const EventDetails = () => {
               {event.description && (
                 <div className="prose prose-sm max-w-none text-foreground whitespace-pre-wrap">{event.description}</div>
               )}
+            </div>
 
-              {event.status === "completed" && (
-                <div className="rounded-2xl border border-border bg-card p-6 space-y-3">
+            <aside className="lg:col-span-1">
+              {event.status === "completed" ? (
+                <div className="sticky top-24 rounded-2xl border border-border bg-card p-6 space-y-3">
                   <h3 className="font-display text-xl font-bold flex items-center gap-2">
                     <FileText className="h-5 w-5 text-primary" />
                     {t.events.resultsTitle}
@@ -232,16 +234,16 @@ const EventDetails = () => {
                   {event.results_pdf_url || event.results_url ? (
                     <>
                       <p className="text-sm text-muted-foreground">{t.events.resultsHint}</p>
-                      <div className="flex flex-wrap gap-2">
+                      <div className="flex flex-col gap-2">
                         {event.results_pdf_url && (
-                          <Button asChild>
+                          <Button asChild className="w-full">
                             <a href={event.results_pdf_url} target="_blank" rel="noopener noreferrer">
                               <FileText className="h-4 w-4" /> {t.events.downloadResults}
                             </a>
                           </Button>
                         )}
                         {event.results_url && (
-                          <Button asChild variant={event.results_pdf_url ? "outline" : "default"}>
+                          <Button asChild variant={event.results_pdf_url ? "outline" : "default"} className="w-full">
                             <a href={event.results_url} target="_blank" rel="noopener noreferrer">
                               <FileText className="h-4 w-4" /> {t.events.openResults}
                             </a>
@@ -252,18 +254,6 @@ const EventDetails = () => {
                   ) : (
                     <p className="text-sm text-muted-foreground">{t.events.resultsNone}</p>
                   )}
-                </div>
-              )}
-            </div>
-
-            <aside className="lg:col-span-1">
-              {event.status === "completed" ? (
-                <div className="sticky top-24 bg-card p-6 rounded-2xl shadow-card space-y-4">
-                  <Button asChild variant="outline" className="w-full">
-                    <Link to={`/events/${event.id}/participants`}>
-                      <Users className="h-4 w-4" /> {t.events.participants}
-                    </Link>
-                  </Button>
                 </div>
               ) : (
               <div className="sticky top-24 bg-card p-6 rounded-2xl shadow-card space-y-4">
