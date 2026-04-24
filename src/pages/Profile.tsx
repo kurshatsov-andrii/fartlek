@@ -22,14 +22,34 @@ const Profile = () => {
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState(false);
   const [form, setForm] = useState({
-    full_name: "", birth_date: "", gender: "", city: "", club: "", email: "",
+    full_name: "", birth_date: "", gender: "", city: "", club: "", email: "", phone: "",
   });
   const [athletes, setAthletes] = useState<Athlete[]>([]);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editing, setEditing] = useState<Athlete | null>(null);
 
+  // Phone format: +38 (XXX) XXX-XX-XX (9 digits after +38)
+  const PHONE_RE = /^\+38 \(\d{3}\) \d{3}-\d{2}-\d{2}$/;
+  const isPhoneValid = PHONE_RE.test(form.phone);
+
+  const formatPhone = (raw: string): string => {
+    // Strip all non-digits, drop leading 38 if present
+    let digits = raw.replace(/\D/g, "");
+    if (digits.startsWith("38")) digits = digits.slice(2);
+    digits = digits.slice(0, 9);
+    let out = "+38";
+    if (digits.length === 0) return out;
+    out += " (" + digits.slice(0, 3);
+    if (digits.length < 3) return out;
+    out += ")";
+    if (digits.length > 3) out += " " + digits.slice(3, 6);
+    if (digits.length > 6) out += "-" + digits.slice(6, 8);
+    if (digits.length > 8) out += "-" + digits.slice(8, 9);
+    return out;
+  };
+
   const isComplete =
-    !!form.full_name.trim() && !!form.birth_date && !!form.gender && !!form.city.trim();
+    !!form.full_name.trim() && !!form.birth_date && !!form.gender && !!form.city.trim() && isPhoneValid;
 
   const reloadAthletes = async (uid: string) => {
     const { data } = await supabase.from("athletes").select("*").eq("owner_id", uid)
@@ -49,6 +69,7 @@ const Profile = () => {
           city: data.city ?? "",
           club: data.club ?? "",
           email: data.email,
+          phone: (data as any).phone ?? "",
         });
       }
       await reloadAthletes(user.id);
@@ -65,6 +86,10 @@ const Profile = () => {
       toast.error(t.profile.fillRequired);
       return;
     }
+    if (!isPhoneValid) {
+      toast.error(t.profile.phoneInvalid);
+      return;
+    }
     setBusy(true);
     const { error } = await supabase.from("profiles").update({
       full_name: form.full_name.trim(),
@@ -72,7 +97,8 @@ const Profile = () => {
       gender: form.gender as any,
       city: form.city.trim(),
       club: form.club.trim() || null,
-    }).eq("id", user.id);
+      phone: form.phone,
+    } as any).eq("id", user.id);
     if (!error) await reloadAthletes(user.id);
     setBusy(false);
     if (error) {
