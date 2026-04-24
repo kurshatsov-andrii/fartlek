@@ -314,17 +314,25 @@ const Participants = () => {
           <div className="mt-6 space-y-8">
             {Object.entries(
               filteredRows.reduce<Record<string, any[]>>((acc, r) => {
-                const key = `${r.distance_km ?? "—"}`;
+                const key = `${r.distance_km ?? "—"}|${r.distance_name ?? ""}`;
                 (acc[key] ||= []).push(r);
                 return acc;
               }, {})
             )
-              .sort((a, b) => Number(a[0]) - Number(b[0]))
-              .map(([km, list]) => (
-                <div key={km} className="bg-card rounded-2xl shadow-card overflow-x-auto">
+              .sort((a, b) => {
+                const [kmA, nameA] = a[0].split("|");
+                const [kmB, nameB] = b[0].split("|");
+                const diff = Number(kmA) - Number(kmB);
+                return diff !== 0 ? diff : nameA.localeCompare(nameB);
+              })
+              .map(([key, list]) => {
+                const [km, name] = key.split("|");
+                return (
+                <div key={key} className="bg-card rounded-2xl shadow-card overflow-x-auto">
                   <div className="flex items-center justify-between px-4 py-3 border-b border-border">
                     <h2 className="font-display text-xl font-bold">
                       {km} {lang === "uk" ? "км" : "km"}
+                      {name && <span className="text-muted-foreground font-normal text-base ml-2">· {name}</span>}
                     </h2>
                     <span className="text-sm text-muted-foreground">{list.length}</span>
                   </div>
