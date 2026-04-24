@@ -251,6 +251,7 @@ const Admin = () => {
                     return (
                       <tr key={u.id} className="border-b last:border-0 align-top">
                         <td className="p-3">{u.email}</td>
+                        <td className="p-3 whitespace-nowrap">{(u as any).phone ?? "—"}</td>
                         <td className="p-3">{u.full_name ?? "—"}</td>
                         <td className="p-3">{u.city ?? "—"}</td>
                         <td className="p-3">{u.club ?? "—"}</td>
