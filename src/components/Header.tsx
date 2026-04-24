@@ -55,14 +55,20 @@ export const Header = () => {
                 {isAdmin && (
                   <DropdownMenuItem asChild><Link to="/admin"><Shield className="h-4 w-4" />Адмін-панель</Link></DropdownMenuItem>
                 )}
+                <DropdownMenuItem asChild className="md:hidden"><Link to="/contacts"><Mail className="h-4 w-4" />{t.nav.contacts}</Link></DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={signOut}><LogOut className="h-4 w-4" />{t.nav.logout}</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <Button asChild size="sm" className="ml-2 hidden sm:inline-flex">
-              <Link to="/auth">{t.nav.login}</Link>
-            </Button>
+            <>
+              <Link to="/contacts" className="md:hidden text-sm font-medium text-muted-foreground hover:text-foreground transition-base px-2">
+                {t.nav.contacts}
+              </Link>
+              <Button asChild size="sm" className="ml-2 hidden sm:inline-flex">
+                <Link to="/auth">{t.nav.login}</Link>
+              </Button>
+            </>
           )}
         </div>
       </div>
