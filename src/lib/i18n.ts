@@ -33,8 +33,10 @@ export interface Dict {
   };
   profile: {
     title: string; sub: string; birthDate: string; gender: string; city: string; club: string;
+    phone: string; phonePlaceholder: string; phoneInvalid: string;
     male: string; female: string; other: string; boy: string; girl: string; save: string; saved: string;
     requiredBanner: string; requiredToRegister: string; fillRequired: string; clubOptional: string;
+    phoneRequiredBanner: string; privacyNote: string;
   };
   ticket: {
     title: string; bib: string; download: string; qrHint: string; status: string;
@@ -127,11 +129,15 @@ export const translations: Record<Lang, Dict> = {
     profile: {
       title: "Мій профіль", sub: "Дані автоматично підставляються при реєстрації на події",
       birthDate: "Дата народження", gender: "Стать", city: "Місто", club: "Клуб",
+      phone: "Номер телефону", phonePlaceholder: "+38 (___) ___-__-__",
+      phoneInvalid: "Введи телефон у форматі +38 (xxx) xxx-xx-xx",
       male: "Чоловік", female: "Жінка", other: "Інше", boy: "Дитина — хлопчик", girl: "Дитина — дівчинка", save: "Зберегти", saved: "Збережено",
       requiredBanner: "Заповни профіль, щоб реєструватись на події. Усі поля обов'язкові, окрім клубу.",
       requiredToRegister: "Спочатку заповни профіль — це обов'язково для реєстрації на події.",
       fillRequired: "Заповни всі обов'язкові поля",
       clubOptional: "необов'язково",
+      phoneRequiredBanner: "Ми додали обов'язкове поле «Номер телефону». Будь ласка, заповни його та збережи профіль.",
+      privacyNote: "Email і номер телефону приховані від інших користувачів. Їх бачить лише адміністратор платформи.",
     },
     ticket: {
       title: "Стартовий квиток", bib: "Номер", download: "Завантажити PDF",
@@ -239,11 +245,15 @@ export const translations: Record<Lang, Dict> = {
     profile: {
       title: "My profile", sub: "Data is auto-filled when you register for events",
       birthDate: "Birth date", gender: "Gender", city: "City", club: "Club",
+      phone: "Phone number", phonePlaceholder: "+38 (___) ___-__-__",
+      phoneInvalid: "Enter phone in format +38 (xxx) xxx-xx-xx",
       male: "Male", female: "Female", other: "Other", boy: "Child — boy", girl: "Child — girl", save: "Save", saved: "Saved",
       requiredBanner: "Complete your profile to register for events. All fields are required except club.",
       requiredToRegister: "Please complete your profile first — it's required to register for events.",
       fillRequired: "Please fill all required fields",
       clubOptional: "optional",
+      phoneRequiredBanner: "We've added a required Phone number field. Please fill it in and save your profile.",
+      privacyNote: "Your email and phone are hidden from other users. Only the platform administrator can see them.",
     },
     ticket: {
       title: "Start ticket", bib: "Bib", download: "Download PDF",
