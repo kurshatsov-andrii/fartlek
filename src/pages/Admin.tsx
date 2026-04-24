@@ -67,7 +67,7 @@ const Admin = () => {
       const [{ data: ev }, { data: ord }, { data: us }, { data: rs }] = await Promise.all([
         supabase.from("events").select("*").order("created_at", { ascending: false }),
         supabase.from("wayforpay_orders").select("*").order("created_at", { ascending: false }).limit(100),
-        supabase.from("profiles").select("id, email, full_name, city, club, created_at").order("created_at", { ascending: false }).limit(100),
+        supabase.from("profiles").select("id, email, phone, full_name, city, club, created_at").order("created_at", { ascending: false }).limit(100),
         supabase.from("user_roles").select("user_id, role"),
       ]);
       setEvents(ev ?? []);
