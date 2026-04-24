@@ -49,11 +49,12 @@ const Participants = () => {
     setIsOrganizer(ev?.organizer_id === user.id || isAdmin);
     const { data: dists } = await supabase
       .from("distances")
-      .select("distance_km, price")
+      .select("distance_km, name, price")
       .eq("event_id", id);
     const priceMap: Record<string, number> = {};
     (dists ?? []).forEach((d: any) => {
-      priceMap[String(d.distance_km)] = Number(d.price ?? 0);
+      const key = `${d.distance_km}|${d.name ?? ""}`;
+      priceMap[key] = Number(d.price ?? 0);
     });
     setDistancePriceMap(priceMap);
     const { data: participants } = await (supabase.rpc as any)("get_event_participants", { _event_id: id });
