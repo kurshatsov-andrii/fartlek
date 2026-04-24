@@ -49,11 +49,12 @@ const Participants = () => {
     setIsOrganizer(ev?.organizer_id === user.id || isAdmin);
     const { data: dists } = await supabase
       .from("distances")
-      .select("distance_km, price")
+      .select("distance_km, name, price")
       .eq("event_id", id);
     const priceMap: Record<string, number> = {};
     (dists ?? []).forEach((d: any) => {
-      priceMap[String(d.distance_km)] = Number(d.price ?? 0);
+      const key = `${d.distance_km}|${d.name ?? ""}`;
+      priceMap[key] = Number(d.price ?? 0);
     });
     setDistancePriceMap(priceMap);
     const { data: participants } = await (supabase.rpc as any)("get_event_participants", { _event_id: id });
@@ -121,7 +122,7 @@ const Participants = () => {
         name: (r.full_name as string) ?? "",
         registration_id: r.registration_id as string,
         kind: r.receipt_url ? "receipt" : "payment",
-        amount: distancePriceMap[String(r.distance_km)] ?? 0,
+        amount: distancePriceMap[`${r.distance_km}|${r.distance_name ?? ""}`] ?? 0,
       }));
   }, [rows, distancePriceMap]);
 
@@ -313,17 +314,25 @@ const Participants = () => {
           <div className="mt-6 space-y-8">
             {Object.entries(
               filteredRows.reduce<Record<string, any[]>>((acc, r) => {
-                const key = `${r.distance_km ?? "—"}`;
+                const key = `${r.distance_km ?? "—"}|${r.distance_name ?? ""}`;
                 (acc[key] ||= []).push(r);
                 return acc;
               }, {})
             )
-              .sort((a, b) => Number(a[0]) - Number(b[0]))
-              .map(([km, list]) => (
-                <div key={km} className="bg-card rounded-2xl shadow-card overflow-x-auto">
+              .sort((a, b) => {
+                const [kmA, nameA] = a[0].split("|");
+                const [kmB, nameB] = b[0].split("|");
+                const diff = Number(kmA) - Number(kmB);
+                return diff !== 0 ? diff : nameA.localeCompare(nameB);
+              })
+              .map(([key, list]) => {
+                const [km, name] = key.split("|");
+                return (
+                <div key={key} className="bg-card rounded-2xl shadow-card overflow-x-auto">
                   <div className="flex items-center justify-between px-4 py-3 border-b border-border">
                     <h2 className="font-display text-xl font-bold">
                       {km} {lang === "uk" ? "км" : "km"}
+                      {name && <span className="text-muted-foreground font-normal text-base ml-2">· {name}</span>}
                     </h2>
                     <span className="text-sm text-muted-foreground">{list.length}</span>
                   </div>
@@ -413,7 +422,7 @@ const Participants = () => {
                     </tbody>
                   </table>
                 </div>
-              ))}
+              );})}
           </div>
         )}
       </main>
