@@ -136,14 +136,37 @@ const Profile = () => {
               <div className="mt-6 flex items-start gap-3 rounded-xl border border-primary/40 bg-primary/10 p-4 text-sm">
                 <AlertCircle className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
                 <p className="text-foreground">
-                  {redirectTo ? t.profile.requiredToRegister : t.profile.requiredBanner}
+                  {!form.phone && form.full_name && form.birth_date && form.gender && form.city
+                    ? t.profile.phoneRequiredBanner
+                    : redirectTo
+                    ? t.profile.requiredToRegister
+                    : t.profile.requiredBanner}
                 </p>
               </div>
             )}
             <form onSubmit={save} className="mt-8 space-y-5 bg-card p-6 rounded-2xl shadow-card">
+              <p className="text-xs text-muted-foreground rounded-lg bg-muted/50 p-3 border border-border">
+                🔒 {t.profile.privacyNote}
+              </p>
               <div className="space-y-2">
                 <Label>Email</Label>
                 <Input value={form.email} disabled />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="phone">{t.profile.phone} <span className="text-destructive">*</span></Label>
+                <Input
+                  id="phone"
+                  type="tel"
+                  inputMode="tel"
+                  required
+                  placeholder={t.profile.phonePlaceholder}
+                  value={form.phone}
+                  onChange={(e) => setForm({ ...form, phone: formatPhone(e.target.value) })}
+                  onFocus={(e) => { if (!e.target.value) setForm({ ...form, phone: "+38 (" }); }}
+                />
+                {form.phone && !isPhoneValid && (
+                  <p className="text-xs text-destructive">{t.profile.phoneInvalid}</p>
+                )}
               </div>
               <div className="space-y-2">
                 <Label htmlFor="fn">{t.auth.fullName} <span className="text-destructive">*</span></Label>
