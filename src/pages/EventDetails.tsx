@@ -333,6 +333,15 @@ const EventDetails = () => {
                   <p className="text-xs text-destructive">{t.athletes.alreadyRegistered}</p>
                 )}
 
+                {!!user && athletes.length === 0 && !isAlreadyRegistered && (
+                  <Link
+                    to="/profile"
+                    className="block text-xs text-destructive hover:underline"
+                  >
+                    {t.profile.requiredToRegister}
+                  </Link>
+                )}
+
                 <Button
                   onClick={register}
                   className="w-full"
