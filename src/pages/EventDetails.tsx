@@ -14,6 +14,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { startWayForPayCheckout } from "@/lib/wayforpay";
 import { buildEventSeo } from "@/lib/seo";
+import { linkifyText } from "@/lib/linkify";
 import type { EventCategory } from "@/lib/i18n";
 
 interface EventRow {
@@ -220,7 +221,9 @@ const EventDetails = () => {
                 </div>
               </div>
               {event.description && (
-                <div className="prose prose-sm max-w-none text-foreground whitespace-pre-wrap">{event.description}</div>
+                <div className="prose prose-sm max-w-none text-foreground whitespace-pre-wrap break-words">
+                  {linkifyText(event.description)}
+                </div>
               )}
             </div>
 
