@@ -67,7 +67,7 @@ const Admin = () => {
       const [{ data: ev }, { data: ord }, { data: us }, { data: rs }] = await Promise.all([
         supabase.from("events").select("*").order("created_at", { ascending: false }),
         supabase.from("wayforpay_orders").select("*").order("created_at", { ascending: false }).limit(100),
-        supabase.from("profiles").select("id, email, full_name, city, club, created_at").order("created_at", { ascending: false }).limit(100),
+        supabase.from("profiles").select("id, email, phone, full_name, city, club, created_at").order("created_at", { ascending: false }).limit(100),
         supabase.from("user_roles").select("user_id, role"),
       ]);
       setEvents(ev ?? []);
@@ -233,6 +233,7 @@ const Admin = () => {
                 <thead className="border-b">
                   <tr className="text-left">
                     <th className="p-3">Email</th>
+                    <th className="p-3">Телефон</th>
                     <th className="p-3">Ім'я</th>
                     <th className="p-3">Місто</th>
                     <th className="p-3">Клуб</th>
@@ -250,6 +251,7 @@ const Admin = () => {
                     return (
                       <tr key={u.id} className="border-b last:border-0 align-top">
                         <td className="p-3">{u.email}</td>
+                        <td className="p-3 whitespace-nowrap">{(u as any).phone ?? "—"}</td>
                         <td className="p-3">{u.full_name ?? "—"}</td>
                         <td className="p-3">{u.city ?? "—"}</td>
                         <td className="p-3">{u.club ?? "—"}</td>
