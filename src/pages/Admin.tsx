@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Navigate, Link } from "react-router-dom";
-import { Loader2, Shield, Calendar, Users, CreditCard } from "lucide-react";
+import { Loader2, Shield, Calendar, Users, CreditCard, Edit } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -159,8 +159,9 @@ const Admin = () => {
                     {e.event_date} · {e.organizer_name} · {STATUS_LABEL[e.status] ?? e.status}
                   </div>
                 </div>
-                <div className="flex gap-2">
+                <div className="flex flex-wrap gap-2">
                   <Button asChild size="sm" variant="outline"><Link to={`/events/${e.id}`}>Перегляд</Link></Button>
+                  <Button asChild size="sm" variant="outline"><Link to={`/organizer/events/${e.id}`}><Edit className="h-4 w-4" /> Редагувати</Link></Button>
                   {e.status !== "published" && <Button size="sm" disabled={busy} onClick={() => setEventStatus(e.id, "published")}>Опублікувати</Button>}
                   {e.status !== "completed" && <Button size="sm" variant="secondary" disabled={busy} onClick={() => setEventStatus(e.id, "completed")}>Завершити</Button>}
                   {e.status !== "cancelled" && <Button size="sm" variant="destructive" disabled={busy} onClick={() => setEventStatus(e.id, "cancelled")}>Скасувати</Button>}
