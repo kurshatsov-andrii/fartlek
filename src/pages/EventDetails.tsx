@@ -220,7 +220,9 @@ const EventDetails = () => {
                 </div>
               </div>
               {event.description && (
-                <div className="prose prose-sm max-w-none text-foreground whitespace-pre-wrap">{event.description}</div>
+                <div className="prose prose-sm max-w-none text-foreground whitespace-pre-wrap break-words">
+                  {linkifyText(event.description)}
+                </div>
               )}
             </div>
 
