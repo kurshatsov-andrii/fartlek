@@ -21,9 +21,10 @@ const EventEditor = () => {
   const { id } = useParams<{ id: string }>();
   const isNew = !id || id === "new";
   const { t } = useApp();
-  const { user, isOrganizer, loading: authLoading } = useAuth();
+  const { user, isOrganizer, isAdmin, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(!isNew);
+  const [originalOrganizerId, setOriginalOrganizerId] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [form, setForm] = useState({
@@ -41,6 +42,9 @@ const EventEditor = () => {
     if (isNew || !user) return;
     (async () => {
       const { data: ev } = await supabase.from("events").select("*").eq("id", id).maybeSingle();
+      if (ev) {
+        setOriginalOrganizerId(ev.organizer_id);
+      }
       if (ev) setForm({
         title: ev.title, description: ev.description ?? "",
         organizer_name: ev.organizer_name, event_date: ev.event_date,
@@ -95,7 +99,7 @@ const EventEditor = () => {
     setBusy(true);
     const payload = {
       ...form,
-      organizer_id: user.id,
+      organizer_id: !isNew && originalOrganizerId ? originalOrganizerId : user.id,
       status: form.status as any,
       event_time: form.event_time + ":00",
       image_url: form.image_url || null,
