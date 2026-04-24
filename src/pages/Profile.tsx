@@ -29,7 +29,7 @@ const Profile = () => {
   const [editing, setEditing] = useState<Athlete | null>(null);
 
   // Phone format: +38 (XXX) XXX-XX-XX (9 digits after +38)
-  const PHONE_RE = /^\+38 \(\d{3}\) \d{3}-\d{2}-\d{2}$/;
+  const PHONE_RE = /^\+38 \(\d{3}\) \d{3}-\d{2}-\d{2}-\d{1}$|^\+38 \(\d{3}\) \d{3}-\d{2}-\d{2}$/;
   const isPhoneValid = PHONE_RE.test(form.phone);
 
   const formatPhone = (raw: string): string => {
