@@ -111,16 +111,14 @@ export const CompletedEventsSection = () => {
                   )}
                 </div>
                 <div className="mt-4 pt-3 border-t border-border">
-                  {ev.results_pdf_url ? (
+                  {ev.results_pdf_url || ev.results_url ? (
                     <Button asChild size="sm" variant="outline" className="w-full">
-                      <a href={ev.results_pdf_url} target="_blank" rel="noopener noreferrer">
-                        <FileText className="h-4 w-4" /> {t.events.downloadResults}
-                      </a>
-                    </Button>
-                  ) : ev.results_url ? (
-                    <Button asChild size="sm" variant="outline" className="w-full">
-                      <a href={ev.results_url} target="_blank" rel="noopener noreferrer">
-                        <FileText className="h-4 w-4" /> {t.events.openResults}
+                      <a
+                        href={ev.results_pdf_url || ev.results_url || "#"}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <FileText className="h-4 w-4" /> {t.events.results}
                       </a>
                     </Button>
                   ) : (
