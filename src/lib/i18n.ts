@@ -271,6 +271,7 @@ export const translations: Record<Lang, Dict> = {
       receiptInvalidType: "Only images (JPG, PNG, WEBP) or PDF are allowed.",
       receiptTooBig: "File is too big — max 10 MB.",
       receiptRevoked: "The organizer revoked the confirmation. Please upload a new receipt.",
+      paymentTitle: "Pay for participation", paymentHint: "Pay online, then upload the receipt below.", payNow: "Pay now",
     },
     organizer: {
       dashboard: "Organizer dashboard", createEvent: "Create event", myEvents: "My events",
