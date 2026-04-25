@@ -129,8 +129,31 @@ const Participants = () => {
   const pendingPaymentCount = reminderTargets.filter((r) => r.kind === "payment").length;
   const pendingReceiptCount = reminderTargets.filter((r) => r.kind === "receipt").length;
 
+  const reminderCooldownKey = id ? `reminder-sent:${id}` : "";
+
   const sendReminders = async () => {
     if (!id || reminderTargets.length === 0) return;
+    // 24h cooldown per event
+    const lastSentRaw = localStorage.getItem(reminderCooldownKey);
+    if (lastSentRaw) {
+      const lastSent = new Date(lastSentRaw);
+      const nextAllowed = new Date(lastSent.getTime() + 24 * 60 * 60 * 1000);
+      if (nextAllowed > new Date()) {
+        const timeStr = nextAllowed.toLocaleString(lang === "uk" ? "uk-UA" : "en-US", {
+          hour: "2-digit",
+          minute: "2-digit",
+          day: "2-digit",
+          month: "2-digit",
+        });
+        toast.error(
+          lang === "uk"
+            ? `Наступна розсилка можлива о ${timeStr}`
+            : `Next reminder available at ${timeStr}`
+        );
+        setReminderOpen(false);
+        return;
+      }
+    }
     setSendingReminders(true);
     // Завжди використовуємо production URL у листах, щоб лінки не ламались,
     // якщо нагадування надсилається з preview-середовища.
@@ -159,10 +182,11 @@ const Participants = () => {
     setSendingReminders(false);
     setReminderOpen(false);
     if (ok > 0) {
+      localStorage.setItem(reminderCooldownKey, new Date().toISOString());
       toast.success(
         lang === "uk"
-          ? `Надіслано ${ok} нагадувань${fail ? `, ${fail} не вдалося` : ""}`
-          : `Sent ${ok} reminders${fail ? `, ${fail} failed` : ""}`
+          ? `Розсилку надіслано: ${ok} лист(ів)${fail ? `, ${fail} не вдалося` : ""}`
+          : `Reminders sent: ${ok}${fail ? `, ${fail} failed` : ""}`
       );
     } else if (fail > 0) {
       toast.error(lang === "uk" ? "Не вдалося надіслати нагадування" : "Failed to send reminders");
