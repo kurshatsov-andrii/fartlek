@@ -154,6 +154,7 @@ export const translations: Record<Lang, Dict> = {
       receiptInvalidType: "Дозволено лише зображення (JPG, PNG, WEBP) або PDF.",
       receiptTooBig: "Файл завеликий — максимум 10 МБ.",
       receiptRevoked: "Організатор відкликав підтвердження. Завантаж нову квитанцію.",
+      paymentTitle: "Оплата участі", paymentHint: "Сплати участь онлайн, після чого завантаж квитанцію нижче.", payNow: "Оплатити",
     },
     organizer: {
       dashboard: "Панель організатора", createEvent: "Створити подію", myEvents: "Мої події",
