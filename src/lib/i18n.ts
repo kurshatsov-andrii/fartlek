@@ -81,6 +81,22 @@ export interface Dict {
     age1829: string; age3039: string; age4049: string; age50plus: string; ageUnknown: string;
     noData: string; participants: string;
   };
+  promo: {
+    title: string; subtitle: string; manage: string; backToDashboard: string;
+    create: string; edit: string; cancel: string; save: string; delete: string;
+    code: string; codePlaceholder: string;
+    discountType: string; percent: string; fixed: string;
+    discountValue: string; discountValuePercent: string; discountValueFixed: string;
+    distances: string; distancesAll: string; distancesPick: string;
+    maxUses: string; maxUsesHint: string; usesCount: string;
+    validUntil: string; validUntilHint: string; noExpiry: string;
+    isActive: string; statusActive: string; statusInactive: string; statusExpired: string; statusUsedUp: string;
+    deleteConfirm: string; deleted: string; saved: string; createNew: string;
+    empty: string;
+    apply: string; applied: string; remove: string; promoCodeLabel: string; promoPlaceholder: string;
+    invalid: string; expired: string; limitReached: string; distanceNotAllowed: string; alreadyUsed: string;
+    discountApplied: string; finalPrice: string; originalPrice: string;
+  };
 }
 
 export const EVENT_CATEGORIES = ["run", "half_marathon", "marathon", "ultra", "trail", "ocr", "online"] as const;
@@ -223,6 +239,25 @@ export const translations: Record<Lang, Dict> = {
       age1829: "18–29", age3039: "30–39", age4049: "40–49", age50plus: "50+", ageUnknown: "Невідомо",
       noData: "Немає даних", participants: "учасників",
     },
+    promo: {
+      title: "Промокоди", subtitle: "Знижки для учасників події", manage: "Промокоди", backToDashboard: "← До панелі",
+      create: "Створити промокод", edit: "Редагувати", cancel: "Скасувати", save: "Зберегти", delete: "Видалити",
+      code: "Код", codePlaceholder: "SUMMER10",
+      discountType: "Тип знижки", percent: "Відсоток (%)", fixed: "Фіксована сума (₴)",
+      discountValue: "Розмір знижки", discountValuePercent: "Розмір (1–100)", discountValueFixed: "Сума у грн",
+      distances: "Дистанції", distancesAll: "Усі дистанції", distancesPick: "Обрати дистанції",
+      maxUses: "Ліміт використань", maxUsesHint: "Залиште порожнім для необмеженого", usesCount: "Використано",
+      validUntil: "Діє до", validUntilHint: "Залиште порожнім, якщо без терміну", noExpiry: "Без терміну",
+      isActive: "Активний",
+      statusActive: "Активний", statusInactive: "Вимкнено", statusExpired: "Прострочено", statusUsedUp: "Ліміт вичерпано",
+      deleteConfirm: "Видалити цей промокод?", deleted: "Промокод видалено", saved: "Збережено", createNew: "Новий промокод",
+      empty: "Промокодів ще немає. Створіть перший — і поділіться з учасниками.",
+      apply: "Застосувати", applied: "Застосовано", remove: "Прибрати", promoCodeLabel: "Промокод",
+      promoPlaceholder: "Введіть код",
+      invalid: "Промокод недійсний", expired: "Термін дії минув", limitReached: "Ліміт використань вичерпано",
+      distanceNotAllowed: "Не діє на обрану дистанцію", alreadyUsed: "Ви вже використали цей код",
+      discountApplied: "Знижка застосована", finalPrice: "До сплати", originalPrice: "Початкова ціна",
+    },
   },
   en: {
     nav: { events: "Events", organizer: "For organizers", login: "Sign in", signup: "Sign up", dashboard: "Dashboard", profile: "Profile", logout: "Sign out", myEvents: "My events", contacts: "Contacts" },
@@ -358,6 +393,25 @@ export const translations: Record<Lang, Dict> = {
       male: "Male", female: "Female", other: "Other",
       age1829: "18–29", age3039: "30–39", age4049: "40–49", age50plus: "50+", ageUnknown: "Unknown",
       noData: "No data", participants: "participants",
+    },
+    promo: {
+      title: "Promo codes", subtitle: "Discounts for event participants", manage: "Promo codes", backToDashboard: "← To dashboard",
+      create: "Create promo code", edit: "Edit", cancel: "Cancel", save: "Save", delete: "Delete",
+      code: "Code", codePlaceholder: "SUMMER10",
+      discountType: "Discount type", percent: "Percent (%)", fixed: "Fixed amount (UAH)",
+      discountValue: "Discount value", discountValuePercent: "Value (1–100)", discountValueFixed: "Amount in UAH",
+      distances: "Distances", distancesAll: "All distances", distancesPick: "Pick distances",
+      maxUses: "Usage limit", maxUsesHint: "Leave empty for unlimited", usesCount: "Used",
+      validUntil: "Valid until", validUntilHint: "Leave empty for no expiry", noExpiry: "No expiry",
+      isActive: "Active",
+      statusActive: "Active", statusInactive: "Disabled", statusExpired: "Expired", statusUsedUp: "Limit reached",
+      deleteConfirm: "Delete this promo code?", deleted: "Promo code deleted", saved: "Saved", createNew: "New promo code",
+      empty: "No promo codes yet. Create your first one and share with participants.",
+      apply: "Apply", applied: "Applied", remove: "Remove", promoCodeLabel: "Promo code",
+      promoPlaceholder: "Enter code",
+      invalid: "Invalid promo code", expired: "Promo code has expired", limitReached: "Usage limit reached",
+      distanceNotAllowed: "Not valid for selected distance", alreadyUsed: "You have already used this code",
+      discountApplied: "Discount applied", finalPrice: "Total to pay", originalPrice: "Original price",
     },
   },
 };

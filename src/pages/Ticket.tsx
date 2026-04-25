@@ -12,6 +12,7 @@ import { useApp } from "@/contexts/AppContext";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { startWayForPayCheckout } from "@/lib/wayforpay";
+import { PromoCodeInput, PromoPreview } from "@/components/PromoCodeInput";
 
 const Ticket = () => {
   const { id } = useParams<{ id: string }>();
@@ -23,6 +24,8 @@ const Ticket = () => {
   const [uploadingReceipt, setUploadingReceipt] = useState(false);
   const [payingBusy, setPayingBusy] = useState(false);
   const [receiptViewUrl, setReceiptViewUrl] = useState<string>("");
+  const [redemption, setRedemption] = useState<{ discount_amount: number; promo_code_id: string; code?: string } | null>(null);
+  const [promo, setPromo] = useState<PromoPreview | null>(null);
   const cardRef = useRef<HTMLDivElement>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
@@ -62,6 +65,19 @@ const Ticket = () => {
         setQrUrl(url);
       }
       setData(reg);
+      // Load existing redemption (if user already applied a promo)
+      if (reg) {
+        const { data: red } = await supabase
+          .from("promo_code_redemptions")
+          .select("discount_amount, promo_code_id, promo_codes(code)")
+          .eq("registration_id", reg.id)
+          .maybeSingle();
+        if (red) setRedemption({
+          discount_amount: Number(red.discount_amount),
+          promo_code_id: red.promo_code_id,
+          code: (red as any).promo_codes?.code,
+        });
+      }
       setLoading(false);
     })();
   }, [id, user]);
@@ -202,8 +218,54 @@ const Ticket = () => {
               <h2 className="font-display text-lg font-bold">{t.ticket.paymentTitle}</h2>
               <p className="text-sm text-muted-foreground mt-1">{t.ticket.paymentHint}</p>
             </div>
+
+            {(() => {
+              const basePrice = Number(dist?.price ?? 0);
+              if (!basePrice) return null;
+              if (redemption) {
+                return (
+                  <div className="rounded-md border border-primary/40 bg-primary/10 p-3 text-sm space-y-1">
+                    <div className="flex justify-between">
+                      <span>{t.promo.applied}{redemption.code ? `: ${redemption.code}` : ""}</span>
+                      <span className="font-semibold">−{redemption.discount_amount} ₴</span>
+                    </div>
+                    <div className="flex justify-between border-t border-primary/30 pt-1">
+                      <span className="text-muted-foreground line-through">{basePrice} ₴</span>
+                      <span className="font-bold text-primary">{t.promo.finalPrice}: {Math.max(basePrice - redemption.discount_amount, 0)} ₴</span>
+                    </div>
+                  </div>
+                );
+              }
+              return (
+                <div className="space-y-2">
+                  <PromoCodeInput
+                    eventId={ev.id}
+                    distanceId={dist?.id ?? ""}
+                    basePrice={basePrice}
+                    applied={promo}
+                    onApplied={setPromo}
+                  />
+                  {promo && (
+                    <div className="text-sm flex justify-between border-t border-border pt-2">
+                      <span className="text-muted-foreground line-through">{basePrice} ₴</span>
+                      <span className="font-bold text-primary">{t.promo.finalPrice}: {promo.final_price} ₴</span>
+                    </div>
+                  )}
+                </div>
+              );
+            })()}
+
             {ev.payment_url ? (
-              <Button asChild className="w-full sm:w-auto">
+              <Button asChild className="w-full sm:w-auto" onClick={async () => {
+                if (promo && !redemption) {
+                  const { error } = await supabase.rpc("apply_promo_code", {
+                    _code: promo.code, _event_id: ev.id, _distance_id: dist.id,
+                    _registration_id: data.id, _base_price: Number(dist.price),
+                  });
+                  if (error) toast.error(error.message);
+                  else { setRedemption({ discount_amount: promo.discount_amount, promo_code_id: promo.promo_id, code: promo.code }); setPromo(null); }
+                }
+              }}>
                 <a href={ev.payment_url} target="_blank" rel="noopener noreferrer">
                   <CreditCard className="h-4 w-4" /> {t.ticket.payNow}
                 </a>
@@ -214,7 +276,18 @@ const Ticket = () => {
                 disabled={payingBusy}
                 onClick={async () => {
                   setPayingBusy(true);
-                  try { await startWayForPayCheckout(data.id); }
+                  try {
+                    if (promo && !redemption) {
+                      const { error: pErr } = await supabase.rpc("apply_promo_code", {
+                        _code: promo.code, _event_id: ev.id, _distance_id: dist.id,
+                        _registration_id: data.id, _base_price: Number(dist.price),
+                      });
+                      if (pErr) throw pErr;
+                      setRedemption({ discount_amount: promo.discount_amount, promo_code_id: promo.promo_id, code: promo.code });
+                      setPromo(null);
+                    }
+                    await startWayForPayCheckout(data.id);
+                  }
                   catch (e: any) { toast.error(e.message ?? t.common.error); setPayingBusy(false); }
                 }}
               >

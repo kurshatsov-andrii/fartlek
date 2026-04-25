@@ -15,6 +15,7 @@ import { toast } from "sonner";
 import { startWayForPayCheckout } from "@/lib/wayforpay";
 import { buildEventSeo } from "@/lib/seo";
 import { linkifyText } from "@/lib/linkify";
+import { PromoCodeInput, PromoPreview } from "@/components/PromoCodeInput";
 import type { EventCategory } from "@/lib/i18n";
 
 interface EventRow {
@@ -42,6 +43,10 @@ const EventDetails = () => {
   const [selectedAthlete, setSelectedAthlete] = useState<string>("");
   const [athleteRegs, setAthleteRegs] = useState<Set<string>>(new Set()); // `${athleteId}:${distanceId}` already registered
   const [athleteDialogOpen, setAthleteDialogOpen] = useState(false);
+  const [promo, setPromo] = useState<PromoPreview | null>(null);
+
+  // Reset promo if distance changes
+  useEffect(() => { setPromo(null); }, [selectedDistance]);
 
   const reloadAthletes = async (uid: string, eventId: string) => {
     const { data: ats } = await supabase.from("athletes").select("*").eq("owner_id", uid)
@@ -130,8 +135,17 @@ const EventDetails = () => {
       payment_status: isPaidReg ? "pending" : "free",
       qr_code_data: qrPayload,
     }).select("id").single();
+    if (error) { setBusy(false); toast.error(error.message); return; }
+    // Apply promo code if previewed and event is paid
+    if (isPaidReg && promo) {
+      const { error: pErr } = await supabase.rpc("apply_promo_code", {
+        _code: promo.code, _event_id: event.id, _distance_id: dist.id,
+        _registration_id: reg.id, _base_price: dist.price,
+      });
+      if (pErr) toast.error(pErr.message);
+      else toast.success(t.promo.discountApplied);
+    }
     setBusy(false);
-    if (error) { toast.error(error.message); return; }
     toast.success("OK");
     if (isPaidReg && event.payment_url) {
       window.open(event.payment_url, "_blank", "noopener,noreferrer");
@@ -363,6 +377,29 @@ const EventDetails = () => {
                     {t.profile.requiredToRegister}
                   </Link>
                 )}
+
+                {(() => {
+                  const dist = distances.find((d) => d.id === selectedDistance);
+                  const showPromo = !!user && event.is_paid && !!dist && dist.price > 0 && !isAlreadyRegistered;
+                  if (!showPromo) return null;
+                  return (
+                    <>
+                      <PromoCodeInput
+                        eventId={event.id}
+                        distanceId={dist!.id}
+                        basePrice={Number(dist!.price)}
+                        applied={promo}
+                        onApplied={setPromo}
+                      />
+                      {promo && (
+                        <div className="text-sm flex justify-between border-t border-border pt-2">
+                          <span className="text-muted-foreground line-through">{dist!.price} ₴</span>
+                          <span className="font-bold text-primary">{t.promo.finalPrice}: {promo.final_price} ₴</span>
+                        </div>
+                      )}
+                    </>
+                  );
+                })()}
 
                 <Button
                   onClick={register}

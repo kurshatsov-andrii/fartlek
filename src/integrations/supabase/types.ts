@@ -344,6 +344,92 @@ export type Database = {
         }
         Relationships: []
       }
+      promo_code_redemptions: {
+        Row: {
+          created_at: string
+          discount_amount: number
+          event_id: string
+          id: string
+          promo_code_id: string
+          registration_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          discount_amount: number
+          event_id: string
+          id?: string
+          promo_code_id: string
+          registration_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          discount_amount?: number
+          event_id?: string
+          id?: string
+          promo_code_id?: string
+          registration_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "promo_code_redemptions_promo_code_id_fkey"
+            columns: ["promo_code_id"]
+            isOneToOne: false
+            referencedRelation: "promo_codes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      promo_codes: {
+        Row: {
+          code: string
+          created_at: string
+          created_by: string
+          discount_type: Database["public"]["Enums"]["promo_discount_type"]
+          discount_value: number
+          distance_ids: string[]
+          event_id: string
+          id: string
+          is_active: boolean
+          max_uses: number | null
+          updated_at: string
+          uses_count: number
+          valid_until: string | null
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          created_by: string
+          discount_type: Database["public"]["Enums"]["promo_discount_type"]
+          discount_value: number
+          distance_ids?: string[]
+          event_id: string
+          id?: string
+          is_active?: boolean
+          max_uses?: number | null
+          updated_at?: string
+          uses_count?: number
+          valid_until?: string | null
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          created_by?: string
+          discount_type?: Database["public"]["Enums"]["promo_discount_type"]
+          discount_value?: number
+          distance_ids?: string[]
+          event_id?: string
+          id?: string
+          is_active?: boolean
+          max_uses?: number | null
+          updated_at?: string
+          uses_count?: number
+          valid_until?: string | null
+        }
+        Relationships: []
+      }
       registrations: {
         Row: {
           athlete_id: string | null
@@ -514,6 +600,20 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      apply_promo_code: {
+        Args: {
+          _base_price: number
+          _code: string
+          _distance_id: string
+          _event_id: string
+          _registration_id: string
+        }
+        Returns: {
+          discount_amount: number
+          final_price: number
+          promo_id: string
+        }[]
+      }
       delete_email: {
         Args: { message_id: number; queue_name: string }
         Returns: boolean
@@ -581,6 +681,20 @@ export type Database = {
         }[]
       }
       slugify: { Args: { _input: string }; Returns: string }
+      validate_promo_code: {
+        Args: {
+          _base_price: number
+          _code: string
+          _distance_id: string
+          _event_id: string
+        }
+        Returns: {
+          discount_amount: number
+          error_code: string
+          final_price: number
+          promo_id: string
+        }[]
+      }
     }
     Enums: {
       app_role: "participant" | "organizer" | "admin"
@@ -596,6 +710,7 @@ export type Database = {
       gender_type: "male" | "female" | "other" | "boy" | "girl"
       payment_provider_type: "liqpay" | "stripe" | "free"
       payment_status_type: "pending" | "paid" | "failed" | "refunded" | "free"
+      promo_discount_type: "percent" | "fixed"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -737,6 +852,7 @@ export const Constants = {
       gender_type: ["male", "female", "other", "boy", "girl"],
       payment_provider_type: ["liqpay", "stripe", "free"],
       payment_status_type: ["pending", "paid", "failed", "refunded", "free"],
+      promo_discount_type: ["percent", "fixed"],
     },
   },
 } as const
