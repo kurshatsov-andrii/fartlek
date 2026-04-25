@@ -50,6 +50,7 @@ const App = () => (
               <Route path="/organizer" element={<OrganizerDashboard />} />
               <Route path="/organizer/events/new" element={<EventEditor />} />
               <Route path="/organizer/events/:id/analytics" element={<EventAnalytics />} />
+              <Route path="/organizer/events/:id/promo-codes" element={<PromoCodes />} />
               <Route path="/organizer/events/:id" element={<EventEditor />} />
               <Route path="/payment/success" element={<PaymentSuccess />} />
               <Route path="/payment/fail" element={<PaymentFail />} />
