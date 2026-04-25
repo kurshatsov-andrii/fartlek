@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Navigate, Link } from "react-router-dom";
-import { Loader2, Shield, Calendar, Users, CreditCard, Edit, BarChart3 } from "lucide-react";
+import { Loader2, Shield, Calendar, Users, CreditCard, Edit, BarChart3, Ticket } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
