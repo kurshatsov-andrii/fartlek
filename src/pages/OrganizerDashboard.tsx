@@ -137,6 +137,11 @@ const OrganizerDashboard = () => {
                     </p>
                   </div>
                   <div className="flex flex-wrap gap-2">
+                    <Button asChild variant="outline" size="sm" title={lang === "uk" ? "Попередній перегляд" : "Preview"}>
+                      <Link to={`/events/${ev.slug ?? ev.id}`} target="_blank" rel="noopener noreferrer">
+                        <Eye className="h-4 w-4" />
+                      </Link>
+                    </Button>
                     <Button asChild variant="outline" size="sm">
                       <Link to={`/events/${ev.id}/participants`}><Users className="h-4 w-4" /> {t.events.participants}</Link>
                     </Button>
