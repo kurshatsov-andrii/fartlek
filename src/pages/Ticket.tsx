@@ -21,6 +21,7 @@ const Ticket = () => {
   const [qrUrl, setQrUrl] = useState<string>("");
   const [loading, setLoading] = useState(true);
   const [uploadingReceipt, setUploadingReceipt] = useState(false);
+  const [payingBusy, setPayingBusy] = useState(false);
   const [receiptViewUrl, setReceiptViewUrl] = useState<string>("");
   const cardRef = useRef<HTMLDivElement>(null);
   const fileRef = useRef<HTMLInputElement>(null);
