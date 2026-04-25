@@ -12,6 +12,7 @@ import { useApp } from "@/contexts/AppContext";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { startWayForPayCheckout } from "@/lib/wayforpay";
+import { PromoCodeInput, PromoPreview } from "@/components/PromoCodeInput";
 
 const Ticket = () => {
   const { id } = useParams<{ id: string }>();
