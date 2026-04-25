@@ -44,6 +44,7 @@ const EventDetails = () => {
   const [athleteRegs, setAthleteRegs] = useState<Set<string>>(new Set()); // `${athleteId}:${distanceId}` already registered
   const [athleteDialogOpen, setAthleteDialogOpen] = useState(false);
   const [promo, setPromo] = useState<PromoPreview | null>(null);
+  const [hasPromoCodes, setHasPromoCodes] = useState(false);
 
   // Reset promo if distance changes
   useEffect(() => { setPromo(null); }, [selectedDistance]);
@@ -84,6 +85,12 @@ const EventDetails = () => {
       setDistances(ds ?? []);
       setParticipantsCount((cnt as number) ?? 0);
       if (ds && ds.length > 0) setSelectedDistance(ds[0].id);
+      const { count: promoCnt } = await supabase
+        .from("promo_codes")
+        .select("id", { count: "exact", head: true })
+        .eq("event_id", ev.id)
+        .eq("is_active", true);
+      setHasPromoCodes((promoCnt ?? 0) > 0);
       if (user) {
         const { data: reg } = await supabase.from("registrations").select("id, payment_status").eq("event_id", ev.id).eq("user_id", user.id).maybeSingle();
         if (reg) setRegistration(reg);
@@ -380,7 +387,7 @@ const EventDetails = () => {
 
                 {(() => {
                   const dist = distances.find((d) => d.id === selectedDistance);
-                  const showPromo = !!user && event.is_paid && !!dist && dist.price > 0 && !isAlreadyRegistered;
+                  const showPromo = !!user && event.is_paid && !!dist && dist.price > 0 && !isAlreadyRegistered && hasPromoCodes;
                   if (!showPromo) return null;
                   return (
                     <>
