@@ -134,7 +134,7 @@ const Participants = () => {
     setSendingReminders(true);
     // Завжди використовуємо production URL у листах, щоб лінки не ламались,
     // якщо нагадування надсилається з preview-середовища.
-    const ticketBase = `https://fartlek.com.ua/ticket/`;
+    const ticketBase = `https://fartlek.lovable.app/ticket/`;
     let ok = 0;
     let fail = 0;
     for (const t of reminderTargets) {
