@@ -3,7 +3,7 @@ import { Link, useParams, Navigate } from "react-router-dom";
 import QRCode from "qrcode";
 import { jsPDF } from "jspdf";
 import html2canvas from "html2canvas";
-import { Download, Loader2, ArrowLeft, Upload, FileCheck2, ExternalLink } from "lucide-react";
+import { Download, Loader2, ArrowLeft, Upload, FileCheck2, ExternalLink, CreditCard } from "lucide-react";
 import { toast } from "sonner";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { useApp } from "@/contexts/AppContext";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
+import { startWayForPayCheckout } from "@/lib/wayforpay";
 
 const Ticket = () => {
   const { id } = useParams<{ id: string }>();
