@@ -148,6 +148,9 @@ const OrganizerDashboard = () => {
                     <Button asChild variant="outline" size="sm" title={t.analytics.title}>
                       <Link to={`/organizer/events/${ev.id}/analytics`}><BarChart3 className="h-4 w-4" /></Link>
                     </Button>
+                    <Button asChild variant="outline" size="sm" title={t.promo.manage}>
+                      <Link to={`/organizer/events/${ev.id}/promo-codes`}><Ticket className="h-4 w-4" /></Link>
+                    </Button>
                     
                     <Button onClick={() => exportData(ev.id, ev.title)} variant="outline" size="sm"><Download className="h-4 w-4" /> XLSX</Button>
                     {(ev.results_pdf_url || ev.results_url) && (
