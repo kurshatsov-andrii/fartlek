@@ -81,6 +81,22 @@ export interface Dict {
     age1829: string; age3039: string; age4049: string; age50plus: string; ageUnknown: string;
     noData: string; participants: string;
   };
+  promo: {
+    title: string; subtitle: string; manage: string; backToDashboard: string;
+    create: string; edit: string; cancel: string; save: string; delete: string;
+    code: string; codePlaceholder: string;
+    discountType: string; percent: string; fixed: string;
+    discountValue: string; discountValuePercent: string; discountValueFixed: string;
+    distances: string; distancesAll: string; distancesPick: string;
+    maxUses: string; maxUsesHint: string; usesCount: string;
+    validUntil: string; validUntilHint: string; noExpiry: string;
+    isActive: string; statusActive: string; statusInactive: string; statusExpired: string; statusUsedUp: string;
+    deleteConfirm: string; deleted: string; saved: string; createNew: string;
+    empty: string;
+    apply: string; applied: string; remove: string; promoCodeLabel: string; promoPlaceholder: string;
+    invalid: string; expired: string; limitReached: string; distanceNotAllowed: string; alreadyUsed: string;
+    discountApplied: string; finalPrice: string; originalPrice: string;
+  };
 }
 
 export const EVENT_CATEGORIES = ["run", "half_marathon", "marathon", "ultra", "trail", "ocr", "online"] as const;
