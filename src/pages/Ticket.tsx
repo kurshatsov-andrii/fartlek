@@ -24,6 +24,8 @@ const Ticket = () => {
   const [uploadingReceipt, setUploadingReceipt] = useState(false);
   const [payingBusy, setPayingBusy] = useState(false);
   const [receiptViewUrl, setReceiptViewUrl] = useState<string>("");
+  const [redemption, setRedemption] = useState<{ discount_amount: number; promo_code_id: string; code?: string } | null>(null);
+  const [promo, setPromo] = useState<PromoPreview | null>(null);
   const cardRef = useRef<HTMLDivElement>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
