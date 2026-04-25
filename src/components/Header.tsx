@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { LogOut, User, LayoutDashboard, Ticket, Shield, Mail } from "lucide-react";
 import logoFartlek from "@/assets/logo-fartlek.jpg";
 import { Button } from "@/components/ui/button";
@@ -11,6 +11,24 @@ import {
 export const Header = () => {
   const { t } = useApp();
   const { user, isOrganizer, isAdmin, signOut } = useAuth();
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const handleEventsClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (location.pathname === "/") {
+      const el = document.getElementById("events");
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+        return;
+      }
+    }
+    navigate("/#events");
+    setTimeout(() => {
+      const el = document.getElementById("events");
+      if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 100);
+  };
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-border/40 bg-background/80 backdrop-blur-lg">
@@ -23,7 +41,7 @@ export const Header = () => {
         </Link>
 
         <nav className="hidden md:flex items-center gap-8">
-          <Link to="/#events" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-base">{t.nav.events}</Link>
+          <a href="/#events" onClick={handleEventsClick} className="text-sm font-medium text-muted-foreground hover:text-foreground transition-base cursor-pointer">{t.nav.events}</a>
           {user && (
             <>
               <Link to="/profile" className="hidden lg:inline text-sm font-medium text-muted-foreground hover:text-foreground transition-base">{t.nav.profile}</Link>
