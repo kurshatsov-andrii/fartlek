@@ -43,6 +43,10 @@ const EventDetails = () => {
   const [selectedAthlete, setSelectedAthlete] = useState<string>("");
   const [athleteRegs, setAthleteRegs] = useState<Set<string>>(new Set()); // `${athleteId}:${distanceId}` already registered
   const [athleteDialogOpen, setAthleteDialogOpen] = useState(false);
+  const [promo, setPromo] = useState<PromoPreview | null>(null);
+
+  // Reset promo if distance changes
+  useEffect(() => { setPromo(null); }, [selectedDistance]);
 
   const reloadAthletes = async (uid: string, eventId: string) => {
     const { data: ats } = await supabase.from("athletes").select("*").eq("owner_id", uid)
