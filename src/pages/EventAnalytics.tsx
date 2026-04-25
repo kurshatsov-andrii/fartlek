@@ -164,7 +164,7 @@ const EventAnalytics = () => {
 
   if (authLoading) return null;
   if (!user) return <Navigate to="/auth?role=organizer" replace />;
-  if (!isOrganizer) return <Navigate to="/" replace />;
+  if (!isOrganizer && !isAdmin) return <Navigate to="/" replace />;
 
   if (loading) {
     return (
