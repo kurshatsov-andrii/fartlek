@@ -182,10 +182,11 @@ const Participants = () => {
     setSendingReminders(false);
     setReminderOpen(false);
     if (ok > 0) {
+      localStorage.setItem(reminderCooldownKey, new Date().toISOString());
       toast.success(
         lang === "uk"
-          ? `Надіслано ${ok} нагадувань${fail ? `, ${fail} не вдалося` : ""}`
-          : `Sent ${ok} reminders${fail ? `, ${fail} failed` : ""}`
+          ? `Розсилку надіслано: ${ok} лист(ів)${fail ? `, ${fail} не вдалося` : ""}`
+          : `Reminders sent: ${ok}${fail ? `, ${fail} failed` : ""}`
       );
     } else if (fail > 0) {
       toast.error(lang === "uk" ? "Не вдалося надіслати нагадування" : "Failed to send reminders");
