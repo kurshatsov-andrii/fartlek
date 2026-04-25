@@ -147,7 +147,7 @@ const Participants = () => {
         });
         toast.error(
           lang === "uk"
-            ? `Наступна розсилка можлива о ${timeStr}`
+            ? `Наступна розсилка можлива ${timeStr}`
             : `Next reminder available at ${timeStr}`
         );
         setReminderOpen(false);
