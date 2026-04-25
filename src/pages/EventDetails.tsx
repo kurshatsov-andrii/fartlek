@@ -175,7 +175,7 @@ const EventDetails = () => {
   const endDateIso = `${event.event_date}T23:59:59`;
   const offerUrl = `${siteOrigin}${canonical}`;
   // validFrom — момент, з якого діє пропозиція реєстрації (вважаємо: з моменту створення події)
-  const validFromIso = event.created_at ?? new Date().toISOString();
+  const validFromIso = new Date().toISOString();
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "SportsEvent",
