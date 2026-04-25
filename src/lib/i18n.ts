@@ -70,6 +70,17 @@ export interface Dict {
     pickerLabel: string; pickerHint: string; addNew: string;
     alreadyRegistered: string; registeringAs: string;
   };
+  analytics: {
+    title: string; subtitle: string; backToDashboard: string; empty: string;
+    kpiTotal: string; kpiPaid: string; kpiPending: string; kpiConversion: string; kpiRevenue: string;
+    registrationsOverTime: string; registrationsOverTimeHint: string;
+    distanceBreakdown: string; distanceBreakdownHint: string; capacityFull: string;
+    demographics: string; gender: string; ageGroups: string; topCities: string; topClubs: string;
+    receiptsStatus: string; receiptUploaded: string; receiptConfirmed: string; receiptPending: string; receiptRevoked: string;
+    male: string; female: string; other: string;
+    age1829: string; age3039: string; age4049: string; age50plus: string; ageUnknown: string;
+    noData: string; participants: string;
+  };
 }
 
 export const EVENT_CATEGORIES = ["run", "half_marathon", "marathon", "ultra", "trail", "ocr", "online"] as const;
