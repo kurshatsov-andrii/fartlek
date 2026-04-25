@@ -21,7 +21,9 @@ const ReceiptReminderEmail = ({
   const finalTicketUrl = ticketUrl || SITE_URL
   return (
     <Html lang="uk" dir="ltr">
-      <Head />
+      <Head>
+        {React.createElement('meta', { httpEquiv: 'Content-Type', content: 'text/html; charset=UTF-8' })}
+      </Head>
       <Preview>
         Завантажте квитанцію про оплату{eventTitle ? ` для «${eventTitle}»` : ''}
       </Preview>
