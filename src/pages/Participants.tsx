@@ -132,7 +132,9 @@ const Participants = () => {
   const sendReminders = async () => {
     if (!id || reminderTargets.length === 0) return;
     setSendingReminders(true);
-    const ticketBase = `${window.location.origin}/ticket/`;
+    // Завжди використовуємо production URL у листах, щоб лінки не ламались,
+    // якщо нагадування надсилається з preview-середовища.
+    const ticketBase = `https://fartlek.com.ua/ticket/`;
     let ok = 0;
     let fail = 0;
     for (const t of reminderTargets) {
