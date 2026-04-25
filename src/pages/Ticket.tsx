@@ -65,6 +65,19 @@ const Ticket = () => {
         setQrUrl(url);
       }
       setData(reg);
+      // Load existing redemption (if user already applied a promo)
+      if (reg) {
+        const { data: red } = await supabase
+          .from("promo_code_redemptions")
+          .select("discount_amount, promo_code_id, promo_codes(code)")
+          .eq("registration_id", reg.id)
+          .maybeSingle();
+        if (red) setRedemption({
+          discount_amount: Number(red.discount_amount),
+          promo_code_id: red.promo_code_id,
+          code: (red as any).promo_codes?.code,
+        });
+      }
       setLoading(false);
     })();
   }, [id, user]);
