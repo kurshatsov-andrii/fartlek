@@ -70,6 +70,17 @@ export interface Dict {
     pickerLabel: string; pickerHint: string; addNew: string;
     alreadyRegistered: string; registeringAs: string;
   };
+  analytics: {
+    title: string; subtitle: string; backToDashboard: string; empty: string;
+    kpiTotal: string; kpiPaid: string; kpiPending: string; kpiConversion: string; kpiRevenue: string;
+    registrationsOverTime: string; registrationsOverTimeHint: string;
+    distanceBreakdown: string; distanceBreakdownHint: string; capacityFull: string;
+    demographics: string; gender: string; ageGroups: string; topCities: string; topClubs: string;
+    receiptsStatus: string; receiptUploaded: string; receiptConfirmed: string; receiptPending: string; receiptRevoked: string;
+    male: string; female: string; other: string;
+    age1829: string; age3039: string; age4049: string; age50plus: string; ageUnknown: string;
+    noData: string; participants: string;
+  };
 }
 
 export const EVENT_CATEGORIES = ["run", "half_marathon", "marathon", "ultra", "trail", "ocr", "online"] as const;
@@ -193,6 +204,25 @@ export const translations: Record<Lang, Dict> = {
       alreadyRegistered: "Цей учасник вже зареєстрований на цю дистанцію",
       registeringAs: "Реєструємо",
     },
+    analytics: {
+      title: "Аналітика події", subtitle: "Зведена статистика по реєстраціях та учасниках",
+      backToDashboard: "← До панелі", empty: "Поки що немає даних — почекай перших реєстрацій.",
+      kpiTotal: "Усього реєстрацій", kpiPaid: "Оплачено", kpiPending: "Очікують оплати",
+      kpiConversion: "Конверсія оплати", kpiRevenue: "Дохід (₴)",
+      registrationsOverTime: "Динаміка реєстрацій",
+      registrationsOverTimeHint: "Кількість нових реєстрацій по днях.",
+      distanceBreakdown: "Розподіл по дистанціях",
+      distanceBreakdownHint: "Скільки учасників на кожній дистанції та заповненість квоти.",
+      capacityFull: "заповнено",
+      demographics: "Демографія", gender: "Стать", ageGroups: "Вікові групи",
+      topCities: "Топ-10 міст", topClubs: "Топ-10 клубів",
+      receiptsStatus: "Статус квитанцій",
+      receiptUploaded: "Завантажено", receiptConfirmed: "Підтверджено",
+      receiptPending: "Не завантажено", receiptRevoked: "Відкликано",
+      male: "Чоловіки", female: "Жінки", other: "Інше",
+      age1829: "18–29", age3039: "30–39", age4049: "40–49", age50plus: "50+", ageUnknown: "Невідомо",
+      noData: "Немає даних", participants: "учасників",
+    },
   },
   en: {
     nav: { events: "Events", organizer: "For organizers", login: "Sign in", signup: "Sign up", dashboard: "Dashboard", profile: "Profile", logout: "Sign out", myEvents: "My events", contacts: "Contacts" },
@@ -309,6 +339,25 @@ export const translations: Record<Lang, Dict> = {
       addNew: "+ Add new athlete",
       alreadyRegistered: "This athlete is already registered for this distance",
       registeringAs: "Registering",
+    },
+    analytics: {
+      title: "Event analytics", subtitle: "Summary stats for registrations and participants",
+      backToDashboard: "← To dashboard", empty: "No data yet — wait for the first registrations.",
+      kpiTotal: "Total registrations", kpiPaid: "Paid", kpiPending: "Pending payment",
+      kpiConversion: "Payment conversion", kpiRevenue: "Revenue (UAH)",
+      registrationsOverTime: "Registrations over time",
+      registrationsOverTimeHint: "New registrations per day.",
+      distanceBreakdown: "Distance breakdown",
+      distanceBreakdownHint: "Participants per distance and capacity fill rate.",
+      capacityFull: "filled",
+      demographics: "Demographics", gender: "Gender", ageGroups: "Age groups",
+      topCities: "Top 10 cities", topClubs: "Top 10 clubs",
+      receiptsStatus: "Receipts status",
+      receiptUploaded: "Uploaded", receiptConfirmed: "Confirmed",
+      receiptPending: "Not uploaded", receiptRevoked: "Revoked",
+      male: "Male", female: "Female", other: "Other",
+      age1829: "18–29", age3039: "30–39", age4049: "40–49", age50plus: "50+", ageUnknown: "Unknown",
+      noData: "No data", participants: "participants",
     },
   },
 };
