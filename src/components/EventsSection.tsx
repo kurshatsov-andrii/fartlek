@@ -39,8 +39,13 @@ export const EventsSection = () => {
       day: "numeric", month: "long", year: "numeric",
     });
 
-  const minPrice = (ev: EventCard) =>
-    activeDistances(ev).length > 0 ? Math.min(...activeDistances(ev).map((d) => d.price)) : 0;
+  const minPrice = (ev: EventCard) => {
+    const prices = activeDistances(ev).map((d) => d.price);
+    if (prices.length === 0) return 0;
+    const positive = prices.filter((p) => p > 0);
+    if (positive.length > 0) return Math.min(...positive);
+    return Math.min(...prices);
+  };
 
   const activeDistances = (ev: EventCard) => ev.distances.filter((d) => d.is_active !== false);
 
