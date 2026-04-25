@@ -15,6 +15,7 @@ import { toast } from "sonner";
 import { startWayForPayCheckout } from "@/lib/wayforpay";
 import { buildEventSeo } from "@/lib/seo";
 import { linkifyText } from "@/lib/linkify";
+import { PromoCodeInput, PromoPreview } from "@/components/PromoCodeInput";
 import type { EventCategory } from "@/lib/i18n";
 
 interface EventRow {
