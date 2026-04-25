@@ -3,7 +3,7 @@ import { Link, useParams, Navigate } from "react-router-dom";
 import QRCode from "qrcode";
 import { jsPDF } from "jspdf";
 import html2canvas from "html2canvas";
-import { Download, Loader2, ArrowLeft, Upload, FileCheck2, ExternalLink } from "lucide-react";
+import { Download, Loader2, ArrowLeft, Upload, FileCheck2, ExternalLink, CreditCard } from "lucide-react";
 import { toast } from "sonner";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { useApp } from "@/contexts/AppContext";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
+import { startWayForPayCheckout } from "@/lib/wayforpay";
 
 const Ticket = () => {
   const { id } = useParams<{ id: string }>();
@@ -20,6 +21,7 @@ const Ticket = () => {
   const [qrUrl, setQrUrl] = useState<string>("");
   const [loading, setLoading] = useState(true);
   const [uploadingReceipt, setUploadingReceipt] = useState(false);
+  const [payingBusy, setPayingBusy] = useState(false);
   const [receiptViewUrl, setReceiptViewUrl] = useState<string>("");
   const cardRef = useRef<HTMLDivElement>(null);
   const fileRef = useRef<HTMLInputElement>(null);
@@ -193,6 +195,35 @@ const Ticket = () => {
             </Button>
           </div>
         </div>
+
+        {data.payment_status === "pending" && (
+          <div className="mt-6 bg-card rounded-2xl shadow-card p-6 space-y-3">
+            <div>
+              <h2 className="font-display text-lg font-bold">{t.ticket.paymentTitle}</h2>
+              <p className="text-sm text-muted-foreground mt-1">{t.ticket.paymentHint}</p>
+            </div>
+            {ev.payment_url ? (
+              <Button asChild className="w-full sm:w-auto">
+                <a href={ev.payment_url} target="_blank" rel="noopener noreferrer">
+                  <CreditCard className="h-4 w-4" /> {t.ticket.payNow}
+                </a>
+              </Button>
+            ) : (
+              <Button
+                className="w-full sm:w-auto"
+                disabled={payingBusy}
+                onClick={async () => {
+                  setPayingBusy(true);
+                  try { await startWayForPayCheckout(data.id); }
+                  catch (e: any) { toast.error(e.message ?? t.common.error); setPayingBusy(false); }
+                }}
+              >
+                {payingBusy ? <Loader2 className="h-4 w-4 animate-spin" /> : <CreditCard className="h-4 w-4" />}
+                {t.ticket.payNow}
+              </Button>
+            )}
+          </div>
+        )}
 
         {data.payment_status !== "free" && (
           <div className="mt-6 bg-card rounded-2xl shadow-card p-6 space-y-4">

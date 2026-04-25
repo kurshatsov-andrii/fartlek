@@ -44,6 +44,7 @@ export interface Dict {
     receiptTitle: string; receiptHint: string; receiptUpload: string; receiptUploading: string;
     receiptReplace: string; receiptUploaded: string; receiptView: string; receiptInvalidType: string;
     receiptTooBig: string; receiptRevoked: string;
+    paymentTitle: string; paymentHint: string; payNow: string;
   };
   organizer: {
     dashboard: string; createEvent: string; myEvents: string; participants: string;
@@ -153,6 +154,7 @@ export const translations: Record<Lang, Dict> = {
       receiptInvalidType: "Дозволено лише зображення (JPG, PNG, WEBP) або PDF.",
       receiptTooBig: "Файл завеликий — максимум 10 МБ.",
       receiptRevoked: "Організатор відкликав підтвердження. Завантаж нову квитанцію.",
+      paymentTitle: "Оплата участі", paymentHint: "Сплати участь онлайн, після чого завантаж квитанцію нижче.", payNow: "Оплатити",
     },
     organizer: {
       dashboard: "Панель організатора", createEvent: "Створити подію", myEvents: "Мої події",
@@ -269,6 +271,7 @@ export const translations: Record<Lang, Dict> = {
       receiptInvalidType: "Only images (JPG, PNG, WEBP) or PDF are allowed.",
       receiptTooBig: "File is too big — max 10 MB.",
       receiptRevoked: "The organizer revoked the confirmation. Please upload a new receipt.",
+      paymentTitle: "Pay for participation", paymentHint: "Pay online, then upload the receipt below.", payNow: "Pay now",
     },
     organizer: {
       dashboard: "Organizer dashboard", createEvent: "Create event", myEvents: "My events",
