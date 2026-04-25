@@ -135,8 +135,17 @@ const EventDetails = () => {
       payment_status: isPaidReg ? "pending" : "free",
       qr_code_data: qrPayload,
     }).select("id").single();
+    if (error) { setBusy(false); toast.error(error.message); return; }
+    // Apply promo code if previewed and event is paid
+    if (isPaidReg && promo) {
+      const { error: pErr } = await supabase.rpc("apply_promo_code", {
+        _code: promo.code, _event_id: event.id, _distance_id: dist.id,
+        _registration_id: reg.id, _base_price: dist.price,
+      });
+      if (pErr) toast.error(pErr.message);
+      else toast.success(t.promo.discountApplied);
+    }
     setBusy(false);
-    if (error) { toast.error(error.message); return; }
     toast.success("OK");
     if (isPaidReg && event.payment_url) {
       window.open(event.payment_url, "_blank", "noopener,noreferrer");
