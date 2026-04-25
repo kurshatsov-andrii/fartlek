@@ -196,6 +196,35 @@ const Ticket = () => {
           </div>
         </div>
 
+        {data.payment_status === "pending" && (
+          <div className="mt-6 bg-card rounded-2xl shadow-card p-6 space-y-3">
+            <div>
+              <h2 className="font-display text-lg font-bold">{t.ticket.paymentTitle}</h2>
+              <p className="text-sm text-muted-foreground mt-1">{t.ticket.paymentHint}</p>
+            </div>
+            {ev.payment_url ? (
+              <Button asChild className="w-full sm:w-auto">
+                <a href={ev.payment_url} target="_blank" rel="noopener noreferrer">
+                  <CreditCard className="h-4 w-4" /> {t.ticket.payNow}
+                </a>
+              </Button>
+            ) : (
+              <Button
+                className="w-full sm:w-auto"
+                disabled={payingBusy}
+                onClick={async () => {
+                  setPayingBusy(true);
+                  try { await startWayForPayCheckout(data.id); }
+                  catch (e: any) { toast.error(e.message ?? t.common.error); setPayingBusy(false); }
+                }}
+              >
+                {payingBusy ? <Loader2 className="h-4 w-4 animate-spin" /> : <CreditCard className="h-4 w-4" />}
+                {t.ticket.payNow}
+              </Button>
+            )}
+          </div>
+        )}
+
         {data.payment_status !== "free" && (
           <div className="mt-6 bg-card rounded-2xl shadow-card p-6 space-y-4">
             <div className="flex items-start justify-between gap-3">
