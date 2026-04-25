@@ -169,24 +169,43 @@ const EventDetails = () => {
   });
 
   const canonical = `/events/${event.slug ?? event.id}`;
+  const siteOrigin = typeof window !== "undefined" ? window.location.origin : "https://fartlek.lovable.app";
+  const startDateIso = `${event.event_date}T${event.event_time}`;
+  // Подія триває умовно до кінця стартового дня
+  const endDateIso = `${event.event_date}T23:59:59`;
+  const offerUrl = `${siteOrigin}${canonical}`;
+  // validFrom — момент, з якого діє пропозиція реєстрації (вважаємо: з моменту створення події)
+  const validFromIso = event.created_at ?? new Date().toISOString();
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "SportsEvent",
     name: event.title,
-    startDate: `${event.event_date}T${event.event_time}`,
+    startDate: startDateIso,
+    endDate: endDateIso,
     eventStatus: "https://schema.org/EventScheduled",
     eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
-    location: event.location ? { "@type": "Place", name: event.location, address: event.location } : undefined,
+    location: event.location
+      ? { "@type": "Place", name: event.location, address: event.location }
+      : { "@type": "Place", name: "Ukraine", address: "Ukraine" },
     image: event.image_url || undefined,
     description: event.description || seo.description,
-    organizer: { "@type": "Organization", name: event.organizer_name },
+    organizer: {
+      "@type": "Organization",
+      name: event.organizer_name,
+      url: siteOrigin,
+    },
+    performer: {
+      "@type": "PerformingGroup",
+      name: event.organizer_name,
+    },
     offers: distances.map((d) => ({
       "@type": "Offer",
       name: `${d.distance_km} km${d.name ? ` — ${d.name}` : ""}`,
       price: event.is_paid ? d.price : 0,
       priceCurrency: "UAH",
       availability: "https://schema.org/InStock",
-      url: `${window.location.origin}${canonical}`,
+      validFrom: validFromIso,
+      url: offerUrl,
     })),
   };
 
