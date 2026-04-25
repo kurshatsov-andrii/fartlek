@@ -378,6 +378,29 @@ const EventDetails = () => {
                   </Link>
                 )}
 
+                {(() => {
+                  const dist = distances.find((d) => d.id === selectedDistance);
+                  const showPromo = !!user && event.is_paid && !!dist && dist.price > 0 && !isAlreadyRegistered;
+                  if (!showPromo) return null;
+                  return (
+                    <>
+                      <PromoCodeInput
+                        eventId={event.id}
+                        distanceId={dist!.id}
+                        basePrice={Number(dist!.price)}
+                        applied={promo}
+                        onApplied={setPromo}
+                      />
+                      {promo && (
+                        <div className="text-sm flex justify-between border-t border-border pt-2">
+                          <span className="text-muted-foreground line-through">{dist!.price} ₴</span>
+                          <span className="font-bold text-primary">{t.promo.finalPrice}: {promo.final_price} ₴</span>
+                        </div>
+                      )}
+                    </>
+                  );
+                })()}
+
                 <Button
                   onClick={register}
                   className="w-full"
