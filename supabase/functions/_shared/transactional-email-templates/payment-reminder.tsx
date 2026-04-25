@@ -23,7 +23,9 @@ const PaymentReminderEmail = ({
   const finalTicketUrl = ticketUrl || SITE_URL
   return (
     <Html lang="uk" dir="ltr">
-      <Head />
+      <Head>
+        {React.createElement('meta', { httpEquiv: 'Content-Type', content: 'text/html; charset=UTF-8' })}
+      </Head>
       <Preview>
         Нагадування: оплата участі{eventTitle ? ` у «${eventTitle}»` : ''}
       </Preview>
