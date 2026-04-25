@@ -26,6 +26,7 @@ const Ticket = () => {
   const [receiptViewUrl, setReceiptViewUrl] = useState<string>("");
   const [redemption, setRedemption] = useState<{ discount_amount: number; promo_code_id: string; code?: string } | null>(null);
   const [promo, setPromo] = useState<PromoPreview | null>(null);
+  const [hasPromoCodes, setHasPromoCodes] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
@@ -77,6 +78,12 @@ const Ticket = () => {
           promo_code_id: red.promo_code_id,
           code: (red as any).promo_codes?.code,
         });
+        const { count: promoCnt } = await supabase
+          .from("promo_codes")
+          .select("id", { count: "exact", head: true })
+          .eq("event_id", (reg as any).event_id)
+          .eq("is_active", true);
+        setHasPromoCodes((promoCnt ?? 0) > 0);
       }
       setLoading(false);
     })();
@@ -222,6 +229,7 @@ const Ticket = () => {
             {(() => {
               const basePrice = Number(dist?.price ?? 0);
               if (!basePrice) return null;
+              if (!redemption && !hasPromoCodes) return null;
               if (redemption) {
                 return (
                   <div className="rounded-md border border-primary/40 bg-primary/10 p-3 text-sm space-y-1">
