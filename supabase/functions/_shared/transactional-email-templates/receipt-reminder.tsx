@@ -86,7 +86,7 @@ export const template = {
   previewData: {
     name: 'Марія',
     eventTitle: 'Київський напівмарафон',
-    ticketUrl: 'https://fartlek.com.ua/ticket/example',
+    ticketUrl: 'https://fartlek.lovable.app/ticket/example',
   },
 } satisfies TemplateEntry
 
