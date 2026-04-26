@@ -250,10 +250,28 @@ const Participants = () => {
     [rows]
   );
 
+  const ageRanges: Record<string, [number, number]> = {
+    "1-17": [1, 17],
+    "18-29": [18, 29],
+    "30-39": [30, 39],
+    "40-49": [40, 49],
+    "50-59": [50, 59],
+    "60-69": [60, 69],
+    "70-79": [70, 79],
+    "80-100": [80, 100],
+  };
+
   const filteredRows = useMemo(() => {
+    const currentYear = new Date().getFullYear();
     return rows.filter((r) => {
       if (fGender !== "all" && r.gender !== fGender) return false;
       if (fYear !== "all" && String(r.birth_year ?? "") !== fYear) return false;
+      if (fAge !== "all") {
+        const range = ageRanges[fAge];
+        if (!range || !r.birth_year) return false;
+        const age = currentYear - Number(r.birth_year);
+        if (age < range[0] || age > range[1]) return false;
+      }
       if (fCity !== "all" && (r.city ?? "") !== fCity) return false;
       if (fClub !== "all" && (r.club ?? "") !== fClub) return false;
       if (isPaid && fPayment !== "all" && r.payment_status !== fPayment) return false;
@@ -263,13 +281,13 @@ const Participants = () => {
       }
       return true;
     });
-  }, [rows, fGender, fYear, fCity, fClub, fPayment, isPaid, search]);
+  }, [rows, fGender, fYear, fAge, fCity, fClub, fPayment, isPaid, search]);
 
   const resetFilters = () => {
-    setFGender("all"); setFYear("all"); setFCity("all"); setFClub("all"); setFPayment("all"); setSearch("");
+    setFGender("all"); setFYear("all"); setFAge("all"); setFCity("all"); setFClub("all"); setFPayment("all"); setSearch("");
   };
   const hasActiveFilters =
-    fGender !== "all" || fYear !== "all" || fCity !== "all" || fClub !== "all" || fPayment !== "all" || search.trim() !== "";
+    fGender !== "all" || fYear !== "all" || fAge !== "all" || fCity !== "all" || fClub !== "all" || fPayment !== "all" || search.trim() !== "";
 
   if (authLoading) return null;
   if (!user) return <Navigate to={`/auth?redirect=/events/${id}/participants`} replace />;
