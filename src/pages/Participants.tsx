@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
-import { ArrowLeft, Loader2, CheckCircle2, XCircle, FileText, RotateCcw, Trash2, X, Bell } from "lucide-react";
+import { ArrowLeft, Loader2, CheckCircle2, XCircle, FileText, RotateCcw, Trash2, X, Bell, ArrowRightLeft } from "lucide-react";
 import { toast } from "sonner";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
@@ -11,6 +11,9 @@ import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import {
+  Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle,
+} from "@/components/ui/dialog";
 import { useApp } from "@/contexts/AppContext";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
@@ -28,6 +31,10 @@ const Participants = () => {
   const [distancePriceMap, setDistancePriceMap] = useState<Record<string, number>>({});
   const [reminderOpen, setReminderOpen] = useState(false);
   const [sendingReminders, setSendingReminders] = useState(false);
+  const [distances, setDistances] = useState<any[]>([]);
+  const [moveTarget, setMoveTarget] = useState<any | null>(null);
+  const [moveToId, setMoveToId] = useState<string>("");
+  const [moving, setMoving] = useState(false);
 
   // Filters
   const [fGender, setFGender] = useState<string>("all");
@@ -49,14 +56,16 @@ const Participants = () => {
     setIsOrganizer(ev?.organizer_id === user.id || isAdmin);
     const { data: dists } = await supabase
       .from("distances")
-      .select("distance_km, name, price")
-      .eq("event_id", id);
+      .select("id, distance_km, name, price, max_participants, is_active")
+      .eq("event_id", id)
+      .order("distance_km", { ascending: true });
     const priceMap: Record<string, number> = {};
     (dists ?? []).forEach((d: any) => {
       const key = `${d.distance_km}|${d.name ?? ""}`;
       priceMap[key] = Number(d.price ?? 0);
     });
     setDistancePriceMap(priceMap);
+    setDistances(dists ?? []);
     const { data: participants } = await (supabase.rpc as any)("get_event_participants", { _event_id: id });
     setRows(participants ?? []);
     setLoading(false);
@@ -109,6 +118,40 @@ const Participants = () => {
     setBusyId(null);
     if (error) { toast.error(error.message); return; }
     toast.success(lang === "uk" ? "Учасника видалено" : "Participant removed");
+    load();
+  };
+
+  const openMoveDialog = (r: any) => {
+    setMoveTarget(r);
+    setMoveToId("");
+  };
+
+  const confirmMove = async () => {
+    if (!moveTarget || !moveToId) return;
+    setMoving(true);
+    const { data, error } = await (supabase.rpc as any)("move_registration_to_distance", {
+      _registration_id: moveTarget.registration_id,
+      _new_distance_id: moveToId,
+    });
+    setMoving(false);
+    if (error) {
+      const msg = error.message || "";
+      const map: Record<string, string> = {
+        DISTANCE_FULL: lang === "uk" ? "Немає вільних місць на обраній дистанції" : "Selected distance is full",
+        INVALID_DISTANCE: lang === "uk" ? "Невірна дистанція" : "Invalid distance",
+        NOT_AUTHORIZED: lang === "uk" ? "Немає прав" : "Not authorized",
+      };
+      const matched = Object.keys(map).find((k) => msg.includes(k));
+      toast.error(matched ? map[matched] : msg);
+      return;
+    }
+    const newBib = Array.isArray(data) ? data[0]?.new_bib_number : (data as any)?.new_bib_number;
+    toast.success(
+      lang === "uk"
+        ? `Учасника переміщено. Новий номер: ${newBib ?? "—"}`
+        : `Participant moved. New bib: ${newBib ?? "—"}`
+    );
+    setMoveTarget(null);
     load();
   };
 
@@ -430,7 +473,18 @@ const Participants = () => {
                           )}
                           {isOrganizer && (
                             <td className="p-3">
-                              <div className="flex items-center justify-center">
+                              <div className="flex items-center justify-center gap-1">
+                                {distances.length > 1 && (
+                                  <Button
+                                    size="sm"
+                                    variant="ghost"
+                                    onClick={() => openMoveDialog(r)}
+                                    disabled={busyId === r.registration_id}
+                                    title={lang === "uk" ? "Перенести на іншу дистанцію" : "Move to another distance"}
+                                  >
+                                    <ArrowRightLeft className="h-4 w-4" />
+                                  </Button>
+                                )}
                                 <Button
                                   size="sm"
                                   variant="ghost"
@@ -498,6 +552,57 @@ const Participants = () => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+      <Dialog open={!!moveTarget} onOpenChange={(o) => !o && setMoveTarget(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>
+              {lang === "uk" ? "Перенести на іншу дистанцію" : "Move to another distance"}
+            </DialogTitle>
+            <DialogDescription>
+              {moveTarget && (
+                <>
+                  {moveTarget.full_name} · #{moveTarget.bib_number ?? "—"} ·{" "}
+                  {moveTarget.distance_km} {lang === "uk" ? "км" : "km"}
+                  {moveTarget.distance_name ? ` · ${moveTarget.distance_name}` : ""}
+                </>
+              )}
+              <div className="mt-2 text-xs">
+                {lang === "uk"
+                  ? "Учаснику буде призначено новий стартовий номер. Посилання на квиток залишиться тим самим."
+                  : "Participant will get a new bib number. Ticket link stays the same."}
+              </div>
+            </DialogDescription>
+          </DialogHeader>
+          <div className="py-2">
+            <label className="text-xs text-muted-foreground mb-1 block">
+              {lang === "uk" ? "Нова дистанція" : "New distance"}
+            </label>
+            <Select value={moveToId} onValueChange={setMoveToId}>
+              <SelectTrigger>
+                <SelectValue placeholder={lang === "uk" ? "Оберіть дистанцію" : "Select distance"} />
+              </SelectTrigger>
+              <SelectContent>
+                {distances
+                  .filter((d) => moveTarget && d.id !== moveTarget.distance_id && d.is_active !== false)
+                  .map((d) => (
+                    <SelectItem key={d.id} value={d.id}>
+                      {d.distance_km} {lang === "uk" ? "км" : "km"}
+                      {d.name ? ` · ${d.name}` : ""}
+                    </SelectItem>
+                  ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setMoveTarget(null)} disabled={moving}>
+              {lang === "uk" ? "Скасувати" : "Cancel"}
+            </Button>
+            <Button onClick={confirmMove} disabled={moving || !moveToId}>
+              {moving ? <Loader2 className="h-4 w-4 animate-spin" /> : (lang === "uk" ? "Перенести" : "Move")}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
       <Footer />
     </div>
   );

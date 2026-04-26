@@ -663,6 +663,13 @@ export type Database = {
         }
         Returns: boolean
       }
+      move_registration_to_distance: {
+        Args: { _new_distance_id: string; _registration_id: string }
+        Returns: {
+          new_bib_number: number
+          new_distance_id: string
+        }[]
+      }
       move_to_dlq: {
         Args: {
           dlq_name: string
