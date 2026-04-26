@@ -121,6 +121,40 @@ const Participants = () => {
     load();
   };
 
+  const openMoveDialog = (r: any) => {
+    setMoveTarget(r);
+    setMoveToId("");
+  };
+
+  const confirmMove = async () => {
+    if (!moveTarget || !moveToId) return;
+    setMoving(true);
+    const { data, error } = await (supabase.rpc as any)("move_registration_to_distance", {
+      _registration_id: moveTarget.registration_id,
+      _new_distance_id: moveToId,
+    });
+    setMoving(false);
+    if (error) {
+      const msg = error.message || "";
+      const map: Record<string, string> = {
+        DISTANCE_FULL: lang === "uk" ? "Немає вільних місць на обраній дистанції" : "Selected distance is full",
+        INVALID_DISTANCE: lang === "uk" ? "Невірна дистанція" : "Invalid distance",
+        NOT_AUTHORIZED: lang === "uk" ? "Немає прав" : "Not authorized",
+      };
+      const matched = Object.keys(map).find((k) => msg.includes(k));
+      toast.error(matched ? map[matched] : msg);
+      return;
+    }
+    const newBib = Array.isArray(data) ? data[0]?.new_bib_number : (data as any)?.new_bib_number;
+    toast.success(
+      lang === "uk"
+        ? `Учасника переміщено. Новий номер: ${newBib ?? "—"}`
+        : `Participant moved. New bib: ${newBib ?? "—"}`
+    );
+    setMoveTarget(null);
+    load();
+  };
+
   // Recipients = those without a confirmed (green check) payment.
   // Two groups: no receipt uploaded → payment-reminder; receipt uploaded but not yet confirmed → receipt-reminder.
   const reminderTargets = useMemo(() => {
