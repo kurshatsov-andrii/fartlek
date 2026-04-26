@@ -39,6 +39,7 @@ const Participants = () => {
   // Filters
   const [fGender, setFGender] = useState<string>("all");
   const [fYear, setFYear] = useState<string>("all");
+  const [fAge, setFAge] = useState<string>("all");
   const [fCity, setFCity] = useState<string>("all");
   const [fClub, setFClub] = useState<string>("all");
   const [fPayment, setFPayment] = useState<string>("all");
