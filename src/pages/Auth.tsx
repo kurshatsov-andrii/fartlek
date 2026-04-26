@@ -144,6 +144,27 @@ const Auth = () => {
                 </svg>
                 Увійти через Google
               </Button>
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full"
+                disabled={busy}
+                onClick={async () => {
+                  setBusy(true);
+                  const result = await lovable.auth.signInWithOAuth("apple", {
+                    redirect_uri: `${window.location.origin}${redirectTo}`,
+                  });
+                  if (result.error) {
+                    toast.error(translateAuthError(result.error));
+                    setBusy(false);
+                  }
+                }}
+              >
+                <svg className="h-4 w-4" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
+                  <path d="M16.365 1.43c0 1.14-.46 2.23-1.21 3.04-.81.85-2.13 1.51-3.21 1.43-.13-1.13.4-2.31 1.16-3.07.86-.86 2.31-1.5 3.26-1.4zM20.5 17.36c-.59 1.31-.88 1.9-1.64 3.05-1.07 1.61-2.58 3.61-4.45 3.62-1.66.02-2.09-1.08-4.34-1.07-2.25.01-2.72 1.09-4.39 1.07-1.87-.02-3.3-1.83-4.37-3.43-2.99-4.52-3.31-9.83-1.46-12.65 1.31-2 3.39-3.18 5.34-3.18 1.99 0 3.24 1.09 4.88 1.09 1.59 0 2.56-1.09 4.86-1.09 1.74 0 3.58.95 4.89 2.59-4.3 2.36-3.6 8.51.68 10z"/>
+                </svg>
+                Увійти через Apple
+              </Button>
               <div className="relative">
                 <div className="absolute inset-0 flex items-center"><span className="w-full border-t border-border" /></div>
                 <div className="relative flex justify-center text-xs"><span className="bg-background px-2 text-muted-foreground">або</span></div>
