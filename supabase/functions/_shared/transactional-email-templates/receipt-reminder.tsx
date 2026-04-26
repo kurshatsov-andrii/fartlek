@@ -5,7 +5,7 @@ import {
 import type { TemplateEntry } from './registry.ts'
 
 const SITE_NAME = 'fartlek'
-const SITE_URL = 'https://fartlek.com.ua'
+const SITE_URL = 'https://fartlek.lovable.app'
 
 interface ReceiptReminderProps {
   name?: string
