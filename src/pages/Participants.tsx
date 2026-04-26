@@ -353,6 +353,23 @@ const Participants = () => {
                 </SelectContent>
               </Select>
             </div>
+            <div className="min-w-[140px]">
+              <label className="text-xs text-muted-foreground mb-1 block">{lang === "uk" ? "Вікова категорія" : "Age group"}</label>
+              <Select value={fAge} onValueChange={setFAge}>
+                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">{lang === "uk" ? "Усі" : "All"}</SelectItem>
+                  <SelectItem value="1-17">1–17</SelectItem>
+                  <SelectItem value="18-29">18–29</SelectItem>
+                  <SelectItem value="30-39">30–39</SelectItem>
+                  <SelectItem value="40-49">40–49</SelectItem>
+                  <SelectItem value="50-59">50–59</SelectItem>
+                  <SelectItem value="60-69">60–69</SelectItem>
+                  <SelectItem value="70-79">70–79</SelectItem>
+                  <SelectItem value="80-100">80–100</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
             <div className="min-w-[160px]">
               <label className="text-xs text-muted-foreground mb-1 block">{t.profile.city}</label>
               <Select value={fCity} onValueChange={setFCity}>
