@@ -56,14 +56,16 @@ const Participants = () => {
     setIsOrganizer(ev?.organizer_id === user.id || isAdmin);
     const { data: dists } = await supabase
       .from("distances")
-      .select("distance_km, name, price")
-      .eq("event_id", id);
+      .select("id, distance_km, name, price, max_participants, is_active")
+      .eq("event_id", id)
+      .order("distance_km", { ascending: true });
     const priceMap: Record<string, number> = {};
     (dists ?? []).forEach((d: any) => {
       const key = `${d.distance_km}|${d.name ?? ""}`;
       priceMap[key] = Number(d.price ?? 0);
     });
     setDistancePriceMap(priceMap);
+    setDistances(dists ?? []);
     const { data: participants } = await (supabase.rpc as any)("get_event_participants", { _event_id: id });
     setRows(participants ?? []);
     setLoading(false);
