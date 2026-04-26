@@ -31,6 +31,10 @@ const Participants = () => {
   const [distancePriceMap, setDistancePriceMap] = useState<Record<string, number>>({});
   const [reminderOpen, setReminderOpen] = useState(false);
   const [sendingReminders, setSendingReminders] = useState(false);
+  const [distances, setDistances] = useState<any[]>([]);
+  const [moveTarget, setMoveTarget] = useState<any | null>(null);
+  const [moveToId, setMoveToId] = useState<string>("");
+  const [moving, setMoving] = useState(false);
 
   // Filters
   const [fGender, setFGender] = useState<string>("all");
