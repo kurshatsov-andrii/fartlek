@@ -552,6 +552,57 @@ const Participants = () => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+      <Dialog open={!!moveTarget} onOpenChange={(o) => !o && setMoveTarget(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>
+              {lang === "uk" ? "Перенести на іншу дистанцію" : "Move to another distance"}
+            </DialogTitle>
+            <DialogDescription>
+              {moveTarget && (
+                <>
+                  {moveTarget.full_name} · #{moveTarget.bib_number ?? "—"} ·{" "}
+                  {moveTarget.distance_km} {lang === "uk" ? "км" : "km"}
+                  {moveTarget.distance_name ? ` · ${moveTarget.distance_name}` : ""}
+                </>
+              )}
+              <div className="mt-2 text-xs">
+                {lang === "uk"
+                  ? "Учаснику буде призначено новий стартовий номер. Посилання на квиток залишиться тим самим."
+                  : "Participant will get a new bib number. Ticket link stays the same."}
+              </div>
+            </DialogDescription>
+          </DialogHeader>
+          <div className="py-2">
+            <label className="text-xs text-muted-foreground mb-1 block">
+              {lang === "uk" ? "Нова дистанція" : "New distance"}
+            </label>
+            <Select value={moveToId} onValueChange={setMoveToId}>
+              <SelectTrigger>
+                <SelectValue placeholder={lang === "uk" ? "Оберіть дистанцію" : "Select distance"} />
+              </SelectTrigger>
+              <SelectContent>
+                {distances
+                  .filter((d) => moveTarget && d.id !== moveTarget.distance_id && d.is_active !== false)
+                  .map((d) => (
+                    <SelectItem key={d.id} value={d.id}>
+                      {d.distance_km} {lang === "uk" ? "км" : "km"}
+                      {d.name ? ` · ${d.name}` : ""}
+                    </SelectItem>
+                  ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setMoveTarget(null)} disabled={moving}>
+              {lang === "uk" ? "Скасувати" : "Cancel"}
+            </Button>
+            <Button onClick={confirmMove} disabled={moving || !moveToId}>
+              {moving ? <Loader2 className="h-4 w-4 animate-spin" /> : (lang === "uk" ? "Перенести" : "Move")}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
       <Footer />
     </div>
   );
