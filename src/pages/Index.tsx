@@ -1,6 +1,7 @@
 import { Header } from "@/components/Header";
 import { Hero } from "@/components/Hero";
 import { VideoTutorialSection } from "@/components/VideoTutorialSection";
+import { FeaturesCarousel } from "@/components/FeaturesCarousel";
 import { EventsSection } from "@/components/EventsSection";
 import { CompletedEventsSection } from "@/components/CompletedEventsSection";
 import { Footer } from "@/components/Footer";
@@ -27,6 +28,7 @@ const Index = () => {
       <main className="flex-1">
         <Hero />
         {!user && <VideoTutorialSection />}
+        {!user && <FeaturesCarousel />}
         <EventsSection />
         <CompletedEventsSection />
       </main>
