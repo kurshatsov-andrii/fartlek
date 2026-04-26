@@ -473,7 +473,18 @@ const Participants = () => {
                           )}
                           {isOrganizer && (
                             <td className="p-3">
-                              <div className="flex items-center justify-center">
+                              <div className="flex items-center justify-center gap-1">
+                                {distances.length > 1 && (
+                                  <Button
+                                    size="sm"
+                                    variant="ghost"
+                                    onClick={() => openMoveDialog(r)}
+                                    disabled={busyId === r.registration_id}
+                                    title={lang === "uk" ? "Перенести на іншу дистанцію" : "Move to another distance"}
+                                  >
+                                    <ArrowRightLeft className="h-4 w-4" />
+                                  </Button>
+                                )}
                                 <Button
                                   size="sm"
                                   variant="ghost"
