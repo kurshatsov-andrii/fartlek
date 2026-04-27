@@ -28,6 +28,10 @@ const Auth = () => {
   const [role, setRole] = useState<"participant" | "organizer">(initialRole);
   const [busy, setBusy] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  // Honeypot field — invisible to humans, filled by bots
+  const [website, setWebsite] = useState("");
+  // Track when the form was rendered — bots usually submit instantly
+  const [formLoadedAt] = useState(() => Date.now());
 
   useEffect(() => {
     if (!loading && user) navigate(redirectTo, { replace: true });
