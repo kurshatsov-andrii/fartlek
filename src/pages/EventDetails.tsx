@@ -24,6 +24,7 @@ interface EventRow {
   image_url: string | null; is_paid: boolean; payment_url: string | null; status: string; category: EventCategory;
   results_pdf_url: string | null;
   results_url: string | null;
+  description_image_url: string | null;
 }
 interface DistanceRow { id: string; distance_km: number; name: string | null; price: number; is_active?: boolean; }
 
@@ -264,6 +265,16 @@ const EventDetails = () => {
                 <div className="prose prose-sm max-w-none text-foreground whitespace-pre-wrap break-words">
                   {linkifyText(event.description)}
                 </div>
+              )}
+              {event.description_image_url && (
+                <a href={event.description_image_url} target="_blank" rel="noopener noreferrer" className="block">
+                  <img
+                    src={event.description_image_url}
+                    alt={event.title}
+                    loading="lazy"
+                    className="w-full rounded-xl border border-border object-contain max-h-[600px] bg-muted"
+                  />
+                </a>
               )}
             </div>
 

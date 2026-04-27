@@ -34,8 +34,10 @@ const EventEditor = () => {
     category: "run" as EventCategory,
     results_pdf_url: "",
     results_url: "",
+    description_image_url: "",
   });
   const [uploadingResults, setUploadingResults] = useState(false);
+  const [uploadingDescImage, setUploadingDescImage] = useState(false);
   const [distances, setDistances] = useState<DistanceForm[]>([{ distance_km: "10", name: "", price: "0", bib_start: "" }]);
 
   useEffect(() => {
@@ -55,6 +57,7 @@ const EventEditor = () => {
         category: ((ev as any).category ?? "run") as EventCategory,
         results_pdf_url: (ev as any).results_pdf_url ?? "",
         results_url: (ev as any).results_url ?? "",
+        description_image_url: (ev as any).description_image_url ?? "",
       });
       const { data: ds } = await supabase.from("distances").select("*").eq("event_id", id).eq("is_active", true).order("distance_km");
       if (ds) setDistances(ds.map((d: any) => ({ id: d.id, distance_km: String(d.distance_km), name: d.name ?? "", price: String(d.price), bib_start: d.bib_start != null ? String(d.bib_start) : "" })));
@@ -92,6 +95,20 @@ const EventEditor = () => {
     setForm((f) => ({ ...f, results_pdf_url: "" }));
   };
 
+  const uploadDescImage = async (file: File) => {
+    if (!user) return;
+    if (!file.type.startsWith("image/")) { toast.error("Файл має бути зображенням"); return; }
+    if (file.size > 10 * 1024 * 1024) { toast.error("Файл занадто великий (макс. 10 МБ)"); return; }
+    setUploadingDescImage(true);
+    const ext = file.name.split(".").pop();
+    const path = `${user.id}/desc-${Date.now()}.${ext}`;
+    const { error } = await supabase.storage.from("event-images").upload(path, file);
+    if (error) { toast.error(error.message); setUploadingDescImage(false); return; }
+    const { data } = supabase.storage.from("event-images").getPublicUrl(path);
+    setForm((f) => ({ ...f, description_image_url: data.publicUrl }));
+    setUploadingDescImage(false);
+  };
+
   const save = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user) return;
@@ -108,6 +125,7 @@ const EventEditor = () => {
       payment_url: form.is_paid ? (form.payment_url || null) : null,
       results_pdf_url: form.results_pdf_url || null,
       results_url: form.results_url || null,
+      description_image_url: form.description_image_url || null,
     } as any;
     let eventId = id!;
     if (isNew) {
@@ -206,6 +224,25 @@ const EventEditor = () => {
             <div className="space-y-2">
               <Label>{t.organizer.description}</Label>
               <Textarea rows={5} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
+            </div>
+            <div className="space-y-2">
+              <Label>Зображення в описі</Label>
+              <p className="text-xs text-muted-foreground">Необов'язкове. Одне зображення, яке буде показано під описом події (наприклад, мапа траси, схема старту).</p>
+              <div className="flex flex-wrap items-center gap-3">
+                {form.description_image_url && (
+                  <img src={form.description_image_url} alt="" className="h-20 w-20 rounded object-cover border border-border" />
+                )}
+                <label className="inline-flex items-center gap-2 cursor-pointer rounded-md border border-input bg-background px-4 py-2 text-sm hover:bg-accent hover:text-accent-foreground transition-base">
+                  {uploadingDescImage ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
+                  {form.description_image_url ? "Замінити" : "Завантажити"}
+                  <input type="file" accept="image/*" className="hidden" onChange={(e) => e.target.files?.[0] && uploadDescImage(e.target.files[0])} />
+                </label>
+                {form.description_image_url && (
+                  <Button type="button" variant="ghost" size="sm" onClick={() => setForm((f) => ({ ...f, description_image_url: "" }))}>
+                    <X className="h-4 w-4" /> Видалити
+                  </Button>
+                )}
+              </div>
             </div>
             <div className="space-y-2">
               <Label>{t.organizer.image} *</Label>

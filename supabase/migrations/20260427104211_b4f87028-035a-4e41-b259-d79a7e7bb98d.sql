@@ -1,0 +1,1 @@
+ALTER TABLE public.events ADD COLUMN description_image_url text;
