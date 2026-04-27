@@ -450,6 +450,7 @@ const Participants = () => {
                         <th className="p-3 font-semibold">{lang === "uk" ? "Рік" : "Year"}</th>
                         <th className="p-3 font-semibold">{t.profile.city}</th>
                         <th className="p-3 font-semibold">{t.profile.club}</th>
+                        {isOrganizer && <th className="p-3 font-semibold">{lang === "uk" ? "Доданий" : "Added by"}</th>}
                         {isPaid && <th className="p-3 font-semibold text-center">{lang === "uk" ? "Оплата" : "Payment"}</th>}
                         {isPaid && isOrganizer && <th className="p-3 font-semibold text-center">{lang === "uk" ? "Квитанція" : "Receipt"}</th>}
                         {isOrganizer && <th className="p-3 font-semibold text-center">{lang === "uk" ? "Дії" : "Actions"}</th>}
@@ -476,6 +477,24 @@ const Participants = () => {
                           <td className="p-3">{r.birth_year ?? "—"}</td>
                           <td className="p-3">{r.city ?? "—"}</td>
                           <td className="p-3">{r.club ?? "—"}</td>
+                          {isOrganizer && (
+                            <td className="p-3">
+                              {r.is_self_athlete ? (
+                                <span className="text-muted-foreground">{lang === "uk" ? "Сам зареєструвався" : "Self"}</span>
+                              ) : r.added_by_name || r.added_by_email ? (
+                                <div className="flex flex-col">
+                                  <span>{r.added_by_name ?? "—"}</span>
+                                  {r.added_by_email && (
+                                    <a href={`mailto:${r.added_by_email}`} className="text-xs text-muted-foreground hover:text-foreground truncate">
+                                      {r.added_by_email}
+                                    </a>
+                                  )}
+                                </div>
+                              ) : (
+                                <span className="text-muted-foreground">—</span>
+                              )}
+                            </td>
+                          )}
                           {isPaid && (
                             <td className="p-3 text-center">
                               {r.payment_status === "paid" ? (

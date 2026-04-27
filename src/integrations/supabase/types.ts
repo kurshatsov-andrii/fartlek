@@ -628,6 +628,8 @@ export type Database = {
       get_event_participants: {
         Args: { _event_id: string }
         Returns: {
+          added_by_email: string
+          added_by_name: string
           bib_number: number
           birth_year: number
           city: string
@@ -637,6 +639,7 @@ export type Database = {
           email: string
           full_name: string
           gender: Database["public"]["Enums"]["gender_type"]
+          is_self_athlete: boolean
           payment_status: Database["public"]["Enums"]["payment_status_type"]
           phone: string
           receipt_confirmed_at: string
