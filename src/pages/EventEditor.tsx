@@ -226,6 +226,25 @@ const EventEditor = () => {
               <Textarea rows={5} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
             </div>
             <div className="space-y-2">
+              <Label>Зображення в описі</Label>
+              <p className="text-xs text-muted-foreground">Необов'язкове. Одне зображення, яке буде показано під описом події (наприклад, мапа траси, схема старту).</p>
+              <div className="flex flex-wrap items-center gap-3">
+                {form.description_image_url && (
+                  <img src={form.description_image_url} alt="" className="h-20 w-20 rounded object-cover border border-border" />
+                )}
+                <label className="inline-flex items-center gap-2 cursor-pointer rounded-md border border-input bg-background px-4 py-2 text-sm hover:bg-accent hover:text-accent-foreground transition-base">
+                  {uploadingDescImage ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
+                  {form.description_image_url ? "Замінити" : "Завантажити"}
+                  <input type="file" accept="image/*" className="hidden" onChange={(e) => e.target.files?.[0] && uploadDescImage(e.target.files[0])} />
+                </label>
+                {form.description_image_url && (
+                  <Button type="button" variant="ghost" size="sm" onClick={() => setForm((f) => ({ ...f, description_image_url: "" }))}>
+                    <X className="h-4 w-4" /> Видалити
+                  </Button>
+                )}
+              </div>
+            </div>
+            <div className="space-y-2">
               <Label>{t.organizer.image} *</Label>
               <div className="flex items-center gap-3">
                 {form.image_url && <img src={form.image_url} alt="" className="h-16 w-16 rounded object-cover" />}
