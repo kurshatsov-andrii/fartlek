@@ -57,6 +57,7 @@ const EventEditor = () => {
         category: ((ev as any).category ?? "run") as EventCategory,
         results_pdf_url: (ev as any).results_pdf_url ?? "",
         results_url: (ev as any).results_url ?? "",
+        description_image_url: (ev as any).description_image_url ?? "",
       });
       const { data: ds } = await supabase.from("distances").select("*").eq("event_id", id).eq("is_active", true).order("distance_km");
       if (ds) setDistances(ds.map((d: any) => ({ id: d.id, distance_km: String(d.distance_km), name: d.name ?? "", price: String(d.price), bib_start: d.bib_start != null ? String(d.bib_start) : "" })));
