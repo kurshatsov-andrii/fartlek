@@ -266,6 +266,16 @@ const EventDetails = () => {
                   {linkifyText(event.description)}
                 </div>
               )}
+              {event.description_image_url && (
+                <a href={event.description_image_url} target="_blank" rel="noopener noreferrer" className="block">
+                  <img
+                    src={event.description_image_url}
+                    alt={event.title}
+                    loading="lazy"
+                    className="w-full rounded-xl border border-border object-contain max-h-[600px] bg-muted"
+                  />
+                </a>
+              )}
             </div>
 
             <aside className="lg:col-span-1">
