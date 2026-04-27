@@ -24,6 +24,7 @@ interface EventRow {
   image_url: string | null; is_paid: boolean; payment_url: string | null; status: string; category: EventCategory;
   results_pdf_url: string | null;
   results_url: string | null;
+  description_image_url: string | null;
 }
 interface DistanceRow { id: string; distance_km: number; name: string | null; price: number; is_active?: boolean; }
 
