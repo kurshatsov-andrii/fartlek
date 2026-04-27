@@ -1,6 +1,17 @@
 import { useEffect, useState } from "react";
 import { Navigate, Link } from "react-router-dom";
-import { Loader2, Shield, Calendar, Users, CreditCard, Edit, BarChart3, Ticket } from "lucide-react";
+import { Loader2, Shield, Calendar, Users, CreditCard, Edit, BarChart3, Ticket, Trash2 } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -114,6 +125,24 @@ const Admin = () => {
     if (error) return toast.error(error.message);
     setRolesByUser((s) => ({ ...s, [userId]: (s[userId] ?? []).filter((r) => r !== role) }));
     toast.success(`Роль «${ROLE_LABEL[role]}» знято`);
+  };
+
+  const deleteUser = async (userId: string) => {
+    if (userId === user.id) return toast.error("Не можна видалити самого себе");
+    setBusy(true);
+    const { data, error } = await supabase.functions.invoke("admin-delete-user", {
+      body: { user_id: userId },
+    });
+    setBusy(false);
+    if (error || (data as any)?.error) {
+      return toast.error((data as any)?.error ?? error?.message ?? "Помилка видалення");
+    }
+    setUsers((s) => s.filter((u) => u.id !== userId));
+    setRolesByUser((s) => {
+      const { [userId]: _, ...rest } = s;
+      return rest;
+    });
+    toast.success("Користувача видалено");
   };
 
   return (
@@ -309,6 +338,32 @@ const Admin = () => {
                                 + Адмін
                               </Button>
                             )}
+                            <AlertDialog>
+                              <AlertDialogTrigger asChild>
+                                <Button
+                                  size="sm"
+                                  variant="destructive"
+                                  disabled={isSelf || busy}
+                                  title={isSelf ? "Не можна видалити самого себе" : "Видалити користувача"}
+                                >
+                                  <Trash2 className="h-4 w-4" />
+                                </Button>
+                              </AlertDialogTrigger>
+                              <AlertDialogContent>
+                                <AlertDialogHeader>
+                                  <AlertDialogTitle>Видалити користувача?</AlertDialogTitle>
+                                  <AlertDialogDescription>
+                                    Користувач <strong>{u.email}</strong> буде остаточно видалений разом із профілем та ролями. Цю дію не можна скасувати.
+                                  </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                  <AlertDialogCancel>Скасувати</AlertDialogCancel>
+                                  <AlertDialogAction onClick={() => deleteUser(u.id)}>
+                                    Видалити
+                                  </AlertDialogAction>
+                                </AlertDialogFooter>
+                              </AlertDialogContent>
+                            </AlertDialog>
                           </div>
                         </td>
                       </tr>
