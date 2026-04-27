@@ -338,6 +338,32 @@ const Admin = () => {
                                 + Адмін
                               </Button>
                             )}
+                            <AlertDialog>
+                              <AlertDialogTrigger asChild>
+                                <Button
+                                  size="sm"
+                                  variant="destructive"
+                                  disabled={isSelf || busy}
+                                  title={isSelf ? "Не можна видалити самого себе" : "Видалити користувача"}
+                                >
+                                  <Trash2 className="h-4 w-4" />
+                                </Button>
+                              </AlertDialogTrigger>
+                              <AlertDialogContent>
+                                <AlertDialogHeader>
+                                  <AlertDialogTitle>Видалити користувача?</AlertDialogTitle>
+                                  <AlertDialogDescription>
+                                    Користувач <strong>{u.email}</strong> буде остаточно видалений разом із профілем та ролями. Цю дію не можна скасувати.
+                                  </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                  <AlertDialogCancel>Скасувати</AlertDialogCancel>
+                                  <AlertDialogAction onClick={() => deleteUser(u.id)}>
+                                    Видалити
+                                  </AlertDialogAction>
+                                </AlertDialogFooter>
+                              </AlertDialogContent>
+                            </AlertDialog>
                           </div>
                         </td>
                       </tr>
