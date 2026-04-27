@@ -28,6 +28,10 @@ const Auth = () => {
   const [role, setRole] = useState<"participant" | "organizer">(initialRole);
   const [busy, setBusy] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  // Honeypot field — invisible to humans, filled by bots
+  const [website, setWebsite] = useState("");
+  // Track when the form was rendered — bots usually submit instantly
+  const [formLoadedAt] = useState(() => Date.now());
 
   useEffect(() => {
     if (!loading && user) navigate(redirectTo, { replace: true });
@@ -44,6 +48,21 @@ const Auth = () => {
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Anti-bot: honeypot check (invisible field should be empty)
+    if (website.trim() !== "") {
+      // Silently reject bots
+      toast.success(t.auth.successSignUp);
+      setMode("signin");
+      return;
+    }
+
+    // Anti-bot: time check (real users take >2 sec to fill the form)
+    if (Date.now() - formLoadedAt < 2000) {
+      toast.error("Будь ласка, заповніть форму уважно");
+      return;
+    }
+
     setBusy(true);
     const { error } = await supabase.auth.signUp({
       email,
@@ -247,6 +266,18 @@ const Auth = () => {
                       {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                     </button>
                   </div>
+                </div>
+                {/* Honeypot field — hidden from users, bots fill it in */}
+                <div aria-hidden="true" style={{ position: "absolute", left: "-9999px", width: "1px", height: "1px", overflow: "hidden" }}>
+                  <label htmlFor="website">Website</label>
+                  <input
+                    id="website"
+                    type="text"
+                    tabIndex={-1}
+                    autoComplete="off"
+                    value={website}
+                    onChange={(e) => setWebsite(e.target.value)}
+                  />
                 </div>
                 <Button type="submit" className="w-full" disabled={busy}>
                   {busy && <Loader2 className="h-4 w-4 animate-spin" />} {t.auth.signUp}
