@@ -95,6 +95,20 @@ const EventEditor = () => {
     setForm((f) => ({ ...f, results_pdf_url: "" }));
   };
 
+  const uploadDescImage = async (file: File) => {
+    if (!user) return;
+    if (!file.type.startsWith("image/")) { toast.error("Файл має бути зображенням"); return; }
+    if (file.size > 10 * 1024 * 1024) { toast.error("Файл занадто великий (макс. 10 МБ)"); return; }
+    setUploadingDescImage(true);
+    const ext = file.name.split(".").pop();
+    const path = `${user.id}/desc-${Date.now()}.${ext}`;
+    const { error } = await supabase.storage.from("event-images").upload(path, file);
+    if (error) { toast.error(error.message); setUploadingDescImage(false); return; }
+    const { data } = supabase.storage.from("event-images").getPublicUrl(path);
+    setForm((f) => ({ ...f, description_image_url: data.publicUrl }));
+    setUploadingDescImage(false);
+  };
+
   const save = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user) return;
