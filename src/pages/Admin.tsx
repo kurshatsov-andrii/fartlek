@@ -127,6 +127,24 @@ const Admin = () => {
     toast.success(`Роль «${ROLE_LABEL[role]}» знято`);
   };
 
+  const deleteUser = async (userId: string) => {
+    if (userId === user.id) return toast.error("Не можна видалити самого себе");
+    setBusy(true);
+    const { data, error } = await supabase.functions.invoke("admin-delete-user", {
+      body: { user_id: userId },
+    });
+    setBusy(false);
+    if (error || (data as any)?.error) {
+      return toast.error((data as any)?.error ?? error?.message ?? "Помилка видалення");
+    }
+    setUsers((s) => s.filter((u) => u.id !== userId));
+    setRolesByUser((s) => {
+      const { [userId]: _, ...rest } = s;
+      return rest;
+    });
+    toast.success("Користувача видалено");
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Header />
