@@ -267,6 +267,18 @@ const Auth = () => {
                     </button>
                   </div>
                 </div>
+                {/* Honeypot field — hidden from users, bots fill it in */}
+                <div aria-hidden="true" style={{ position: "absolute", left: "-9999px", width: "1px", height: "1px", overflow: "hidden" }}>
+                  <label htmlFor="website">Website</label>
+                  <input
+                    id="website"
+                    type="text"
+                    tabIndex={-1}
+                    autoComplete="off"
+                    value={website}
+                    onChange={(e) => setWebsite(e.target.value)}
+                  />
+                </div>
                 <Button type="submit" className="w-full" disabled={busy}>
                   {busy && <Loader2 className="h-4 w-4 animate-spin" />} {t.auth.signUp}
                 </Button>
