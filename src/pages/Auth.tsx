@@ -48,6 +48,21 @@ const Auth = () => {
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Anti-bot: honeypot check (invisible field should be empty)
+    if (website.trim() !== "") {
+      // Silently reject bots
+      toast.success(t.auth.successSignUp);
+      setMode("signin");
+      return;
+    }
+
+    // Anti-bot: time check (real users take >2 sec to fill the form)
+    if (Date.now() - formLoadedAt < 2000) {
+      toast.error("Будь ласка, заповніть форму уважно");
+      return;
+    }
+
     setBusy(true);
     const { error } = await supabase.auth.signUp({
       email,
