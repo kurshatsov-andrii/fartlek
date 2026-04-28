@@ -232,12 +232,19 @@ const Admin = () => {
           <TabsContent value="users" className="space-y-3">
             <div className="flex flex-wrap items-center gap-2">
               <span className="text-sm text-muted-foreground mr-1">Сортувати за роллю:</span>
-              {([
-                { v: "all", label: "Усі" },
-                { v: "admin", label: "Адміністратори" },
-                { v: "organizer", label: "Організатори" },
-                { v: "participant", label: "Учасники" },
-              ] as const).map((opt) => (
+              {(() => {
+                const adminCount = users.filter((u) => (rolesByUser[u.id] ?? []).includes("admin")).length;
+                const organizerCount = users.filter((u) => (rolesByUser[u.id] ?? []).includes("organizer")).length;
+                const participantCount = users.filter((u) => {
+                  const rs = rolesByUser[u.id] ?? [];
+                  return rs.length === 0 || rs.includes("participant");
+                }).length;
+                return ([
+                  { v: "all", label: `Усі (${users.length})` },
+                  { v: "admin", label: `Адміністратори (${adminCount})` },
+                  { v: "organizer", label: `Організатори (${organizerCount})` },
+                  { v: "participant", label: `Учасники (${participantCount})` },
+                ] as const).map((opt) => (
                 <Button
                   key={opt.v}
                   size="sm"
@@ -246,7 +253,8 @@ const Admin = () => {
                 >
                   {opt.label}
                 </Button>
-              ))}
+              ));
+              })()}
               <span className="text-sm text-muted-foreground ml-3 mr-1">Сортувати за датою:</span>
               {([
                 { v: "newest", label: "Спочатку нові" },
