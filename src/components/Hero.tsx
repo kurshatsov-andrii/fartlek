@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight, User, Trophy } from "lucide-react";
+import { ArrowRight, User, Trophy, Play, Pause, Music2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useApp } from "@/contexts/AppContext";
 import { useAuth } from "@/hooks/useAuth";
@@ -19,6 +19,19 @@ export const Hero = () => {
   const { t } = useApp();
   const { user } = useAuth();
   const [stats, setStats] = useState({ events: 0, runners: 0, cities: 0, clubs: 0 });
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  const toggleAnthem = () => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    if (audio.paused) {
+      audio.play().then(() => setIsPlaying(true)).catch(() => setIsPlaying(false));
+    } else {
+      audio.pause();
+      setIsPlaying(false);
+    }
+  };
 
   useEffect(() => {
     (async () => {
@@ -92,6 +105,32 @@ export const Hero = () => {
               </Button>
             </div>
           )}
+
+          <div className="mt-8 inline-flex max-w-full items-center gap-3 rounded-full border border-secondary-foreground/15 bg-secondary-foreground/5 py-2 pl-2 pr-4 backdrop-blur">
+            <button
+              type="button"
+              onClick={toggleAnthem}
+              aria-label={isPlaying ? "Pause Fartlek Events anthem" : "Play Fartlek Events anthem"}
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-glow transition-transform hover:scale-105"
+            >
+              {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="ml-0.5 h-4 w-4" />}
+            </button>
+            <Music2 className="h-4 w-4 text-primary" />
+            <div className="flex min-w-0 flex-col leading-tight">
+              <span className="truncate text-sm font-semibold">Fartlek Events — гімн</span>
+              <span className="truncate text-[11px] uppercase tracking-wider text-secondary-foreground/60">
+                Музика для мотивації
+              </span>
+            </div>
+            <audio
+              ref={audioRef}
+              src="https://fartlek.com.ua/wp-content/uploads/2026/04/Fartlek-Events.mp3"
+              preload="none"
+              onEnded={() => setIsPlaying(false)}
+              onPause={() => setIsPlaying(false)}
+              onPlay={() => setIsPlaying(true)}
+            />
+          </div>
 
           <dl className="mt-16 grid max-w-xl grid-cols-2 gap-6 border-t border-secondary-foreground/10 pt-8 sm:grid-cols-4">
             {[
