@@ -242,7 +242,7 @@ const Admin = () => {
                   key={opt.v}
                   size="sm"
                   variant={roleFilter === opt.v ? "default" : "outline"}
-                  onClick={() => setRoleFilter(opt.v)}
+                  onClick={() => { setRoleFilter(opt.v); setUserLimit(50); }}
                 >
                   {opt.label}
                 </Button>
