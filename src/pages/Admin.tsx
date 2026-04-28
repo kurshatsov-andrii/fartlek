@@ -58,7 +58,7 @@ const Admin = () => {
     if (rs.includes("participant")) return "participant";
     return "none";
   };
-  const visibleUsers = users
+  const filteredUsers = users
     .filter((u) => {
       if (roleFilter === "all") return true;
       const rs = rolesByUser[u.id] ?? [];
@@ -72,6 +72,7 @@ const Admin = () => {
       const tb = new Date(b.created_at ?? 0).getTime();
       return userSort === "newest" ? tb - ta : ta - tb;
     });
+  const visibleUsers = filteredUsers.slice(0, userLimit);
 
   useEffect(() => {
     if (!isAdmin) return;
