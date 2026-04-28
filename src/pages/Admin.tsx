@@ -381,6 +381,14 @@ const Admin = () => {
                 </tbody>
               </table>
             </div>
+            <div className="flex items-center justify-between text-sm text-muted-foreground">
+              <span>Показано {visibleUsers.length} з {filteredUsers.length}</span>
+              {visibleUsers.length < filteredUsers.length && (
+                <Button variant="outline" size="sm" onClick={() => setUserLimit((n) => n + 50)}>
+                  Завантажити ще 50
+                </Button>
+              )}
+            </div>
           </TabsContent>
         </Tabs>
       </main>
