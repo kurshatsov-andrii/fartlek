@@ -256,7 +256,7 @@ const Admin = () => {
                   key={opt.v}
                   size="sm"
                   variant={userSort === opt.v ? "default" : "outline"}
-                  onClick={() => setUserSort(opt.v)}
+                  onClick={() => { setUserSort(opt.v); setUserLimit(50); }}
                 >
                   {opt.label}
                 </Button>
