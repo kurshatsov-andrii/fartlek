@@ -37,6 +37,7 @@ const Admin = () => {
   const [busy, setBusy] = useState(false);
   const [roleFilter, setRoleFilter] = useState<"all" | AppRole>("all");
   const [userSort, setUserSort] = useState<"newest" | "oldest">("newest");
+  const [userLimit, setUserLimit] = useState(50);
   const [eventStatusFilter, setEventStatusFilter] = useState<"all" | "published" | "cancelled" | "completed" | "draft">("all");
 
   const STATUS_LABEL: Record<string, string> = {
@@ -57,7 +58,7 @@ const Admin = () => {
     if (rs.includes("participant")) return "participant";
     return "none";
   };
-  const visibleUsers = users
+  const filteredUsers = users
     .filter((u) => {
       if (roleFilter === "all") return true;
       const rs = rolesByUser[u.id] ?? [];
@@ -71,6 +72,7 @@ const Admin = () => {
       const tb = new Date(b.created_at ?? 0).getTime();
       return userSort === "newest" ? tb - ta : ta - tb;
     });
+  const visibleUsers = filteredUsers.slice(0, userLimit);
 
   useEffect(() => {
     if (!isAdmin) return;
@@ -240,7 +242,7 @@ const Admin = () => {
                   key={opt.v}
                   size="sm"
                   variant={roleFilter === opt.v ? "default" : "outline"}
-                  onClick={() => setRoleFilter(opt.v)}
+                  onClick={() => { setRoleFilter(opt.v); setUserLimit(50); }}
                 >
                   {opt.label}
                 </Button>
@@ -254,7 +256,7 @@ const Admin = () => {
                   key={opt.v}
                   size="sm"
                   variant={userSort === opt.v ? "default" : "outline"}
-                  onClick={() => setUserSort(opt.v)}
+                  onClick={() => { setUserSort(opt.v); setUserLimit(50); }}
                 >
                   {opt.label}
                 </Button>
@@ -378,6 +380,14 @@ const Admin = () => {
                   )}
                 </tbody>
               </table>
+            </div>
+            <div className="flex items-center justify-between text-sm text-muted-foreground">
+              <span>Показано {visibleUsers.length} з {filteredUsers.length}</span>
+              {visibleUsers.length < filteredUsers.length && (
+                <Button variant="outline" size="sm" onClick={() => setUserLimit((n) => n + 50)}>
+                  Завантажити ще 50
+                </Button>
+              )}
             </div>
           </TabsContent>
         </Tabs>
