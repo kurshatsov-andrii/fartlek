@@ -253,7 +253,8 @@ const Admin = () => {
                 >
                   {opt.label}
                 </Button>
-              ))}
+              ));
+              })()}
               <span className="text-sm text-muted-foreground ml-3 mr-1">Сортувати за датою:</span>
               {([
                 { v: "newest", label: "Спочатку нові" },
