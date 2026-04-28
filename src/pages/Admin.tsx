@@ -37,6 +37,7 @@ const Admin = () => {
   const [busy, setBusy] = useState(false);
   const [roleFilter, setRoleFilter] = useState<"all" | AppRole>("all");
   const [userSort, setUserSort] = useState<"newest" | "oldest">("newest");
+  const [userLimit, setUserLimit] = useState(50);
   const [eventStatusFilter, setEventStatusFilter] = useState<"all" | "published" | "cancelled" | "completed" | "draft">("all");
 
   const STATUS_LABEL: Record<string, string> = {
