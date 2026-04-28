@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
+import { useApp } from "@/contexts/AppContext";
 import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 // Routes the user is allowed to visit even with an incomplete profile.
 const ALLOWED_PATHS = [
@@ -20,6 +22,7 @@ const isAllowedPath = (pathname: string) =>
 
 export const ProfileCompletionGate = () => {
   const { user, loading } = useAuth();
+  const { lang } = useApp();
   const location = useLocation();
   const navigate = useNavigate();
   const [checking, setChecking] = useState(false);
@@ -48,6 +51,18 @@ export const ProfileCompletionGate = () => {
 
       if (!complete) {
         const redirect = encodeURIComponent(location.pathname + location.search);
+        toast.warning(
+          lang === "en"
+            ? "Please complete your profile"
+            : "Будь ласка, заповніть профіль",
+          {
+            description:
+              lang === "en"
+                ? "To use the platform you must fill in all required profile fields (name, date of birth, gender, city, phone)."
+                : "Щоб користуватися платформою, потрібно заповнити всі обов'язкові поля профілю (ім'я, дата народження, стать, місто, телефон).",
+            duration: 6000,
+          }
+        );
         navigate(`/profile?redirect=${redirect}`, { replace: true });
       }
       setChecking(false);
