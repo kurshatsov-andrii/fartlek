@@ -25,6 +25,7 @@ import CategoryPage from "./pages/CategoryPage.tsx";
 import CategoriesIndex from "./pages/CategoriesIndex.tsx";
 import Contacts from "./pages/Contacts.tsx";
 import Unsubscribe from "./pages/Unsubscribe.tsx";
+import { ProfileCompletionGate } from "./components/ProfileCompletionGate";
 
 const queryClient = new QueryClient();
 
@@ -36,6 +37,7 @@ const App = () => (
           <Toaster />
           <Sonner />
           <BrowserRouter>
+            <ProfileCompletionGate />
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/auth" element={<Auth />} />
