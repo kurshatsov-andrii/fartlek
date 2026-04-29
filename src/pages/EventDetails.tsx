@@ -46,6 +46,7 @@ const EventDetails = () => {
   const [athleteDialogOpen, setAthleteDialogOpen] = useState(false);
   const [promo, setPromo] = useState<PromoPreview | null>(null);
   const [hasPromoCodes, setHasPromoCodes] = useState(false);
+  const [clubSlug, setClubSlug] = useState<string | null>(null);
 
   // Reset promo if distance changes
   useEffect(() => { setPromo(null); }, [selectedDistance]);
