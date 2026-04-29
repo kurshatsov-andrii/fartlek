@@ -36,8 +36,10 @@ const Admin = () => {
   const [rolesByUser, setRolesByUser] = useState<Record<string, AppRole[]>>({});
   const [busy, setBusy] = useState(false);
   const [roleFilter, setRoleFilter] = useState<"all" | AppRole>("all");
-  const [userSort, setUserSort] = useState<"newest" | "oldest">("newest");
+  const [userSort, setUserSort] = useState<"newest" | "oldest" | "city_asc" | "city_desc" | "club_asc" | "club_desc">("newest");
   const [userLimit, setUserLimit] = useState(50);
+  const [cityFilter, setCityFilter] = useState<string>("all");
+  const [clubFilter, setClubFilter] = useState<string>("all");
   const [eventStatusFilter, setEventStatusFilter] = useState<"all" | "published" | "cancelled" | "completed" | "draft">("all");
 
   const STATUS_LABEL: Record<string, string> = {
