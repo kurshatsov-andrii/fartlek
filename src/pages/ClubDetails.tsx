@@ -13,6 +13,28 @@ const linkLabel = (url: string) => {
   try { return new URL(url).hostname.replace(/^www\./, ""); } catch { return url; }
 };
 
+const buildAutoDescription = (club: Club, lang: "uk" | "en"): string => {
+  const types = (club.activity_types ?? []) as string[];
+  const isTrail = types.includes("trail");
+  const isOcr = types.includes("ocr");
+  const isTri = (types as string[]).includes("triathlon");
+
+  if (lang === "uk") {
+    const kind = isTrail ? "Трейловий клуб" : isOcr ? "OCR клуб" : isTri ? "Триатлон клуб" : "Біговий клуб";
+    const parts: string[] = [];
+    parts.push(club.city ? `${kind} ${club.name} у місті ${club.city}` : `${kind} ${club.name}`);
+    if (club.founded_year) parts.push(`заснований у ${club.founded_year} році`);
+    if (club.members_count != null) parts.push(`кількість учасників клубу — ${club.members_count}`);
+    return parts.join(", ") + ".";
+  }
+  const kind = isTrail ? "Trail running club" : isOcr ? "OCR club" : isTri ? "Triathlon club" : "Running club";
+  const parts: string[] = [];
+  parts.push(club.city ? `${kind} ${club.name} in ${club.city}` : `${kind} ${club.name}`);
+  if (club.founded_year) parts.push(`founded in ${club.founded_year}`);
+  if (club.members_count != null) parts.push(`${club.members_count} members`);
+  return parts.join(", ") + ".";
+};
+
 const ClubDetails = () => {
   const { slug } = useParams<{ slug: string }>();
   const { lang } = useApp();
@@ -68,9 +90,7 @@ const ClubDetails = () => {
     const title = (lang === "uk" ? titleUk : titleEn).slice(0, 60);
 
     const descBase = club.description?.replace(/\s+/g, " ").trim();
-    const descFallback = lang === "uk"
-      ? `${kindUk} ${club.name}${club.city ? ` в ${club.city}` : ""}. Тренування, контакти, соцмережі та інформація про клуб на Fartlek.`
-      : `${kindEn} ${club.name}${club.city ? ` in ${club.city}` : ""}. Training, contacts, socials and club info on Fartlek.`;
+    const descFallback = buildAutoDescription(club, lang as "uk" | "en");
     const description = (descBase && descBase.length > 40 ? descBase : descFallback).slice(0, 160);
 
     const url = `${window.location.origin}/clubs/${club.slug ?? club.id}`;
@@ -166,6 +186,9 @@ const ClubDetails = () => {
                     ))}
                   </div>
                 )}
+                <p className="text-sm text-muted-foreground mt-3">
+                  {buildAutoDescription(club, lang as "uk" | "en")}
+                </p>
               </div>
             </div>
 
