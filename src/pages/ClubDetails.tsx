@@ -13,6 +13,28 @@ const linkLabel = (url: string) => {
   try { return new URL(url).hostname.replace(/^www\./, ""); } catch { return url; }
 };
 
+const buildAutoDescription = (club: Club, lang: "uk" | "en"): string => {
+  const types = (club.activity_types ?? []) as string[];
+  const isTrail = types.includes("trail");
+  const isOcr = types.includes("ocr");
+  const isTri = (types as string[]).includes("triathlon");
+
+  if (lang === "uk") {
+    const kind = isTrail ? "Трейловий клуб" : isOcr ? "OCR клуб" : isTri ? "Триатлон клуб" : "Біговий клуб";
+    const parts: string[] = [];
+    parts.push(club.city ? `${kind} ${club.name} у місті ${club.city}` : `${kind} ${club.name}`);
+    if (club.founded_year) parts.push(`заснований у ${club.founded_year} році`);
+    if (club.members_count != null) parts.push(`кількість учасників клубу — ${club.members_count}`);
+    return parts.join(", ") + ".";
+  }
+  const kind = isTrail ? "Trail running club" : isOcr ? "OCR club" : isTri ? "Triathlon club" : "Running club";
+  const parts: string[] = [];
+  parts.push(club.city ? `${kind} ${club.name} in ${club.city}` : `${kind} ${club.name}`);
+  if (club.founded_year) parts.push(`founded in ${club.founded_year}`);
+  if (club.members_count != null) parts.push(`${club.members_count} members`);
+  return parts.join(", ") + ".";
+};
+
 const ClubDetails = () => {
   const { slug } = useParams<{ slug: string }>();
   const { lang } = useApp();
