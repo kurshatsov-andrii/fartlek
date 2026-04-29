@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate, useSearchParams } from "react-router-dom";
 import { ArrowLeft, Loader2, Upload, X, Trash2 } from "lucide-react";
 import { z } from "zod";
 import { Header } from "@/components/Header";
@@ -46,6 +46,8 @@ const ClubEditor = () => {
   const { lang } = useApp();
   const { user, isOrganizer, isAdmin, loading: authLoading } = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const editClubId = searchParams.get("id"); // admin editing someone else's club
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -102,7 +104,10 @@ const ClubEditor = () => {
     if (!user) return;
     (async () => {
       setLoading(true);
-      const { data } = await supabase.from("clubs" as any).select("*").eq("owner_id", user.id).maybeSingle();
+      const query = editClubId
+        ? supabase.from("clubs" as any).select("*").eq("id", editClubId).maybeSingle()
+        : supabase.from("clubs" as any).select("*").eq("owner_id", user.id).maybeSingle();
+      const { data } = await query;
       if (data) {
         const c = data as any as Club;
         setClub(c);
@@ -128,7 +133,7 @@ const ClubEditor = () => {
       }
       setLoading(false);
     })();
-  }, [user]);
+  }, [user, editClubId]);
 
   const uploadLogo = async (file: File) => {
     if (!user) return;
@@ -166,7 +171,7 @@ const ClubEditor = () => {
 
     setBusy(true);
     const payload: any = {
-      owner_id: user.id,
+      owner_id: club ? club.owner_id : user.id,
       name: form.name.trim(),
       city: form.city.trim() || null,
       description: form.description.trim() || null,
@@ -191,7 +196,7 @@ const ClubEditor = () => {
     setBusy(false);
     if (error) { toast.error(error.message); return; }
     toast.success(T.saved);
-    navigate("/organizer");
+    navigate(editClubId ? "/admin" : "/organizer");
   };
 
   const remove = async () => {
@@ -200,19 +205,21 @@ const ClubEditor = () => {
     const { error } = await supabase.from("clubs" as any).delete().eq("id", club.id);
     if (error) { toast.error(error.message); return; }
     toast.success(T.deleted);
-    navigate("/organizer");
+    navigate(editClubId ? "/admin" : "/organizer");
   };
 
   if (authLoading) return null;
   if (!user) return <Navigate to="/auth?role=organizer" replace />;
   if (!isOrganizer && !isAdmin) return <Navigate to="/" replace />;
 
+  const backHref = editClubId ? "/admin" : "/organizer";
+
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Header />
       <main className="flex-1 container max-w-3xl py-10">
-        <Link to="/organizer" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-6">
-          <ArrowLeft className="h-4 w-4" /> {T.back}
+        <Link to={backHref} className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-6">
+          <ArrowLeft className="h-4 w-4" /> {editClubId ? "До адмін-панелі" : T.back}
         </Link>
         <h1 className="font-display text-3xl font-bold mb-6">{T.title}</h1>
 
