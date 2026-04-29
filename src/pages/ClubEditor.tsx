@@ -352,8 +352,8 @@ const ClubEditor = () => {
             <div className="pt-4 border-t border-border space-y-4">
               <h2 className="font-semibold">{T.about}</h2>
               <div className="grid sm:grid-cols-2 gap-4">
-                <div className="space-y-1.5"><Label>{T.founded}</Label><Input type="number" min={1800} max={new Date().getFullYear()} value={form.founded_year} onChange={(e) => setForm({ ...form, founded_year: e.target.value })} /></div>
-                <div className="space-y-1.5"><Label>{T.members}</Label><Input type="number" min={0} value={form.members_count} onChange={(e) => setForm({ ...form, members_count: e.target.value })} /></div>
+                <div className="space-y-1.5"><Label>{T.founded} *</Label><Input required type="number" min={1800} max={new Date().getFullYear()} value={form.founded_year} onChange={(e) => setForm({ ...form, founded_year: e.target.value })} /></div>
+                <div className="space-y-1.5"><Label>{T.members} *</Label><Input required type="number" min={0} value={form.members_count} onChange={(e) => setForm({ ...form, members_count: e.target.value })} /></div>
               </div>
             </div>
 
