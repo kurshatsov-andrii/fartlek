@@ -290,10 +290,14 @@ const Admin = () => {
                 </Button>
               ));
               })()}
-              <span className="text-sm text-muted-foreground ml-3 mr-1">Сортувати за датою:</span>
+              <span className="text-sm text-muted-foreground ml-3 mr-1">Сортувати:</span>
               {([
                 { v: "newest", label: "Спочатку нові" },
                 { v: "oldest", label: "Спочатку старі" },
+                { v: "city_asc", label: "Місто A→Я" },
+                { v: "city_desc", label: "Місто Я→A" },
+                { v: "club_asc", label: "Клуб A→Я" },
+                { v: "club_desc", label: "Клуб Я→A" },
               ] as const).map((opt) => (
                 <Button
                   key={opt.v}
@@ -304,6 +308,38 @@ const Admin = () => {
                   {opt.label}
                 </Button>
               ))}
+            </div>
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="text-sm text-muted-foreground mr-1">Місто:</span>
+              <Select value={cityFilter} onValueChange={(v) => { setCityFilter(v); setUserLimit(50); }}>
+                <SelectTrigger className="h-8 w-[200px]"><SelectValue placeholder="Усі міста" /></SelectTrigger>
+                <SelectContent className="max-h-[300px]">
+                  <SelectItem value="all">Усі міста ({users.filter(u => norm(u.city) !== "").length})</SelectItem>
+                  {cityOptions.map((c) => (
+                    <SelectItem key={c.key} value={c.key}>
+                      {c.label} ({users.filter(u => normLower(u.city) === c.key).length})
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              {cityFilter !== "all" && (
+                <Button size="sm" variant="ghost" onClick={() => setCityFilter("all")}>Скинути</Button>
+              )}
+              <span className="text-sm text-muted-foreground ml-3 mr-1">Клуб:</span>
+              <Select value={clubFilter} onValueChange={(v) => { setClubFilter(v); setUserLimit(50); }}>
+                <SelectTrigger className="h-8 w-[200px]"><SelectValue placeholder="Усі клуби" /></SelectTrigger>
+                <SelectContent className="max-h-[300px]">
+                  <SelectItem value="all">Усі клуби ({users.filter(u => norm(u.club) !== "").length})</SelectItem>
+                  {clubOptions.map((c) => (
+                    <SelectItem key={c.key} value={c.key}>
+                      {c.label} ({users.filter(u => normLower(u.club) === c.key).length})
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              {clubFilter !== "all" && (
+                <Button size="sm" variant="ghost" onClick={() => setClubFilter("all")}>Скинути</Button>
+              )}
             </div>
             <div className="overflow-x-auto bg-card rounded-xl">
               <table className="w-full text-sm">
