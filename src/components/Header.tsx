@@ -1,5 +1,5 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { LogOut, User, LayoutDashboard, Ticket, Shield, Mail } from "lucide-react";
+import { LogOut, User, LayoutDashboard, Ticket, Shield, Mail, Users } from "lucide-react";
 import logoFartlek from "@/assets/logo-fartlek.jpg";
 import { Button } from "@/components/ui/button";
 import { useApp } from "@/contexts/AppContext";
@@ -42,6 +42,7 @@ export const Header = () => {
 
         <nav className="hidden md:flex items-center gap-8">
           <a href="/#events" onClick={handleEventsClick} className="text-sm font-medium text-muted-foreground hover:text-foreground transition-base cursor-pointer">{t.nav.events}</a>
+          <Link to="/clubs" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-base">Клуби</Link>
           {user && (
             <>
               <Link to="/profile" className="hidden lg:inline text-sm font-medium text-muted-foreground hover:text-foreground transition-base">{t.nav.profile}</Link>
@@ -68,7 +69,10 @@ export const Header = () => {
                 <DropdownMenuItem asChild><Link to="/profile"><User className="h-4 w-4" />{t.nav.profile}</Link></DropdownMenuItem>
                 <DropdownMenuItem asChild><Link to="/my-events"><Ticket className="h-4 w-4" />{t.nav.myEvents}</Link></DropdownMenuItem>
                 {isOrganizer && (
-                  <DropdownMenuItem asChild><Link to="/organizer"><LayoutDashboard className="h-4 w-4" />{t.nav.dashboard}</Link></DropdownMenuItem>
+                  <>
+                    <DropdownMenuItem asChild><Link to="/organizer"><LayoutDashboard className="h-4 w-4" />{t.nav.dashboard}</Link></DropdownMenuItem>
+                    <DropdownMenuItem asChild><Link to="/clubs/edit"><Users className="h-4 w-4" />Профіль клубу</Link></DropdownMenuItem>
+                  </>
                 )}
                 {isAdmin && (
                   <DropdownMenuItem asChild><Link to="/admin"><Shield className="h-4 w-4" />Адмін-панель</Link></DropdownMenuItem>

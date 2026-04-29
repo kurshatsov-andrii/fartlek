@@ -25,6 +25,9 @@ import CategoryPage from "./pages/CategoryPage.tsx";
 import CategoriesIndex from "./pages/CategoriesIndex.tsx";
 import Contacts from "./pages/Contacts.tsx";
 import Unsubscribe from "./pages/Unsubscribe.tsx";
+import ClubsCatalog from "./pages/ClubsCatalog.tsx";
+import ClubDetails from "./pages/ClubDetails.tsx";
+import ClubEditor from "./pages/ClubEditor.tsx";
 import { ProfileCompletionGate } from "./components/ProfileCompletionGate";
 
 const queryClient = new QueryClient();
@@ -59,6 +62,9 @@ const App = () => (
               <Route path="/admin" element={<Admin />} />
               <Route path="/contacts" element={<Contacts />} />
               <Route path="/unsubscribe" element={<Unsubscribe />} />
+              <Route path="/clubs" element={<ClubsCatalog />} />
+              <Route path="/clubs/edit" element={<ClubEditor />} />
+              <Route path="/clubs/:slug" element={<ClubDetails />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
