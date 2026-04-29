@@ -60,6 +60,29 @@ const Admin = () => {
     if (rs.includes("participant")) return "participant";
     return "none";
   };
+  const norm = (v: any) => (v ?? "").toString().trim();
+  const normLower = (v: any) => norm(v).toLowerCase();
+
+  const cityOptions = Array.from(
+    new Map(
+      users
+        .filter((u) => norm(u.city) !== "")
+        .map((u) => [normLower(u.city), norm(u.city)])
+    ).entries()
+  )
+    .map(([key, label]) => ({ key, label }))
+    .sort((a, b) => a.label.localeCompare(b.label, "uk"));
+
+  const clubOptions = Array.from(
+    new Map(
+      users
+        .filter((u) => norm(u.club) !== "")
+        .map((u) => [normLower(u.club), norm(u.club)])
+    ).entries()
+  )
+    .map(([key, label]) => ({ key, label }))
+    .sort((a, b) => a.label.localeCompare(b.label, "uk"));
+
   const filteredUsers = users
     .filter((u) => {
       if (roleFilter === "all") return true;
@@ -67,7 +90,17 @@ const Admin = () => {
       if (roleFilter === "participant") return rs.length === 0 || rs.includes("participant");
       return rs.includes(roleFilter);
     })
+    .filter((u) => cityFilter === "all" || normLower(u.city) === cityFilter)
+    .filter((u) => clubFilter === "all" || normLower(u.club) === clubFilter)
     .sort((a, b) => {
+      if (userSort === "city_asc" || userSort === "city_desc") {
+        const cmp = norm(a.city).localeCompare(norm(b.city), "uk");
+        return userSort === "city_asc" ? cmp : -cmp;
+      }
+      if (userSort === "club_asc" || userSort === "club_desc") {
+        const cmp = norm(a.club).localeCompare(norm(b.club), "uk");
+        return userSort === "club_asc" ? cmp : -cmp;
+      }
       const roleDiff = ROLE_PRIORITY[topRole(a.id)] - ROLE_PRIORITY[topRole(b.id)];
       if (roleDiff !== 0) return roleDiff;
       const ta = new Date(a.created_at ?? 0).getTime();
