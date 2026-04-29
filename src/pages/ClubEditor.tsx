@@ -108,6 +108,8 @@ const ClubEditor = () => {
     invalidUrl: "Некоректне посилання (має починатись з https://)",
     invalidEmail: "Некоректний email",
     invalidYear: "Некоректний рік",
+    invalidPhone: "Некоректний номер телефону (наприклад +380501234567)",
+    wrongHost: (field: string) => `Посилання має вести на ${field}`,
   } : {
     title: "Club profile",
     back: "To dashboard",
@@ -129,6 +131,8 @@ const ClubEditor = () => {
     invalidUrl: "Invalid URL (must start with https://)",
     invalidEmail: "Invalid email",
     invalidYear: "Invalid year",
+    invalidPhone: "Invalid phone number (e.g. +380501234567)",
+    wrongHost: (field: string) => `Link must point to ${field}`,
   };
 
   useEffect(() => {
