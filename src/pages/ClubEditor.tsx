@@ -15,19 +15,50 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { CLUB_ACTIVITY_TYPES, CLUB_ACTIVITY_LABELS, type ClubActivityType, type Club } from "@/lib/clubs";
 
-const urlOrEmpty = z.string().trim().max(500).url().or(z.literal(""));
+// URL must start with https:// (or http://) and be a valid URL
+const httpsUrl = z
+  .string()
+  .trim()
+  .max(500)
+  .refine((v) => /^https?:\/\//i.test(v), { message: "must_start_with_https" })
+  .refine((v) => {
+    try { new URL(v); return true; } catch { return false; }
+  }, { message: "invalid_url" });
+
+const urlOrEmpty = z.literal("").or(httpsUrl);
+
+// URL must match a specific host (allows subdomains)
+const hostUrl = (hosts: string[]) =>
+  z.literal("").or(
+    httpsUrl.refine((v) => {
+      try {
+        const h = new URL(v).hostname.toLowerCase().replace(/^www\./, "");
+        return hosts.some((d) => h === d || h.endsWith(`.${d}`));
+      } catch { return false; }
+    }, { message: "wrong_host" })
+  );
+
+// E.164-ish: optional +, 7–15 digits, allows spaces, dashes, parens
+const phoneRegex = /^\+?[0-9][0-9\s\-().]{6,30}[0-9]$/;
+const phoneOrEmpty = z.literal("").or(
+  z.string().trim().max(40).refine((v) => {
+    const digits = v.replace(/\D/g, "");
+    return phoneRegex.test(v) && digits.length >= 7 && digits.length <= 15;
+  }, { message: "invalid_phone" })
+);
+
 const schema = z.object({
   name: z.string().trim().min(2, "min 2").max(120),
   city: z.string().trim().max(120).optional().or(z.literal("")),
   description: z.string().trim().max(2000).optional().or(z.literal("")),
   website_url: urlOrEmpty,
-  instagram_url: urlOrEmpty,
-  facebook_url: urlOrEmpty,
-  telegram_url: urlOrEmpty,
-  strava_url: urlOrEmpty,
-  youtube_url: urlOrEmpty,
+  instagram_url: hostUrl(["instagram.com"]),
+  facebook_url: hostUrl(["facebook.com", "fb.com", "fb.me"]),
+  telegram_url: hostUrl(["t.me", "telegram.me", "telegram.org"]),
+  strava_url: hostUrl(["strava.com"]),
+  youtube_url: hostUrl(["youtube.com", "youtu.be"]),
   contact_email: z.string().trim().max(255).email().or(z.literal("")),
-  contact_phone: z.string().trim().max(40).optional().or(z.literal("")),
+  contact_phone: phoneOrEmpty,
   founded_year: z.string().regex(/^\d{0,4}$/).optional().or(z.literal("")),
   members_count: z.string().regex(/^\d{0,7}$/).optional().or(z.literal("")),
   training_location: z.string().trim().max(300).optional().or(z.literal("")),
@@ -77,6 +108,8 @@ const ClubEditor = () => {
     invalidUrl: "Некоректне посилання (має починатись з https://)",
     invalidEmail: "Некоректний email",
     invalidYear: "Некоректний рік",
+    invalidPhone: "Некоректний номер телефону (наприклад +380501234567)",
+    wrongHost: (field: string) => `Посилання має вести на ${field}`,
   } : {
     title: "Club profile",
     back: "To dashboard",
@@ -98,6 +131,8 @@ const ClubEditor = () => {
     invalidUrl: "Invalid URL (must start with https://)",
     invalidEmail: "Invalid email",
     invalidYear: "Invalid year",
+    invalidPhone: "Invalid phone number (e.g. +380501234567)",
+    wrongHost: (field: string) => `Link must point to ${field}`,
   };
 
   useEffect(() => {
@@ -160,10 +195,22 @@ const ClubEditor = () => {
     const parsed = schema.safeParse(form);
     if (!parsed.success) {
       const first = parsed.error.issues[0];
-      const msg = first.path[0] === "name" ? T.nameRequired
-        : first.path[0] === "contact_email" ? T.invalidEmail
-        : first.path[0] === "founded_year" ? T.invalidYear
-        : T.invalidUrl;
+      const field = String(first.path[0] ?? "");
+      const code = first.message;
+      const hostLabels: Record<string, string> = {
+        instagram_url: "instagram.com",
+        facebook_url: "facebook.com",
+        telegram_url: "t.me",
+        strava_url: "strava.com",
+        youtube_url: "youtube.com / youtu.be",
+      };
+      let msg: string;
+      if (field === "name") msg = T.nameRequired;
+      else if (field === "contact_email") msg = T.invalidEmail;
+      else if (field === "contact_phone") msg = T.invalidPhone;
+      else if (field === "founded_year" || field === "members_count") msg = T.invalidYear;
+      else if (code === "wrong_host" && hostLabels[field]) msg = T.wrongHost(hostLabels[field]);
+      else msg = T.invalidUrl;
       toast.error(msg); return;
     }
     const fy = form.founded_year ? parseInt(form.founded_year, 10) : null;
