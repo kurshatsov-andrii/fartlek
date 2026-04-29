@@ -268,7 +268,13 @@ const EventDetails = () => {
                 <div className="flex items-center gap-2"><Users className="h-4 w-4 text-primary" />{participantsCount} {t.events.participants.toLowerCase()}</div>
                 <div className="flex items-center gap-2" title={t.events.organizer}>
                   <UserCircle2 className="h-4 w-4 text-primary" />
-                  <span className="font-medium">{event.organizer_name}</span>
+                  {clubSlug ? (
+                    <Link to={`/clubs/${clubSlug}`} className="font-medium hover:text-primary underline-offset-4 hover:underline">
+                      {event.organizer_name}
+                    </Link>
+                  ) : (
+                    <span className="font-medium">{event.organizer_name}</span>
+                  )}
                 </div>
               </div>
               {event.description && (
