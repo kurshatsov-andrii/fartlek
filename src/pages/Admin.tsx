@@ -198,6 +198,29 @@ const Admin = () => {
     toast.success("Користувача видалено");
   };
 
+  const deleteClub = async (clubId: string, clubName: string) => {
+    if (!confirm(`Видалити клуб «${clubName}» назавжди?`)) return;
+    const { error } = await supabase.from("clubs" as any).delete().eq("id", clubId);
+    if (error) return toast.error(error.message);
+    setClubs((s) => s.filter((c) => c.id !== clubId));
+    toast.success("Клуб видалено");
+  };
+
+  const filteredClubs = clubs.filter((c) => {
+    if (clubSearch && !c.name.toLowerCase().includes(clubSearch.toLowerCase())) return false;
+    if (clubCityFilter !== "all" && (c.city ?? "").toLowerCase() !== clubCityFilter) return false;
+    if (clubActivityFilter !== "all" && !(c.activity_types ?? []).includes(clubActivityFilter as any)) return false;
+    return true;
+  });
+
+  const clubCityOptions = Array.from(
+    new Map(
+      clubs
+        .filter((c) => norm(c.city) !== "")
+        .map((c) => [normLower(c.city), norm(c.city)])
+    ).entries()
+  ).map(([key, label]) => ({ key, label })).sort((a, b) => a.label.localeCompare(b.label, "uk"));
+
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Header />
@@ -211,6 +234,7 @@ const Admin = () => {
             <TabsTrigger value="events"><Calendar className="h-4 w-4 mr-2" />Події ({events.length})</TabsTrigger>
             <TabsTrigger value="payments"><CreditCard className="h-4 w-4 mr-2" />Платежі ({orders.length})</TabsTrigger>
             <TabsTrigger value="users"><Users className="h-4 w-4 mr-2" />Користувачі ({users.length})</TabsTrigger>
+            <TabsTrigger value="clubs"><UsersRound className="h-4 w-4 mr-2" />Клуби ({clubs.length})</TabsTrigger>
           </TabsList>
 
           <TabsContent value="events" className="space-y-3">
