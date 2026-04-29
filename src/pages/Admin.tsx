@@ -509,6 +509,137 @@ const Admin = () => {
               )}
             </div>
           </TabsContent>
+
+          <TabsContent value="clubs" className="space-y-3">
+            <div className="flex flex-wrap items-center gap-2">
+              <div className="relative">
+                <Search className="h-4 w-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                <Input
+                  value={clubSearch}
+                  onChange={(e) => setClubSearch(e.target.value)}
+                  placeholder="Пошук за назвою"
+                  className="pl-9 h-9 w-[240px]"
+                />
+              </div>
+              <span className="text-sm text-muted-foreground ml-3 mr-1">Місто:</span>
+              <Select value={clubCityFilter} onValueChange={setClubCityFilter}>
+                <SelectTrigger className="h-8 w-[200px]"><SelectValue placeholder="Усі міста" /></SelectTrigger>
+                <SelectContent className="max-h-[300px]">
+                  <SelectItem value="all">Усі міста</SelectItem>
+                  {clubCityOptions.map((c) => (
+                    <SelectItem key={c.key} value={c.key}>{c.label}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              {clubCityFilter !== "all" && (
+                <Button size="sm" variant="ghost" onClick={() => setClubCityFilter("all")}>Скинути</Button>
+              )}
+              <span className="text-sm text-muted-foreground ml-3 mr-1">Тип:</span>
+              <Select value={clubActivityFilter} onValueChange={setClubActivityFilter}>
+                <SelectTrigger className="h-8 w-[200px]"><SelectValue placeholder="Усі види" /></SelectTrigger>
+                <SelectContent className="max-h-[300px]">
+                  <SelectItem value="all">Усі види</SelectItem>
+                  {CLUB_ACTIVITY_TYPES.map((a) => (
+                    <SelectItem key={a} value={a}>{CLUB_ACTIVITY_LABELS.uk[a]}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              {clubActivityFilter !== "all" && (
+                <Button size="sm" variant="ghost" onClick={() => setClubActivityFilter("all")}>Скинути</Button>
+              )}
+            </div>
+
+            <div className="overflow-x-auto bg-card rounded-xl">
+              <table className="w-full text-sm">
+                <thead className="border-b">
+                  <tr className="text-left">
+                    <th className="p-3">Лого</th>
+                    <th className="p-3">Назва</th>
+                    <th className="p-3">Місто</th>
+                    <th className="p-3">Типи</th>
+                    <th className="p-3">Власник</th>
+                    <th className="p-3">Створено</th>
+                    <th className="p-3 text-right">Дії</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredClubs.map((c) => (
+                    <tr key={c.id} className="border-b last:border-0 align-top">
+                      <td className="p-3">
+                        {c.logo_url ? (
+                          <img src={c.logo_url} alt="" className="h-10 w-10 rounded object-cover border border-border" />
+                        ) : (
+                          <div className="h-10 w-10 rounded bg-muted flex items-center justify-center text-lg">🏃</div>
+                        )}
+                      </td>
+                      <td className="p-3 font-medium">{c.name}</td>
+                      <td className="p-3 text-muted-foreground">{c.city ?? "—"}</td>
+                      <td className="p-3">
+                        <div className="flex flex-wrap gap-1 max-w-[260px]">
+                          {(c.activity_types ?? []).map((a) => (
+                            <Badge key={a} variant="secondary" className="text-xs">
+                              {CLUB_ACTIVITY_LABELS.uk[a]}
+                            </Badge>
+                          ))}
+                          {(c.activity_types ?? []).length === 0 && <span className="text-xs text-muted-foreground">—</span>}
+                        </div>
+                      </td>
+                      <td className="p-3 text-xs">
+                        <div className="font-medium">{c.owner_name ?? "—"}</div>
+                        <div className="text-muted-foreground">{c.owner_email ?? "—"}</div>
+                      </td>
+                      <td className="p-3 whitespace-nowrap text-xs text-muted-foreground">
+                        {new Date(c.created_at).toLocaleDateString("uk-UA")}
+                      </td>
+                      <td className="p-3">
+                        <div className="flex flex-wrap gap-2 justify-end">
+                          <Button asChild size="sm" variant="outline" title="Перегляд">
+                            <Link to={`/clubs/${c.slug ?? c.id}`} target="_blank" rel="noopener noreferrer">
+                              <Eye className="h-4 w-4" />
+                            </Link>
+                          </Button>
+                          <Button asChild size="sm" variant="outline">
+                            <Link to={`/clubs/edit?id=${c.id}`}><Edit className="h-4 w-4" /> Редагувати</Link>
+                          </Button>
+                          <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                              <Button size="sm" variant="destructive" title="Видалити клуб">
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                              <AlertDialogHeader>
+                                <AlertDialogTitle>Видалити клуб?</AlertDialogTitle>
+                                <AlertDialogDescription>
+                                  Клуб <strong>{c.name}</strong> буде остаточно видалений. Цю дію не можна скасувати.
+                                </AlertDialogDescription>
+                              </AlertDialogHeader>
+                              <AlertDialogFooter>
+                                <AlertDialogCancel>Скасувати</AlertDialogCancel>
+                                <AlertDialogAction onClick={() => deleteClub(c.id, c.name)}>
+                                  Видалити
+                                </AlertDialogAction>
+                              </AlertDialogFooter>
+                            </AlertDialogContent>
+                          </AlertDialog>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                  {filteredClubs.length === 0 && (
+                    <tr>
+                      <td colSpan={7} className="p-6 text-center text-muted-foreground">
+                        Немає клубів
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+            <div className="text-sm text-muted-foreground">
+              Показано {filteredClubs.length} з {clubs.length}
+            </div>
+          </TabsContent>
         </Tabs>
       </main>
       <Footer />
