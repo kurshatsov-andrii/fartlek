@@ -205,19 +205,21 @@ const ClubEditor = () => {
     const { error } = await supabase.from("clubs" as any).delete().eq("id", club.id);
     if (error) { toast.error(error.message); return; }
     toast.success(T.deleted);
-    navigate("/organizer");
+    navigate(editClubId ? "/admin" : "/organizer");
   };
 
   if (authLoading) return null;
   if (!user) return <Navigate to="/auth?role=organizer" replace />;
   if (!isOrganizer && !isAdmin) return <Navigate to="/" replace />;
 
+  const backHref = editClubId ? "/admin" : "/organizer";
+
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Header />
       <main className="flex-1 container max-w-3xl py-10">
-        <Link to="/organizer" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-6">
-          <ArrowLeft className="h-4 w-4" /> {T.back}
+        <Link to={backHref} className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-6">
+          <ArrowLeft className="h-4 w-4" /> {editClubId ? "До адмін-панелі" : T.back}
         </Link>
         <h1 className="font-display text-3xl font-bold mb-6">{T.title}</h1>
 
