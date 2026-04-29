@@ -46,6 +46,7 @@ const EventDetails = () => {
   const [athleteDialogOpen, setAthleteDialogOpen] = useState(false);
   const [promo, setPromo] = useState<PromoPreview | null>(null);
   const [hasPromoCodes, setHasPromoCodes] = useState(false);
+  const [clubSlug, setClubSlug] = useState<string | null>(null);
 
   // Reset promo if distance changes
   useEffect(() => { setPromo(null); }, [selectedDistance]);
@@ -92,6 +93,15 @@ const EventDetails = () => {
         .eq("event_id", ev.id)
         .eq("is_active", true);
       setHasPromoCodes((promoCnt ?? 0) > 0);
+      if (ev.organizer_name) {
+        const { data: club } = await supabase
+          .from("clubs")
+          .select("slug")
+          .ilike("name", ev.organizer_name.trim())
+          .not("slug", "is", null)
+          .maybeSingle();
+        setClubSlug(club?.slug ?? null);
+      }
       if (user) {
         const { data: reg } = await supabase.from("registrations").select("id, payment_status").eq("event_id", ev.id).eq("user_id", user.id).maybeSingle();
         if (reg) setRegistration(reg);
@@ -258,7 +268,13 @@ const EventDetails = () => {
                 <div className="flex items-center gap-2"><Users className="h-4 w-4 text-primary" />{participantsCount} {t.events.participants.toLowerCase()}</div>
                 <div className="flex items-center gap-2" title={t.events.organizer}>
                   <UserCircle2 className="h-4 w-4 text-primary" />
-                  <span className="font-medium">{event.organizer_name}</span>
+                  {clubSlug ? (
+                    <Link to={`/clubs/${clubSlug}`} className="font-medium hover:text-primary underline-offset-4 hover:underline">
+                      {event.organizer_name}
+                    </Link>
+                  ) : (
+                    <span className="font-medium">{event.organizer_name}</span>
+                  )}
                 </div>
               </div>
               {event.description && (
