@@ -52,6 +52,13 @@ const ClubsCatalog = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
+      <SEO
+        title={lang === "uk" ? "Бігові клуби України — Fartlek Events" : "Running clubs of Ukraine — Fartlek Events"}
+        description={lang === "uk"
+          ? "Найкращі бігові клуби у місті Київ, Харків, Дніпро, Одеса, Львів, Кривий Ріг, Вінниця, Тернопіль та інші."
+          : "Best running clubs in Kyiv, Kharkiv, Dnipro, Odesa, Lviv, Kryvyi Rih, Vinnytsia, Ternopil and other cities of Ukraine."}
+        canonical="/clubs"
+      />
       <Header />
       <main className="flex-1 container max-w-6xl py-10">
         <h1 className="font-display text-4xl font-bold">{T.title}</h1>
