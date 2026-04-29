@@ -46,6 +46,8 @@ const ClubEditor = () => {
   const { lang } = useApp();
   const { user, isOrganizer, isAdmin, loading: authLoading } = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const editClubId = searchParams.get("id"); // admin editing someone else's club
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState(false);
   const [uploading, setUploading] = useState(false);
