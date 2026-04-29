@@ -77,6 +77,7 @@ export const Header = () => {
                 {isAdmin && (
                   <DropdownMenuItem asChild><Link to="/admin"><Shield className="h-4 w-4" />Адмін-панель</Link></DropdownMenuItem>
                 )}
+                <DropdownMenuItem asChild className="md:hidden"><Link to="/clubs"><Users className="h-4 w-4" />Клуби</Link></DropdownMenuItem>
                 <DropdownMenuItem asChild className="md:hidden"><Link to="/contacts"><Mail className="h-4 w-4" />{t.nav.contacts}</Link></DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={signOut}><LogOut className="h-4 w-4" />{t.nav.logout}</DropdownMenuItem>
