@@ -18,7 +18,7 @@ const formatCount = (n: number) => {
 export const Hero = () => {
   const { t } = useApp();
   const { user } = useAuth();
-  const [stats, setStats] = useState({ events: 0, runners: 0, cities: 0, clubs: 0 });
+  const [stats, setStats] = useState({ events: 0, runners: 0, cities: 0, clubs: 0, organizers: 0, registrations: 0 });
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
 
@@ -43,6 +43,8 @@ export const Hero = () => {
           runners: row.runners_count ?? 0,
           cities: row.cities_count ?? 0,
           clubs: row.clubs_count ?? 0,
+          organizers: row.organizers_count ?? 0,
+          registrations: row.registrations_count ?? 0,
         });
       }
     })();
@@ -132,10 +134,12 @@ export const Hero = () => {
             />
           </div>
 
-          <dl className="mt-16 grid max-w-xl grid-cols-2 gap-6 border-t border-secondary-foreground/10 pt-8 sm:grid-cols-4">
+          <dl className="mt-16 grid max-w-2xl grid-cols-2 gap-6 border-t border-secondary-foreground/10 pt-8 sm:grid-cols-3 lg:grid-cols-6">
             {[
               { v: `${stats.events}`, l: t.hero.stats.events },
               { v: formatCount(stats.runners), l: t.hero.stats.runners },
+              { v: formatCount(stats.registrations), l: t.hero.stats.registrations },
+              { v: `${stats.organizers}`, l: t.hero.stats.organizers },
               { v: `${stats.cities}`, l: t.hero.stats.cities },
               { v: `${stats.clubs}`, l: t.hero.stats.clubs },
             ].map((s) => (

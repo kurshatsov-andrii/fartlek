@@ -5,7 +5,7 @@ export interface Dict {
   hero: {
     kicker: string; title: string; subtitle: string;
     ctaParticipant: string; ctaOrganizer: string;
-    stats: { events: string; runners: string; cities: string; clubs: string };
+    stats: { events: string; runners: string; cities: string; clubs: string; organizers: string; registrations: string };
   };
   events: {
     heading: string; sub: string; details: string; register: string;
@@ -111,7 +111,7 @@ export const translations: Record<Lang, Dict> = {
       subtitle: "Fartlek Events — платформа реєстрації на забіги, трейли та змагання по всій Україні. QR-стартові пакети, миттєві результати, зручні протоколи.",
       ctaParticipant: "Вхід для учасників",
       ctaOrganizer: "Вхід для організаторів",
-      stats: { events: "Подій", runners: "Бігунів", cities: "Міст", clubs: "Клубів" },
+      stats: { events: "Подій", runners: "Бігунів", cities: "Міст", clubs: "Клубів", organizers: "Організаторів", registrations: "Реєстрацій" },
     },
     events: {
       heading: "Найближчі події", sub: "Обери свій старт. Реєструйся за хвилину.",
@@ -266,7 +266,7 @@ export const translations: Record<Lang, Dict> = {
       title: "Run. Register. Conquer.",
       subtitle: "Fartlek Events — the registration platform for races, trails and competitions across Ukraine. QR start packs, instant results, clean protocols.",
       ctaParticipant: "Participant sign in", ctaOrganizer: "Organizer sign in",
-      stats: { events: "Events", runners: "Runners", cities: "Cities", clubs: "Clubs" },
+      stats: { events: "Events", runners: "Runners", cities: "Cities", clubs: "Clubs", organizers: "Organizers", registrations: "Registrations" },
     },
     events: {
       heading: "Upcoming events", sub: "Pick your start. Register in a minute.",
