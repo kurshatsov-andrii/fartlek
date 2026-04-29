@@ -49,7 +49,7 @@ const phoneOrEmpty = z.literal("").or(
 
 const schema = z.object({
   name: z.string().trim().min(2, "min 2").max(120),
-  city: z.string().trim().max(120).optional().or(z.literal("")),
+  city: z.string().trim().min(1, "city_required").max(120),
   description: z.string().trim().max(2000).optional().or(z.literal("")),
   website_url: urlOrEmpty,
   instagram_url: hostUrl(["instagram.com"]),
@@ -59,8 +59,8 @@ const schema = z.object({
   youtube_url: hostUrl(["youtube.com", "youtu.be"]),
   contact_email: z.string().trim().max(255).email().or(z.literal("")),
   contact_phone: phoneOrEmpty,
-  founded_year: z.string().regex(/^\d{0,4}$/).optional().or(z.literal("")),
-  members_count: z.string().regex(/^\d{0,7}$/).optional().or(z.literal("")),
+  founded_year: z.string().regex(/^\d{4}$/, "year_required"),
+  members_count: z.string().regex(/^\d{1,7}$/, "members_required"),
   training_location: z.string().trim().max(300).optional().or(z.literal("")),
   training_schedule: z.string().trim().max(1000).optional().or(z.literal("")),
 });
