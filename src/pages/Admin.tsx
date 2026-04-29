@@ -120,11 +120,12 @@ const Admin = () => {
   useEffect(() => {
     if (!isAdmin) return;
     (async () => {
-      const [{ data: ev }, { data: ord }, { data: us }, { data: rs }] = await Promise.all([
+      const [{ data: ev }, { data: ord }, { data: us }, { data: rs }, { data: cl }] = await Promise.all([
         supabase.from("events").select("*").order("created_at", { ascending: false }),
         supabase.from("wayforpay_orders").select("*").order("created_at", { ascending: false }).limit(1000),
         supabase.from("profiles").select("id, email, phone, full_name, city, club, created_at").order("created_at", { ascending: false }).range(0, 9999),
         supabase.from("user_roles").select("user_id, role"),
+        supabase.from("clubs" as any).select("*").order("name"),
       ]);
       setEvents(ev ?? []);
       setOrders(ord ?? []);
@@ -134,6 +135,13 @@ const Admin = () => {
         map[r.user_id] = [...(map[r.user_id] ?? []), r.role as AppRole];
       });
       setRolesByUser(map);
+      // enrich clubs with owner email/name
+      const profilesMap = Object.fromEntries((us ?? []).map((p: any) => [p.id, p]));
+      setClubs(((cl ?? []) as any[]).map((c) => ({
+        ...c,
+        owner_email: profilesMap[c.owner_id]?.email,
+        owner_name: profilesMap[c.owner_id]?.full_name,
+      })));
     })();
   }, [isAdmin]);
 
