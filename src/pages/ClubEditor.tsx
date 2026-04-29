@@ -200,6 +200,7 @@ const ClubEditor = () => {
   const save = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user) return;
+    if (!logoUrl) { toast.error(T.logoRequired); return; }
     const parsed = schema.safeParse(form);
     if (!parsed.success) {
       const first = parsed.error.issues[0];
@@ -214,15 +215,17 @@ const ClubEditor = () => {
       };
       let msg: string;
       if (field === "name") msg = T.nameRequired;
+      else if (field === "city") msg = T.cityRequired;
+      else if (field === "founded_year") msg = T.yearRequired;
+      else if (field === "members_count") msg = T.membersRequired;
       else if (field === "contact_email") msg = T.invalidEmail;
       else if (field === "contact_phone") msg = T.invalidPhone;
-      else if (field === "founded_year" || field === "members_count") msg = T.invalidYear;
       else if (code === "wrong_host" && hostLabels[field]) msg = T.wrongHost(hostLabels[field]);
       else msg = T.invalidUrl;
       toast.error(msg); return;
     }
     const fy = form.founded_year ? parseInt(form.founded_year, 10) : null;
-    if (fy != null && (fy < 1800 || fy > new Date().getFullYear())) { toast.error(T.invalidYear); return; }
+    if (fy == null || fy < 1800 || fy > new Date().getFullYear()) { toast.error(T.yearRequired); return; }
 
     setBusy(true);
     const payload: any = {
