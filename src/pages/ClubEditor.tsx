@@ -49,7 +49,7 @@ const phoneOrEmpty = z.literal("").or(
 
 const schema = z.object({
   name: z.string().trim().min(2, "min 2").max(120),
-  city: z.string().trim().max(120).optional().or(z.literal("")),
+  city: z.string().trim().min(1, "city_required").max(120),
   description: z.string().trim().max(2000).optional().or(z.literal("")),
   website_url: urlOrEmpty,
   instagram_url: hostUrl(["instagram.com"]),
@@ -59,8 +59,8 @@ const schema = z.object({
   youtube_url: hostUrl(["youtube.com", "youtu.be"]),
   contact_email: z.string().trim().max(255).email().or(z.literal("")),
   contact_phone: phoneOrEmpty,
-  founded_year: z.string().regex(/^\d{0,4}$/).optional().or(z.literal("")),
-  members_count: z.string().regex(/^\d{0,7}$/).optional().or(z.literal("")),
+  founded_year: z.string().regex(/^\d{4}$/, "year_required"),
+  members_count: z.string().regex(/^\d{1,7}$/, "members_required"),
   training_location: z.string().trim().max(300).optional().or(z.literal("")),
   training_schedule: z.string().trim().max(1000).optional().or(z.literal("")),
 });
@@ -104,7 +104,11 @@ const ClubEditor = () => {
     save: "Зберегти", cancel: "Скасувати", deleteClub: "Видалити клуб", confirmDelete: "Видалити клуб назавжди?",
     saved: "Збережено", deleted: "Видалено",
     invalidLogo: "Файл має бути зображенням до 5 МБ",
+    logoRequired: "Завантажте логотип клубу",
     nameRequired: "Введіть назву клубу (мінімум 2 символи)",
+    cityRequired: "Вкажіть місто",
+    yearRequired: "Вкажіть рік заснування (1800–поточний)",
+    membersRequired: "Вкажіть кількість учасників",
     invalidUrl: "Некоректне посилання (має починатись з https://)",
     invalidEmail: "Некоректний email",
     invalidYear: "Некоректний рік",
@@ -127,7 +131,11 @@ const ClubEditor = () => {
     save: "Save", cancel: "Cancel", deleteClub: "Delete club", confirmDelete: "Delete club permanently?",
     saved: "Saved", deleted: "Deleted",
     invalidLogo: "File must be an image up to 5 MB",
+    logoRequired: "Upload a club logo",
     nameRequired: "Enter a club name (min 2 characters)",
+    cityRequired: "Enter a city",
+    yearRequired: "Enter founded year (1800–current)",
+    membersRequired: "Enter members count",
     invalidUrl: "Invalid URL (must start with https://)",
     invalidEmail: "Invalid email",
     invalidYear: "Invalid year",
@@ -192,6 +200,7 @@ const ClubEditor = () => {
   const save = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user) return;
+    if (!logoUrl) { toast.error(T.logoRequired); return; }
     const parsed = schema.safeParse(form);
     if (!parsed.success) {
       const first = parsed.error.issues[0];
@@ -206,15 +215,17 @@ const ClubEditor = () => {
       };
       let msg: string;
       if (field === "name") msg = T.nameRequired;
+      else if (field === "city") msg = T.cityRequired;
+      else if (field === "founded_year") msg = T.yearRequired;
+      else if (field === "members_count") msg = T.membersRequired;
       else if (field === "contact_email") msg = T.invalidEmail;
       else if (field === "contact_phone") msg = T.invalidPhone;
-      else if (field === "founded_year" || field === "members_count") msg = T.invalidYear;
       else if (code === "wrong_host" && hostLabels[field]) msg = T.wrongHost(hostLabels[field]);
       else msg = T.invalidUrl;
       toast.error(msg); return;
     }
     const fy = form.founded_year ? parseInt(form.founded_year, 10) : null;
-    if (fy != null && (fy < 1800 || fy > new Date().getFullYear())) { toast.error(T.invalidYear); return; }
+    if (fy == null || fy < 1800 || fy > new Date().getFullYear()) { toast.error(T.yearRequired); return; }
 
     setBusy(true);
     const payload: any = {
@@ -280,7 +291,7 @@ const ClubEditor = () => {
             </div>
 
             <div className="space-y-2">
-              <Label>{T.logo}</Label>
+              <Label>{T.logo} *</Label>
               <div className="flex flex-wrap items-center gap-3">
                 {logoUrl && <img src={logoUrl} alt="" className="h-20 w-20 rounded-lg object-cover border border-border" />}
                 <label className="inline-flex items-center gap-2 cursor-pointer rounded-md border border-input bg-background px-4 py-2 text-sm hover:bg-accent hover:text-accent-foreground transition-base">
@@ -297,8 +308,8 @@ const ClubEditor = () => {
             </div>
 
             <div className="space-y-2">
-              <Label>{T.city}</Label>
-              <Input value={form.city} maxLength={120} onChange={(e) => setForm({ ...form, city: e.target.value })} />
+              <Label>{T.city} *</Label>
+              <Input required value={form.city} maxLength={120} onChange={(e) => setForm({ ...form, city: e.target.value })} />
             </div>
 
             <div className="space-y-2">
@@ -341,8 +352,8 @@ const ClubEditor = () => {
             <div className="pt-4 border-t border-border space-y-4">
               <h2 className="font-semibold">{T.about}</h2>
               <div className="grid sm:grid-cols-2 gap-4">
-                <div className="space-y-1.5"><Label>{T.founded}</Label><Input type="number" min={1800} max={new Date().getFullYear()} value={form.founded_year} onChange={(e) => setForm({ ...form, founded_year: e.target.value })} /></div>
-                <div className="space-y-1.5"><Label>{T.members}</Label><Input type="number" min={0} value={form.members_count} onChange={(e) => setForm({ ...form, members_count: e.target.value })} /></div>
+                <div className="space-y-1.5"><Label>{T.founded} *</Label><Input required type="number" min={1800} max={new Date().getFullYear()} value={form.founded_year} onChange={(e) => setForm({ ...form, founded_year: e.target.value })} /></div>
+                <div className="space-y-1.5"><Label>{T.members} *</Label><Input required type="number" min={0} value={form.members_count} onChange={(e) => setForm({ ...form, members_count: e.target.value })} /></div>
               </div>
             </div>
 
