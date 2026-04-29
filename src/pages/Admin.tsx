@@ -45,6 +45,10 @@ const Admin = () => {
   const [cityFilter, setCityFilter] = useState<string>("all");
   const [clubFilter, setClubFilter] = useState<string>("all");
   const [eventStatusFilter, setEventStatusFilter] = useState<"all" | "published" | "cancelled" | "completed" | "draft">("all");
+  const [clubs, setClubs] = useState<(Club & { owner_email?: string; owner_name?: string })[]>([]);
+  const [clubSearch, setClubSearch] = useState("");
+  const [clubCityFilter, setClubCityFilter] = useState<string>("all");
+  const [clubActivityFilter, setClubActivityFilter] = useState<string>("all");
 
   const STATUS_LABEL: Record<string, string> = {
     published: "Опубліковано",
