@@ -90,9 +90,7 @@ const ClubDetails = () => {
     const title = (lang === "uk" ? titleUk : titleEn).slice(0, 60);
 
     const descBase = club.description?.replace(/\s+/g, " ").trim();
-    const descFallback = lang === "uk"
-      ? `${kindUk} ${club.name}${club.city ? ` в ${club.city}` : ""}. Тренування, контакти, соцмережі та інформація про клуб на Fartlek.`
-      : `${kindEn} ${club.name}${club.city ? ` in ${club.city}` : ""}. Training, contacts, socials and club info on Fartlek.`;
+    const descFallback = buildAutoDescription(club, lang as "uk" | "en");
     const description = (descBase && descBase.length > 40 ? descBase : descFallback).slice(0, 160);
 
     const url = `${window.location.origin}/clubs/${club.slug ?? club.id}`;
