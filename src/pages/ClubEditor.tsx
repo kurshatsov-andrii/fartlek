@@ -171,7 +171,7 @@ const ClubEditor = () => {
 
     setBusy(true);
     const payload: any = {
-      owner_id: user.id,
+      owner_id: club ? club.owner_id : user.id,
       name: form.name.trim(),
       city: form.city.trim() || null,
       description: form.description.trim() || null,
@@ -196,7 +196,7 @@ const ClubEditor = () => {
     setBusy(false);
     if (error) { toast.error(error.message); return; }
     toast.success(T.saved);
-    navigate("/organizer");
+    navigate(editClubId ? "/admin" : "/organizer");
   };
 
   const remove = async () => {
