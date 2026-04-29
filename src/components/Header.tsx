@@ -69,7 +69,10 @@ export const Header = () => {
                 <DropdownMenuItem asChild><Link to="/profile"><User className="h-4 w-4" />{t.nav.profile}</Link></DropdownMenuItem>
                 <DropdownMenuItem asChild><Link to="/my-events"><Ticket className="h-4 w-4" />{t.nav.myEvents}</Link></DropdownMenuItem>
                 {isOrganizer && (
-                  <DropdownMenuItem asChild><Link to="/organizer"><LayoutDashboard className="h-4 w-4" />{t.nav.dashboard}</Link></DropdownMenuItem>
+                  <>
+                    <DropdownMenuItem asChild><Link to="/organizer"><LayoutDashboard className="h-4 w-4" />{t.nav.dashboard}</Link></DropdownMenuItem>
+                    <DropdownMenuItem asChild><Link to="/clubs/edit"><Users className="h-4 w-4" />Профіль клубу</Link></DropdownMenuItem>
+                  </>
                 )}
                 {isAdmin && (
                   <DropdownMenuItem asChild><Link to="/admin"><Shield className="h-4 w-4" />Адмін-панель</Link></DropdownMenuItem>
