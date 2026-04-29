@@ -104,9 +104,14 @@ const OrganizerDashboard = () => {
             <h1 className="font-display text-4xl font-bold">{t.organizer.dashboard}</h1>
             <p className="text-muted-foreground mt-1">{t.organizer.myEvents}</p>
           </div>
-          <Button asChild size="lg">
-            <Link to="/organizer/events/new"><Plus className="h-4 w-4" /> {t.organizer.createEvent}</Link>
-          </Button>
+          <div className="flex flex-wrap gap-2">
+            <Button asChild variant="outline" size="lg">
+              <Link to="/clubs/edit"><UsersRound className="h-4 w-4" /> Профіль клубу</Link>
+            </Button>
+            <Button asChild size="lg">
+              <Link to="/organizer/events/new"><Plus className="h-4 w-4" /> {t.organizer.createEvent}</Link>
+            </Button>
+          </div>
         </div>
 
         {loading ? (
