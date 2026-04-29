@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import { Navigate, Link } from "react-router-dom";
-import { Loader2, Shield, Calendar, Users, CreditCard, Edit, BarChart3, Ticket, Trash2 } from "lucide-react";
+import { Loader2, Shield, Calendar, Users, CreditCard, Edit, BarChart3, Ticket, Trash2, UsersRound, Eye, Search } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import { CLUB_ACTIVITY_TYPES, CLUB_ACTIVITY_LABELS, type Club } from "@/lib/clubs";
 import {
   AlertDialog,
   AlertDialogAction,
