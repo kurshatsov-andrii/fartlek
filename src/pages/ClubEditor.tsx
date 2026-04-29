@@ -195,10 +195,22 @@ const ClubEditor = () => {
     const parsed = schema.safeParse(form);
     if (!parsed.success) {
       const first = parsed.error.issues[0];
-      const msg = first.path[0] === "name" ? T.nameRequired
-        : first.path[0] === "contact_email" ? T.invalidEmail
-        : first.path[0] === "founded_year" ? T.invalidYear
-        : T.invalidUrl;
+      const field = String(first.path[0] ?? "");
+      const code = first.message;
+      const hostLabels: Record<string, string> = {
+        instagram_url: "instagram.com",
+        facebook_url: "facebook.com",
+        telegram_url: "t.me",
+        strava_url: "strava.com",
+        youtube_url: "youtube.com / youtu.be",
+      };
+      let msg: string;
+      if (field === "name") msg = T.nameRequired;
+      else if (field === "contact_email") msg = T.invalidEmail;
+      else if (field === "contact_phone") msg = T.invalidPhone;
+      else if (field === "founded_year" || field === "members_count") msg = T.invalidYear;
+      else if (code === "wrong_host" && hostLabels[field]) msg = T.wrongHost(hostLabels[field]);
+      else msg = T.invalidUrl;
       toast.error(msg); return;
     }
     const fy = form.founded_year ? parseInt(form.founded_year, 10) : null;
