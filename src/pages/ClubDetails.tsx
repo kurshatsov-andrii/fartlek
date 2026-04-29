@@ -186,6 +186,9 @@ const ClubDetails = () => {
                     ))}
                   </div>
                 )}
+                <p className="text-sm text-muted-foreground mt-3">
+                  {buildAutoDescription(club, lang as "uk" | "en")}
+                </p>
               </div>
             </div>
 
