@@ -291,7 +291,7 @@ const ClubEditor = () => {
             </div>
 
             <div className="space-y-2">
-              <Label>{T.logo}</Label>
+              <Label>{T.logo} *</Label>
               <div className="flex flex-wrap items-center gap-3">
                 {logoUrl && <img src={logoUrl} alt="" className="h-20 w-20 rounded-lg object-cover border border-border" />}
                 <label className="inline-flex items-center gap-2 cursor-pointer rounded-md border border-input bg-background px-4 py-2 text-sm hover:bg-accent hover:text-accent-foreground transition-base">
@@ -308,8 +308,8 @@ const ClubEditor = () => {
             </div>
 
             <div className="space-y-2">
-              <Label>{T.city}</Label>
-              <Input value={form.city} maxLength={120} onChange={(e) => setForm({ ...form, city: e.target.value })} />
+              <Label>{T.city} *</Label>
+              <Input required value={form.city} maxLength={120} onChange={(e) => setForm({ ...form, city: e.target.value })} />
             </div>
 
             <div className="space-y-2">
