@@ -45,6 +45,93 @@ const ClubDetails = () => {
     })();
   }, [slug]);
 
+  // SEO: title, meta description, canonical, OG, JSON-LD
+  useEffect(() => {
+    if (!club) return;
+
+    const types = (club.activity_types ?? []) as string[];
+    const isTrail = types.includes("trail");
+    const isOcr = types.includes("ocr");
+    const isTri = types.includes("triathlon");
+
+    const kindUk = isTrail ? "Трейловий клуб"
+      : isOcr ? "OCR клуб"
+      : isTri ? "Триатлон клуб"
+      : "Біговий клуб";
+    const kindEn = isTrail ? "Trail running club"
+      : isOcr ? "OCR club"
+      : isTri ? "Triathlon club"
+      : "Running club";
+
+    const titleUk = club.city ? `${kindUk} ${club.name} в ${club.city}` : `${kindUk} ${club.name}`;
+    const titleEn = club.city ? `${kindEn} ${club.name} in ${club.city}` : `${kindEn} ${club.name}`;
+    const title = (lang === "uk" ? titleUk : titleEn).slice(0, 60);
+
+    const descBase = club.description?.replace(/\s+/g, " ").trim();
+    const descFallback = lang === "uk"
+      ? `${kindUk} ${club.name}${club.city ? ` в ${club.city}` : ""}. Тренування, контакти, соцмережі та інформація про клуб на Fartlek.`
+      : `${kindEn} ${club.name}${club.city ? ` in ${club.city}` : ""}. Training, contacts, socials and club info on Fartlek.`;
+    const description = (descBase && descBase.length > 40 ? descBase : descFallback).slice(0, 160);
+
+    const url = `${window.location.origin}/clubs/${club.slug ?? club.id}`;
+    const image = club.logo_url || `${window.location.origin}/og-image.png`;
+
+    document.title = title;
+
+    const setMeta = (selector: string, attr: "name" | "property", key: string, content: string) => {
+      let el = document.head.querySelector<HTMLMetaElement>(selector);
+      if (!el) {
+        el = document.createElement("meta");
+        el.setAttribute(attr, key);
+        document.head.appendChild(el);
+      }
+      el.setAttribute("content", content);
+    };
+
+    setMeta(`meta[name="description"]`, "name", "description", description);
+    setMeta(`meta[property="og:title"]`, "property", "og:title", title);
+    setMeta(`meta[property="og:description"]`, "property", "og:description", description);
+    setMeta(`meta[property="og:type"]`, "property", "og:type", "profile");
+    setMeta(`meta[property="og:url"]`, "property", "og:url", url);
+    setMeta(`meta[property="og:image"]`, "property", "og:image", image);
+    setMeta(`meta[name="twitter:card"]`, "name", "twitter:card", "summary_large_image");
+    setMeta(`meta[name="twitter:title"]`, "name", "twitter:title", title);
+    setMeta(`meta[name="twitter:description"]`, "name", "twitter:description", description);
+    setMeta(`meta[name="twitter:image"]`, "name", "twitter:image", image);
+
+    let canonical = document.head.querySelector<HTMLLinkElement>(`link[rel="canonical"]`);
+    if (!canonical) {
+      canonical = document.createElement("link");
+      canonical.setAttribute("rel", "canonical");
+      document.head.appendChild(canonical);
+    }
+    canonical.setAttribute("href", url);
+
+    const ldId = "club-jsonld";
+    document.getElementById(ldId)?.remove();
+    const ld = document.createElement("script");
+    ld.type = "application/ld+json";
+    ld.id = ldId;
+    ld.text = JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "SportsClub",
+      name: club.name,
+      description,
+      url,
+      image: club.logo_url || undefined,
+      address: club.city ? { "@type": "PostalAddress", addressLocality: club.city } : undefined,
+      email: club.contact_email || undefined,
+      telephone: club.contact_phone || undefined,
+      foundingDate: club.founded_year ? String(club.founded_year) : undefined,
+      sameAs: [club.website_url, club.instagram_url, club.facebook_url, club.telegram_url, club.strava_url, club.youtube_url].filter(Boolean),
+    });
+    document.head.appendChild(ld);
+
+    return () => {
+      document.getElementById(ldId)?.remove();
+    };
+  }, [club, lang]);
+
   if (notFound) return <Navigate to="/clubs" replace />;
 
   return (
