@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { useApp } from "@/contexts/AppContext";
 import { supabase } from "@/integrations/supabase/client";
 import { CLUB_ACTIVITY_TYPES, CLUB_ACTIVITY_LABELS, type Club, type ClubActivityType } from "@/lib/clubs";
+import { SEO } from "@/components/SEO";
 
 const ClubsCatalog = () => {
   const { lang } = useApp();
