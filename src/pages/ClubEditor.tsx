@@ -104,7 +104,10 @@ const ClubEditor = () => {
     if (!user) return;
     (async () => {
       setLoading(true);
-      const { data } = await supabase.from("clubs" as any).select("*").eq("owner_id", user.id).maybeSingle();
+      const query = editClubId
+        ? supabase.from("clubs" as any).select("*").eq("id", editClubId).maybeSingle()
+        : supabase.from("clubs" as any).select("*").eq("owner_id", user.id).maybeSingle();
+      const { data } = await query;
       if (data) {
         const c = data as any as Club;
         setClub(c);
@@ -130,7 +133,7 @@ const ClubEditor = () => {
       }
       setLoading(false);
     })();
-  }, [user]);
+  }, [user, editClubId]);
 
   const uploadLogo = async (file: File) => {
     if (!user) return;
