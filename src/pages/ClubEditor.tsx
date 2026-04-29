@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate, useSearchParams } from "react-router-dom";
 import { ArrowLeft, Loader2, Upload, X, Trash2 } from "lucide-react";
 import { z } from "zod";
 import { Header } from "@/components/Header";
