@@ -32,10 +32,10 @@ export const Header = () => {
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-border/40 bg-background/80 backdrop-blur-lg">
-      <div className="container flex h-16 items-center justify-between">
-        <Link to="/" className="flex items-center gap-3 group">
+      <div className="container flex h-16 items-center justify-between gap-3">
+        <Link to="/" className="flex items-center gap-3 group shrink-0">
           <img src={logoFartlek} alt="Фартлек" className="h-10 w-10 rounded-full object-cover shadow-glow transition-bounce group-hover:scale-110" />
-          <span className="font-display text-xl font-bold tracking-tight">
+          <span className="hidden sm:inline font-display text-xl font-bold tracking-tight">
             Фартлек
           </span>
         </Link>
