@@ -1,6 +1,7 @@
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious, type CarouselApi } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useApp } from "@/contexts/AppContext";
 import participants from "@/assets/features/participants.png";
 import organizers1 from "@/assets/features/organizers-1.png";
@@ -19,6 +20,19 @@ const slides = [
 export const FeaturesCarousel = () => {
   const { lang } = useApp();
   const plugin = useRef(Autoplay({ delay: 4500, stopOnInteraction: true }));
+  const [api, setApi] = useState<CarouselApi | null>(null);
+  const [current, setCurrent] = useState(0);
+
+  useEffect(() => {
+    if (!api) return;
+    setCurrent(api.selectedScrollSnap());
+    const onSelect = () => setCurrent(api.selectedScrollSnap());
+    api.on("select", onSelect);
+    api.on("reInit", onSelect);
+    return () => {
+      api.off("select", onSelect);
+    };
+  }, [api]);
 
   return (
     <section className="bg-background py-20 sm:py-28">
@@ -46,11 +60,12 @@ export const FeaturesCarousel = () => {
           <Carousel
             opts={{ align: "center", loop: true }}
             plugins={[plugin.current]}
+            setApi={setApi}
             className="mx-auto max-w-5xl"
           >
             <CarouselContent>
               {slides.map((s, i) => (
-                <CarouselItem key={i} className="md:basis-2/3 lg:basis-1/2">
+                <CarouselItem key={i} className="basis-[85%] sm:basis-full md:basis-2/3 lg:basis-1/2">
                   <div className="overflow-hidden rounded-2xl border border-border/60 bg-card shadow-elegant transition-transform hover:scale-[1.01]">
                     <img
                       src={s.src}
@@ -67,6 +82,42 @@ export const FeaturesCarousel = () => {
             <CarouselPrevious className="hidden sm:flex" />
             <CarouselNext className="hidden sm:flex" />
           </Carousel>
+
+          {/* Mobile swipe hint: arrows + dots */}
+          <div className="mt-6 flex items-center justify-center gap-4 sm:hidden">
+            <button
+              type="button"
+              aria-label="Previous slide"
+              onClick={() => api?.scrollPrev()}
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-border bg-card text-foreground shadow-sm active:scale-95 transition"
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </button>
+            <div className="flex items-center gap-1.5">
+              {slides.map((_, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  aria-label={`Go to slide ${i + 1}`}
+                  onClick={() => api?.scrollTo(i)}
+                  className={`h-1.5 rounded-full transition-all ${
+                    current === i ? "w-6 bg-primary" : "w-1.5 bg-muted-foreground/40"
+                  }`}
+                />
+              ))}
+            </div>
+            <button
+              type="button"
+              aria-label="Next slide"
+              onClick={() => api?.scrollNext()}
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-border bg-card text-foreground shadow-sm active:scale-95 transition"
+            >
+              <ChevronRight className="h-4 w-4" />
+            </button>
+          </div>
+          <p className="mt-2 text-center text-xs text-muted-foreground sm:hidden">
+            {lang === "uk" ? "← Гортайте, щоб побачити більше →" : "← Swipe to see more →"}
+          </p>
         </div>
       </div>
     </section>
