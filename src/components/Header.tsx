@@ -1,5 +1,5 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { LogOut, User, LayoutDashboard, Ticket, Shield, Mail } from "lucide-react";
+import { LogOut, User, LayoutDashboard, Ticket, Shield, Mail, Users } from "lucide-react";
 import logoFartlek from "@/assets/logo-fartlek.jpg";
 import { Button } from "@/components/ui/button";
 import { useApp } from "@/contexts/AppContext";
