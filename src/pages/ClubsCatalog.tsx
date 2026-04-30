@@ -104,8 +104,9 @@ const ClubsCatalog = () => {
             <p className="text-muted-foreground">{T.empty}</p>
           </div>
         ) : (
+          <>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
-            {filtered.map((c) => (
+            {visible.map((c) => (
               <Link key={c.id} to={`/clubs/${c.slug ?? c.id}`} className="bg-card p-5 rounded-2xl shadow-card hover:shadow-elegant transition-base block">
                 <div className="flex items-center gap-4">
                   {c.logo_url ? (
@@ -137,6 +138,14 @@ const ClubsCatalog = () => {
               </Link>
             ))}
           </div>
+          {visibleCount < filtered.length && (
+            <div className="flex justify-center mt-8">
+              <Button variant="outline" size="lg" onClick={() => setVisibleCount((n) => n + PAGE_SIZE)}>
+                {T.loadMore} ({filtered.length - visibleCount})
+              </Button>
+            </div>
+          )}
+          </>
         )}
 
         <div className="mt-12 flex flex-col items-center gap-2 text-center">
