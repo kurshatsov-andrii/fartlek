@@ -230,9 +230,14 @@ const Admin = () => {
             <Shield className="h-7 w-7 text-primary" />
             <h1 className="font-display text-3xl font-bold">Адмін-панель</h1>
           </div>
-          <Button asChild variant="outline" size="sm">
-            <Link to="/admin/campaigns">📧 Розсилки</Link>
-          </Button>
+          <div className="flex gap-2 flex-wrap">
+            <Button asChild variant="outline" size="sm">
+              <Link to="/admin/campaigns">📧 Розсилки</Link>
+            </Button>
+            <Button asChild variant="outline" size="sm">
+              <Link to="/admin/unsubscribes">🚫 Відписки</Link>
+            </Button>
+          </div>
         </div>
         <Tabs defaultValue="events" className="space-y-6">
           <TabsList>

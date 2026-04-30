@@ -796,6 +796,28 @@ export type Database = {
           runners_count: number
         }[]
       }
+      get_unsubscribe_stats: {
+        Args: never
+        Returns: {
+          city: string
+          email: string
+          full_name: string
+          has_profile: boolean
+          marketing_consent: boolean
+          reason: string
+          unsubscribed_at: string
+        }[]
+      }
+      get_unsubscribe_summary: {
+        Args: never
+        Returns: {
+          total_subscribed: number
+          total_suppressed: number
+          total_unsubscribed: number
+          unsubscribed_last_30d: number
+          unsubscribed_last_7d: number
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
