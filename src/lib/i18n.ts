@@ -63,6 +63,11 @@ export interface Dict {
     label: string; all: string;
     run: string; half_marathon: string; marathon: string; ultra: string; trail: string; ocr: string; online: string;
   };
+  format: {
+    label: string; hint: string;
+    offline: string; online: string; hybrid: string;
+    badgeOffline: string; badgeOnline: string; badgeHybrid: string;
+  };
   athletes: {
     sectionTitle: string; sectionHint: string;
     addTitle: string; editTitle: string; addBtn: string; formHint: string;
