@@ -119,10 +119,12 @@ Deno.serve(async (req) => {
     return jsonResponse({ error: 'Invalid JSON' }, 400)
   }
 
-  const { campaign_id, test_email } = body
+  const { campaign_id, test_email, batch_size, batch_offset } = body
   if (!campaign_id || typeof campaign_id !== 'string') {
     return jsonResponse({ error: 'campaign_id required' }, 400)
   }
+  const bSize = Math.max(1, Math.min(200, Number(batch_size) || 50))
+  const bOffset = Math.max(0, Number(batch_offset) || 0)
 
   // Load campaign
   const { data: campaign, error: cErr } = await admin
