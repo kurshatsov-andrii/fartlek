@@ -23,7 +23,7 @@ interface DistanceForm { id?: string; distance_km: string; name: string; price: 
 const EventEditor = () => {
   const { id } = useParams<{ id: string }>();
   const isNew = !id || id === "new";
-  const { t } = useApp();
+  const { t, lang } = useApp();
   const { user, isOrganizer, isAdmin, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(!isNew);
