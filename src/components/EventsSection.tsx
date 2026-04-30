@@ -37,6 +37,10 @@ export const EventsSection = () => {
     [events, activeCat]
   );
 
+  useEffect(() => { setVisibleCount(PAGE_SIZE); }, [activeCat]);
+
+  const visible = filtered.slice(0, visibleCount);
+
   const fmtDate = (iso: string) =>
     new Date(iso).toLocaleDateString(lang === "uk" ? "uk-UA" : "en-US", {
       day: "numeric", month: "long", year: "numeric",
