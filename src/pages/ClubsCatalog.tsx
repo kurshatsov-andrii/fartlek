@@ -24,7 +24,7 @@ const ClubsCatalog = () => {
   const [activity, setActivity] = useState<string>("all");
 
   const T = lang === "uk" ? {
-    title: "Клуби", subtitle: "Каталог спортивних клубів", search: "Пошук за назвою",
+    title: "Клуби", subtitle: "Каталог бігових клубів", search: "Пошук за назвою",
     allCities: "Усі міста", allActivities: "Усі види", empty: "Клуби не знайдено",
     members: "учасників", noLogo: "🏃",
   } : {
