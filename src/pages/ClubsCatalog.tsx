@@ -22,15 +22,17 @@ const ClubsCatalog = () => {
   const [q, setQ] = useState("");
   const [city, setCity] = useState<string>("all");
   const [activity, setActivity] = useState<string>("all");
+  const PAGE_SIZE = 9;
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 
   const T = lang === "uk" ? {
     title: "Клуби", subtitle: "Бігові клуби України", search: "Пошук за назвою",
     allCities: "Усі міста", allActivities: "Усі види", empty: "Клуби не знайдено",
-    members: "учасників", noLogo: "🏃",
+    members: "учасників", noLogo: "🏃", loadMore: "Завантажити ще",
   } : {
     title: "Clubs", subtitle: "Running clubs of Ukraine", search: "Search by name",
     allCities: "All cities", allActivities: "All types", empty: "No clubs found",
-    members: "members", noLogo: "🏃",
+    members: "members", noLogo: "🏃", loadMore: "Load more",
   };
 
   useEffect(() => {
@@ -53,6 +55,10 @@ const ClubsCatalog = () => {
     if (activity !== "all" && !(c.activity_types ?? []).includes(activity as ClubActivityType)) return false;
     return true;
   }), [clubs, q, city, activity]);
+
+  useEffect(() => { setVisibleCount(PAGE_SIZE); }, [q, city, activity]);
+
+  const visible = filtered.slice(0, visibleCount);
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
@@ -98,8 +104,9 @@ const ClubsCatalog = () => {
             <p className="text-muted-foreground">{T.empty}</p>
           </div>
         ) : (
+          <>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
-            {filtered.map((c) => (
+            {visible.map((c) => (
               <Link key={c.id} to={`/clubs/${c.slug ?? c.id}`} className="bg-card p-5 rounded-2xl shadow-card hover:shadow-elegant transition-base block">
                 <div className="flex items-center gap-4">
                   {c.logo_url ? (
@@ -131,6 +138,14 @@ const ClubsCatalog = () => {
               </Link>
             ))}
           </div>
+          {visibleCount < filtered.length && (
+            <div className="flex justify-center mt-8">
+              <Button variant="outline" size="lg" onClick={() => setVisibleCount((n) => n + PAGE_SIZE)}>
+                {T.loadMore} ({filtered.length - visibleCount})
+              </Button>
+            </div>
+          )}
+          </>
         )}
 
         <div className="mt-12 flex flex-col items-center gap-2 text-center">

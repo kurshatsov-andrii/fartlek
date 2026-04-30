@@ -24,6 +24,8 @@ const CategoryPage = () => {
   const { t, lang } = useApp();
   const [events, setEvents] = useState<EventCard[]>([]);
   const [loading, setLoading] = useState(true);
+  const PAGE_SIZE = 9;
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 
   const isValid = (EVENT_CATEGORIES as readonly string[]).includes(category ?? "");
   const cat = (isValid ? category : "run") as EventCategory;
@@ -37,6 +39,8 @@ const CategoryPage = () => {
       .order("event_date", { ascending: true })
       .then(({ data }) => { setEvents((data as any) ?? []); setLoading(false); });
   }, [cat, isValid]);
+
+  useEffect(() => { setVisibleCount(PAGE_SIZE); }, [cat]);
 
   const seo = useMemo(() => categorySeo(cat, lang), [cat, lang]);
 
@@ -90,8 +94,9 @@ const CategoryPage = () => {
             <p className="text-muted-foreground">{t.events.empty}</p>
           </div>
         ) : (
+          <>
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {events.map((ev) => {
+            {events.slice(0, visibleCount).map((ev) => {
               const active = ev.distances.filter((d) => d.is_active !== false);
               const minPrice = active.length ? Math.min(...active.map((d) => d.price)) : 0;
               const url = `/events/${ev.slug ?? ev.id}`;
@@ -127,6 +132,14 @@ const CategoryPage = () => {
               );
             })}
           </div>
+          {visibleCount < events.length && (
+            <div className="flex justify-center mt-10">
+              <Button variant="outline" size="lg" onClick={() => setVisibleCount((n) => n + PAGE_SIZE)}>
+                {lang === "uk" ? "Завантажити ще" : "Load more"} ({events.length - visibleCount})
+              </Button>
+            </div>
+          )}
+          </>
         )}
       </main>
       <Footer />
