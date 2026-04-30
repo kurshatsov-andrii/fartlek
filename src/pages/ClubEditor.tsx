@@ -55,7 +55,7 @@ const schema = z.object({
   instagram_url: hostUrl(["instagram.com"]),
   facebook_url: hostUrl(["facebook.com", "fb.com", "fb.me"]),
   telegram_url: hostUrl(["t.me", "telegram.me", "telegram.org"]),
-  strava_url: hostUrl(["strava.com"]),
+  strava_url: hostUrl(["strava.com", "strava.app.link"]),
   youtube_url: hostUrl(["youtube.com", "youtu.be"]),
   contact_email: z.string().trim().max(255).email().or(z.literal("")),
   contact_phone: phoneOrEmpty,
@@ -210,7 +210,7 @@ const ClubEditor = () => {
         instagram_url: "instagram.com",
         facebook_url: "facebook.com",
         telegram_url: "t.me",
-        strava_url: "strava.com",
+        strava_url: "strava.com / strava.app.link",
         youtube_url: "youtube.com / youtu.be",
       };
       let msg: string;
