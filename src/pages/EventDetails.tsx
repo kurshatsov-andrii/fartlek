@@ -22,6 +22,7 @@ interface EventRow {
   id: string; slug: string | null; title: string; description: string | null; organizer_name: string;
   event_date: string; event_time: string; location: string | null;
   image_url: string | null; is_paid: boolean; payment_url: string | null; status: string; category: EventCategory;
+  format: "offline" | "online" | "hybrid";
   results_pdf_url: string | null;
   results_url: string | null;
   description_image_url: string | null;
@@ -215,7 +216,12 @@ const EventDetails = () => {
     startDate: startDateIso,
     endDate: endDateIso,
     eventStatus: "https://schema.org/EventScheduled",
-    eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
+    eventAttendanceMode:
+      event.format === "online"
+        ? "https://schema.org/OnlineEventAttendanceMode"
+        : event.format === "hybrid"
+        ? "https://schema.org/MixedEventAttendanceMode"
+        : "https://schema.org/OfflineEventAttendanceMode",
     location: event.location
       ? { "@type": "Place", name: event.location, address: event.location }
       : { "@type": "Place", name: "Ukraine", address: "Ukraine" },
@@ -258,9 +264,14 @@ const EventDetails = () => {
           </Link>
           <div className={event.status === "completed" ? "grid lg:grid-cols-3 gap-8" : "grid lg:grid-cols-3 gap-8"}>
             <div className="lg:col-span-2 space-y-6">
-              <span className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wider ${event.is_paid ? "bg-primary text-primary-foreground" : "bg-accent text-accent-foreground"}`}>
-                {event.is_paid ? t.events.paid : t.events.free}
-              </span>
+              <div className="flex flex-wrap gap-2">
+                <span className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wider ${event.is_paid ? "bg-primary text-primary-foreground" : "bg-accent text-accent-foreground"}`}>
+                  {event.is_paid ? t.events.paid : t.events.free}
+                </span>
+                <span className="inline-flex items-center rounded-full border border-border bg-card px-3 py-1 text-xs font-semibold uppercase tracking-wider text-foreground">
+                  {event.format === "hybrid" ? t.format.badgeHybrid : event.format === "online" ? t.format.badgeOnline : t.format.badgeOffline}
+                </span>
+              </div>
               <h1 className="font-display text-4xl sm:text-5xl font-bold leading-tight">{event.title}</h1>
               <div className="flex flex-wrap gap-x-6 gap-y-3 text-sm">
                 <div className="flex items-center gap-2"><Calendar className="h-4 w-4 text-primary" />{fmtDate} · {event.event_time.slice(0, 5)}</div>
