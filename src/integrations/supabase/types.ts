@@ -336,6 +336,54 @@ export type Database = {
         }
         Relationships: []
       }
+      marketing_campaigns: {
+        Row: {
+          audience_filter: Json
+          created_at: string
+          created_by: string
+          event_ids: string[]
+          failed_count: number
+          id: string
+          intro_text: string | null
+          recipient_count: number
+          sent_at: string | null
+          sent_count: number
+          status: string
+          subject: string
+          updated_at: string
+        }
+        Insert: {
+          audience_filter?: Json
+          created_at?: string
+          created_by: string
+          event_ids?: string[]
+          failed_count?: number
+          id?: string
+          intro_text?: string | null
+          recipient_count?: number
+          sent_at?: string | null
+          sent_count?: number
+          status?: string
+          subject: string
+          updated_at?: string
+        }
+        Update: {
+          audience_filter?: Json
+          created_at?: string
+          created_by?: string
+          event_ids?: string[]
+          failed_count?: number
+          id?: string
+          intro_text?: string | null
+          recipient_count?: number
+          sent_at?: string | null
+          sent_count?: number
+          status?: string
+          subject?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       payments: {
         Row: {
           amount: number
@@ -396,6 +444,8 @@ export type Database = {
           full_name: string | null
           gender: Database["public"]["Enums"]["gender_type"] | null
           id: string
+          marketing_consent: boolean
+          marketing_consent_at: string | null
           phone: string | null
           updated_at: string
         }
@@ -408,6 +458,8 @@ export type Database = {
           full_name?: string | null
           gender?: Database["public"]["Enums"]["gender_type"] | null
           id: string
+          marketing_consent?: boolean
+          marketing_consent_at?: string | null
           phone?: string | null
           updated_at?: string
         }
@@ -420,6 +472,8 @@ export type Database = {
           full_name?: string | null
           gender?: Database["public"]["Enums"]["gender_type"] | null
           id?: string
+          marketing_consent?: boolean
+          marketing_consent_at?: string | null
           phone?: string | null
           updated_at?: string
         }

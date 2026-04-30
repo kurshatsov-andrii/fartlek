@@ -124,6 +124,15 @@ Deno.serve(async (req) => {
     return jsonResponse({ error: 'Failed to process unsubscribe' }, 500)
   }
 
+  // Also flip marketing_consent off on the matching profile (if any)
+  const { error: profileErr } = await supabase
+    .from('profiles')
+    .update({ marketing_consent: false })
+    .ilike('email', tokenRecord.email)
+  if (profileErr) {
+    console.warn('Failed to update profile marketing_consent', { error: profileErr })
+  }
+
   console.log('Email unsubscribed', { email: tokenRecord.email })
 
   return jsonResponse({ success: true })

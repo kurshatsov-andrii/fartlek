@@ -22,7 +22,7 @@ const Profile = () => {
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState(false);
   const [form, setForm] = useState({
-    full_name: "", birth_date: "", gender: "", city: "", club: "", email: "", phone: "",
+    full_name: "", birth_date: "", gender: "", city: "", club: "", email: "", phone: "", marketing_consent: true,
   });
   const [athletes, setAthletes] = useState<Athlete[]>([]);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -70,6 +70,7 @@ const Profile = () => {
           club: data.club ?? "",
           email: data.email,
           phone: (data as any).phone ?? "",
+          marketing_consent: (data as any).marketing_consent ?? true,
         });
       }
       await reloadAthletes(user.id);
@@ -98,6 +99,8 @@ const Profile = () => {
       city: form.city.trim(),
       club: form.club.trim() || null,
       phone: form.phone,
+      marketing_consent: form.marketing_consent,
+      marketing_consent_at: form.marketing_consent ? new Date().toISOString() : null,
     } as any).eq("id", user.id);
     if (!error) await reloadAthletes(user.id);
     setBusy(false);
@@ -203,6 +206,20 @@ const Profile = () => {
                   <Input id="club" value={form.club} onChange={(e) => setForm({ ...form, club: e.target.value })} />
                 </div>
               </div>
+              <label className="flex items-start gap-2 text-sm cursor-pointer select-none rounded-lg border border-border bg-muted/30 p-3">
+                <input
+                  type="checkbox"
+                  checked={form.marketing_consent}
+                  onChange={(e) => setForm({ ...form, marketing_consent: e.target.checked })}
+                  className="mt-0.5 h-4 w-4 rounded border-border accent-primary"
+                />
+                <span className="leading-snug">
+                  Отримувати листи про нові події на платформі
+                  <span className="block text-xs text-muted-foreground mt-0.5">
+                    Розсилки про опубліковані події. Можна вимкнути в будь-який момент.
+                  </span>
+                </span>
+              </label>
               <Button type="submit" disabled={busy} className="w-full sm:w-auto">
                 {busy && <Loader2 className="h-4 w-4 animate-spin" />} {t.profile.save}
               </Button>
