@@ -1,18 +1,22 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
-import { Loader2, MapPin, Search } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { Loader2, MapPin, Plus, Search } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { useApp } from "@/contexts/AppContext";
+import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { CLUB_ACTIVITY_TYPES, CLUB_ACTIVITY_LABELS, type Club, type ClubActivityType } from "@/lib/clubs";
 import { SEO } from "@/components/SEO";
 
 const ClubsCatalog = () => {
   const { lang } = useApp();
+  const { user, isOrganizer } = useAuth();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [clubs, setClubs] = useState<Club[]>([]);
   const [q, setQ] = useState("");
