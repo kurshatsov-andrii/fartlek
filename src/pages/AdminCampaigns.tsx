@@ -45,7 +45,9 @@ const AdminCampaigns = () => {
   const [cityFilter, setCityFilter] = useState("");
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [testEmail, setTestEmail] = useState("");
+  const [batchSize, setBatchSize] = useState(50);
   const [busy, setBusy] = useState(false);
+  const [progress, setProgress] = useState<{ sent: number; failed: number; total: number } | null>(null);
   const [pageLoading, setPageLoading] = useState(true);
 
   useEffect(() => {
@@ -109,11 +111,12 @@ const AdminCampaigns = () => {
       toast.error("Тема обов'язкова");
       return;
     }
-    if (mode === "real" && !confirm(`Надіслати розсилку ${recipientCount ?? "?"} користувачам?`)) {
+    if (mode === "real" && !confirm(`Надіслати розсилку ${recipientCount ?? "?"} користувачам батчами по ${batchSize}?`)) {
       return;
     }
 
     setBusy(true);
+    setProgress(null);
     try {
       // Create campaign
       const { data: campaign, error: cErr } = await supabase
@@ -129,21 +132,43 @@ const AdminCampaigns = () => {
         .single();
 
       if (cErr || !campaign) throw new Error(cErr?.message ?? "Не вдалося створити");
+      const campaignId = (campaign as any).id;
 
-      const { data, error } = await supabase.functions.invoke("send-marketing-campaign", {
-        body: {
-          campaign_id: (campaign as any).id,
-          ...(mode === "test" ? { test_email: testEmail.trim() } : {}),
-        },
-      });
-
-      if (error) throw new Error(error.message);
-      const r = data as any;
       if (mode === "test") {
+        const { data, error } = await supabase.functions.invoke("send-marketing-campaign", {
+          body: { campaign_id: campaignId, test_email: testEmail.trim() },
+        });
+        if (error) throw new Error(error.message);
+        const r = data as any;
         toast.success(`Тест надіслано: ${r.sent}/${r.total}`);
       } else {
-        toast.success(`Готово: відправлено ${r.sent}, помилок ${r.failed}`);
-        // Refresh campaigns
+        // Loop batches
+        let offset = 0;
+        let totalSent = 0;
+        let totalFailed = 0;
+        let total = recipientCount ?? 0;
+        let batchNum = 0;
+
+        while (true) {
+          batchNum++;
+          const { data, error } = await supabase.functions.invoke("send-marketing-campaign", {
+            body: { campaign_id: campaignId, batch_size: batchSize, batch_offset: offset },
+          });
+          if (error) throw new Error(error.message);
+          const r = data as any;
+          totalSent += r.sent;
+          totalFailed += r.failed;
+          total = r.total_recipients ?? total;
+          setProgress({ sent: totalSent, failed: totalFailed, total });
+          toast.message(`Батч ${batchNum}: відправлено ${r.sent}, помилок ${r.failed}`);
+
+          if (r.done || !r.next_offset) break;
+          offset = r.next_offset;
+          // Pause between batches to avoid Resend rate limits
+          await new Promise((res) => setTimeout(res, 5000));
+        }
+
+        toast.success(`Готово: ${totalSent}/${total}, помилок ${totalFailed}`);
         const { data: c } = await supabase
           .from("marketing_campaigns" as any)
           .select("*")
@@ -169,7 +194,7 @@ const AdminCampaigns = () => {
         </div>
         <p className="text-muted-foreground mb-8">
           Надсилайте підбірки подій усім користувачам, які підписані на розсилки. Лист іде з{" "}
-          <code className="text-xs bg-muted px-1 py-0.5 rounded">news@send.fartlek.com.ua</code>.
+          <code className="text-xs bg-muted px-1 py-0.5 rounded">news@fartlek.com.ua</code>.
         </p>
 
         <section className="bg-card p-6 rounded-2xl shadow-card space-y-5">
@@ -273,6 +298,30 @@ const AdminCampaigns = () => {
               </div>
             </div>
 
+            <div className="space-y-2">
+              <Label>Розмір батчу (листів за раз)</Label>
+              <div className="flex items-center gap-3">
+                <Input
+                  type="number"
+                  min={1}
+                  max={200}
+                  value={batchSize}
+                  onChange={(e) => setBatchSize(Math.max(1, Math.min(200, Number(e.target.value) || 50)))}
+                  className="w-32"
+                />
+                <p className="text-xs text-muted-foreground">
+                  Між батчами пауза 5 сек. Рекомендовано 50, щоб не перевищити ліміт Resend (~2 листи/сек).
+                </p>
+              </div>
+            </div>
+
+            {progress && (
+              <div className="rounded-lg border border-border bg-muted/30 p-3 text-sm">
+                Прогрес: <strong>{progress.sent}</strong> / {progress.total}
+                {progress.failed > 0 && <span className="text-destructive"> · помилок: {progress.failed}</span>}
+              </div>
+            )}
+
             <Button
               size="lg"
               className="w-full"
@@ -280,7 +329,7 @@ const AdminCampaigns = () => {
               onClick={() => createAndSend("real")}
             >
               {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
-              Надіслати {recipientCount ?? 0} підписникам
+              Надіслати {recipientCount ?? 0} підписникам (батчами по {batchSize})
             </Button>
           </div>
         </section>

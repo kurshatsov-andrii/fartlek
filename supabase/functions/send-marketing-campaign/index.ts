@@ -119,10 +119,12 @@ Deno.serve(async (req) => {
     return jsonResponse({ error: 'Invalid JSON' }, 400)
   }
 
-  const { campaign_id, test_email } = body
+  const { campaign_id, test_email, batch_size, batch_offset } = body
   if (!campaign_id || typeof campaign_id !== 'string') {
     return jsonResponse({ error: 'campaign_id required' }, 400)
   }
+  const bSize = Math.max(1, Math.min(200, Number(batch_size) || 50))
+  const bOffset = Math.max(0, Number(batch_offset) || 0)
 
   // Load campaign
   const { data: campaign, error: cErr } = await admin
@@ -151,10 +153,10 @@ Deno.serve(async (req) => {
 
   // Determine recipients
   type Recipient = { email: string; full_name: string | null }
-  let recipients: Recipient[] = []
+  let allRecipients: Recipient[] = []
 
   if (test_email) {
-    recipients = [{ email: test_email, full_name: 'Тест' }]
+    allRecipients = [{ email: test_email, full_name: 'Тест' }]
   } else {
     const filter = campaign.audience_filter || {}
     let q = admin
@@ -162,6 +164,7 @@ Deno.serve(async (req) => {
       .select('email, full_name, city')
       .eq('marketing_consent', true)
       .not('email', 'is', null)
+      .order('email', { ascending: true })
 
     if (filter.city) q = q.ilike('city', filter.city)
 
@@ -172,18 +175,34 @@ Deno.serve(async (req) => {
     const { data: suppressed } = await admin.from('suppressed_emails').select('email')
     const suppressedSet = new Set((suppressed ?? []).map((s) => s.email.toLowerCase()))
 
-    recipients = (profs ?? [])
+    allRecipients = (profs ?? [])
       .filter((p) => p.email && !suppressedSet.has(p.email.toLowerCase()))
       .map((p) => ({ email: p.email!, full_name: p.full_name }))
   }
 
-  if (!recipients.length) return jsonResponse({ error: 'No recipients' }, 400)
+  if (!allRecipients.length) return jsonResponse({ error: 'No recipients' }, 400)
 
-  // Mark campaign sending
-  await admin
-    .from('marketing_campaigns')
-    .update({ status: 'sending', recipient_count: recipients.length })
-    .eq('id', campaign_id)
+  // Slice for current batch
+  const recipients = test_email
+    ? allRecipients
+    : allRecipients.slice(bOffset, bOffset + bSize)
+
+  if (!recipients.length) {
+    return jsonResponse({
+      success: true, sent: 0, failed: 0, total: 0,
+      total_recipients: allRecipients.length,
+      next_offset: null,
+      done: true,
+    })
+  }
+
+  // Mark campaign sending (only on first batch)
+  if (!test_email && bOffset === 0) {
+    await admin
+      .from('marketing_campaigns')
+      .update({ status: 'sending', recipient_count: allRecipients.length })
+      .eq('id', campaign_id)
+  }
 
   let sent = 0
   let failed = 0
@@ -276,17 +295,39 @@ Deno.serve(async (req) => {
     await new Promise((res) => setTimeout(res, BATCH_DELAY_MS))
   }
 
+  const nextOffset = bOffset + recipients.length
+  const done = test_email ? true : nextOffset >= allRecipients.length
+
   if (!test_email) {
+    // Increment campaign counters and finalize when done
+    const { data: cur } = await admin
+      .from('marketing_campaigns')
+      .select('sent_count, failed_count')
+      .eq('id', campaign_id)
+      .maybeSingle()
+
+    const newSent = (cur?.sent_count ?? 0) + sent
+    const newFailed = (cur?.failed_count ?? 0) + failed
+
     await admin
       .from('marketing_campaigns')
       .update({
-        status: failed === recipients.length ? 'failed' : 'sent',
-        sent_count: sent,
-        failed_count: failed,
-        sent_at: new Date().toISOString(),
+        status: done ? (newSent === 0 ? 'failed' : 'sent') : 'sending',
+        sent_count: newSent,
+        failed_count: newFailed,
+        ...(done ? { sent_at: new Date().toISOString() } : {}),
       })
       .eq('id', campaign_id)
   }
 
-  return jsonResponse({ success: true, sent, failed, total: recipients.length, test: !!test_email })
+  return jsonResponse({
+    success: true,
+    sent,
+    failed,
+    total: recipients.length,
+    total_recipients: test_email ? recipients.length : allRecipients.length,
+    next_offset: done ? null : nextOffset,
+    done,
+    test: !!test_email,
+  })
 })
