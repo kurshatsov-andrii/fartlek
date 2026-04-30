@@ -295,17 +295,39 @@ Deno.serve(async (req) => {
     await new Promise((res) => setTimeout(res, BATCH_DELAY_MS))
   }
 
+  const nextOffset = bOffset + recipients.length
+  const done = test_email ? true : nextOffset >= allRecipients.length
+
   if (!test_email) {
+    // Increment campaign counters and finalize when done
+    const { data: cur } = await admin
+      .from('marketing_campaigns')
+      .select('sent_count, failed_count')
+      .eq('id', campaign_id)
+      .maybeSingle()
+
+    const newSent = (cur?.sent_count ?? 0) + sent
+    const newFailed = (cur?.failed_count ?? 0) + failed
+
     await admin
       .from('marketing_campaigns')
       .update({
-        status: failed === recipients.length ? 'failed' : 'sent',
-        sent_count: sent,
-        failed_count: failed,
-        sent_at: new Date().toISOString(),
+        status: done ? (newSent === 0 ? 'failed' : 'sent') : 'sending',
+        sent_count: newSent,
+        failed_count: newFailed,
+        ...(done ? { sent_at: new Date().toISOString() } : {}),
       })
       .eq('id', campaign_id)
   }
 
-  return jsonResponse({ success: true, sent, failed, total: recipients.length, test: !!test_email })
+  return jsonResponse({
+    success: true,
+    sent,
+    failed,
+    total: recipients.length,
+    total_recipients: test_email ? recipients.length : allRecipients.length,
+    next_offset: done ? null : nextOffset,
+    done,
+    test: !!test_email,
+  })
 })
