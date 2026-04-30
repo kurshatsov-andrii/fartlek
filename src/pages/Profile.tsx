@@ -22,7 +22,7 @@ const Profile = () => {
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState(false);
   const [form, setForm] = useState({
-    full_name: "", birth_date: "", gender: "", city: "", club: "", email: "", phone: "",
+    full_name: "", birth_date: "", gender: "", city: "", club: "", email: "", phone: "", marketing_consent: true,
   });
   const [athletes, setAthletes] = useState<Athlete[]>([]);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -70,6 +70,7 @@ const Profile = () => {
           club: data.club ?? "",
           email: data.email,
           phone: (data as any).phone ?? "",
+          marketing_consent: (data as any).marketing_consent ?? true,
         });
       }
       await reloadAthletes(user.id);
@@ -98,6 +99,8 @@ const Profile = () => {
       city: form.city.trim(),
       club: form.club.trim() || null,
       phone: form.phone,
+      marketing_consent: form.marketing_consent,
+      marketing_consent_at: form.marketing_consent ? new Date().toISOString() : null,
     } as any).eq("id", user.id);
     if (!error) await reloadAthletes(user.id);
     setBusy(false);
