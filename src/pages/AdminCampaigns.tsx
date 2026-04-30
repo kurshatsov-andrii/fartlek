@@ -298,6 +298,30 @@ const AdminCampaigns = () => {
               </div>
             </div>
 
+            <div className="space-y-2">
+              <Label>Розмір батчу (листів за раз)</Label>
+              <div className="flex items-center gap-3">
+                <Input
+                  type="number"
+                  min={1}
+                  max={200}
+                  value={batchSize}
+                  onChange={(e) => setBatchSize(Math.max(1, Math.min(200, Number(e.target.value) || 50)))}
+                  className="w-32"
+                />
+                <p className="text-xs text-muted-foreground">
+                  Між батчами пауза 5 сек. Рекомендовано 50, щоб не перевищити ліміт Resend (~2 листи/сек).
+                </p>
+              </div>
+            </div>
+
+            {progress && (
+              <div className="rounded-lg border border-border bg-muted/30 p-3 text-sm">
+                Прогрес: <strong>{progress.sent}</strong> / {progress.total}
+                {progress.failed > 0 && <span className="text-destructive"> · помилок: {progress.failed}</span>}
+              </div>
+            )}
+
             <Button
               size="lg"
               className="w-full"
@@ -305,7 +329,7 @@ const AdminCampaigns = () => {
               onClick={() => createAndSend("real")}
             >
               {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
-              Надіслати {recipientCount ?? 0} підписникам
+              Надіслати {recipientCount ?? 0} підписникам (батчами по {batchSize})
             </Button>
           </div>
         </section>
