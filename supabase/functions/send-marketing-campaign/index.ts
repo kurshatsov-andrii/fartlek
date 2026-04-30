@@ -6,7 +6,7 @@ const corsHeaders = {
 }
 
 const GATEWAY_URL = 'https://connector-gateway.lovable.dev/resend'
-const FROM_ADDRESS = 'Фартлек <news@send.fartlek.com.ua>'
+const FROM_ADDRESS = 'Фартлек <news@fartlek.com.ua>'
 const SITE_URL = 'https://fartlek.lovable.app'
 const BATCH_DELAY_MS = 250 // ~4/sec — safe for Resend free tier
 
