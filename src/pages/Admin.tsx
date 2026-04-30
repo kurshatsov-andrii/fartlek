@@ -225,9 +225,14 @@ const Admin = () => {
     <div className="min-h-screen flex flex-col bg-background">
       <Header />
       <main className="flex-1 container py-10">
-        <div className="flex items-center gap-3 mb-8">
-          <Shield className="h-7 w-7 text-primary" />
-          <h1 className="font-display text-3xl font-bold">Адмін-панель</h1>
+        <div className="flex items-center justify-between gap-3 mb-8 flex-wrap">
+          <div className="flex items-center gap-3">
+            <Shield className="h-7 w-7 text-primary" />
+            <h1 className="font-display text-3xl font-bold">Адмін-панель</h1>
+          </div>
+          <Button asChild variant="outline" size="sm">
+            <Link to="/admin/campaigns">📧 Розсилки</Link>
+          </Button>
         </div>
         <Tabs defaultValue="events" className="space-y-6">
           <TabsList>
