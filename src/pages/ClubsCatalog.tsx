@@ -56,6 +56,10 @@ const ClubsCatalog = () => {
     return true;
   }), [clubs, q, city, activity]);
 
+  useEffect(() => { setVisibleCount(PAGE_SIZE); }, [q, city, activity]);
+
+  const visible = filtered.slice(0, visibleCount);
+
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <SEO
