@@ -241,7 +241,7 @@ Deno.serve(async (req) => {
           subject: campaign.subject,
           html,
           headers: {
-            'List-Unsubscribe': `<${unsubscribeUrl}>, <mailto:unsubscribe@send.fartlek.com.ua>`,
+            'List-Unsubscribe': `<${unsubscribeUrl}>, <mailto:unsubscribe@fartlek.com.ua>`,
             'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click',
           },
         }),
