@@ -194,7 +194,7 @@ const AdminCampaigns = () => {
         </div>
         <p className="text-muted-foreground mb-8">
           Надсилайте підбірки подій усім користувачам, які підписані на розсилки. Лист іде з{" "}
-          <code className="text-xs bg-muted px-1 py-0.5 rounded">news@send.fartlek.com.ua</code>.
+          <code className="text-xs bg-muted px-1 py-0.5 rounded">news@fartlek.com.ua</code>.
         </p>
 
         <section className="bg-card p-6 rounded-2xl shadow-card space-y-5">
