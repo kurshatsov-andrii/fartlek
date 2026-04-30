@@ -344,6 +344,19 @@ const EventEditor = () => {
               </Select>
             </div>
 
+            <div className="space-y-2">
+              <Label>{t.format.label} *</Label>
+              <Select value={form.format} onValueChange={(v) => setForm({ ...form, format: v as "offline" | "online" | "hybrid" })}>
+                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="offline">{t.format.offline}</SelectItem>
+                  <SelectItem value="online">{t.format.online}</SelectItem>
+                  <SelectItem value="hybrid">{t.format.hybrid}</SelectItem>
+                </SelectContent>
+              </Select>
+              <p className="text-xs text-muted-foreground">{t.format.hint}</p>
+            </div>
+
             <div className="space-y-3">
               <Label>{t.organizer.distances} *</Label>
               <div className="hidden sm:grid grid-cols-12 gap-2 px-1 text-xs text-muted-foreground">
