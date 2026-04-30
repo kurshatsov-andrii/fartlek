@@ -45,7 +45,9 @@ const AdminCampaigns = () => {
   const [cityFilter, setCityFilter] = useState("");
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [testEmail, setTestEmail] = useState("");
+  const [batchSize, setBatchSize] = useState(50);
   const [busy, setBusy] = useState(false);
+  const [progress, setProgress] = useState<{ sent: number; failed: number; total: number } | null>(null);
   const [pageLoading, setPageLoading] = useState(true);
 
   useEffect(() => {
