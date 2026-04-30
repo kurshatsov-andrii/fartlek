@@ -40,6 +40,8 @@ const CategoryPage = () => {
       .then(({ data }) => { setEvents((data as any) ?? []); setLoading(false); });
   }, [cat, isValid]);
 
+  useEffect(() => { setVisibleCount(PAGE_SIZE); }, [cat]);
+
   const seo = useMemo(() => categorySeo(cat, lang), [cat, lang]);
 
   if (!isValid) return <Navigate to="/" replace />;
