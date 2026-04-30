@@ -132,6 +132,24 @@ const ClubsCatalog = () => {
             ))}
           </div>
         )}
+
+        <div className="mt-12 flex flex-col items-center gap-2 text-center">
+          <Button
+            size="lg"
+            onClick={() => {
+              if (!user || !isOrganizer) navigate("/auth?role=organizer");
+              else navigate("/clubs/edit");
+            }}
+          >
+            <Plus className="h-4 w-4" />
+            {lang === "uk" ? "Додати клуб" : "Add club"}
+          </Button>
+          <p className="text-xs text-muted-foreground max-w-md">
+            {lang === "uk"
+              ? "Додавати клуб можуть лише користувачі, зареєстровані як Організатор. Якщо ви ще не організатор — оберіть цю роль під час реєстрації."
+              : "Only users registered as Organizer can add a club. If you are not an organizer yet — pick this role during sign up."}
+          </p>
+        </div>
       </main>
       <Footer />
     </div>
