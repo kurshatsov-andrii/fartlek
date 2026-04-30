@@ -43,6 +43,15 @@ const EventEditor = () => {
   const [uploadingResults, setUploadingResults] = useState(false);
   const [uploadingDescImage, setUploadingDescImage] = useState(false);
   const [distances, setDistances] = useState<DistanceForm[]>([{ distance_km: "10", name: "", price: "0", bib_start: "" }]);
+  const [clubOptions, setClubOptions] = useState<{ id: string; name: string; city: string | null }[]>([]);
+  const [clubPickerOpen, setClubPickerOpen] = useState(false);
+
+  useEffect(() => {
+    (async () => {
+      const { data } = await supabase.from("clubs" as any).select("id,name,city").order("name");
+      setClubOptions((data ?? []) as any);
+    })();
+  }, []);
 
   useEffect(() => {
     if (isNew || !user) return;
