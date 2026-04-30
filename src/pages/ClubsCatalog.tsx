@@ -28,7 +28,7 @@ const ClubsCatalog = () => {
     allCities: "Усі міста", allActivities: "Усі види", empty: "Клуби не знайдено",
     members: "учасників", noLogo: "🏃",
   } : {
-    title: "Clubs", subtitle: "Sports clubs catalog", search: "Search by name",
+    title: "Clubs", subtitle: "Running clubs catalog", search: "Search by name",
     allCities: "All cities", allActivities: "All types", empty: "No clubs found",
     members: "members", noLogo: "🏃",
   };
