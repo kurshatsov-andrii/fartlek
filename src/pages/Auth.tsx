@@ -280,17 +280,6 @@ const Auth = () => {
                     onChange={(e) => setWebsite(e.target.value)}
                   />
                 </div>
-                <label className="flex items-start gap-2 text-sm cursor-pointer select-none">
-                  <input
-                    type="checkbox"
-                    checked={marketingConsent}
-                    onChange={(e) => setMarketingConsent(e.target.checked)}
-                    className="mt-0.5 h-4 w-4 rounded border-border accent-primary"
-                  />
-                  <span className="text-muted-foreground leading-snug">
-                    Хочу отримувати листи про нові події на платформі. Можна відписатись у будь-який момент.
-                  </span>
-                </label>
                 <Button type="submit" className="w-full" disabled={busy}>
                   {busy && <Loader2 className="h-4 w-4 animate-spin" />} {t.auth.signUp}
                 </Button>
