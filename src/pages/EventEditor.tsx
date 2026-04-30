@@ -223,7 +223,7 @@ const EventEditor = () => {
                 <Input
                   required
                   className="flex-1"
-                  placeholder={t.lang === "uk" ? "Введіть назву або оберіть клуб" : "Enter name or pick a club"}
+                  placeholder={lang === "uk" ? "Введіть назву або оберіть клуб" : "Enter name or pick a club"}
                   value={form.organizer_name}
                   onChange={(e) => setForm({ ...form, organizer_name: e.target.value })}
                 />
@@ -231,14 +231,14 @@ const EventEditor = () => {
                   <PopoverTrigger asChild>
                     <Button type="button" variant="outline" className="shrink-0">
                       <ChevronsUpDown className="h-4 w-4" />
-                      {t.lang === "uk" ? "З клубів" : "From clubs"}
+                      {lang === "uk" ? "З клубів" : "From clubs"}
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-[320px] p-0" align="end">
                     <Command>
-                      <CommandInput placeholder={t.lang === "uk" ? "Пошук клубу..." : "Search club..."} />
+                      <CommandInput placeholder={lang === "uk" ? "Пошук клубу..." : "Search club..."} />
                       <CommandList>
-                        <CommandEmpty>{t.lang === "uk" ? "Не знайдено" : "Not found"}</CommandEmpty>
+                        <CommandEmpty>{lang === "uk" ? "Не знайдено" : "Not found"}</CommandEmpty>
                         <CommandGroup>
                           {clubOptions.map((c) => (
                             <CommandItem
@@ -261,7 +261,7 @@ const EventEditor = () => {
                 </Popover>
               </div>
               <p className="text-xs text-muted-foreground">
-                {t.lang === "uk"
+                {lang === "uk"
                   ? "Можна ввести вручну або вибрати клуб з каталогу."
                   : "Type a name or pick a club from the catalog."}
               </p>
