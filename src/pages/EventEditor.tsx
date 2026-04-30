@@ -32,6 +32,7 @@ const EventEditor = () => {
     event_date: "", event_time: "", location: "",
     image_url: "", is_paid: false, payment_url: "", status: "draft",
     category: "run" as EventCategory,
+    format: "offline" as "offline" | "online" | "hybrid",
     results_pdf_url: "",
     results_url: "",
     description_image_url: "",
@@ -55,6 +56,7 @@ const EventEditor = () => {
         payment_url: (ev as any).payment_url ?? "",
         status: ev.status,
         category: ((ev as any).category ?? "run") as EventCategory,
+        format: ((ev as any).format ?? "offline") as "offline" | "online" | "hybrid",
         results_pdf_url: (ev as any).results_pdf_url ?? "",
         results_url: (ev as any).results_url ?? "",
         description_image_url: (ev as any).description_image_url ?? "",
@@ -340,6 +342,19 @@ const EventEditor = () => {
                   ))}
                 </SelectContent>
               </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label>{t.format.label} *</Label>
+              <Select value={form.format} onValueChange={(v) => setForm({ ...form, format: v as "offline" | "online" | "hybrid" })}>
+                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="offline">{t.format.offline}</SelectItem>
+                  <SelectItem value="online">{t.format.online}</SelectItem>
+                  <SelectItem value="hybrid">{t.format.hybrid}</SelectItem>
+                </SelectContent>
+              </Select>
+              <p className="text-xs text-muted-foreground">{t.format.hint}</p>
             </div>
 
             <div className="space-y-3">

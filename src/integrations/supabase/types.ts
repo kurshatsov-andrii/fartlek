@@ -275,6 +275,7 @@ export type Database = {
           description_image_url: string | null
           event_date: string
           event_time: string
+          format: Database["public"]["Enums"]["event_format"]
           id: string
           image_url: string | null
           is_paid: boolean
@@ -296,6 +297,7 @@ export type Database = {
           description_image_url?: string | null
           event_date: string
           event_time: string
+          format?: Database["public"]["Enums"]["event_format"]
           id?: string
           image_url?: string | null
           is_paid?: boolean
@@ -317,6 +319,7 @@ export type Database = {
           description_image_url?: string | null
           event_date?: string
           event_time?: string
+          format?: Database["public"]["Enums"]["event_format"]
           id?: string
           image_url?: string | null
           is_paid?: boolean
@@ -804,6 +807,7 @@ export type Database = {
         | "trail"
         | "ocr"
         | "online"
+      event_format: "offline" | "online" | "hybrid"
       event_status: "draft" | "published" | "cancelled" | "completed"
       gender_type: "male" | "female" | "other" | "boy" | "girl"
       payment_provider_type: "liqpay" | "stripe" | "free"
@@ -955,6 +959,7 @@ export const Constants = {
         "ocr",
         "online",
       ],
+      event_format: ["offline", "online", "hybrid"],
       event_status: ["draft", "published", "cancelled", "completed"],
       gender_type: ["male", "female", "other", "boy", "girl"],
       payment_provider_type: ["liqpay", "stripe", "free"],

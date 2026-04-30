@@ -63,6 +63,11 @@ export interface Dict {
     label: string; all: string;
     run: string; half_marathon: string; marathon: string; ultra: string; trail: string; ocr: string; online: string;
   };
+  format: {
+    label: string; hint: string;
+    offline: string; online: string; hybrid: string;
+    badgeOffline: string; badgeOnline: string; badgeHybrid: string;
+  };
   athletes: {
     sectionTitle: string; sectionHint: string;
     addTitle: string; editTitle: string; addBtn: string; formHint: string;
@@ -202,6 +207,12 @@ export const translations: Record<Lang, Dict> = {
       label: "Категорія", all: "Всі",
       run: "Забіги", half_marathon: "Напівмарафони", marathon: "Марафони",
       ultra: "Ультра", trail: "Трейл", ocr: "OCR", online: "Онлайн",
+    },
+    format: {
+      label: "Формат проведення",
+      hint: "Гібрид — подія проходить одночасно і офлайн, і онлайн.",
+      offline: "Офлайн", online: "Онлайн", hybrid: "Гібрид (офлайн + онлайн)",
+      badgeOffline: "Офлайн", badgeOnline: "Онлайн", badgeHybrid: "Офлайн + Онлайн",
     },
     athletes: {
       sectionTitle: "Мої учасники",
@@ -357,6 +368,12 @@ export const translations: Record<Lang, Dict> = {
       label: "Category", all: "All",
       run: "Runs", half_marathon: "Half marathons", marathon: "Marathons",
       ultra: "Ultra", trail: "Trail", ocr: "OCR", online: "Online",
+    },
+    format: {
+      label: "Event format",
+      hint: "Hybrid — the event runs offline and online at the same time.",
+      offline: "Offline", online: "Online", hybrid: "Hybrid (offline + online)",
+      badgeOffline: "Offline", badgeOnline: "Online", badgeHybrid: "Offline + Online",
     },
     athletes: {
       sectionTitle: "My athletes",

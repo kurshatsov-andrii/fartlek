@@ -15,6 +15,7 @@ interface EventCard {
   organizer_name: string; event_date: string; event_time: string;
   location: string | null; image_url: string | null; is_paid: boolean;
   category: EventCategory;
+  format: "offline" | "online" | "hybrid";
   distances: { distance_km: number; price: number; is_active?: boolean }[];
 }
 
@@ -30,7 +31,7 @@ const CategoryPage = () => {
   useEffect(() => {
     if (!isValid) return;
     supabase.from("events")
-      .select("id, slug, title, description, organizer_name, event_date, event_time, location, image_url, is_paid, category, distances(distance_km, price, is_active)")
+      .select("id, slug, title, description, organizer_name, event_date, event_time, location, image_url, is_paid, category, format, distances(distance_km, price, is_active)")
       .eq("status", "published")
       .eq("category", cat)
       .order("event_date", { ascending: true })
@@ -100,9 +101,12 @@ const CategoryPage = () => {
                     {ev.image_url
                       ? <img src={ev.image_url} alt={ev.title} loading="lazy" className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" />
                       : <div className="h-full w-full bg-gradient-hero" />}
-                    <div className="absolute top-4 left-4">
+                    <div className="absolute top-4 left-4 flex flex-col items-start gap-1.5">
                       <span className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wider backdrop-blur ${ev.is_paid ? "bg-primary text-primary-foreground" : "bg-accent text-accent-foreground"}`}>
                         {ev.is_paid ? `${minPrice} ₴` : t.events.free}
+                      </span>
+                      <span className="inline-flex items-center rounded-full bg-background/95 px-3 py-1 text-[10px] font-semibold uppercase tracking-wider text-foreground backdrop-blur">
+                        {ev.format === "hybrid" ? t.format.badgeHybrid : ev.format === "online" ? t.format.badgeOnline : t.format.badgeOffline}
                       </span>
                     </div>
                   </Link>
