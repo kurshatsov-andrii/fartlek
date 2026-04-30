@@ -24,11 +24,11 @@ const ClubsCatalog = () => {
   const [activity, setActivity] = useState<string>("all");
 
   const T = lang === "uk" ? {
-    title: "Клуби", subtitle: "Каталог бігових клубів", search: "Пошук за назвою",
+    title: "Клуби", subtitle: "Бігові клуби України", search: "Пошук за назвою",
     allCities: "Усі міста", allActivities: "Усі види", empty: "Клуби не знайдено",
     members: "учасників", noLogo: "🏃",
   } : {
-    title: "Clubs", subtitle: "Running clubs catalog", search: "Search by name",
+    title: "Clubs", subtitle: "Running clubs of Ukraine", search: "Search by name",
     allCities: "All cities", allActivities: "All types", empty: "No clubs found",
     members: "members", noLogo: "🏃",
   };
