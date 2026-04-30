@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
-import { ArrowLeft, Loader2, Plus, X, Upload } from "lucide-react";
+import { ArrowLeft, Loader2, Plus, X, Upload, ChevronsUpDown, Check } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -9,10 +9,13 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { useApp } from "@/contexts/AppContext";
 import { EVENT_CATEGORIES, type EventCategory } from "@/lib/i18n";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
+import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
 interface DistanceForm { id?: string; distance_km: string; name: string; price: string; bib_start: string; }
@@ -20,7 +23,7 @@ interface DistanceForm { id?: string; distance_km: string; name: string; price: 
 const EventEditor = () => {
   const { id } = useParams<{ id: string }>();
   const isNew = !id || id === "new";
-  const { t } = useApp();
+  const { t, lang } = useApp();
   const { user, isOrganizer, isAdmin, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(!isNew);
@@ -40,6 +43,15 @@ const EventEditor = () => {
   const [uploadingResults, setUploadingResults] = useState(false);
   const [uploadingDescImage, setUploadingDescImage] = useState(false);
   const [distances, setDistances] = useState<DistanceForm[]>([{ distance_km: "10", name: "", price: "0", bib_start: "" }]);
+  const [clubOptions, setClubOptions] = useState<{ id: string; name: string; city: string | null }[]>([]);
+  const [clubPickerOpen, setClubPickerOpen] = useState(false);
+
+  useEffect(() => {
+    (async () => {
+      const { data } = await supabase.from("clubs" as any).select("id,name,city").order("name");
+      setClubOptions((data ?? []) as any);
+    })();
+  }, []);
 
   useEffect(() => {
     if (isNew || !user) return;
@@ -207,7 +219,52 @@ const EventEditor = () => {
             </div>
             <div className="space-y-2">
               <Label>{t.events.organizer} *</Label>
-              <Input required value={form.organizer_name} onChange={(e) => setForm({ ...form, organizer_name: e.target.value })} />
+              <div className="flex gap-2">
+                <Input
+                  required
+                  className="flex-1"
+                  placeholder={lang === "uk" ? "Введіть назву або оберіть клуб" : "Enter name or pick a club"}
+                  value={form.organizer_name}
+                  onChange={(e) => setForm({ ...form, organizer_name: e.target.value })}
+                />
+                <Popover open={clubPickerOpen} onOpenChange={setClubPickerOpen}>
+                  <PopoverTrigger asChild>
+                    <Button type="button" variant="outline" className="shrink-0">
+                      <ChevronsUpDown className="h-4 w-4" />
+                      {lang === "uk" ? "З клубів" : "From clubs"}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-[320px] p-0" align="end">
+                    <Command>
+                      <CommandInput placeholder={lang === "uk" ? "Пошук клубу..." : "Search club..."} />
+                      <CommandList>
+                        <CommandEmpty>{lang === "uk" ? "Не знайдено" : "Not found"}</CommandEmpty>
+                        <CommandGroup>
+                          {clubOptions.map((c) => (
+                            <CommandItem
+                              key={c.id}
+                              value={`${c.name} ${c.city ?? ""}`}
+                              onSelect={() => {
+                                setForm((f) => ({ ...f, organizer_name: c.name }));
+                                setClubPickerOpen(false);
+                              }}
+                            >
+                              <Check className={cn("h-4 w-4", form.organizer_name === c.name ? "opacity-100" : "opacity-0")} />
+                              <span className="truncate">{c.name}</span>
+                              {c.city && <span className="ml-auto text-xs text-muted-foreground">{c.city}</span>}
+                            </CommandItem>
+                          ))}
+                        </CommandGroup>
+                      </CommandList>
+                    </Command>
+                  </PopoverContent>
+                </Popover>
+              </div>
+              <p className="text-xs text-muted-foreground">
+                {lang === "uk"
+                  ? "Можна ввести вручну або вибрати клуб з каталогу."
+                  : "Type a name or pick a club from the catalog."}
+              </p>
             </div>
             <div className="grid sm:grid-cols-2 gap-4">
               <div className="space-y-2">
