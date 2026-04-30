@@ -24,6 +24,8 @@ const CategoryPage = () => {
   const { t, lang } = useApp();
   const [events, setEvents] = useState<EventCard[]>([]);
   const [loading, setLoading] = useState(true);
+  const PAGE_SIZE = 9;
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 
   const isValid = (EVENT_CATEGORIES as readonly string[]).includes(category ?? "");
   const cat = (isValid ? category : "run") as EventCategory;
