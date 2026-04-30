@@ -12,6 +12,7 @@ interface EventCard {
   event_date: string; event_time: string; location: string | null;
   image_url: string | null; is_paid: boolean;
   category: EventCategory;
+  format: "offline" | "online" | "hybrid";
   distances: { distance_km: number; price: number; is_active?: boolean }[];
 }
 
@@ -23,7 +24,7 @@ export const EventsSection = () => {
 
   useEffect(() => {
     supabase.from("events")
-      .select("id, slug, title, description, organizer_name, event_date, event_time, location, image_url, is_paid, category, distances(distance_km, price, is_active)")
+      .select("id, slug, title, description, organizer_name, event_date, event_time, location, image_url, is_paid, category, format, distances(distance_km, price, is_active)")
       .eq("status", "published")
       .order("event_date", { ascending: true })
       .then(({ data }) => { setEvents((data as any) ?? []); setLoading(false); });
@@ -104,9 +105,12 @@ export const EventsSection = () => {
                       <div className="h-full w-full bg-gradient-hero" />
                     )}
                     <div className="absolute inset-0 card-overlay" />
-                    <div className="absolute top-4 left-4">
+                    <div className="absolute top-4 left-4 flex flex-col items-start gap-1.5">
                       <span className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wider backdrop-blur ${ev.is_paid ? "bg-primary text-primary-foreground" : "bg-accent text-accent-foreground"}`}>
                         {ev.is_paid ? `${price} ₴` : t.events.free}
+                      </span>
+                      <span className="inline-flex items-center rounded-full bg-background/95 px-3 py-1 text-[10px] font-semibold uppercase tracking-wider text-foreground backdrop-blur">
+                        {ev.format === "hybrid" ? t.format.badgeHybrid : ev.format === "online" ? t.format.badgeOnline : t.format.badgeOffline}
                       </span>
                     </div>
                     <div className="absolute bottom-4 left-4 right-4 flex flex-wrap gap-1.5">
