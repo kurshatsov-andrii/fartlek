@@ -111,11 +111,12 @@ const AdminCampaigns = () => {
       toast.error("Тема обов'язкова");
       return;
     }
-    if (mode === "real" && !confirm(`Надіслати розсилку ${recipientCount ?? "?"} користувачам?`)) {
+    if (mode === "real" && !confirm(`Надіслати розсилку ${recipientCount ?? "?"} користувачам батчами по ${batchSize}?`)) {
       return;
     }
 
     setBusy(true);
+    setProgress(null);
     try {
       // Create campaign
       const { data: campaign, error: cErr } = await supabase
@@ -131,21 +132,43 @@ const AdminCampaigns = () => {
         .single();
 
       if (cErr || !campaign) throw new Error(cErr?.message ?? "Не вдалося створити");
+      const campaignId = (campaign as any).id;
 
-      const { data, error } = await supabase.functions.invoke("send-marketing-campaign", {
-        body: {
-          campaign_id: (campaign as any).id,
-          ...(mode === "test" ? { test_email: testEmail.trim() } : {}),
-        },
-      });
-
-      if (error) throw new Error(error.message);
-      const r = data as any;
       if (mode === "test") {
+        const { data, error } = await supabase.functions.invoke("send-marketing-campaign", {
+          body: { campaign_id: campaignId, test_email: testEmail.trim() },
+        });
+        if (error) throw new Error(error.message);
+        const r = data as any;
         toast.success(`Тест надіслано: ${r.sent}/${r.total}`);
       } else {
-        toast.success(`Готово: відправлено ${r.sent}, помилок ${r.failed}`);
-        // Refresh campaigns
+        // Loop batches
+        let offset = 0;
+        let totalSent = 0;
+        let totalFailed = 0;
+        let total = recipientCount ?? 0;
+        let batchNum = 0;
+
+        while (true) {
+          batchNum++;
+          const { data, error } = await supabase.functions.invoke("send-marketing-campaign", {
+            body: { campaign_id: campaignId, batch_size: batchSize, batch_offset: offset },
+          });
+          if (error) throw new Error(error.message);
+          const r = data as any;
+          totalSent += r.sent;
+          totalFailed += r.failed;
+          total = r.total_recipients ?? total;
+          setProgress({ sent: totalSent, failed: totalFailed, total });
+          toast.message(`Батч ${batchNum}: відправлено ${r.sent}, помилок ${r.failed}`);
+
+          if (r.done || !r.next_offset) break;
+          offset = r.next_offset;
+          // Pause between batches to avoid Resend rate limits
+          await new Promise((res) => setTimeout(res, 5000));
+        }
+
+        toast.success(`Готово: ${totalSent}/${total}, помилок ${totalFailed}`);
         const { data: c } = await supabase
           .from("marketing_campaigns" as any)
           .select("*")
