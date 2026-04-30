@@ -21,6 +21,8 @@ export const EventsSection = () => {
   const [events, setEvents] = useState<EventCard[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeCat, setActiveCat] = useState<EventCategory | "all">("all");
+  const PAGE_SIZE = 9;
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 
   useEffect(() => {
     supabase.from("events")
