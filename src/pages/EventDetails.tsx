@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { Calendar, MapPin, Users, Loader2, ArrowLeft, UserCircle2, FileText, CalendarPlus } from "lucide-react";
 import { downloadIcs } from "@/lib/calendar";
+import { AddToCalendarButton } from "@/components/AddToCalendarButton";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { SEO } from "@/components/SEO";
@@ -459,23 +460,19 @@ const EventDetails = () => {
                     <Users className="h-4 w-4" /> {t.events.participants}
                   </Link>
                 </Button>
-                <Button
-                  variant="outline"
+                <AddToCalendarButton
                   className="w-full"
-                  onClick={() =>
-                    downloadIcs({
-                      uid: event.id,
-                      title: event.title,
-                      description: event.description,
-                      location: event.location,
-                      date: event.event_date,
-                      time: event.event_time,
-                      url: `${siteOrigin}${canonical}`,
-                    })
-                  }
-                >
-                  <CalendarPlus className="h-4 w-4" /> {t.events.addToCalendar}
-                </Button>
+                  event={{
+                    uid: event.id,
+                    title: event.title,
+                    description: event.description,
+                    location: event.location,
+                    date: event.event_date,
+                    time: event.event_time,
+                    url: `${siteOrigin}${canonical}`,
+                  }}
+                />
+
               </div>
               )}
             </aside>
