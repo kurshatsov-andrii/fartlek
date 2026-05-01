@@ -139,6 +139,12 @@ export const EventChat = ({ eventId, eventOrganizerId }: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [eventId, user?.id]);
 
+  // Mark as read whenever the manager opens the chat or new messages arrive while open
+  useEffect(() => {
+    if (canManage && !loading) markRead();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [canManage, loading, messages.length]);
+
   const send = async () => {
     if (!user) return;
     const parsed = messageSchema.safeParse(text);
