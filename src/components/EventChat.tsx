@@ -191,6 +191,40 @@ export const EventChat = ({ eventId, eventOrganizerId }: Props) => {
     if (error) toast.error(error.message);
   };
 
+  const startEdit = (m: ChatMessage) => {
+    setEditingId(m.id);
+    setEditText(m.content);
+  };
+
+  const cancelEdit = () => {
+    setEditingId(null);
+    setEditText("");
+  };
+
+  const saveEdit = async (m: ChatMessage) => {
+    if (!user) return;
+    const parsed = messageSchema.safeParse(editText);
+    if (!parsed.success) {
+      toast.error(parsed.error.errors[0].message);
+      return;
+    }
+    if (parsed.data === m.content) {
+      cancelEdit();
+      return;
+    }
+    setSavingEdit(true);
+    const { error } = await supabase
+      .from("event_chat_messages")
+      .update({ content: parsed.data, edited_at: new Date().toISOString() })
+      .eq("id", m.id);
+    setSavingEdit(false);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+    cancelEdit();
+  };
+
   const pinned = messages.filter((m) => m.is_pinned);
   const regular = messages.filter((m) => !m.is_pinned);
 
