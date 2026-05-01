@@ -910,6 +910,15 @@ export type Database = {
         Args: { payload: Json; queue_name: string }
         Returns: number
       }
+      get_chat_authors: {
+        Args: { _user_ids: string[] }
+        Returns: {
+          avatar_url: string
+          email: string
+          full_name: string
+          id: string
+        }[]
+      }
       get_event_participants: {
         Args: { _event_id: string }
         Returns: {
