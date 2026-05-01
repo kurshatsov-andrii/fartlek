@@ -118,6 +118,8 @@ export const EventChat = ({ eventId, eventOrganizerId }: Props) => {
             requestAnimationFrame(() => {
               listRef.current?.scrollTo({ top: listRef.current.scrollHeight, behavior: "smooth" });
             });
+            // Manager is currently viewing — mark as read
+            markRead();
           } else if (payload.eventType === "UPDATE") {
             const m = payload.new as ChatMessage;
             setMessages((prev) =>
