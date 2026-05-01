@@ -22,6 +22,7 @@ import type { EventCategory } from "@/lib/i18n";
 
 interface EventRow {
   id: string; slug: string | null; title: string; description: string | null; organizer_name: string;
+  organizer_id: string;
   event_date: string; event_time: string; location: string | null;
   image_url: string | null; is_paid: boolean; payment_url: string | null; status: string; category: EventCategory;
   format: "offline" | "online" | "hybrid";
