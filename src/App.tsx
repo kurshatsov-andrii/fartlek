@@ -24,6 +24,7 @@ import PaymentFail from "./pages/PaymentFail.tsx";
 import Admin from "./pages/Admin.tsx";
 import AdminCampaigns from "./pages/AdminCampaigns.tsx";
 import AdminUnsubscribes from "./pages/AdminUnsubscribes.tsx";
+import AdminEventCoOrganizers from "./pages/AdminEventCoOrganizers.tsx";
 import CategoryPage from "./pages/CategoryPage.tsx";
 import CategoriesIndex from "./pages/CategoriesIndex.tsx";
 import Contacts from "./pages/Contacts.tsx";
@@ -66,6 +67,7 @@ const App = () => (
               <Route path="/admin" element={<Admin />} />
               <Route path="/admin/campaigns" element={<AdminCampaigns />} />
               <Route path="/admin/unsubscribes" element={<AdminUnsubscribes />} />
+              <Route path="/admin/events/:id/co-organizers" element={<AdminEventCoOrganizers />} />
               <Route path="/contacts" element={<Contacts />} />
               <Route path="/unsubscribe" element={<Unsubscribe />} />
               <Route path="/clubs" element={<ClubsCatalog />} />

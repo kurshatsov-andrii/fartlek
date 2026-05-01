@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Navigate, Link } from "react-router-dom";
-import { Loader2, Shield, Calendar, Users, CreditCard, Edit, BarChart3, Ticket, Trash2, UsersRound, Eye, Search } from "lucide-react";
+import { Loader2, Shield, Calendar, Users, CreditCard, Edit, BarChart3, Ticket, Trash2, UsersRound, Eye, Search, UserPlus } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { CLUB_ACTIVITY_TYPES, CLUB_ACTIVITY_LABELS, type Club } from "@/lib/clubs";
@@ -280,6 +280,7 @@ const Admin = () => {
                   <Button asChild size="sm" variant="outline"><Link to={`/organizer/events/${e.id}`}><Edit className="h-4 w-4" /> Редагувати</Link></Button>
                   <Button asChild size="sm" variant="outline" title="Аналітика"><Link to={`/organizer/events/${e.id}/analytics`}><BarChart3 className="h-4 w-4" /></Link></Button>
                   <Button asChild size="sm" variant="outline" title="Промокоди"><Link to={`/organizer/events/${e.id}/promo-codes`}><Ticket className="h-4 w-4" /></Link></Button>
+                  <Button asChild size="sm" variant="outline" title="Співорганізатори"><Link to={`/admin/events/${e.id}/co-organizers`}><UserPlus className="h-4 w-4" /></Link></Button>
                   {e.status !== "published" && <Button size="sm" disabled={busy} onClick={() => setEventStatus(e.id, "published")}>Опублікувати</Button>}
                   {e.status !== "completed" && <Button size="sm" variant="secondary" disabled={busy} onClick={() => setEventStatus(e.id, "completed")}>Завершити</Button>}
                   {e.status !== "cancelled" && <Button size="sm" variant="destructive" disabled={busy} onClick={() => setEventStatus(e.id, "cancelled")}>Скасувати</Button>}
