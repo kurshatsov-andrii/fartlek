@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { Loader2, Send, Pin, PinOff, Trash2, MessageCircle } from "lucide-react";
+import { Loader2, Send, Pin, PinOff, Trash2, MessageCircle, Pencil, X, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
