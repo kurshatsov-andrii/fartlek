@@ -153,6 +153,7 @@ const OrganizerEventCampaign = () => {
           await new Promise((res) => setTimeout(res, 5000));
         }
         toast.success(`Готово: ${totalSent}/${total}, помилок ${totalFailed}`);
+        try { if (draftKey) localStorage.removeItem(draftKey); } catch {}
 
         const { data: h } = await supabase
           .from("marketing_campaigns" as any)
