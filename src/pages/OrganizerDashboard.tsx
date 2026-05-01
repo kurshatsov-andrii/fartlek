@@ -14,6 +14,7 @@ const OrganizerDashboard = () => {
   const { t, lang } = useApp();
   const { user, isOrganizer, loading: authLoading } = useAuth();
   const [events, setEvents] = useState<any[]>([]);
+  const [unreadByEvent, setUnreadByEvent] = useState<Record<string, number>>({});
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
