@@ -99,8 +99,6 @@ const Profile = () => {
       city: form.city.trim(),
       club: form.club.trim() || null,
       phone: form.phone,
-      marketing_consent: form.marketing_consent,
-      marketing_consent_at: form.marketing_consent ? new Date().toISOString() : null,
     } as any).eq("id", user.id);
     if (!error) await reloadAthletes(user.id);
     setBusy(false);
