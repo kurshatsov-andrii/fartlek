@@ -42,6 +42,9 @@ export const EventChat = ({ eventId, eventOrganizerId }: Props) => {
   const [text, setText] = useState("");
   const [sending, setSending] = useState(false);
   const [isCoOrganizer, setIsCoOrganizer] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editText, setEditText] = useState("");
+  const [savingEdit, setSavingEdit] = useState(false);
   const listRef = useRef<HTMLDivElement>(null);
 
   const canManage = !!user && (isAdmin || user.id === eventOrganizerId || isCoOrganizer);
