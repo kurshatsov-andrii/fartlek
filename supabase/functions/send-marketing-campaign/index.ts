@@ -180,8 +180,32 @@ Deno.serve(async (req) => {
 
   if (test_email) {
     allRecipients = [{ email: test_email, full_name: 'Тест' }]
+  } else if (audienceEventId) {
+    // Recipients = users registered for this event (still respecting marketing_consent)
+    const { data: regs, error: rErr } = await admin
+      .from('registrations')
+      .select('user_id')
+      .eq('event_id', audienceEventId)
+    if (rErr) return jsonResponse({ error: rErr.message }, 500)
+    const userIds = Array.from(new Set((regs ?? []).map((r: any) => r.user_id)))
+    if (userIds.length === 0) {
+      allRecipients = []
+    } else {
+      const { data: profs, error: pErr } = await admin
+        .from('profiles')
+        .select('email, full_name')
+        .in('id', userIds)
+        .eq('marketing_consent', true)
+        .not('email', 'is', null)
+        .order('email', { ascending: true })
+      if (pErr) return jsonResponse({ error: pErr.message }, 500)
+      const { data: suppressed } = await admin.from('suppressed_emails').select('email')
+      const suppressedSet = new Set((suppressed ?? []).map((s) => s.email.toLowerCase()))
+      allRecipients = (profs ?? [])
+        .filter((p) => p.email && !suppressedSet.has(p.email.toLowerCase()))
+        .map((p) => ({ email: p.email!, full_name: p.full_name }))
+    }
   } else {
-    const filter = campaign.audience_filter || {}
     let q = admin
       .from('profiles')
       .select('email, full_name, city')
