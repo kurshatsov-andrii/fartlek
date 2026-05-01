@@ -267,6 +267,30 @@ export type Database = {
         }
         Relationships: []
       }
+      event_co_organizers: {
+        Row: {
+          added_by: string | null
+          created_at: string
+          event_id: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          added_by?: string | null
+          created_at?: string
+          event_id: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          added_by?: string | null
+          created_at?: string
+          event_id?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       events: {
         Row: {
           category: Database["public"]["Enums"]["event_category"]
@@ -749,6 +773,10 @@ export type Database = {
           promo_id: string
         }[]
       }
+      can_manage_event: {
+        Args: { _event_id: string; _user_id: string }
+        Returns: boolean
+      }
       delete_email: {
         Args: { message_id: number; queue_name: string }
         Returns: boolean
@@ -823,6 +851,10 @@ export type Database = {
           _role: Database["public"]["Enums"]["app_role"]
           _user_id: string
         }
+        Returns: boolean
+      }
+      is_event_co_organizer: {
+        Args: { _event_id: string; _user_id: string }
         Returns: boolean
       }
       move_registration_to_distance: {
