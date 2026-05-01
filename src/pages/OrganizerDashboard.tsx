@@ -219,6 +219,22 @@ const OrganizerDashboard = () => {
                     <Button asChild variant="outline" size="sm" title="Лист учасникам">
                       <Link to={`/organizer/events/${ev.id}/campaign`}><Mail className="h-4 w-4" /></Link>
                     </Button>
+                    <Button
+                      asChild
+                      variant={unreadByEvent[ev.id] ? "default" : "outline"}
+                      size="sm"
+                      title="Чат події"
+                      className="relative"
+                    >
+                      <Link to={`/events/${ev.slug ?? ev.id}#event-chat`}>
+                        <MessageCircle className="h-4 w-4" />
+                        {unreadByEvent[ev.id] > 0 && (
+                          <span className="ml-1 inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-full bg-destructive text-destructive-foreground text-xs font-bold">
+                            {unreadByEvent[ev.id] > 99 ? "99+" : unreadByEvent[ev.id]}
+                          </span>
+                        )}
+                      </Link>
+                    </Button>
                     
                     <Button onClick={() => exportData(ev.id, ev.title)} variant="outline" size="sm"><Download className="h-4 w-4" /> XLSX</Button>
                     {(ev.results_pdf_url || ev.results_url) && (
