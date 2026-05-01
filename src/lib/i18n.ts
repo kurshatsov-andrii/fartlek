@@ -21,6 +21,7 @@ export interface Dict {
     resultsInvalidType: string; resultsTooBig: string;
     resultsExternalUrl: string; resultsExternalHint: string; openResults: string;
     resultsOr: string;
+    addToCalendar: string;
   };
   auth: {
     signIn: string; signUp: string; email: string; password: string; fullName: string;
@@ -145,6 +146,7 @@ export const translations: Record<Lang, Dict> = {
       resultsExternalHint: "Якщо результати на іншому сайті — встав сюди посилання. Використовується, якщо PDF не завантажений.",
       openResults: "Відкрити результати",
       resultsOr: "або",
+      addToCalendar: "Додати в календар",
     },
     auth: {
       signIn: "Вхід", signUp: "Реєстрація", email: "Email", password: "Пароль", fullName: "Повне ім'я",
@@ -306,6 +308,7 @@ export const translations: Record<Lang, Dict> = {
       resultsExternalHint: "If results are hosted elsewhere — paste the link. Used when no PDF is uploaded.",
       openResults: "Open results",
       resultsOr: "or",
+      addToCalendar: "Add to calendar",
     },
     auth: {
       signIn: "Sign in", signUp: "Sign up", email: "Email", password: "Password", fullName: "Full name",

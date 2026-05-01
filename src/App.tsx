@@ -18,6 +18,7 @@ import OrganizerDashboard from "./pages/OrganizerDashboard.tsx";
 import EventAnalytics from "./pages/EventAnalytics.tsx";
 import PromoCodes from "./pages/PromoCodes.tsx";
 import EventEditor from "./pages/EventEditor.tsx";
+import OrganizerEventCampaign from "./pages/OrganizerEventCampaign.tsx";
 import PaymentSuccess from "./pages/PaymentSuccess.tsx";
 import PaymentFail from "./pages/PaymentFail.tsx";
 import Admin from "./pages/Admin.tsx";
@@ -58,6 +59,7 @@ const App = () => (
               <Route path="/organizer/events/new" element={<EventEditor />} />
               <Route path="/organizer/events/:id/analytics" element={<EventAnalytics />} />
               <Route path="/organizer/events/:id/promo-codes" element={<PromoCodes />} />
+              <Route path="/organizer/events/:id/campaign" element={<OrganizerEventCampaign />} />
               <Route path="/organizer/events/:id" element={<EventEditor />} />
               <Route path="/payment/success" element={<PaymentSuccess />} />
               <Route path="/payment/fail" element={<PaymentFail />} />

@@ -92,7 +92,7 @@ Deno.serve(async (req) => {
   if (!supabaseUrl || !supabaseServiceKey) return jsonResponse({ error: 'Server config missing' }, 500)
   if (!lovableApiKey || !resendApiKey) return jsonResponse({ error: 'Resend not configured' }, 500)
 
-  // Verify caller is admin
+  // Verify caller is admin OR organizer of the campaign's events
   const authHeader = req.headers.get('Authorization')
   if (!authHeader) return jsonResponse({ error: 'Unauthorized' }, 401)
 
@@ -109,7 +109,7 @@ Deno.serve(async (req) => {
     .eq('user_id', user.id)
     .eq('role', 'admin')
     .maybeSingle()
-  if (!roleCheck) return jsonResponse({ error: 'Admin role required' }, 403)
+  const isAdminUser = !!roleCheck
 
   // Parse input
   let body: any
@@ -134,22 +134,45 @@ Deno.serve(async (req) => {
     .maybeSingle()
   if (cErr || !campaign) return jsonResponse({ error: 'Campaign not found' }, 404)
 
-  if (!campaign.event_ids?.length) {
-    return jsonResponse({ error: 'No events selected' }, 400)
+  // Authorize: admin always; organizer only if all event_ids belong to them,
+  // or if the audience is restricted to a single own event.
+  const filter = (campaign.audience_filter as any) || {}
+  const audienceEventId: string | null = typeof filter.event_id === 'string' ? filter.event_id : null
+
+  if (!isAdminUser) {
+    const eventsToCheck = new Set<string>([
+      ...(campaign.event_ids ?? []),
+      ...(audienceEventId ? [audienceEventId] : []),
+    ])
+    if (eventsToCheck.size === 0) {
+      return jsonResponse({ error: 'Forbidden' }, 403)
+    }
+    const { data: ownEvents } = await admin
+      .from('events')
+      .select('id')
+      .in('id', Array.from(eventsToCheck))
+      .eq('organizer_id', user.id)
+    const ownSet = new Set((ownEvents ?? []).map((e: any) => e.id))
+    for (const id of eventsToCheck) {
+      if (!ownSet.has(id)) return jsonResponse({ error: 'Forbidden: not your event' }, 403)
+    }
   }
 
-  // Load events
-  const { data: events } = await admin
-    .from('events')
-    .select('id, slug, title, event_date, location, status')
-    .in('id', campaign.event_ids)
-    .eq('status', 'published')
+  // Load events (optional — may be empty for org event-targeted info letters)
+  let sortedEvents: Array<{ id: string; slug: string | null; title: string; event_date: string; location: string | null }> = []
+  if (campaign.event_ids?.length) {
+    const { data: events } = await admin
+      .from('events')
+      .select('id, slug, title, event_date, location, status')
+      .in('id', campaign.event_ids)
 
-  if (!events?.length) return jsonResponse({ error: 'No published events found' }, 400)
-
-  const sortedEvents = events
-    .map((e) => ({ id: e.id, slug: e.slug, title: e.title, event_date: e.event_date, location: e.location }))
-    .sort((a, b) => a.event_date.localeCompare(b.event_date))
+    sortedEvents = (events ?? [])
+      .map((e) => ({ id: e.id, slug: e.slug, title: e.title, event_date: e.event_date, location: e.location }))
+      .sort((a, b) => a.event_date.localeCompare(b.event_date))
+  }
+  if (!sortedEvents.length && !campaign.intro_text?.trim()) {
+    return jsonResponse({ error: 'Either events or intro text required' }, 400)
+  }
 
   // Determine recipients
   type Recipient = { email: string; full_name: string | null }
@@ -157,8 +180,32 @@ Deno.serve(async (req) => {
 
   if (test_email) {
     allRecipients = [{ email: test_email, full_name: 'Тест' }]
+  } else if (audienceEventId) {
+    // Recipients = users registered for this event (still respecting marketing_consent)
+    const { data: regs, error: rErr } = await admin
+      .from('registrations')
+      .select('user_id')
+      .eq('event_id', audienceEventId)
+    if (rErr) return jsonResponse({ error: rErr.message }, 500)
+    const userIds = Array.from(new Set((regs ?? []).map((r: any) => r.user_id)))
+    if (userIds.length === 0) {
+      allRecipients = []
+    } else {
+      const { data: profs, error: pErr } = await admin
+        .from('profiles')
+        .select('email, full_name')
+        .in('id', userIds)
+        .eq('marketing_consent', true)
+        .not('email', 'is', null)
+        .order('email', { ascending: true })
+      if (pErr) return jsonResponse({ error: pErr.message }, 500)
+      const { data: suppressed } = await admin.from('suppressed_emails').select('email')
+      const suppressedSet = new Set((suppressed ?? []).map((s) => s.email.toLowerCase()))
+      allRecipients = (profs ?? [])
+        .filter((p) => p.email && !suppressedSet.has(p.email.toLowerCase()))
+        .map((p) => ({ email: p.email!, full_name: p.full_name }))
+    }
   } else {
-    const filter = campaign.audience_filter || {}
     let q = admin
       .from('profiles')
       .select('email, full_name, city')
