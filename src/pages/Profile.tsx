@@ -215,6 +215,54 @@ const Profile = () => {
                 🔒 {t.profile.privacyNote}
               </p>
               <div className="space-y-2">
+                <Label>Фото профілю</Label>
+                <div className="flex items-center gap-4">
+                  <Avatar className="h-20 w-20 ring-2 ring-primary/20">
+                    {form.avatar_url && <AvatarImage src={form.avatar_url} alt={form.full_name || "avatar"} />}
+                    <AvatarFallback className="text-xl font-semibold bg-primary text-primary-foreground">
+                      {initials}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="flex flex-col gap-2">
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={(e) => {
+                        const f = e.target.files?.[0];
+                        if (f) uploadAvatar(f);
+                        e.target.value = "";
+                      }}
+                    />
+                    <div className="flex gap-2">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => fileInputRef.current?.click()}
+                        disabled={uploadingAvatar}
+                      >
+                        {uploadingAvatar ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
+                        {form.avatar_url ? "Змінити" : "Завантажити"}
+                      </Button>
+                      {form.avatar_url && (
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          onClick={removeAvatar}
+                          disabled={uploadingAvatar}
+                        >
+                          <X className="h-4 w-4" /> Видалити
+                        </Button>
+                      )}
+                    </div>
+                    <p className="text-xs text-muted-foreground">JPG/PNG, до 5 МБ</p>
+                  </div>
+                </div>
+              </div>
+              <div className="space-y-2">
                 <Label>Email</Label>
                 <Input value={form.email} disabled />
               </div>
