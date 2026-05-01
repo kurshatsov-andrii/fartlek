@@ -45,6 +45,16 @@ export const EventChat = ({ eventId, eventOrganizerId }: Props) => {
 
   const canManage = !!user && (isAdmin || user.id === eventOrganizerId || isCoOrganizer);
 
+  const markRead = async () => {
+    if (!user || !canManage) return;
+    await supabase
+      .from("event_chat_reads")
+      .upsert(
+        { user_id: user.id, event_id: eventId, last_read_at: new Date().toISOString() },
+        { onConflict: "user_id,event_id" }
+      );
+  };
+
   const loadProfiles = async (userIds: string[]) => {
     const missing = userIds.filter((id) => !profiles[id]);
     if (missing.length === 0) return;
@@ -108,6 +118,8 @@ export const EventChat = ({ eventId, eventOrganizerId }: Props) => {
             requestAnimationFrame(() => {
               listRef.current?.scrollTo({ top: listRef.current.scrollHeight, behavior: "smooth" });
             });
+            // Manager is currently viewing — mark as read
+            markRead();
           } else if (payload.eventType === "UPDATE") {
             const m = payload.new as ChatMessage;
             setMessages((prev) =>
@@ -126,6 +138,12 @@ export const EventChat = ({ eventId, eventOrganizerId }: Props) => {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [eventId, user?.id]);
+
+  // Mark as read whenever the manager opens the chat or new messages arrive while open
+  useEffect(() => {
+    if (canManage && !loading) markRead();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [canManage, loading, messages.length]);
 
   const send = async () => {
     if (!user) return;
@@ -235,7 +253,7 @@ export const EventChat = ({ eventId, eventOrganizerId }: Props) => {
   };
 
   return (
-    <section className="bg-card rounded-2xl shadow-card p-5 sm:p-6">
+    <section id="event-chat" className="bg-card rounded-2xl shadow-card p-5 sm:p-6 scroll-mt-20">
       <div className="flex items-center gap-2 mb-4">
         <MessageCircle className="h-5 w-5 text-primary" />
         <h2 className="font-display text-2xl font-bold">Чат події</h2>

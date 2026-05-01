@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, Navigate } from "react-router-dom";
-import { Plus, Edit, Trash2, Users, Loader2, Download, FileText, Eye, BarChart3, Ticket, UsersRound, Mail } from "lucide-react";
+import { Plus, Edit, Trash2, Users, Loader2, Download, FileText, Eye, BarChart3, Ticket, UsersRound, Mail, MessageCircle } from "lucide-react";
 import * as XLSX from "xlsx";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
@@ -14,12 +14,43 @@ const OrganizerDashboard = () => {
   const { t, lang } = useApp();
   const { user, isOrganizer, loading: authLoading } = useAuth();
   const [events, setEvents] = useState<any[]>([]);
+  const [unreadByEvent, setUnreadByEvent] = useState<Record<string, number>>({});
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!user) return;
     refresh();
+    loadUnread();
+    // Realtime: bump unread when a new chat message arrives in any event the user manages
+    const ch = supabase
+      .channel(`dashboard-chat-unread-${user.id}`)
+      .on(
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "event_chat_messages" },
+        (payload) => {
+          const m = payload.new as { event_id: string; user_id: string };
+          if (m.user_id === user.id) return;
+          setUnreadByEvent((prev) =>
+            prev[m.event_id] !== undefined ? { ...prev, [m.event_id]: (prev[m.event_id] ?? 0) + 1 } : prev
+          );
+        }
+      )
+      .subscribe();
+    return () => {
+      supabase.removeChannel(ch);
+    };
   }, [user]);
+
+  const loadUnread = async () => {
+    const { data } = await supabase.rpc("get_managed_events_unread_chat");
+    if (data) {
+      const map: Record<string, number> = {};
+      for (const row of data as Array<{ event_id: string; unread_count: number }>) {
+        map[row.event_id] = row.unread_count ?? 0;
+      }
+      setUnreadByEvent(map);
+    }
+  };
 
   const refresh = async () => {
     setLoading(true);
@@ -187,6 +218,22 @@ const OrganizerDashboard = () => {
                     </Button>
                     <Button asChild variant="outline" size="sm" title="Лист учасникам">
                       <Link to={`/organizer/events/${ev.id}/campaign`}><Mail className="h-4 w-4" /></Link>
+                    </Button>
+                    <Button
+                      asChild
+                      variant={unreadByEvent[ev.id] ? "default" : "outline"}
+                      size="sm"
+                      title="Чат події"
+                      className="relative"
+                    >
+                      <Link to={`/events/${ev.slug ?? ev.id}#event-chat`}>
+                        <MessageCircle className="h-4 w-4" />
+                        {unreadByEvent[ev.id] > 0 && (
+                          <span className="ml-1 inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-full bg-destructive text-destructive-foreground text-xs font-bold">
+                            {unreadByEvent[ev.id] > 99 ? "99+" : unreadByEvent[ev.id]}
+                          </span>
+                        )}
+                      </Link>
                     </Button>
                     
                     <Button onClick={() => exportData(ev.id, ev.title)} variant="outline" size="sm"><Download className="h-4 w-4" /> XLSX</Button>

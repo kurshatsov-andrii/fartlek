@@ -317,6 +317,33 @@ export type Database = {
           },
         ]
       }
+      event_chat_reads: {
+        Row: {
+          created_at: string
+          event_id: string
+          id: string
+          last_read_at: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          event_id: string
+          id?: string
+          last_read_at?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          event_id?: string
+          id?: string
+          last_read_at?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       event_co_organizers: {
         Row: {
           added_by: string | null
@@ -862,6 +889,14 @@ export type Database = {
       get_event_participants_count: {
         Args: { _event_id: string }
         Returns: number
+      }
+      get_managed_events_unread_chat: {
+        Args: never
+        Returns: {
+          event_id: string
+          last_message_at: string
+          unread_count: number
+        }[]
       }
       get_public_stats: {
         Args: never
