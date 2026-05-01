@@ -23,11 +23,35 @@ const OrganizerDashboard = () => {
 
   const refresh = async () => {
     setLoading(true);
-    const { data } = await supabase.from("events")
+    // Own events
+    const { data: own } = await supabase.from("events")
       .select("*, distances(*), registrations(count)")
       .eq("organizer_id", user!.id)
       .order("event_date", { ascending: false });
-    setEvents(data ?? []);
+
+    // Co-organizer events
+    const { data: coRows } = await supabase
+      .from("event_co_organizers")
+      .select("event_id")
+      .eq("user_id", user!.id);
+    const coEventIds = (coRows ?? []).map((r) => r.event_id);
+    let coEvents: any[] = [];
+    if (coEventIds.length) {
+      const { data } = await supabase.from("events")
+        .select("*, distances(*), registrations(count)")
+        .in("id", coEventIds)
+        .order("event_date", { ascending: false });
+      coEvents = (data ?? []).map((e) => ({ ...e, _isCoOrganizer: true }));
+    }
+
+    // Merge unique by id (own takes precedence)
+    const byId = new Map<string, any>();
+    [...(own ?? []), ...coEvents].forEach((e) => {
+      if (!byId.has(e.id)) byId.set(e.id, e);
+    });
+    setEvents(Array.from(byId.values()).sort(
+      (a, b) => new Date(b.event_date).getTime() - new Date(a.event_date).getTime()
+    ));
     setLoading(false);
   };
 
