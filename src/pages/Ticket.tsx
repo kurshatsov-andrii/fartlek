@@ -217,23 +217,20 @@ const Ticket = () => {
             <Button onClick={downloadPdf} className="w-full" disabled={!qrUrl}>
               <Download className="h-4 w-4" /> {t.ticket.download}
             </Button>
-            <Button
+            <AddToCalendarButton
               variant="outline"
               className="w-full"
-              onClick={() =>
-                downloadIcs({
-                  uid: data.id,
-                  title: ev.title,
-                  description: ev.description,
-                  location: ev.location,
-                  date: ev.event_date,
-                  time: ev.event_time,
-                  url: `${window.location.origin}/events/${ev.slug ?? ev.id}`,
-                })
-              }
-            >
-              <CalendarPlus className="h-4 w-4" /> {t.events.addToCalendar}
-            </Button>
+              event={{
+                uid: data.id,
+                title: ev.title,
+                description: ev.description,
+                location: ev.location,
+                date: ev.event_date,
+                time: ev.event_time,
+                url: `${window.location.origin}/events/${ev.slug ?? ev.id}`,
+              }}
+            />
+
           </div>
         </div>
 
