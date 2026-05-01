@@ -85,6 +85,67 @@ const Profile = () => {
   if (authLoading) return null;
   if (!user) return <Navigate to="/auth" replace />;
 
+  const uploadAvatar = async (file: File) => {
+    if (!user) return;
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("Файл завеликий (макс. 5 МБ)");
+      return;
+    }
+    if (!file.type.startsWith("image/")) {
+      toast.error("Лише зображення");
+      return;
+    }
+    setUploadingAvatar(true);
+    const ext = file.name.split(".").pop()?.toLowerCase() || "jpg";
+    const path = `${user.id}/avatar-${Date.now()}.${ext}`;
+    const { error: upErr } = await supabase.storage.from("avatars").upload(path, file, {
+      cacheControl: "3600",
+      upsert: true,
+    });
+    if (upErr) {
+      setUploadingAvatar(false);
+      toast.error(upErr.message);
+      return;
+    }
+    const { data: pub } = supabase.storage.from("avatars").getPublicUrl(path);
+    const url = pub.publicUrl;
+    const { error: updErr } = await supabase
+      .from("profiles")
+      .update({ avatar_url: url } as any)
+      .eq("id", user.id);
+    setUploadingAvatar(false);
+    if (updErr) {
+      toast.error(updErr.message);
+      return;
+    }
+    setForm((f) => ({ ...f, avatar_url: url }));
+    toast.success("Фото оновлено");
+  };
+
+  const removeAvatar = async () => {
+    if (!user || !form.avatar_url) return;
+    setUploadingAvatar(true);
+    const { error } = await supabase
+      .from("profiles")
+      .update({ avatar_url: null } as any)
+      .eq("id", user.id);
+    setUploadingAvatar(false);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+    setForm((f) => ({ ...f, avatar_url: "" }));
+    toast.success("Фото видалено");
+  };
+
+  const initials = (form.full_name || form.email || "?")
+    .split(" ")
+    .map((s) => s[0])
+    .filter(Boolean)
+    .slice(0, 2)
+    .join("")
+    .toUpperCase();
+
   const save = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.full_name.trim() || !form.birth_date || !form.gender || !form.city.trim()) {
