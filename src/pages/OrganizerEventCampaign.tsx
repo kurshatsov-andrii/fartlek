@@ -26,6 +26,8 @@ const OrganizerEventCampaign = () => {
   const [history, setHistory] = useState<any[]>([]);
   const [pageLoading, setPageLoading] = useState(true);
 
+  const draftKey = id ? `org-campaign-draft:${id}` : "";
+
   useEffect(() => {
     if (!user || !id) return;
     (async () => {
@@ -36,8 +38,22 @@ const OrganizerEventCampaign = () => {
         .maybeSingle();
       setEvent(ev as any);
       if (ev) {
-        setSubject(`Оновлення по події: ${ev.title}`);
-        setIntro("Невелике оновлення для тих, хто зареєструвався на нашу подію.");
+        // Restore draft if present, otherwise use defaults
+        let restored = false;
+        try {
+          const raw = localStorage.getItem(`org-campaign-draft:${ev.id}`);
+          if (raw) {
+            const d = JSON.parse(raw);
+            if (typeof d.subject === "string") setSubject(d.subject);
+            if (typeof d.intro === "string") setIntro(d.intro);
+            if (typeof d.testEmail === "string") setTestEmail(d.testEmail);
+            restored = true;
+          }
+        } catch {}
+        if (!restored) {
+          setSubject(`Оновлення по події: ${ev.title}`);
+          setIntro("Невелике оновлення для тих, хто зареєструвався на нашу подію.");
+        }
 
         // Count recipients (registered users with marketing_consent)
         const { data: regs } = await supabase
@@ -68,6 +84,14 @@ const OrganizerEventCampaign = () => {
       setPageLoading(false);
     })();
   }, [id, user]);
+
+  // Persist draft as user types
+  useEffect(() => {
+    if (!draftKey || pageLoading) return;
+    try {
+      localStorage.setItem(draftKey, JSON.stringify({ subject, intro, testEmail }));
+    } catch {}
+  }, [draftKey, pageLoading, subject, intro, testEmail]);
 
   if (loading || pageLoading)
     return <div className="min-h-screen flex items-center justify-center"><Loader2 className="h-8 w-8 animate-spin" /></div>;
@@ -129,6 +153,7 @@ const OrganizerEventCampaign = () => {
           await new Promise((res) => setTimeout(res, 5000));
         }
         toast.success(`Готово: ${totalSent}/${total}, помилок ${totalFailed}`);
+        try { if (draftKey) localStorage.removeItem(draftKey); } catch {}
 
         const { data: h } = await supabase
           .from("marketing_campaigns" as any)
