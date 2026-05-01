@@ -18,6 +18,7 @@ interface ChatMessage {
   pinned_at: string | null;
   created_at: string;
   deleted_at: string | null;
+  edited_at: string | null;
 }
 
 interface ProfileMini {
