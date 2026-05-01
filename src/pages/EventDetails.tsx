@@ -493,6 +493,10 @@ const EventDetails = () => {
             }}
           />
         )}
+
+        <div className="mt-8">
+          <EventChat eventId={event.id} eventOrganizerId={event.organizer_id} />
+        </div>
       </main>
       <Footer />
     </div>
