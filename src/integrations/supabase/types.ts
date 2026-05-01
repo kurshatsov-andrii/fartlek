@@ -273,6 +273,7 @@ export type Database = {
           created_at: string
           deleted_at: string | null
           deleted_by: string | null
+          edited_at: string | null
           event_id: string
           id: string
           is_pinned: boolean
@@ -286,6 +287,7 @@ export type Database = {
           created_at?: string
           deleted_at?: string | null
           deleted_by?: string | null
+          edited_at?: string | null
           event_id: string
           id?: string
           is_pinned?: boolean
@@ -299,6 +301,7 @@ export type Database = {
           created_at?: string
           deleted_at?: string | null
           deleted_by?: string | null
+          edited_at?: string | null
           event_id?: string
           id?: string
           is_pinned?: boolean
