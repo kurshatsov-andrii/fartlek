@@ -1,9 +1,10 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { Loader2, Send, Pin, PinOff, Trash2, MessageCircle, Pencil, X, Check } from "lucide-react";
+import { Loader2, Send, Pin, PinOff, Trash2, MessageCircle, Pencil, X, Check, Reply, Smile } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
@@ -19,6 +20,14 @@ interface ChatMessage {
   created_at: string;
   deleted_at: string | null;
   edited_at: string | null;
+  reply_to_id: string | null;
+}
+
+interface ChatReaction {
+  id: string;
+  message_id: string;
+  user_id: string;
+  emoji: string;
 }
 
 interface ProfileMini {
@@ -33,10 +42,12 @@ interface Props {
 }
 
 const messageSchema = z.string().trim().min(1, "Порожнє повідомлення").max(2000, "Максимум 2000 символів");
+const QUICK_EMOJIS = ["👍", "❤️", "🔥", "😂", "😮", "🎉", "👏", "🙏"];
 
 export const EventChat = ({ eventId, eventOrganizerId }: Props) => {
   const { user, isAdmin } = useAuth();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [reactions, setReactions] = useState<ChatReaction[]>([]);
   const [profiles, setProfiles] = useState<Record<string, ProfileMini>>({});
   const [loading, setLoading] = useState(true);
   const [text, setText] = useState("");
@@ -45,9 +56,25 @@ export const EventChat = ({ eventId, eventOrganizerId }: Props) => {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editText, setEditText] = useState("");
   const [savingEdit, setSavingEdit] = useState(false);
+  const [replyTo, setReplyTo] = useState<ChatMessage | null>(null);
   const listRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
 
   const canManage = !!user && (isAdmin || user.id === eventOrganizerId || isCoOrganizer);
+
+  const messageById = useMemo(() => {
+    const map: Record<string, ChatMessage> = {};
+    for (const m of messages) map[m.id] = m;
+    return map;
+  }, [messages]);
+
+  const reactionsByMessage = useMemo(() => {
+    const map: Record<string, ChatReaction[]> = {};
+    for (const r of reactions) {
+      (map[r.message_id] ||= []).push(r);
+    }
+    return map;
+  }, [reactions]);
 
   const markRead = async () => {
     if (!user || !canManage) return;
@@ -89,6 +116,18 @@ export const EventChat = ({ eventId, eventOrganizerId }: Props) => {
     const msgs = (data ?? []) as ChatMessage[];
     setMessages(msgs);
     await loadProfiles(Array.from(new Set(msgs.map((m) => m.user_id))));
+
+    if (msgs.length > 0) {
+      const ids = msgs.map((m) => m.id);
+      const { data: rx } = await supabase
+        .from("event_chat_reactions")
+        .select("*")
+        .in("message_id", ids);
+      setReactions((rx ?? []) as ChatReaction[]);
+    } else {
+      setReactions([]);
+    }
+
     setLoading(false);
     requestAnimationFrame(() => {
       listRef.current?.scrollTo({ top: listRef.current.scrollHeight });
@@ -97,7 +136,6 @@ export const EventChat = ({ eventId, eventOrganizerId }: Props) => {
 
   useEffect(() => {
     refresh();
-    // Check co-organizer status
     if (user) {
       supabase
         .from("event_co_organizers")
@@ -122,7 +160,6 @@ export const EventChat = ({ eventId, eventOrganizerId }: Props) => {
             requestAnimationFrame(() => {
               listRef.current?.scrollTo({ top: listRef.current.scrollHeight, behavior: "smooth" });
             });
-            // Manager is currently viewing — mark as read
             markRead();
           } else if (payload.eventType === "UPDATE") {
             const m = payload.new as ChatMessage;
@@ -135,6 +172,19 @@ export const EventChat = ({ eventId, eventOrganizerId }: Props) => {
           }
         }
       )
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "event_chat_reactions" },
+        (payload) => {
+          if (payload.eventType === "INSERT") {
+            const r = payload.new as ChatReaction;
+            setReactions((prev) => (prev.some((x) => x.id === r.id) ? prev : [...prev, r]));
+          } else if (payload.eventType === "DELETE") {
+            const old = payload.old as { id: string };
+            setReactions((prev) => prev.filter((x) => x.id !== old.id));
+          }
+        }
+      )
       .subscribe();
 
     return () => {
@@ -143,7 +193,6 @@ export const EventChat = ({ eventId, eventOrganizerId }: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [eventId, user?.id]);
 
-  // Mark as read whenever the manager opens the chat or new messages arrive while open
   useEffect(() => {
     if (canManage && !loading) markRead();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -161,10 +210,14 @@ export const EventChat = ({ eventId, eventOrganizerId }: Props) => {
       event_id: eventId,
       user_id: user.id,
       content: parsed.data,
+      reply_to_id: replyTo?.id ?? null,
     });
     setSending(false);
     if (error) toast.error(error.message);
-    else setText("");
+    else {
+      setText("");
+      setReplyTo(null);
+    }
   };
 
   const togglePin = async (m: ChatMessage) => {
@@ -183,7 +236,6 @@ export const EventChat = ({ eventId, eventOrganizerId }: Props) => {
   const remove = async (m: ChatMessage) => {
     if (!user) return;
     if (!confirm("Видалити це повідомлення?")) return;
-    // Soft delete so realtime UPDATE removes it for everyone
     const { error } = await supabase
       .from("event_chat_messages")
       .update({ deleted_at: new Date().toISOString(), deleted_by: user.id })
@@ -225,6 +277,39 @@ export const EventChat = ({ eventId, eventOrganizerId }: Props) => {
     cancelEdit();
   };
 
+  const startReply = (m: ChatMessage) => {
+    setReplyTo(m);
+    requestAnimationFrame(() => inputRef.current?.focus());
+  };
+
+  const toggleReaction = async (m: ChatMessage, emoji: string) => {
+    if (!user) {
+      toast.error("Увійдіть, щоб реагувати");
+      return;
+    }
+    const mine = reactions.find((r) => r.message_id === m.id && r.user_id === user.id && r.emoji === emoji);
+    if (mine) {
+      const { error } = await supabase.from("event_chat_reactions").delete().eq("id", mine.id);
+      if (error) toast.error(error.message);
+    } else {
+      const { error } = await supabase.from("event_chat_reactions").insert({
+        message_id: m.id,
+        user_id: user.id,
+        emoji,
+      });
+      if (error && !error.message.includes("duplicate")) toast.error(error.message);
+    }
+  };
+
+  const scrollToMessage = (id: string) => {
+    const el = document.getElementById(`chat-msg-${id}`);
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: "center" });
+      el.classList.add("ring-2", "ring-primary", "rounded-lg");
+      setTimeout(() => el.classList.remove("ring-2", "ring-primary", "rounded-lg"), 1500);
+    }
+  };
+
   const pinned = messages.filter((m) => m.is_pinned);
   const regular = messages.filter((m) => !m.is_pinned);
 
@@ -237,16 +322,52 @@ export const EventChat = ({ eventId, eventOrganizerId }: Props) => {
       .join("")
       .toUpperCase();
 
+  const nameOf = (uid: string) => {
+    const p = profiles[uid];
+    return p?.full_name?.trim() || p?.email?.split("@")[0] || "Користувач";
+  };
+
+  const renderReactions = (m: ChatMessage, isOwn: boolean) => {
+    const list = reactionsByMessage[m.id] ?? [];
+    if (list.length === 0) return null;
+    const grouped: Record<string, ChatReaction[]> = {};
+    for (const r of list) (grouped[r.emoji] ||= []).push(r);
+    return (
+      <div className={`flex flex-wrap gap-1 mt-1 ${isOwn ? "justify-end" : ""}`}>
+        {Object.entries(grouped).map(([emoji, rs]) => {
+          const mine = !!user && rs.some((r) => r.user_id === user.id);
+          return (
+            <button
+              key={emoji}
+              type="button"
+              onClick={() => toggleReaction(m, emoji)}
+              className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs border transition-colors ${
+                mine
+                  ? "bg-primary/15 border-primary/40 text-primary"
+                  : "bg-muted border-transparent hover:bg-muted/70"
+              }`}
+              title={rs.map((r) => nameOf(r.user_id)).join(", ")}
+            >
+              <span>{emoji}</span>
+              <span className="font-semibold">{rs.length}</span>
+            </button>
+          );
+        })}
+      </div>
+    );
+  };
+
   const renderMsg = (m: ChatMessage) => {
     const p = profiles[m.user_id];
-    const name = p?.full_name?.trim() || p?.email?.split("@")[0] || "Користувач";
+    const name = nameOf(m.user_id);
     const isOrganizer = m.user_id === eventOrganizerId;
     const isOwn = user?.id === m.user_id;
     const canDelete = isOwn || canManage;
     const canEdit = isOwn || canManage;
     const isEditing = editingId === m.id;
+    const replied = m.reply_to_id ? messageById[m.reply_to_id] : null;
     return (
-      <div key={m.id} className={`flex gap-3 ${isOwn ? "flex-row-reverse" : ""}`}>
+      <div key={m.id} id={`chat-msg-${m.id}`} className={`flex gap-3 ${isOwn ? "flex-row-reverse" : ""}`}>
         <Avatar className="h-8 w-8 shrink-0">
           <AvatarFallback className="text-xs">{initials(p)}</AvatarFallback>
         </Avatar>
@@ -262,6 +383,20 @@ export const EventChat = ({ eventId, eventOrganizerId }: Props) => {
             {m.edited_at && <span className="italic">(ред.)</span>}
             {m.is_pinned && <Pin className="h-3 w-3" />}
           </div>
+
+          {replied && (
+            <button
+              type="button"
+              onClick={() => scrollToMessage(replied.id)}
+              className={`mt-1 block max-w-full text-left rounded-lg border-l-2 border-primary/60 bg-muted/40 hover:bg-muted/70 transition-colors px-2 py-1 text-xs ${
+                isOwn ? "ml-auto" : ""
+              }`}
+            >
+              <div className="font-semibold text-primary truncate">↪ {nameOf(replied.user_id)}</div>
+              <div className="truncate text-muted-foreground">{replied.content}</div>
+            </button>
+          )}
+
           {isEditing ? (
             <div className={`mt-1 ${isOwn ? "flex flex-col items-end" : ""}`}>
               <Textarea
@@ -299,8 +434,39 @@ export const EventChat = ({ eventId, eventOrganizerId }: Props) => {
               {m.content}
             </div>
           )}
-          {!isEditing && (canManage || canDelete || canEdit) && (
+
+          {!isEditing && renderReactions(m, isOwn)}
+
+          {!isEditing && (
             <div className={`flex gap-1 mt-1 ${isOwn ? "justify-end" : ""}`}>
+              {user && (
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button variant="ghost" size="sm" className="h-6 px-2 text-xs">
+                      <Smile className="h-3 w-3" />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-2" align={isOwn ? "end" : "start"}>
+                    <div className="flex gap-1">
+                      {QUICK_EMOJIS.map((emoji) => (
+                        <button
+                          key={emoji}
+                          type="button"
+                          onClick={() => toggleReaction(m, emoji)}
+                          className="text-lg hover:scale-125 transition-transform px-1"
+                        >
+                          {emoji}
+                        </button>
+                      ))}
+                    </div>
+                  </PopoverContent>
+                </Popover>
+              )}
+              {user && (
+                <Button variant="ghost" size="sm" className="h-6 px-2 text-xs" onClick={() => startReply(m)}>
+                  <Reply className="h-3 w-3" />
+                </Button>
+              )}
               {canManage && (
                 <Button variant="ghost" size="sm" className="h-6 px-2 text-xs" onClick={() => togglePin(m)}>
                   {m.is_pinned ? <PinOff className="h-3 w-3" /> : <Pin className="h-3 w-3" />}
@@ -361,24 +527,41 @@ export const EventChat = ({ eventId, eventOrganizerId }: Props) => {
 
       <div className="mt-4 pt-4 border-t border-border">
         {user ? (
-          <div className="flex gap-2 items-end">
-            <Textarea
-              value={text}
-              onChange={(e) => setText(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
-                  e.preventDefault();
-                  send();
-                }
-              }}
-              placeholder="Напишіть повідомлення... (Ctrl/⌘+Enter — надіслати)"
-              maxLength={2000}
-              rows={2}
-              className="resize-none"
-            />
-            <Button onClick={send} disabled={sending || !text.trim()} size="lg">
-              {sending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
-            </Button>
+          <div className="space-y-2">
+            {replyTo && (
+              <div className="flex items-start gap-2 px-3 py-2 rounded-lg bg-muted border-l-2 border-primary">
+                <Reply className="h-3 w-3 mt-1 text-primary shrink-0" />
+                <div className="flex-1 min-w-0 text-xs">
+                  <div className="font-semibold text-primary">Відповідь {nameOf(replyTo.user_id)}</div>
+                  <div className="truncate text-muted-foreground">{replyTo.content}</div>
+                </div>
+                <Button variant="ghost" size="sm" className="h-6 w-6 p-0" onClick={() => setReplyTo(null)}>
+                  <X className="h-3 w-3" />
+                </Button>
+              </div>
+            )}
+            <div className="flex gap-2 items-end">
+              <Textarea
+                ref={inputRef}
+                value={text}
+                onChange={(e) => setText(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
+                    e.preventDefault();
+                    send();
+                  } else if (e.key === "Escape" && replyTo) {
+                    setReplyTo(null);
+                  }
+                }}
+                placeholder={replyTo ? "Ваша відповідь..." : "Напишіть повідомлення... (Ctrl/⌘+Enter — надіслати)"}
+                maxLength={2000}
+                rows={2}
+                className="resize-none"
+              />
+              <Button onClick={send} disabled={sending || !text.trim()} size="lg">
+                {sending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+              </Button>
+            </div>
           </div>
         ) : (
           <div className="text-center text-sm text-muted-foreground">
