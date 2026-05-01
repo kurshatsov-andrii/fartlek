@@ -45,6 +45,16 @@ export const EventChat = ({ eventId, eventOrganizerId }: Props) => {
 
   const canManage = !!user && (isAdmin || user.id === eventOrganizerId || isCoOrganizer);
 
+  const markRead = async () => {
+    if (!user || !canManage) return;
+    await supabase
+      .from("event_chat_reads")
+      .upsert(
+        { user_id: user.id, event_id: eventId, last_read_at: new Date().toISOString() },
+        { onConflict: "user_id,event_id" }
+      );
+  };
+
   const loadProfiles = async (userIds: string[]) => {
     const missing = userIds.filter((id) => !profiles[id]);
     if (missing.length === 0) return;
