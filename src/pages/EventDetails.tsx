@@ -17,10 +17,12 @@ import { startWayForPayCheckout } from "@/lib/wayforpay";
 import { buildEventSeo } from "@/lib/seo";
 import { linkifyText } from "@/lib/linkify";
 import { PromoCodeInput, PromoPreview } from "@/components/PromoCodeInput";
+import { EventChat } from "@/components/EventChat";
 import type { EventCategory } from "@/lib/i18n";
 
 interface EventRow {
   id: string; slug: string | null; title: string; description: string | null; organizer_name: string;
+  organizer_id: string;
   event_date: string; event_time: string; location: string | null;
   image_url: string | null; is_paid: boolean; payment_url: string | null; status: string; category: EventCategory;
   format: "offline" | "online" | "hybrid";
@@ -491,6 +493,10 @@ const EventDetails = () => {
             }}
           />
         )}
+
+        <div className="mt-8">
+          <EventChat eventId={event.id} eventOrganizerId={event.organizer_id} />
+        </div>
       </main>
       <Footer />
     </div>
