@@ -4,6 +4,7 @@ import QRCode from "qrcode";
 import { jsPDF } from "jspdf";
 import html2canvas from "html2canvas";
 import { Download, Loader2, ArrowLeft, Upload, FileCheck2, ExternalLink, CreditCard, CalendarPlus } from "lucide-react";
+import { AddToCalendarButton } from "@/components/AddToCalendarButton";
 import { downloadIcs } from "@/lib/calendar";
 import { toast } from "sonner";
 import { Header } from "@/components/Header";
