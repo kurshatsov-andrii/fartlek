@@ -74,6 +74,7 @@ const Profile = () => {
           email: data.email,
           phone: (data as any).phone ?? "",
           marketing_consent: (data as any).marketing_consent ?? true,
+          avatar_url: (data as any).avatar_url ?? "",
         });
       }
       await reloadAthletes(user.id);
