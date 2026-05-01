@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
-import { Loader2, AlertCircle, Pencil, Trash2, UserCircle2 } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { Loader2, AlertCircle, Pencil, Trash2, UserCircle2, Upload, X } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
