@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
-import { Loader2, AlertCircle, Pencil, Trash2, UserCircle2 } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { Loader2, AlertCircle, Pencil, Trash2, UserCircle2, Upload, X } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -22,11 +23,13 @@ const Profile = () => {
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState(false);
   const [form, setForm] = useState({
-    full_name: "", birth_date: "", gender: "", city: "", club: "", email: "", phone: "", marketing_consent: true,
+    full_name: "", birth_date: "", gender: "", city: "", club: "", email: "", phone: "", marketing_consent: true, avatar_url: "",
   });
   const [athletes, setAthletes] = useState<Athlete[]>([]);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editing, setEditing] = useState<Athlete | null>(null);
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Phone format: +38 (XXX) XXX-XX-XX (9 digits after +38)
   const PHONE_RE = /^\+38 \(\d{3}\) \d{3}-\d{2}-\d{2}$/;
@@ -71,6 +74,7 @@ const Profile = () => {
           email: data.email,
           phone: (data as any).phone ?? "",
           marketing_consent: (data as any).marketing_consent ?? true,
+          avatar_url: (data as any).avatar_url ?? "",
         });
       }
       await reloadAthletes(user.id);
@@ -80,6 +84,67 @@ const Profile = () => {
 
   if (authLoading) return null;
   if (!user) return <Navigate to="/auth" replace />;
+
+  const uploadAvatar = async (file: File) => {
+    if (!user) return;
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("Файл завеликий (макс. 5 МБ)");
+      return;
+    }
+    if (!file.type.startsWith("image/")) {
+      toast.error("Лише зображення");
+      return;
+    }
+    setUploadingAvatar(true);
+    const ext = file.name.split(".").pop()?.toLowerCase() || "jpg";
+    const path = `${user.id}/avatar-${Date.now()}.${ext}`;
+    const { error: upErr } = await supabase.storage.from("avatars").upload(path, file, {
+      cacheControl: "3600",
+      upsert: true,
+    });
+    if (upErr) {
+      setUploadingAvatar(false);
+      toast.error(upErr.message);
+      return;
+    }
+    const { data: pub } = supabase.storage.from("avatars").getPublicUrl(path);
+    const url = pub.publicUrl;
+    const { error: updErr } = await supabase
+      .from("profiles")
+      .update({ avatar_url: url } as any)
+      .eq("id", user.id);
+    setUploadingAvatar(false);
+    if (updErr) {
+      toast.error(updErr.message);
+      return;
+    }
+    setForm((f) => ({ ...f, avatar_url: url }));
+    toast.success("Фото оновлено");
+  };
+
+  const removeAvatar = async () => {
+    if (!user || !form.avatar_url) return;
+    setUploadingAvatar(true);
+    const { error } = await supabase
+      .from("profiles")
+      .update({ avatar_url: null } as any)
+      .eq("id", user.id);
+    setUploadingAvatar(false);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+    setForm((f) => ({ ...f, avatar_url: "" }));
+    toast.success("Фото видалено");
+  };
+
+  const initials = (form.full_name || form.email || "?")
+    .split(" ")
+    .map((s) => s[0])
+    .filter(Boolean)
+    .slice(0, 2)
+    .join("")
+    .toUpperCase();
 
   const save = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -149,6 +214,54 @@ const Profile = () => {
               <p className="text-xs text-muted-foreground rounded-lg bg-muted/50 p-3 border border-border">
                 🔒 {t.profile.privacyNote}
               </p>
+              <div className="space-y-2">
+                <Label>Фото профілю</Label>
+                <div className="flex items-center gap-4">
+                  <Avatar className="h-20 w-20 ring-2 ring-primary/20">
+                    {form.avatar_url && <AvatarImage src={form.avatar_url} alt={form.full_name || "avatar"} />}
+                    <AvatarFallback className="text-xl font-semibold bg-primary text-primary-foreground">
+                      {initials}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="flex flex-col gap-2">
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={(e) => {
+                        const f = e.target.files?.[0];
+                        if (f) uploadAvatar(f);
+                        e.target.value = "";
+                      }}
+                    />
+                    <div className="flex gap-2">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => fileInputRef.current?.click()}
+                        disabled={uploadingAvatar}
+                      >
+                        {uploadingAvatar ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
+                        {form.avatar_url ? "Змінити" : "Завантажити"}
+                      </Button>
+                      {form.avatar_url && (
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          onClick={removeAvatar}
+                          disabled={uploadingAvatar}
+                        >
+                          <X className="h-4 w-4" /> Видалити
+                        </Button>
+                      )}
+                    </div>
+                    <p className="text-xs text-muted-foreground">JPG/PNG, до 5 МБ</p>
+                  </div>
+                </div>
+              </div>
               <div className="space-y-2">
                 <Label>Email</Label>
                 <Input value={form.email} disabled />

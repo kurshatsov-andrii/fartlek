@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Loader2, Send, Pin, PinOff, Trash2, MessageCircle, Pencil, X, Check, Reply, Smile } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
@@ -34,6 +34,7 @@ interface ProfileMini {
   id: string;
   full_name: string | null;
   email: string;
+  avatar_url: string | null;
 }
 
 interface Props {
@@ -89,11 +90,11 @@ export const EventChat = ({ eventId, eventOrganizerId }: Props) => {
   const loadProfiles = async (userIds: string[]) => {
     const missing = userIds.filter((id) => !profiles[id]);
     if (missing.length === 0) return;
-    const { data } = await supabase.from("profiles").select("id, full_name, email").in("id", missing);
+    const { data } = await supabase.rpc("get_chat_authors", { _user_ids: missing });
     if (data) {
       setProfiles((prev) => {
         const next = { ...prev };
-        for (const p of data) next[p.id] = p as ProfileMini;
+        for (const p of data as any[]) next[p.id] = p as ProfileMini;
         return next;
       });
     }
@@ -322,6 +323,18 @@ export const EventChat = ({ eventId, eventOrganizerId }: Props) => {
       .join("")
       .toUpperCase();
 
+  const AVATAR_COLORS = [
+    "bg-rose-500", "bg-pink-500", "bg-fuchsia-500", "bg-purple-500",
+    "bg-violet-500", "bg-indigo-500", "bg-blue-500", "bg-sky-500",
+    "bg-cyan-500", "bg-teal-500", "bg-emerald-500", "bg-green-500",
+    "bg-lime-600", "bg-amber-500", "bg-orange-500", "bg-red-500",
+  ];
+  const colorFor = (id: string) => {
+    let h = 0;
+    for (let i = 0; i < id.length; i++) h = (h * 31 + id.charCodeAt(i)) >>> 0;
+    return AVATAR_COLORS[h % AVATAR_COLORS.length];
+  };
+
   const nameOf = (uid: string) => {
     const p = profiles[uid];
     return p?.full_name?.trim() || p?.email?.split("@")[0] || "Користувач";
@@ -368,8 +381,11 @@ export const EventChat = ({ eventId, eventOrganizerId }: Props) => {
     const replied = m.reply_to_id ? messageById[m.reply_to_id] : null;
     return (
       <div key={m.id} id={`chat-msg-${m.id}`} className={`flex gap-3 ${isOwn ? "flex-row-reverse" : ""}`}>
-        <Avatar className="h-8 w-8 shrink-0">
-          <AvatarFallback className="text-xs">{initials(p)}</AvatarFallback>
+        <Avatar className="h-9 w-9 shrink-0">
+          {p?.avatar_url && <AvatarImage src={p.avatar_url} alt={nameOf(m.user_id)} />}
+          <AvatarFallback className={`text-xs font-semibold text-white ${colorFor(m.user_id)}`}>
+            {initials(p)}
+          </AvatarFallback>
         </Avatar>
         <div className={`flex-1 min-w-0 ${isOwn ? "text-right" : ""}`}>
           <div className={`flex items-center gap-2 flex-wrap text-xs text-muted-foreground ${isOwn ? "justify-end" : ""}`}>

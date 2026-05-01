@@ -582,6 +582,7 @@ export type Database = {
       }
       profiles: {
         Row: {
+          avatar_url: string | null
           birth_date: string | null
           city: string | null
           club: string | null
@@ -596,6 +597,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          avatar_url?: string | null
           birth_date?: string | null
           city?: string | null
           club?: string | null
@@ -610,6 +612,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          avatar_url?: string | null
           birth_date?: string | null
           city?: string | null
           club?: string | null
@@ -906,6 +909,15 @@ export type Database = {
       enqueue_email: {
         Args: { payload: Json; queue_name: string }
         Returns: number
+      }
+      get_chat_authors: {
+        Args: { _user_ids: string[] }
+        Returns: {
+          avatar_url: string
+          email: string
+          full_name: string
+          id: string
+        }[]
       }
       get_event_participants: {
         Args: { _event_id: string }
