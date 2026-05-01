@@ -151,11 +151,16 @@ const OrganizerDashboard = () => {
               <div key={ev.id} className="bg-card p-5 rounded-2xl shadow-card">
                 <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                   <div className="flex-1">
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 flex-wrap">
                       <span className={`text-xs font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full ${
                         ev.status === "published" ? "bg-accent text-accent-foreground" :
                         ev.status === "draft" ? "bg-muted text-muted-foreground" : "bg-secondary text-secondary-foreground"
                       }`}>{t.organizer[ev.status as keyof typeof t.organizer]}</span>
+                      {ev._isCoOrganizer && (
+                        <span className="text-xs font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full bg-primary/15 text-primary">
+                          Співорганізатор
+                        </span>
+                      )}
                       <span className="text-xs text-muted-foreground">
                         {new Date(ev.event_date).toLocaleDateString(lang === "uk" ? "uk-UA" : "en-US")}
                       </span>
@@ -195,9 +200,11 @@ const OrganizerDashboard = () => {
                     <Button asChild variant="outline" size="sm">
                       <Link to={`/organizer/events/${ev.id}`}><Edit className="h-4 w-4" /></Link>
                     </Button>
-                    <Button onClick={() => remove(ev.id)} variant="outline" size="sm" className="text-destructive hover:text-destructive">
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
+                    {!ev._isCoOrganizer && (
+                      <Button onClick={() => remove(ev.id)} variant="outline" size="sm" className="text-destructive hover:text-destructive">
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    )}
                   </div>
                 </div>
               </div>
