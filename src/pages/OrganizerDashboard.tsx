@@ -20,7 +20,37 @@ const OrganizerDashboard = () => {
   useEffect(() => {
     if (!user) return;
     refresh();
+    loadUnread();
+    // Realtime: bump unread when a new chat message arrives in any event the user manages
+    const ch = supabase
+      .channel(`dashboard-chat-unread-${user.id}`)
+      .on(
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "event_chat_messages" },
+        (payload) => {
+          const m = payload.new as { event_id: string; user_id: string };
+          if (m.user_id === user.id) return;
+          setUnreadByEvent((prev) =>
+            prev[m.event_id] !== undefined ? { ...prev, [m.event_id]: (prev[m.event_id] ?? 0) + 1 } : prev
+          );
+        }
+      )
+      .subscribe();
+    return () => {
+      supabase.removeChannel(ch);
+    };
   }, [user]);
+
+  const loadUnread = async () => {
+    const { data } = await supabase.rpc("get_managed_events_unread_chat");
+    if (data) {
+      const map: Record<string, number> = {};
+      for (const row of data as Array<{ event_id: string; unread_count: number }>) {
+        map[row.event_id] = row.unread_count ?? 0;
+      }
+      setUnreadByEvent(map);
+    }
+  };
 
   const refresh = async () => {
     setLoading(true);
