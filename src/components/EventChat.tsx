@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { Loader2, Send, Pin, PinOff, Trash2, MessageCircle } from "lucide-react";
+import { Loader2, Send, Pin, PinOff, Trash2, MessageCircle, Pencil, X, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -18,6 +18,7 @@ interface ChatMessage {
   pinned_at: string | null;
   created_at: string;
   deleted_at: string | null;
+  edited_at: string | null;
 }
 
 interface ProfileMini {
@@ -41,6 +42,9 @@ export const EventChat = ({ eventId, eventOrganizerId }: Props) => {
   const [text, setText] = useState("");
   const [sending, setSending] = useState(false);
   const [isCoOrganizer, setIsCoOrganizer] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editText, setEditText] = useState("");
+  const [savingEdit, setSavingEdit] = useState(false);
   const listRef = useRef<HTMLDivElement>(null);
 
   const canManage = !!user && (isAdmin || user.id === eventOrganizerId || isCoOrganizer);
@@ -187,6 +191,40 @@ export const EventChat = ({ eventId, eventOrganizerId }: Props) => {
     if (error) toast.error(error.message);
   };
 
+  const startEdit = (m: ChatMessage) => {
+    setEditingId(m.id);
+    setEditText(m.content);
+  };
+
+  const cancelEdit = () => {
+    setEditingId(null);
+    setEditText("");
+  };
+
+  const saveEdit = async (m: ChatMessage) => {
+    if (!user) return;
+    const parsed = messageSchema.safeParse(editText);
+    if (!parsed.success) {
+      toast.error(parsed.error.errors[0].message);
+      return;
+    }
+    if (parsed.data === m.content) {
+      cancelEdit();
+      return;
+    }
+    setSavingEdit(true);
+    const { error } = await supabase
+      .from("event_chat_messages")
+      .update({ content: parsed.data, edited_at: new Date().toISOString() })
+      .eq("id", m.id);
+    setSavingEdit(false);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+    cancelEdit();
+  };
+
   const pinned = messages.filter((m) => m.is_pinned);
   const regular = messages.filter((m) => !m.is_pinned);
 
@@ -205,6 +243,8 @@ export const EventChat = ({ eventId, eventOrganizerId }: Props) => {
     const isOrganizer = m.user_id === eventOrganizerId;
     const isOwn = user?.id === m.user_id;
     const canDelete = isOwn || canManage;
+    const canEdit = isOwn || canManage;
+    const isEditing = editingId === m.id;
     return (
       <div key={m.id} className={`flex gap-3 ${isOwn ? "flex-row-reverse" : ""}`}>
         <Avatar className="h-8 w-8 shrink-0">
@@ -219,20 +259,56 @@ export const EventChat = ({ eventId, eventOrganizerId }: Props) => {
               </span>
             )}
             <span>{new Date(m.created_at).toLocaleString("uk-UA", { dateStyle: "short", timeStyle: "short" })}</span>
+            {m.edited_at && <span className="italic">(ред.)</span>}
             {m.is_pinned && <Pin className="h-3 w-3" />}
           </div>
-          <div
-            className={`mt-1 inline-block max-w-full text-left rounded-2xl px-3 py-2 text-sm whitespace-pre-wrap break-words ${
-              isOwn ? "bg-primary text-primary-foreground" : "bg-muted"
-            }`}
-          >
-            {m.content}
-          </div>
-          {(canManage || canDelete) && (
+          {isEditing ? (
+            <div className={`mt-1 ${isOwn ? "flex flex-col items-end" : ""}`}>
+              <Textarea
+                value={editText}
+                onChange={(e) => setEditText(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
+                    e.preventDefault();
+                    saveEdit(m);
+                  } else if (e.key === "Escape") {
+                    e.preventDefault();
+                    cancelEdit();
+                  }
+                }}
+                maxLength={2000}
+                rows={2}
+                className="resize-none w-full max-w-xl"
+                autoFocus
+              />
+              <div className="flex gap-1 mt-1">
+                <Button size="sm" variant="ghost" className="h-7 px-2" onClick={cancelEdit} disabled={savingEdit}>
+                  <X className="h-3 w-3" /> Скасувати
+                </Button>
+                <Button size="sm" className="h-7 px-2" onClick={() => saveEdit(m)} disabled={savingEdit || !editText.trim()}>
+                  {savingEdit ? <Loader2 className="h-3 w-3 animate-spin" /> : <Check className="h-3 w-3" />} Зберегти
+                </Button>
+              </div>
+            </div>
+          ) : (
+            <div
+              className={`mt-1 inline-block max-w-full text-left rounded-2xl px-3 py-2 text-sm whitespace-pre-wrap break-words ${
+                isOwn ? "bg-primary text-primary-foreground" : "bg-muted"
+              }`}
+            >
+              {m.content}
+            </div>
+          )}
+          {!isEditing && (canManage || canDelete || canEdit) && (
             <div className={`flex gap-1 mt-1 ${isOwn ? "justify-end" : ""}`}>
               {canManage && (
                 <Button variant="ghost" size="sm" className="h-6 px-2 text-xs" onClick={() => togglePin(m)}>
                   {m.is_pinned ? <PinOff className="h-3 w-3" /> : <Pin className="h-3 w-3" />}
+                </Button>
+              )}
+              {canEdit && (
+                <Button variant="ghost" size="sm" className="h-6 px-2 text-xs" onClick={() => startEdit(m)}>
+                  <Pencil className="h-3 w-3" />
                 </Button>
               )}
               {canDelete && (
