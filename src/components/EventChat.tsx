@@ -90,11 +90,11 @@ export const EventChat = ({ eventId, eventOrganizerId }: Props) => {
   const loadProfiles = async (userIds: string[]) => {
     const missing = userIds.filter((id) => !profiles[id]);
     if (missing.length === 0) return;
-    const { data } = await supabase.from("profiles").select("id, full_name, email").in("id", missing);
+    const { data } = await supabase.rpc("get_chat_authors", { _user_ids: missing });
     if (data) {
       setProfiles((prev) => {
         const next = { ...prev };
-        for (const p of data) next[p.id] = p as ProfileMini;
+        for (const p of data as any[]) next[p.id] = p as ProfileMini;
         return next;
       });
     }
