@@ -206,20 +206,9 @@ const Profile = () => {
                   <Input id="club" value={form.club} onChange={(e) => setForm({ ...form, club: e.target.value })} />
                 </div>
               </div>
-              <label className="flex items-start gap-2 text-sm cursor-pointer select-none rounded-lg border border-border bg-muted/30 p-3">
-                <input
-                  type="checkbox"
-                  checked={form.marketing_consent}
-                  onChange={(e) => setForm({ ...form, marketing_consent: e.target.checked })}
-                  className="mt-0.5 h-4 w-4 rounded border-border accent-primary"
-                />
-                <span className="leading-snug">
-                  Отримувати листи про нові події на платформі
-                  <span className="block text-xs text-muted-foreground mt-0.5">
-                    Розсилки про опубліковані події. Можна вимкнути в будь-який момент.
-                  </span>
-                </span>
-              </label>
+              <p className="text-xs text-muted-foreground rounded-lg bg-muted/30 p-3 border border-border leading-snug">
+                📧 Ми надсилаємо вам тільки важливі оновлення по ваших забігах та події платформи. Відписатися можна в будь-який момент через посилання внизу будь-якого листа.
+              </p>
               <Button type="submit" disabled={busy} className="w-full sm:w-auto">
                 {busy && <Loader2 className="h-4 w-4 animate-spin" />} {t.profile.save}
               </Button>
