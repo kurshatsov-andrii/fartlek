@@ -23,11 +23,13 @@ const Profile = () => {
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState(false);
   const [form, setForm] = useState({
-    full_name: "", birth_date: "", gender: "", city: "", club: "", email: "", phone: "", marketing_consent: true,
+    full_name: "", birth_date: "", gender: "", city: "", club: "", email: "", phone: "", marketing_consent: true, avatar_url: "",
   });
   const [athletes, setAthletes] = useState<Athlete[]>([]);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editing, setEditing] = useState<Athlete | null>(null);
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Phone format: +38 (XXX) XXX-XX-XX (9 digits after +38)
   const PHONE_RE = /^\+38 \(\d{3}\) \d{3}-\d{2}-\d{2}$/;
