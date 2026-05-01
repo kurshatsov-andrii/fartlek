@@ -253,7 +253,7 @@ export const EventChat = ({ eventId, eventOrganizerId }: Props) => {
   };
 
   return (
-    <section className="bg-card rounded-2xl shadow-card p-5 sm:p-6">
+    <section id="event-chat" className="bg-card rounded-2xl shadow-card p-5 sm:p-6 scroll-mt-20">
       <div className="flex items-center gap-2 mb-4">
         <MessageCircle className="h-5 w-5 text-primary" />
         <h2 className="font-display text-2xl font-bold">Чат події</h2>
