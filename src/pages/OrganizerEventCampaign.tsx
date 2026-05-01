@@ -85,6 +85,14 @@ const OrganizerEventCampaign = () => {
     })();
   }, [id, user]);
 
+  // Persist draft as user types
+  useEffect(() => {
+    if (!draftKey || pageLoading) return;
+    try {
+      localStorage.setItem(draftKey, JSON.stringify({ subject, intro, testEmail }));
+    } catch {}
+  }, [draftKey, pageLoading, subject, intro, testEmail]);
+
   if (loading || pageLoading)
     return <div className="min-h-screen flex items-center justify-center"><Loader2 className="h-8 w-8 animate-spin" /></div>;
   if (!user) return <Navigate to={`/auth?redirect=/organizer/events/${id}/campaign`} replace />;
