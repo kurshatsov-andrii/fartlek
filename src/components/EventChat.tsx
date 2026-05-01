@@ -381,8 +381,11 @@ export const EventChat = ({ eventId, eventOrganizerId }: Props) => {
     const replied = m.reply_to_id ? messageById[m.reply_to_id] : null;
     return (
       <div key={m.id} id={`chat-msg-${m.id}`} className={`flex gap-3 ${isOwn ? "flex-row-reverse" : ""}`}>
-        <Avatar className="h-8 w-8 shrink-0">
-          <AvatarFallback className="text-xs">{initials(p)}</AvatarFallback>
+        <Avatar className="h-9 w-9 shrink-0">
+          {p?.avatar_url && <AvatarImage src={p.avatar_url} alt={nameOf(m.user_id)} />}
+          <AvatarFallback className={`text-xs font-semibold text-white ${colorFor(m.user_id)}`}>
+            {initials(p)}
+          </AvatarFallback>
         </Avatar>
         <div className={`flex-1 min-w-0 ${isOwn ? "text-right" : ""}`}>
           <div className={`flex items-center gap-2 flex-wrap text-xs text-muted-foreground ${isOwn ? "justify-end" : ""}`}>
