@@ -267,6 +267,56 @@ export type Database = {
         }
         Relationships: []
       }
+      event_chat_messages: {
+        Row: {
+          content: string
+          created_at: string
+          deleted_at: string | null
+          deleted_by: string | null
+          event_id: string
+          id: string
+          is_pinned: boolean
+          pinned_at: string | null
+          pinned_by: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          deleted_at?: string | null
+          deleted_by?: string | null
+          event_id: string
+          id?: string
+          is_pinned?: boolean
+          pinned_at?: string | null
+          pinned_by?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          deleted_at?: string | null
+          deleted_by?: string | null
+          event_id?: string
+          id?: string
+          is_pinned?: boolean
+          pinned_at?: string | null
+          pinned_by?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "event_chat_messages_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       event_co_organizers: {
         Row: {
           added_by: string | null
