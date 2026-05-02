@@ -15,13 +15,45 @@ import { toast } from "sonner";
 import { CheckCircle2, MessageSquareHeart } from "lucide-react";
 
 const MISSING_FEATURES = [
-  { v: "results_tracking", l: "Трекінг результатів" },
-  { v: "ratings", l: "Рейтинги учасників" },
-  { v: "training_plans", l: "Тренувальні плани" },
-  { v: "communities", l: "Спільноти / клуби" },
-  { v: "strava", l: "Інтеграція зі Strava" },
-  { v: "push", l: "Push-сповіщення" },
+  { v: "mobile_app", l: "📱 Мобільний застосунок (iOS/Android)" },
+  { v: "race_history", l: "📊 Історія стартів та особисті рекорди" },
+  { v: "race_photos", l: "📸 Фото з забігів (пошук за номером)" },
+  { v: "virtual_races", l: "🏆 Віртуальні забіги / челенджі" },
+  { v: "results_tracking", l: "⏱️ Трекінг результатів у реальному часі" },
+  { v: "ratings", l: "🥇 Рейтинги учасників" },
+  { v: "training_plans", l: "📅 Тренувальні плани" },
+  { v: "race_series", l: "🏅 Серії змагань / кубки" },
+  { v: "strava", l: "🔗 Інтеграція зі Strava" },
+  { v: "gpx_route", l: "🗺️ Карта маршруту з GPX" },
+  { v: "team_registration", l: "👥 Командні реєстрації / естафети" },
+  { v: "other", l: "✏️ Інше" },
+];
+
+const DISCOVERY_SOURCES = [
+  { v: "google", l: "Google" },
+  { v: "instagram", l: "Instagram" },
+  { v: "facebook", l: "Facebook" },
+  { v: "friends", l: "Друзі / знайомі" },
+  { v: "club", l: "Біговий клуб" },
+  { v: "organizer", l: "Організатор події" },
   { v: "other", l: "Інше" },
+];
+
+const PARTICIPATION_FREQUENCY = [
+  { v: "first_time", l: "Вперше" },
+  { v: "1_2_year", l: "1–2 рази на рік" },
+  { v: "3_5_year", l: "3–5 разів на рік" },
+  { v: "monthly", l: "Щомісяця або частіше" },
+];
+
+const EVENT_CHOICE_FACTORS = [
+  { v: "price", l: "💰 Ціна" },
+  { v: "location", l: "📍 Локація" },
+  { v: "route", l: "🛣️ Траса / дистанція" },
+  { v: "atmosphere", l: "🎉 Атмосфера" },
+  { v: "medal_merch", l: "🏅 Медаль / мерч" },
+  { v: "results_chip", l: "⏱️ Результати / електронний хронометраж" },
+  { v: "organization", l: "✅ Якість організації" },
 ];
 
 const Scale = ({
