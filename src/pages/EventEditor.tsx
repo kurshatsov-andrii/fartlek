@@ -65,19 +65,29 @@ const EventEditor = () => {
       if (ev) {
         setOriginalOrganizerId(ev.organizer_id);
       }
-      if (ev) setForm({
-        title: ev.title, description: ev.description ?? "",
-        organizer_name: ev.organizer_name, event_date: ev.event_date,
-        event_time: ev.event_time.slice(0, 5), location: ev.location ?? "",
-        image_url: ev.image_url ?? "", is_paid: ev.is_paid,
-        payment_url: (ev as any).payment_url ?? "",
-        status: ev.status,
-        category: ((ev as any).category ?? "run") as EventCategory,
-        format: ((ev as any).format ?? "offline") as "offline" | "online" | "hybrid",
-        results_pdf_url: (ev as any).results_pdf_url ?? "",
-        results_url: (ev as any).results_url ?? "",
-        description_image_url: (ev as any).description_image_url ?? "",
-      });
+      if (ev) {
+        const { data: pset } = await supabase
+          .from("event_payment_settings" as any)
+          .select("wayforpay_merchant_login, wayforpay_secret_key, wayforpay_merchant_domain")
+          .eq("event_id", id)
+          .maybeSingle();
+        setForm({
+          title: ev.title, description: ev.description ?? "",
+          organizer_name: ev.organizer_name, event_date: ev.event_date,
+          event_time: ev.event_time.slice(0, 5), location: ev.location ?? "",
+          image_url: ev.image_url ?? "", is_paid: ev.is_paid,
+          payment_url: (ev as any).payment_url ?? "",
+          status: ev.status,
+          category: ((ev as any).category ?? "run") as EventCategory,
+          format: ((ev as any).format ?? "offline") as "offline" | "online" | "hybrid",
+          results_pdf_url: (ev as any).results_pdf_url ?? "",
+          results_url: (ev as any).results_url ?? "",
+          description_image_url: (ev as any).description_image_url ?? "",
+          wfp_merchant_login: (pset as any)?.wayforpay_merchant_login ?? "",
+          wfp_secret_key: (pset as any)?.wayforpay_secret_key ?? "",
+          wfp_merchant_domain: (pset as any)?.wayforpay_merchant_domain ?? "",
+        });
+      }
       const { data: ds } = await supabase.from("distances").select("*").eq("event_id", id).eq("is_active", true).order("distance_km");
       if (ds) setDistances(ds.map((d: any) => ({ id: d.id, distance_km: String(d.distance_km), name: d.name ?? "", price: String(d.price), bib_start: d.bib_start != null ? String(d.bib_start) : "" })));
       setLoading(false);
