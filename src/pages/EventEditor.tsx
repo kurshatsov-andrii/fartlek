@@ -201,7 +201,7 @@ const EventEditor = () => {
       image_url: form.image_url || null,
       location: form.location,
       description: form.description || null,
-      payment_url: form.is_paid ? (form.payment_url || null) : null,
+      payment_url: form.is_paid && paymentMethod === "link" ? (form.payment_url || null) : null,
       results_pdf_url: form.results_pdf_url || null,
       regulations_pdf_url: form.regulations_pdf_url || null,
       results_url: form.results_url || null,
