@@ -435,6 +435,9 @@ export type Database = {
           status: Database["public"]["Enums"]["event_status"]
           title: string
           updated_at: string
+          wayforpay_merchant_domain: string | null
+          wayforpay_merchant_login: string | null
+          wayforpay_secret_key: string | null
         }
         Insert: {
           category?: Database["public"]["Enums"]["event_category"]
@@ -457,6 +460,9 @@ export type Database = {
           status?: Database["public"]["Enums"]["event_status"]
           title: string
           updated_at?: string
+          wayforpay_merchant_domain?: string | null
+          wayforpay_merchant_login?: string | null
+          wayforpay_secret_key?: string | null
         }
         Update: {
           category?: Database["public"]["Enums"]["event_category"]
@@ -479,6 +485,9 @@ export type Database = {
           status?: Database["public"]["Enums"]["event_status"]
           title?: string
           updated_at?: string
+          wayforpay_merchant_domain?: string | null
+          wayforpay_merchant_login?: string | null
+          wayforpay_secret_key?: string | null
         }
         Relationships: []
       }
