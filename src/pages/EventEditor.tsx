@@ -432,7 +432,7 @@ const EventEditor = () => {
               </div>
             )}
 
-            {form.is_paid && isWayForPayUrl(form.payment_url) && (
+            {form.is_paid && (
               <div className="space-y-3 rounded-md border border-primary/40 bg-primary/5 p-4">
                 <div>
                   <h3 className="font-semibold">Реквізити WayForPay</h3>
