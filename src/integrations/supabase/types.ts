@@ -892,6 +892,72 @@ export type Database = {
         }
         Relationships: []
       }
+      survey_responses: {
+        Row: {
+          contact_email: string | null
+          created_at: string
+          design_rating: number | null
+          ease_of_use: number | null
+          easy_to_find_event: string | null
+          id: string
+          liked_most: string | null
+          missing_features: string[]
+          nps_score: number | null
+          organizer_event_creation: number | null
+          organizer_missing_tools: string | null
+          organizer_payments_clear: string | null
+          registration_clarity: number | null
+          registration_difficulty: string | null
+          suggestions: string | null
+          user_agent: string | null
+          user_id: string | null
+          user_role: string | null
+          would_change: string | null
+        }
+        Insert: {
+          contact_email?: string | null
+          created_at?: string
+          design_rating?: number | null
+          ease_of_use?: number | null
+          easy_to_find_event?: string | null
+          id?: string
+          liked_most?: string | null
+          missing_features?: string[]
+          nps_score?: number | null
+          organizer_event_creation?: number | null
+          organizer_missing_tools?: string | null
+          organizer_payments_clear?: string | null
+          registration_clarity?: number | null
+          registration_difficulty?: string | null
+          suggestions?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+          user_role?: string | null
+          would_change?: string | null
+        }
+        Update: {
+          contact_email?: string | null
+          created_at?: string
+          design_rating?: number | null
+          ease_of_use?: number | null
+          easy_to_find_event?: string | null
+          id?: string
+          liked_most?: string | null
+          missing_features?: string[]
+          nps_score?: number | null
+          organizer_event_creation?: number | null
+          organizer_missing_tools?: string | null
+          organizer_payments_clear?: string | null
+          registration_clarity?: number | null
+          registration_difficulty?: string | null
+          suggestions?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+          user_role?: string | null
+          would_change?: string | null
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
