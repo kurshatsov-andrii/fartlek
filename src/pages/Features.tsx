@@ -129,7 +129,7 @@ const Features = () => {
       items: [
         { icon: Tag, title: "Промокоди", desc: "Створюйте знижкові коди (фіксована сума або відсоток) з лімітом використання." },
         { icon: Mail, title: "Email-розсилки", desc: "Маркетингові кампанії учасникам події з готових шаблонів." },
-        { icon: CreditCard, title: "Прийом оплат WayForPay (автопідтвердження)", desc: "Підключіть свій акаунт WayForPay — гроші йдуть напряму вам, а статус оплати ✅ ставиться автоматично. Деталі — у блоці «Оплата» нижче." },
+        { icon: CreditCard, title: "Прийом оплат WayForPay та LiqPay (автопідтвердження)", desc: "Підключіть свій акаунт WayForPay або LiqPay — гроші йдуть напряму вам, а статус оплати ✅ ставиться автоматично. Деталі — у блоці «Оплата» нижче." },
         { icon: Megaphone, title: "Профіль клубу/організатора", desc: "Окрема сторінка з усіма вашими подіями та інформацією про клуб." },
       ],
     },
@@ -166,7 +166,7 @@ const Features = () => {
       items: [
         { icon: Tag, title: "Promo codes", desc: "Discount codes (fixed amount or percentage) with usage limits." },
         { icon: Mail, title: "Email campaigns", desc: "Send marketing emails to participants from ready-made templates." },
-        { icon: CreditCard, title: "WayForPay payments (auto-confirm)", desc: "Connect your own WayForPay account — money goes directly to you, payment status ✅ is set automatically. See the «Payments» block below." },
+        { icon: CreditCard, title: "WayForPay & LiqPay payments (auto-confirm)", desc: "Connect your WayForPay or LiqPay account — money goes directly to you, payment status ✅ is set automatically. See the «Payments» block below." },
         { icon: Megaphone, title: "Club / organizer page", desc: "A dedicated page with all your events and club information." },
       ],
     },
