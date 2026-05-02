@@ -129,7 +129,7 @@ const Features = () => {
       items: [
         { icon: Tag, title: "Промокоди", desc: "Створюйте знижкові коди (фіксована сума або відсоток) з лімітом використання." },
         { icon: Mail, title: "Email-розсилки", desc: "Маркетингові кампанії учасникам події з готових шаблонів." },
-        { icon: CreditCard, title: "Прийом оплат WayForPay", desc: "Гроші надходять напряму на ваш рахунок — платформа лише фасилітує реєстрацію." },
+        { icon: CreditCard, title: "Прийом оплат WayForPay (автопідтвердження)", desc: "Підключіть свій акаунт WayForPay — гроші йдуть напряму вам, а статус оплати ✅ ставиться автоматично. Деталі — у блоці «Оплата» нижче." },
         { icon: Megaphone, title: "Профіль клубу/організатора", desc: "Окрема сторінка з усіма вашими подіями та інформацією про клуб." },
       ],
     },
@@ -166,7 +166,7 @@ const Features = () => {
       items: [
         { icon: Tag, title: "Promo codes", desc: "Discount codes (fixed amount or percentage) with usage limits." },
         { icon: Mail, title: "Email campaigns", desc: "Send marketing emails to participants from ready-made templates." },
-        { icon: CreditCard, title: "WayForPay payments", desc: "Money goes directly to your account — the platform only facilitates registration." },
+        { icon: CreditCard, title: "WayForPay payments (auto-confirm)", desc: "Connect your own WayForPay account — money goes directly to you, payment status ✅ is set automatically. See the «Payments» block below." },
         { icon: Megaphone, title: "Club / organizer page", desc: "A dedicated page with all your events and club information." },
       ],
     },
@@ -270,7 +270,129 @@ const Features = () => {
             </TabsList>
 
             <TabsContent value="participant">{renderGroups(participantGroups)}</TabsContent>
-            <TabsContent value="organizer">{renderGroups(organizerGroups)}</TabsContent>
+            <TabsContent value="organizer">
+              {renderGroups(organizerGroups)}
+
+              {/* Розгорнутий блок про оплату */}
+              <section className="mt-14 rounded-2xl border-2 border-primary/30 bg-gradient-to-br from-primary/5 via-card to-card p-6 md:p-10">
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="h-12 w-12 rounded-xl bg-primary/15 text-primary flex items-center justify-center">
+                    <CreditCard className="h-6 w-6" />
+                  </div>
+                  <h3 className="text-2xl md:text-3xl font-bold">
+                    {isUk ? "Оплата участі — як це працює" : "Payments — how it works"}
+                  </h3>
+                </div>
+                <p className="text-muted-foreground mb-8 max-w-3xl">
+                  {isUk
+                    ? "Fartlek Events не бере комісію з оплат — гроші учасників надходять напряму на ваш рахунок. Підтримуємо два сценарії: автоматичне підтвердження через WayForPay або ручну перевірку квитанції за будь-яким посиланням."
+                    : "Fartlek Events takes no payment commission — participants pay you directly. Two flows are supported: WayForPay auto-confirmation or manual receipt approval for any other payment link."}
+                </p>
+
+                {/* Сценарій 1 — WayForPay */}
+                <div className="rounded-xl border border-primary/40 bg-background p-5 md:p-6 mb-6">
+                  <div className="flex items-start gap-3 mb-4">
+                    <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground text-sm font-bold">1</span>
+                    <div>
+                      <h4 className="text-lg md:text-xl font-bold">
+                        {isUk ? "WayForPay — автоматичне підтвердження ✅" : "WayForPay — automatic confirmation ✅"}
+                      </h4>
+                      <p className="text-sm text-muted-foreground mt-1">
+                        {isUk
+                          ? "Учасник платить на вашому WayForPay, а зелена галочка «Сплачено» з'являється сама — без вашої участі."
+                          : "Participant pays via your WayForPay, the green «Paid» check appears automatically — no manual work."}
+                      </p>
+                    </div>
+                  </div>
+
+                  <ol className="space-y-3 text-sm md:text-base ml-10">
+                    <li>
+                      <strong>{isUk ? "1. У вас має бути акаунт WayForPay." : "1. You need a WayForPay account."}</strong>{" "}
+                      {isUk ? "Якщо немає — зареєструйтесь на " : "If you don't have one — register at "}
+                      <a href="https://wayforpay.com" target="_blank" rel="noopener noreferrer" className="text-primary underline">wayforpay.com</a>.
+                    </li>
+                    <li>
+                      <strong>{isUk ? "2. Створіть/відредагуйте подію" : "2. Create or edit your event"}</strong>{" "}
+                      {isUk ? "у кабінеті організатора, увімкніть «Платна подія» і вставте посилання WayForPay у поле «Посилання на оплату»." : "in the organizer dashboard, enable «Paid event» and paste your WayForPay link into the «Payment URL» field."}
+                    </li>
+                    <li>
+                      <strong>{isUk ? "3. З'являться 3 додаткові поля" : "3. Three extra fields will appear"}</strong>{" "}
+                      {isUk ? "(із вашого кабінету WayForPay → Налаштування → Реквізити мерчанта):" : "(from your WayForPay account → Settings → Merchant credentials):"}
+                      <ul className="list-disc ml-5 mt-1 text-muted-foreground space-y-0.5">
+                        <li><code className="text-foreground">Merchant Login</code></li>
+                        <li><code className="text-foreground">Merchant Secret Key</code></li>
+                        <li><code className="text-foreground">Merchant Domain</code></li>
+                      </ul>
+                    </li>
+                    <li>
+                      <strong>{isUk ? "4. У кабінеті WayForPay" : "4. In your WayForPay dashboard"}</strong>{" "}
+                      {isUk ? "вкажіть два URL (ми покажемо їх готові для копіювання просто на сторінці події):" : "set two URLs (we show them ready-to-copy right on the event page):"}
+                      <ul className="list-disc ml-5 mt-1 text-muted-foreground space-y-1">
+                        <li><strong className="text-foreground">Service URL</strong> — {isUk ? "куди WayForPay надішле підтвердження оплати" : "where WayForPay will send payment confirmation"}</li>
+                        <li><strong className="text-foreground">Return URL</strong> — {isUk ? "куди повернути учасника після оплати" : "where to redirect the participant after payment"}</li>
+                      </ul>
+                    </li>
+                    <li>
+                      <strong>{isUk ? "5. Готово!" : "5. Done!"}</strong>{" "}
+                      {isUk ? "Учасник реєструється → натискає «Сплатити» → платить на WayForPay → автоматично повертається на сайт із зеленою галочкою «Сплачено»." : "Participant registers → clicks «Pay» → pays on WayForPay → automatically returns with a green «Paid» check."}
+                    </li>
+                  </ol>
+
+                  <div className="mt-5 ml-10 rounded-md bg-primary/10 border border-primary/30 p-3 text-sm">
+                    🔒 {isUk
+                      ? "Ваш Secret Key зберігається приватно — його бачите тільки ви, ваші співорганізатори та адміністратор платформи."
+                      : "Your Secret Key is stored privately — only you, your co-organizers, and the platform admin can see it."}
+                  </div>
+                </div>
+
+                {/* Сценарій 2 — інші посилання */}
+                <div className="rounded-xl border border-border bg-background p-5 md:p-6">
+                  <div className="flex items-start gap-3 mb-4">
+                    <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-muted text-foreground text-sm font-bold">2</span>
+                    <div>
+                      <h4 className="text-lg md:text-xl font-bold">
+                        {isUk ? "Будь-яке інше посилання — ручне підтвердження" : "Any other payment link — manual confirmation"}
+                      </h4>
+                      <p className="text-sm text-muted-foreground mt-1">
+                        {isUk
+                          ? "Monobank банка, Privat24, LiqPay, IBAN — учасник платить, завантажує квитанцію, ви підтверджуєте одним кліком."
+                          : "Monobank jar, Privat24, LiqPay, IBAN — participant pays, uploads a receipt, you confirm with one click."}
+                      </p>
+                    </div>
+                  </div>
+
+                  <ol className="space-y-2 text-sm md:text-base ml-10 list-decimal list-inside">
+                    <li>{isUk ? "Вставте будь-яке посилання на оплату у поле «Посилання на оплату»." : "Paste any payment link in the «Payment URL» field."}</li>
+                    <li>{isUk ? "Учасник переходить за ним, оплачує, повертається на сайт і завантажує скрін/PDF квитанції." : "Participant follows it, pays, returns to the site and uploads a screenshot or PDF receipt."}</li>
+                    <li>{isUk ? "У списку учасників ви бачите квитанцію → натискаєте «Підтвердити» → з'являється зелена галочка." : "You see the receipt in the participants list → click «Confirm» → green check appears."}</li>
+                  </ol>
+                </div>
+
+                {/* Часті питання */}
+                <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="rounded-lg bg-muted/40 p-4">
+                    <h5 className="font-semibold mb-1 text-sm">
+                      {isUk ? "💰 Чи бере Fartlek комісію?" : "💰 Does Fartlek take a commission?"}
+                    </h5>
+                    <p className="text-sm text-muted-foreground">
+                      {isUk
+                        ? "Ні. Гроші йдуть напряму на ваш рахунок. Ви платите тільки комісію WayForPay (≈ 2.7%) за свою угоду з ними."
+                        : "No. Money goes directly to your account. You only pay WayForPay's fee (~2.7%) per your contract with them."}
+                    </p>
+                  </div>
+                  <div className="rounded-lg bg-muted/40 p-4">
+                    <h5 className="font-semibold mb-1 text-sm">
+                      {isUk ? "🔄 Що з поверненнями?" : "🔄 What about refunds?"}
+                    </h5>
+                    <p className="text-sm text-muted-foreground">
+                      {isUk
+                        ? "Повернення робите ви через свій кабінет WayForPay або вручну для інших методів. На сайті можна змінити статус оплати назад."
+                        : "You handle refunds via your WayForPay dashboard or manually for other methods. Payment status can be reverted on the site."}
+                    </p>
+                  </div>
+                </div>
+              </section>
+            </TabsContent>
           </Tabs>
 
           <p className="text-center text-xs text-muted-foreground mt-12 italic">
