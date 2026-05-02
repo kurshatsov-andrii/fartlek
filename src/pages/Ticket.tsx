@@ -15,6 +15,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { startWayForPayCheckout } from "@/lib/wayforpay";
 import { startLiqPayCheckout } from "@/lib/liqpay";
+import { startAutomatedPaymentCheckout } from "@/lib/paymentCheckout";
 import { PromoCodeInput, PromoPreview } from "@/components/PromoCodeInput";
 
 const Ticket = () => {
@@ -318,7 +319,9 @@ const Ticket = () => {
                         setRedemption({ discount_amount: promo.discount_amount, promo_code_id: promo.promo_id, code: promo.code });
                         setPromo(null);
                       }
-                      if (isLiqPay) {
+                      if (!ev.payment_url) {
+                        await startAutomatedPaymentCheckout(data.id);
+                      } else if (isLiqPay) {
                         await startLiqPayCheckout(data.id);
                       } else {
                         await startWayForPayCheckout(data.id);

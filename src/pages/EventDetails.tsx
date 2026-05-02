@@ -15,7 +15,7 @@ import { useApp } from "@/contexts/AppContext";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { startWayForPayCheckout } from "@/lib/wayforpay";
+import { startAutomatedPaymentCheckout } from "@/lib/paymentCheckout";
 import { buildEventSeo } from "@/lib/seo";
 import { linkifyText } from "@/lib/linkify";
 import { PromoCodeInput, PromoPreview } from "@/components/PromoCodeInput";
@@ -171,11 +171,19 @@ const EventDetails = () => {
       if (pErr) toast.error(pErr.message);
       else toast.success(t.promo.discountApplied);
     }
-    setBusy(false);
-    toast.success("OK");
-    if (isPaidReg && event.payment_url) {
-      window.open(event.payment_url, "_blank", "noopener,noreferrer");
+    if (isPaidReg) {
+      if (event.payment_url) {
+        window.open(event.payment_url, "_blank", "noopener,noreferrer");
+      } else {
+        try {
+          await startAutomatedPaymentCheckout(reg.id);
+          return;
+        } catch (e: any) {
+          toast.error(e.message ?? t.common.error);
+        }
+      }
     }
+    setBusy(false);
     navigate(`/ticket/${reg.id}`);
   };
 
@@ -371,7 +379,7 @@ const EventDetails = () => {
                             className="w-full"
                             onClick={async () => {
                               setBusy(true);
-                              try { await startWayForPayCheckout(registration.id); }
+                              try { await startAutomatedPaymentCheckout(registration.id); }
                               catch (e: any) { toast.error(e.message); setBusy(false); }
                             }}
                             disabled={busy}
