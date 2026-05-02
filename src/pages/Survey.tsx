@@ -33,6 +33,7 @@ const DISCOVERY_SOURCES = [
   { v: "google", l: "Google" },
   { v: "instagram", l: "Instagram" },
   { v: "facebook", l: "Facebook" },
+  { v: "telegram", l: "Telegram" },
   { v: "friends", l: "Друзі / знайомі" },
   { v: "club", l: "Біговий клуб" },
   { v: "organizer", l: "Організатор події" },
@@ -248,6 +249,7 @@ const Survey = () => {
 
                   <div className="space-y-3">
                     <Label className="text-base">7. Яких функцій вам не вистачає?</Label>
+                    <p className="text-xs text-muted-foreground">Можна обрати кілька варіантів</p>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                       {MISSING_FEATURES.map((f) => (
                         <div key={f.v} className="flex items-center gap-2">
