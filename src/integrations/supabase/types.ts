@@ -897,8 +897,10 @@ export type Database = {
           contact_email: string | null
           created_at: string
           design_rating: number | null
+          discovery_source: string | null
           ease_of_use: number | null
           easy_to_find_event: string | null
+          event_choice_factors: string[]
           id: string
           liked_most: string | null
           missing_features: string[]
@@ -906,6 +908,7 @@ export type Database = {
           organizer_event_creation: number | null
           organizer_missing_tools: string | null
           organizer_payments_clear: string | null
+          participation_frequency: string | null
           registration_clarity: number | null
           registration_difficulty: string | null
           suggestions: string | null
@@ -918,8 +921,10 @@ export type Database = {
           contact_email?: string | null
           created_at?: string
           design_rating?: number | null
+          discovery_source?: string | null
           ease_of_use?: number | null
           easy_to_find_event?: string | null
+          event_choice_factors?: string[]
           id?: string
           liked_most?: string | null
           missing_features?: string[]
@@ -927,6 +932,7 @@ export type Database = {
           organizer_event_creation?: number | null
           organizer_missing_tools?: string | null
           organizer_payments_clear?: string | null
+          participation_frequency?: string | null
           registration_clarity?: number | null
           registration_difficulty?: string | null
           suggestions?: string | null
@@ -939,8 +945,10 @@ export type Database = {
           contact_email?: string | null
           created_at?: string
           design_rating?: number | null
+          discovery_source?: string | null
           ease_of_use?: number | null
           easy_to_find_event?: string | null
+          event_choice_factors?: string[]
           id?: string
           liked_most?: string | null
           missing_features?: string[]
@@ -948,6 +956,7 @@ export type Database = {
           organizer_event_creation?: number | null
           organizer_missing_tools?: string | null
           organizer_payments_clear?: string | null
+          participation_frequency?: string | null
           registration_clarity?: number | null
           registration_difficulty?: string | null
           suggestions?: string | null
