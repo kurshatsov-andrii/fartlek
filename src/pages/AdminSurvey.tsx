@@ -208,6 +208,28 @@ const AdminSurvey = () => {
                     </div>
                   )}
 
+                  {r.event_choice_factors?.length > 0 && (
+                    <div>
+                      <div className="text-sm text-muted-foreground mb-1">Важливо при виборі події:</div>
+                      <div className="flex flex-wrap gap-1.5">
+                        {r.event_choice_factors.map((f: string) => (
+                          <Badge key={f} variant="secondary">{FACTOR_LABELS[f] ?? f}</Badge>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {(r.discovery_source || r.participation_frequency) && (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                      {r.discovery_source && (
+                        <Field label="Дізнався з">{DISCOVERY_LABELS[r.discovery_source] ?? r.discovery_source}</Field>
+                      )}
+                      {r.participation_frequency && (
+                        <Field label="Частота участі">{FREQUENCY_LABELS[r.participation_frequency] ?? r.participation_frequency}</Field>
+                      )}
+                    </div>
+                  )}
+
                   {r.organizer_missing_tools && <TextBlock label="Інструменти для організаторів">{r.organizer_missing_tools}</TextBlock>}
                   {r.liked_most && <TextBlock label="Подобається найбільше">{r.liked_most}</TextBlock>}
                   {r.would_change && <TextBlock label="Що змінити">{r.would_change}</TextBlock>}
