@@ -15,13 +15,45 @@ import { toast } from "sonner";
 import { CheckCircle2, MessageSquareHeart } from "lucide-react";
 
 const MISSING_FEATURES = [
-  { v: "results_tracking", l: "Трекінг результатів" },
-  { v: "ratings", l: "Рейтинги учасників" },
-  { v: "training_plans", l: "Тренувальні плани" },
-  { v: "communities", l: "Спільноти / клуби" },
-  { v: "strava", l: "Інтеграція зі Strava" },
-  { v: "push", l: "Push-сповіщення" },
+  { v: "mobile_app", l: "📱 Мобільний застосунок (iOS/Android)" },
+  { v: "race_history", l: "📊 Історія стартів та особисті рекорди" },
+  { v: "race_photos", l: "📸 Фото з забігів (пошук за номером)" },
+  { v: "virtual_races", l: "🏆 Віртуальні забіги / челенджі" },
+  { v: "results_tracking", l: "⏱️ Трекінг результатів у реальному часі" },
+  { v: "ratings", l: "🥇 Рейтинги учасників" },
+  { v: "training_plans", l: "📅 Тренувальні плани" },
+  { v: "race_series", l: "🏅 Серії змагань / кубки" },
+  { v: "strava", l: "🔗 Інтеграція зі Strava" },
+  { v: "gpx_route", l: "🗺️ Карта маршруту з GPX" },
+  { v: "team_registration", l: "👥 Командні реєстрації / естафети" },
+  { v: "other", l: "✏️ Інше" },
+];
+
+const DISCOVERY_SOURCES = [
+  { v: "google", l: "Google" },
+  { v: "instagram", l: "Instagram" },
+  { v: "facebook", l: "Facebook" },
+  { v: "friends", l: "Друзі / знайомі" },
+  { v: "club", l: "Біговий клуб" },
+  { v: "organizer", l: "Організатор події" },
   { v: "other", l: "Інше" },
+];
+
+const PARTICIPATION_FREQUENCY = [
+  { v: "first_time", l: "Вперше" },
+  { v: "1_2_year", l: "1–2 рази на рік" },
+  { v: "3_5_year", l: "3–5 разів на рік" },
+  { v: "monthly", l: "Щомісяця або частіше" },
+];
+
+const EVENT_CHOICE_FACTORS = [
+  { v: "price", l: "💰 Ціна" },
+  { v: "location", l: "📍 Локація" },
+  { v: "route", l: "🛣️ Траса / дистанція" },
+  { v: "atmosphere", l: "🎉 Атмосфера" },
+  { v: "medal_merch", l: "🏅 Медаль / мерч" },
+  { v: "results_chip", l: "⏱️ Результати / електронний хронометраж" },
+  { v: "organization", l: "✅ Якість організації" },
 ];
 
 const Scale = ({
@@ -76,12 +108,19 @@ const Survey = () => {
   const [wouldChange, setWouldChange] = useState("");
   const [suggestions, setSuggestions] = useState("");
   const [contactEmail, setContactEmail] = useState("");
+  const [discoverySource, setDiscoverySource] = useState<string>("");
+  const [participationFrequency, setParticipationFrequency] = useState<string>("");
+  const [eventChoiceFactors, setEventChoiceFactors] = useState<string[]>([]);
 
   const isOrganizer = roles.includes("organizer") || roles.includes("admin");
   const userRole = !user ? "guest" : isOrganizer ? "organizer" : "participant";
 
   const toggleMissing = (v: string) => {
     setMissing((prev) => (prev.includes(v) ? prev.filter((x) => x !== v) : [...prev, v]));
+  };
+
+  const toggleFactor = (v: string) => {
+    setEventChoiceFactors((prev) => (prev.includes(v) ? prev.filter((x) => x !== v) : [...prev, v]));
   };
 
   const onSubmit = async (e: React.FormEvent) => {
@@ -98,6 +137,9 @@ const Survey = () => {
         registration_clarity: regClarity,
         registration_difficulty: regDifficulty || null,
         missing_features: missing,
+        discovery_source: discoverySource || null,
+        participation_frequency: participationFrequency || null,
+        event_choice_factors: eventChoiceFactors,
         organizer_event_creation: isOrganizer ? orgEventCreation : null,
         organizer_payments_clear: isOrganizer ? orgPaymentsClear || null : null,
         organizer_missing_tools: isOrganizer ? orgMissingTools.trim() || null : null,
@@ -218,6 +260,47 @@ const Survey = () => {
                         </div>
                       ))}
                     </div>
+                  </div>
+
+                  <div className="space-y-3">
+                    <Label className="text-base">8. Що для вас найважливіше при виборі події?</Label>
+                    <p className="text-xs text-muted-foreground">Можна обрати кілька варіантів</p>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      {EVENT_CHOICE_FACTORS.map((f) => (
+                        <div key={f.v} className="flex items-center gap-2">
+                          <Checkbox
+                            id={`fac-${f.v}`}
+                            checked={eventChoiceFactors.includes(f.v)}
+                            onCheckedChange={() => toggleFactor(f.v)}
+                          />
+                          <Label htmlFor={`fac-${f.v}`} className="font-normal cursor-pointer">{f.l}</Label>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="space-y-3">
+                    <Label className="text-base">9. Як ви дізналися про Fartlek?</Label>
+                    <RadioGroup value={discoverySource} onValueChange={setDiscoverySource} className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      {DISCOVERY_SOURCES.map((o) => (
+                        <div key={o.v} className="flex items-center gap-2">
+                          <RadioGroupItem value={o.v} id={`disc-${o.v}`} />
+                          <Label htmlFor={`disc-${o.v}`} className="font-normal cursor-pointer">{o.l}</Label>
+                        </div>
+                      ))}
+                    </RadioGroup>
+                  </div>
+
+                  <div className="space-y-3">
+                    <Label className="text-base">10. Як часто берете участь у забігах?</Label>
+                    <RadioGroup value={participationFrequency} onValueChange={setParticipationFrequency} className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      {PARTICIPATION_FREQUENCY.map((o) => (
+                        <div key={o.v} className="flex items-center gap-2">
+                          <RadioGroupItem value={o.v} id={`freq-${o.v}`} />
+                          <Label htmlFor={`freq-${o.v}`} className="font-normal cursor-pointer">{o.l}</Label>
+                        </div>
+                      ))}
+                    </RadioGroup>
                   </div>
                 </CardContent>
               </Card>
