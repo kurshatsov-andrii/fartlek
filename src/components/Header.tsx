@@ -87,16 +87,16 @@ export const Header = () => {
             </DropdownMenu>
           ) : (
             <>
-              <a href="/#events" onClick={handleEventsClick} className="md:hidden text-sm font-medium text-muted-foreground hover:text-foreground transition-base px-2 cursor-pointer">
+              <a href="/#events" onClick={handleEventsClick} className="md:hidden text-xs font-medium text-muted-foreground hover:text-foreground transition-base px-1 cursor-pointer">
                 {t.nav.events}
               </a>
-              <Link to="/clubs" className="md:hidden text-sm font-medium text-muted-foreground hover:text-foreground transition-base px-2">
+              <Link to="/clubs" className="md:hidden text-xs font-medium text-muted-foreground hover:text-foreground transition-base px-1">
                 Клуби
               </Link>
-              <Link to="/features" className="md:hidden text-sm font-medium text-muted-foreground hover:text-foreground transition-base px-2">
-                Можливості
+              <Link to="/features" className="md:hidden text-xs font-medium text-muted-foreground hover:text-foreground transition-base px-1">
+                Функції
               </Link>
-              <Link to="/contacts" className="md:hidden text-sm font-medium text-muted-foreground hover:text-foreground transition-base px-2">
+              <Link to="/contacts" className="md:hidden text-xs font-medium text-muted-foreground hover:text-foreground transition-base px-1">
                 {t.nav.contacts}
               </Link>
               <Button asChild size="sm" className="ml-2 hidden sm:inline-flex">
