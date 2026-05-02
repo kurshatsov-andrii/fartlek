@@ -521,15 +521,25 @@ const EventDetails = () => {
                 </DialogTitle>
               </DialogHeader>
               <div className="flex-1 overflow-hidden bg-muted">
-                <iframe
-                  src={event.regulations_pdf_url}
-                  title={lang === "uk" ? "Регламент" : "Regulations"}
-                  className="w-full h-full"
-                />
+                {(() => {
+                  const url = event.regulations_pdf_url!;
+                  // Google Docs: convert /edit or any tail to /preview for iframe embedding
+                  const gdocMatch = url.match(/^https:\/\/docs\.google\.com\/document\/d\/([^/]+)/i);
+                  const embedSrc = gdocMatch
+                    ? `https://docs.google.com/document/d/${gdocMatch[1]}/preview`
+                    : url;
+                  return (
+                    <iframe
+                      src={embedSrc}
+                      title={lang === "uk" ? "Регламент" : "Regulations"}
+                      className="w-full h-full"
+                    />
+                  );
+                })()}
               </div>
               <div className="p-3 border-t border-border flex justify-end">
                 <Button asChild variant="outline" size="sm">
-                  <a href={event.regulations_pdf_url} target="_blank" rel="noopener noreferrer" download>
+                  <a href={event.regulations_pdf_url} target="_blank" rel="noopener noreferrer">
                     {lang === "uk" ? "Відкрити в новій вкладці" : "Open in new tab"}
                   </a>
                 </Button>
