@@ -15,7 +15,6 @@ import { toast } from "sonner";
 import { CheckCircle2, MessageSquareHeart } from "lucide-react";
 
 const MISSING_FEATURES = [
-  { v: "mobile_app", l: "📱 Мобільний застосунок (iOS/Android)" },
   { v: "race_history", l: "📊 Історія стартів та особисті рекорди" },
   { v: "race_photos", l: "📸 Фото з забігів (пошук за номером)" },
   { v: "virtual_races", l: "🏆 Віртуальні забіги / челенджі" },
@@ -24,7 +23,6 @@ const MISSING_FEATURES = [
   { v: "training_plans", l: "📅 Тренувальні плани" },
   { v: "race_series", l: "🏅 Серії змагань / кубки" },
   { v: "strava", l: "🔗 Інтеграція зі Strava" },
-  { v: "gpx_route", l: "🗺️ Карта маршруту з GPX" },
   { v: "team_registration", l: "👥 Командні реєстрації / естафети" },
   { v: "other", l: "✏️ Інше" },
 ];
