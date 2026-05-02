@@ -47,6 +47,7 @@ const EventEditor = () => {
 
   const isWayForPayUrl = (url: string) => /wayforpay/i.test(url || "");
   const [uploadingResults, setUploadingResults] = useState(false);
+  const [uploadingRegulations, setUploadingRegulations] = useState(false);
   const [uploadingDescImage, setUploadingDescImage] = useState(false);
   const [distances, setDistances] = useState<DistanceForm[]>([{ distance_km: "10", name: "", price: "0", bib_start: "" }]);
   const [clubOptions, setClubOptions] = useState<{ id: string; name: string; city: string | null }[]>([]);
@@ -82,6 +83,7 @@ const EventEditor = () => {
           category: ((ev as any).category ?? "run") as EventCategory,
           format: ((ev as any).format ?? "offline") as "offline" | "online" | "hybrid",
           results_pdf_url: (ev as any).results_pdf_url ?? "",
+          regulations_pdf_url: (ev as any).regulations_pdf_url ?? "",
           results_url: (ev as any).results_url ?? "",
           description_image_url: (ev as any).description_image_url ?? "",
           wfp_merchant_login: (pset as any)?.wayforpay_merchant_login ?? "",
@@ -123,6 +125,24 @@ const EventEditor = () => {
 
   const removeResults = () => {
     setForm((f) => ({ ...f, results_pdf_url: "" }));
+  };
+
+  const uploadRegulations = async (file: File) => {
+    if (!user || isNew) return;
+    if (file.type !== "application/pdf") { toast.error("Файл має бути у форматі PDF"); return; }
+    if (file.size > 20 * 1024 * 1024) { toast.error("Файл занадто великий (макс. 20 МБ)"); return; }
+    setUploadingRegulations(true);
+    const path = `${id}/regulations-${Date.now()}.pdf`;
+    const { error } = await supabase.storage.from("event-results").upload(path, file, { contentType: "application/pdf", upsert: true });
+    if (error) { toast.error(error.message); setUploadingRegulations(false); return; }
+    const { data } = supabase.storage.from("event-results").getPublicUrl(path);
+    setForm((f) => ({ ...f, regulations_pdf_url: data.publicUrl }));
+    setUploadingRegulations(false);
+    toast.success("Регламент завантажено");
+  };
+
+  const removeRegulations = () => {
+    setForm((f) => ({ ...f, regulations_pdf_url: "" }));
   };
 
   const uploadDescImage = async (file: File) => {
