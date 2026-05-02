@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { AthleteFormDialog, Athlete } from "@/components/AthleteFormDialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useApp } from "@/contexts/AppContext";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
@@ -29,6 +30,7 @@ interface EventRow {
   format: "offline" | "online" | "hybrid";
   results_pdf_url: string | null;
   results_url: string | null;
+  regulations_pdf_url: string | null;
   description_image_url: string | null;
 }
 interface DistanceRow { id: string; distance_km: number; name: string | null; price: number; is_active?: boolean; }
@@ -52,6 +54,7 @@ const EventDetails = () => {
   const [promo, setPromo] = useState<PromoPreview | null>(null);
   const [hasPromoCodes, setHasPromoCodes] = useState(false);
   const [clubSlug, setClubSlug] = useState<string | null>(null);
+  const [regulationsOpen, setRegulationsOpen] = useState(false);
 
   // Reset promo if distance changes
   useEffect(() => { setPromo(null); }, [selectedDistance]);
@@ -297,6 +300,19 @@ const EventDetails = () => {
                   {linkifyText(event.description)}
                 </div>
               )}
+              {event.regulations_pdf_url && (
+                <div>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setRegulationsOpen(true)}
+                    className="gap-2"
+                  >
+                    <FileText className="h-4 w-4" />
+                    {lang === "uk" ? "Регламент" : "Regulations"}
+                  </Button>
+                </div>
+              )}
               {event.description_image_url && (
                 <img
                   src={event.description_image_url}
@@ -494,6 +510,33 @@ const EventDetails = () => {
         <div className="mt-8">
           <EventChat eventId={event.id} eventOrganizerId={event.organizer_id} />
         </div>
+
+        {event.regulations_pdf_url && (
+          <Dialog open={regulationsOpen} onOpenChange={setRegulationsOpen}>
+            <DialogContent className="max-w-5xl w-[95vw] h-[90vh] flex flex-col p-0 gap-0">
+              <DialogHeader className="p-4 border-b border-border">
+                <DialogTitle className="flex items-center gap-2">
+                  <FileText className="h-5 w-5 text-primary" />
+                  {lang === "uk" ? "Регламент події" : "Event regulations"}
+                </DialogTitle>
+              </DialogHeader>
+              <div className="flex-1 overflow-hidden bg-muted">
+                <iframe
+                  src={event.regulations_pdf_url}
+                  title={lang === "uk" ? "Регламент" : "Regulations"}
+                  className="w-full h-full"
+                />
+              </div>
+              <div className="p-3 border-t border-border flex justify-end">
+                <Button asChild variant="outline" size="sm">
+                  <a href={event.regulations_pdf_url} target="_blank" rel="noopener noreferrer" download>
+                    {lang === "uk" ? "Відкрити в новій вкладці" : "Open in new tab"}
+                  </a>
+                </Button>
+              </div>
+            </DialogContent>
+          </Dialog>
+        )}
       </main>
       <Footer />
     </div>

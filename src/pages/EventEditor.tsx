@@ -37,6 +37,7 @@ const EventEditor = () => {
     category: "run" as EventCategory,
     format: "offline" as "offline" | "online" | "hybrid",
     results_pdf_url: "",
+    regulations_pdf_url: "",
     results_url: "",
     description_image_url: "",
     wfp_merchant_login: "",
@@ -46,6 +47,7 @@ const EventEditor = () => {
 
   const isWayForPayUrl = (url: string) => /wayforpay/i.test(url || "");
   const [uploadingResults, setUploadingResults] = useState(false);
+  const [uploadingRegulations, setUploadingRegulations] = useState(false);
   const [uploadingDescImage, setUploadingDescImage] = useState(false);
   const [distances, setDistances] = useState<DistanceForm[]>([{ distance_km: "10", name: "", price: "0", bib_start: "" }]);
   const [clubOptions, setClubOptions] = useState<{ id: string; name: string; city: string | null }[]>([]);
@@ -81,6 +83,7 @@ const EventEditor = () => {
           category: ((ev as any).category ?? "run") as EventCategory,
           format: ((ev as any).format ?? "offline") as "offline" | "online" | "hybrid",
           results_pdf_url: (ev as any).results_pdf_url ?? "",
+          regulations_pdf_url: (ev as any).regulations_pdf_url ?? "",
           results_url: (ev as any).results_url ?? "",
           description_image_url: (ev as any).description_image_url ?? "",
           wfp_merchant_login: (pset as any)?.wayforpay_merchant_login ?? "",
@@ -124,6 +127,24 @@ const EventEditor = () => {
     setForm((f) => ({ ...f, results_pdf_url: "" }));
   };
 
+  const uploadRegulations = async (file: File) => {
+    if (!user || isNew) return;
+    if (file.type !== "application/pdf") { toast.error("Файл має бути у форматі PDF"); return; }
+    if (file.size > 20 * 1024 * 1024) { toast.error("Файл занадто великий (макс. 20 МБ)"); return; }
+    setUploadingRegulations(true);
+    const path = `${id}/regulations-${Date.now()}.pdf`;
+    const { error } = await supabase.storage.from("event-results").upload(path, file, { contentType: "application/pdf", upsert: true });
+    if (error) { toast.error(error.message); setUploadingRegulations(false); return; }
+    const { data } = supabase.storage.from("event-results").getPublicUrl(path);
+    setForm((f) => ({ ...f, regulations_pdf_url: data.publicUrl }));
+    setUploadingRegulations(false);
+    toast.success("Регламент завантажено");
+  };
+
+  const removeRegulations = () => {
+    setForm((f) => ({ ...f, regulations_pdf_url: "" }));
+  };
+
   const uploadDescImage = async (file: File) => {
     if (!user) return;
     if (!file.type.startsWith("image/")) { toast.error("Файл має бути зображенням"); return; }
@@ -163,6 +184,7 @@ const EventEditor = () => {
       description: form.description || null,
       payment_url: form.is_paid ? (form.payment_url || null) : null,
       results_pdf_url: form.results_pdf_url || null,
+      regulations_pdf_url: form.regulations_pdf_url || null,
       results_url: form.results_url || null,
       description_image_url: form.description_image_url || null,
     } as any;
@@ -457,6 +479,42 @@ const EventEditor = () => {
               </div>
             )}
 
+
+            {!isNew && (
+              <div className="space-y-2 rounded-md border border-border p-4">
+                <Label>Регламент події (PDF)</Label>
+                <p className="text-xs text-muted-foreground">
+                  Учасники зможуть переглянути регламент безпосередньо на сторінці події у модальному вікні.
+                </p>
+                <div className="flex flex-wrap items-center gap-3 pt-1">
+                  {form.regulations_pdf_url && (
+                    <a
+                      href={form.regulations_pdf_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm text-primary hover:underline inline-flex items-center gap-1.5"
+                    >
+                      <Upload className="h-4 w-4 rotate-180" /> Переглянути регламент
+                    </a>
+                  )}
+                  <label className="inline-flex items-center gap-2 cursor-pointer rounded-md border border-input bg-background px-4 py-2 text-sm hover:bg-accent hover:text-accent-foreground transition-base">
+                    {uploadingRegulations ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
+                    {form.regulations_pdf_url ? "Замінити PDF" : "Завантажити PDF"}
+                    <input
+                      type="file"
+                      accept="application/pdf"
+                      className="hidden"
+                      onChange={(e) => e.target.files?.[0] && uploadRegulations(e.target.files[0])}
+                    />
+                  </label>
+                  {form.regulations_pdf_url && (
+                    <Button type="button" variant="ghost" size="sm" onClick={removeRegulations}>
+                      <X className="h-4 w-4" /> {t.organizer.delete}
+                    </Button>
+                  )}
+                </div>
+              </div>
+            )}
 
             {!isNew && (
               <div className="space-y-2 rounded-md border border-border p-4">
