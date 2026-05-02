@@ -63,8 +63,10 @@ const EventEditor = () => {
     })();
   }, []);
 
+  const [loadedFor, setLoadedFor] = useState<string | null>(null);
   useEffect(() => {
     if (isNew || !user) return;
+    if (loadedFor === id) return;
     (async () => {
       const { data: ev } = await supabase.from("events").select("*").eq("id", id).maybeSingle();
       if (ev) {
@@ -98,9 +100,10 @@ const EventEditor = () => {
       }
       const { data: ds } = await supabase.from("distances").select("*").eq("event_id", id).eq("is_active", true).order("distance_km");
       if (ds) setDistances(ds.map((d: any) => ({ id: d.id, distance_km: String(d.distance_km), name: d.name ?? "", price: String(d.price), bib_start: d.bib_start != null ? String(d.bib_start) : "" })));
+      setLoadedFor(id ?? null);
       setLoading(false);
     })();
-  }, [id, isNew, user]);
+  }, [id, isNew, user, loadedFor]);
 
   const uploadImage = async (file: File) => {
     if (!user) return;
