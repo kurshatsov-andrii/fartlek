@@ -506,6 +506,75 @@ const EventEditor = () => {
               </div>
             )}
 
+            {form.is_paid && isLiqPayUrl(form.payment_url) && (
+              <div className="space-y-3 rounded-md border border-primary/40 bg-primary/5 p-4">
+                <div>
+                  <h3 className="font-semibold">Реквізити LiqPay</h3>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Дані з твого кабінету LiqPay → Налаштування → API. Зберігаються приватно — їх бачиш тільки ти.
+                  </p>
+                </div>
+                <div className="space-y-2">
+                  <Label>Public Key *</Label>
+                  <Input
+                    placeholder="наприклад: i12345678901"
+                    value={form.liqpay_public_key}
+                    onChange={(e) => setForm({ ...form, liqpay_public_key: e.target.value })}
+                    maxLength={100}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Private Key *</Label>
+                  <Input
+                    type="password"
+                    placeholder="приватний ключ"
+                    value={form.liqpay_private_key}
+                    onChange={(e) => setForm({ ...form, liqpay_private_key: e.target.value })}
+                    maxLength={200}
+                  />
+                </div>
+                <div className="rounded-md bg-background border border-border p-3 text-xs space-y-3">
+                  <p className="font-semibold">⚙️ Налаштуй у кабінеті LiqPay:</p>
+                  {(() => {
+                    const serverUrl = `https://${import.meta.env.VITE_SUPABASE_PROJECT_ID}.supabase.co/functions/v1/liqpay-callback`;
+                    const resultUrl = `${window.location.origin}/payment-success`;
+                    const copy = async (val: string, label: string) => {
+                      try {
+                        await navigator.clipboard.writeText(val);
+                        toast.success(`${label} скопійовано`);
+                      } catch {
+                        toast.error("Не вдалося скопіювати");
+                      }
+                    };
+                    return (
+                      <>
+                        <div>
+                          <p className="mb-1"><strong>Server URL (callback):</strong></p>
+                          <div className="flex items-stretch gap-1">
+                            <code className="flex-1 bg-muted p-2 rounded text-[10px] break-all">{serverUrl}</code>
+                            <Button type="button" variant="outline" size="sm" className="shrink-0" onClick={() => copy(serverUrl, "Server URL")}>
+                              <Copy className="h-3 w-3 mr-1" /> Копіювати
+                            </Button>
+                          </div>
+                        </div>
+                        <div>
+                          <p className="mb-1"><strong>Result URL (повернення):</strong></p>
+                          <div className="flex items-stretch gap-1">
+                            <code className="flex-1 bg-muted p-2 rounded text-[10px] break-all">{resultUrl}</code>
+                            <Button type="button" variant="outline" size="sm" className="shrink-0" onClick={() => copy(resultUrl, "Result URL")}>
+                              <Copy className="h-3 w-3 mr-1" /> Копіювати
+                            </Button>
+                          </div>
+                        </div>
+                        <p className="text-muted-foreground pt-1">
+                          Server URL вкажи у налаштуваннях магазину LiqPay як URL для callback. Result URL — куди повертається учасник після оплати.
+                        </p>
+                      </>
+                    );
+                  })()}
+                </div>
+              </div>
+            )}
 
             {!isNew && (
               <div className="space-y-3 rounded-md border border-border p-4">
