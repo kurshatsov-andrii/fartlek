@@ -94,7 +94,7 @@ export const Header = () => {
                 Клуби
               </Link>
               <Link to="/features" className="md:hidden text-xs font-medium text-muted-foreground hover:text-foreground transition-base px-1">
-                Функції
+                Опції
               </Link>
               <Link to="/contacts" className="md:hidden text-xs font-medium text-muted-foreground hover:text-foreground transition-base px-1">
                 {t.nav.contacts}
