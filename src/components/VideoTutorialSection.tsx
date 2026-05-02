@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Play } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Play, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useApp } from "@/contexts/AppContext";
 
@@ -18,6 +19,7 @@ export const VideoTutorialSection = () => {
         description:
           "Коротке відео-знайомство: як знайти забіг, зареєструватися (себе або дитину), оплатити та отримати QR-квиток.",
         cta: "Дивитись на YouTube",
+        features: "Усі можливості платформи",
         play: "Відтворити відео",
       }
     : {
@@ -26,6 +28,7 @@ export const VideoTutorialSection = () => {
         description:
           "A short walkthrough: find a race, register (yourself or your child), pay and get your QR ticket.",
         cta: "Watch on YouTube",
+        features: "All platform features",
         play: "Play video",
       };
 
@@ -44,7 +47,13 @@ export const VideoTutorialSection = () => {
             <p className="text-base md:text-lg text-muted-foreground leading-relaxed max-w-xl mx-auto lg:mx-0">
               {copy.description}
             </p>
-            <div className="pt-2">
+            <div className="pt-2 flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
+              <Button asChild size="lg">
+                <Link to="/features">
+                  <Sparkles className="mr-2 h-4 w-4" />
+                  {copy.features}
+                </Link>
+              </Button>
               <Button asChild variant="outline" size="lg">
                 <a href={YOUTUBE_URL} target="_blank" rel="noopener noreferrer">
                   <Play className="mr-2 h-4 w-4" />
