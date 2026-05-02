@@ -15,7 +15,6 @@ import { useApp } from "@/contexts/AppContext";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { startWayForPayCheckout } from "@/lib/wayforpay";
 import { startAutomatedPaymentCheckout } from "@/lib/paymentCheckout";
 import { buildEventSeo } from "@/lib/seo";
 import { linkifyText } from "@/lib/linkify";
