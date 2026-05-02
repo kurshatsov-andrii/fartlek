@@ -176,10 +176,8 @@ const EventEditor = () => {
     if (!user) return;
     if (!form.image_url) { toast.error("Додай фото обкладинки"); return; }
 
-    const wfpFilled = !!(form.wfp_merchant_login.trim() || form.wfp_secret_key.trim() || form.wfp_merchant_domain.trim());
-    const liqpayFilled = !!(form.liqpay_public_key.trim() || form.liqpay_private_key.trim());
-    const wfp = form.is_paid && wfpFilled;
-    const liqpay = form.is_paid && liqpayFilled && !wfp;
+    const wfp = form.is_paid && paymentMethod === "wfp";
+    const liqpay = form.is_paid && paymentMethod === "liqpay";
     if (wfp) {
       if (!form.wfp_merchant_login.trim() || !form.wfp_secret_key.trim() || !form.wfp_merchant_domain.trim()) {
         toast.error("Заповни всі поля WayForPay (Merchant Login, Secret Key, Merchant Domain)");
