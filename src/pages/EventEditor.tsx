@@ -184,6 +184,7 @@ const EventEditor = () => {
       description: form.description || null,
       payment_url: form.is_paid ? (form.payment_url || null) : null,
       results_pdf_url: form.results_pdf_url || null,
+      regulations_pdf_url: form.regulations_pdf_url || null,
       results_url: form.results_url || null,
       description_image_url: form.description_image_url || null,
     } as any;
