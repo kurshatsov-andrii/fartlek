@@ -422,7 +422,7 @@ const EventEditor = () => {
                   onChange={(e) => setForm({ ...form, payment_url: e.target.value })}
                 />
                 <p className="text-xs text-muted-foreground">
-                  Якщо вкажеш посилання WayForPay — нижче з'являться додаткові поля для автоматичного підтвердження оплати.
+                  Якщо вкажеш посилання WayForPay або LiqPay — нижче з'являться додаткові поля для автоматичного підтвердження оплати.
                 </p>
               </div>
             )}
