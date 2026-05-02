@@ -47,7 +47,13 @@ export const VideoTutorialSection = () => {
             <p className="text-base md:text-lg text-muted-foreground leading-relaxed max-w-xl mx-auto lg:mx-0">
               {copy.description}
             </p>
-            <div className="pt-2">
+            <div className="pt-2 flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
+              <Button asChild size="lg">
+                <Link to="/features">
+                  <Sparkles className="mr-2 h-4 w-4" />
+                  {copy.features}
+                </Link>
+              </Button>
               <Button asChild variant="outline" size="lg">
                 <a href={YOUTUBE_URL} target="_blank" rel="noopener noreferrer">
                   <Play className="mr-2 h-4 w-4" />
