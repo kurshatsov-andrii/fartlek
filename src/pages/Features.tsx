@@ -166,7 +166,7 @@ const Features = () => {
       items: [
         { icon: Tag, title: "Promo codes", desc: "Discount codes (fixed amount or percentage) with usage limits." },
         { icon: Mail, title: "Email campaigns", desc: "Send marketing emails to participants from ready-made templates." },
-        { icon: CreditCard, title: "WayForPay payments", desc: "Money goes directly to your account — the platform only facilitates registration." },
+        { icon: CreditCard, title: "WayForPay payments (auto-confirm)", desc: "Connect your own WayForPay account — money goes directly to you, payment status ✅ is set automatically. See the «Payments» block below." },
         { icon: Megaphone, title: "Club / organizer page", desc: "A dedicated page with all your events and club information." },
       ],
     },
