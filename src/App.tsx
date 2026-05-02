@@ -32,6 +32,7 @@ import Unsubscribe from "./pages/Unsubscribe.tsx";
 import ClubsCatalog from "./pages/ClubsCatalog.tsx";
 import ClubDetails from "./pages/ClubDetails.tsx";
 import ClubEditor from "./pages/ClubEditor.tsx";
+import Features from "./pages/Features.tsx";
 import { ProfileCompletionGate } from "./components/ProfileCompletionGate";
 
 const queryClient = new QueryClient();
