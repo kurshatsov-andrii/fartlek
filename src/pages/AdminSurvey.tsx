@@ -22,13 +22,47 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
 const FEATURE_LABELS: Record<string, string> = {
-  results_tracking: "Трекінг результатів",
-  ratings: "Рейтинги",
-  training_plans: "Тренувальні плани",
+  mobile_app: "📱 Мобільний застосунок",
+  race_history: "📊 Історія стартів",
+  race_photos: "📸 Фото з забігів",
+  virtual_races: "🏆 Віртуальні забіги",
+  results_tracking: "⏱️ Трекінг результатів",
+  ratings: "🥇 Рейтинги",
+  training_plans: "📅 Тренувальні плани",
+  race_series: "🏅 Серії змагань",
+  strava: "🔗 Strava",
+  gpx_route: "🗺️ GPX маршрут",
+  team_registration: "👥 Командні реєстрації",
   communities: "Спільноти",
-  strava: "Strava",
   push: "Push-сповіщення",
   other: "Інше",
+};
+
+const FACTOR_LABELS: Record<string, string> = {
+  price: "💰 Ціна",
+  location: "📍 Локація",
+  route: "🛣️ Траса",
+  atmosphere: "🎉 Атмосфера",
+  medal_merch: "🏅 Медаль/мерч",
+  results_chip: "⏱️ Хронометраж",
+  organization: "✅ Організація",
+};
+
+const DISCOVERY_LABELS: Record<string, string> = {
+  google: "Google",
+  instagram: "Instagram",
+  facebook: "Facebook",
+  friends: "Друзі",
+  club: "Клуб",
+  organizer: "Організатор",
+  other: "Інше",
+};
+
+const FREQUENCY_LABELS: Record<string, string> = {
+  first_time: "Вперше",
+  "1_2_year": "1–2 на рік",
+  "3_5_year": "3–5 на рік",
+  monthly: "Щомісяця+",
 };
 
 const ROLE_LABELS: Record<string, string> = {
