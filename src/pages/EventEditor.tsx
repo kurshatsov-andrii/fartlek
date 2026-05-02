@@ -510,17 +510,8 @@ const EventEditor = () => {
                     maxLength={200}
                   />
                 </div>
-                <div className="space-y-2">
-                  <Label>Merchant Domain *</Label>
-                  <Input
-                    placeholder="наприклад: fartlek.lovable.app"
-                    value={form.wfp_merchant_domain}
-                    onChange={(e) => setForm({ ...form, wfp_merchant_domain: e.target.value })}
-                    maxLength={200}
-                  />
-                  <p className="text-xs text-muted-foreground">
-                    Має співпадати з доменом, вказаним у WayForPay при реєстрації мерчанта.
-                  </p>
+                <div className="rounded-md bg-background border border-border p-3 text-xs text-muted-foreground">
+                  Домен мерчанта підставляється автоматично з адреси сайту, де користувач натискає «Сплатити». У кабінеті WayForPay вкажи домен <code className="font-mono">fartlek.lovable.app</code> (або свій кастомний домен, якщо підключиш).
                 </div>
                 <div className="rounded-md bg-background border border-border p-3 text-xs space-y-3">
                   <p className="font-semibold">⚙️ Налаштуй у кабінеті WayForPay:</p>
