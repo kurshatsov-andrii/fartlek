@@ -142,9 +142,19 @@ const EventEditor = () => {
     e.preventDefault();
     if (!user) return;
     if (!form.image_url) { toast.error("Додай фото обкладинки"); return; }
+
+    const wfp = form.is_paid && isWayForPayUrl(form.payment_url);
+    if (wfp) {
+      if (!form.wfp_merchant_login.trim() || !form.wfp_secret_key.trim() || !form.wfp_merchant_domain.trim()) {
+        toast.error("Заповни всі поля WayForPay (Merchant Login, Secret Key, Merchant Domain)");
+        return;
+      }
+    }
+
     setBusy(true);
+    const { wfp_merchant_login, wfp_secret_key, wfp_merchant_domain, ...rest } = form;
     const payload = {
-      ...form,
+      ...rest,
       organizer_id: !isNew && originalOrganizerId ? originalOrganizerId : user.id,
       status: form.status as any,
       event_time: form.event_time + ":00",
@@ -165,6 +175,24 @@ const EventEditor = () => {
       const { error } = await supabase.from("events").update(payload).eq("id", id);
       if (error) { toast.error(error.message); setBusy(false); return; }
     }
+
+    // Зберігаємо платіжні реквізити WayForPay (upsert)
+    if (wfp) {
+      const { error: psErr } = await supabase
+        .from("event_payment_settings" as any)
+        .upsert({
+          event_id: eventId,
+          provider: "wayforpay",
+          wayforpay_merchant_login: form.wfp_merchant_login.trim(),
+          wayforpay_secret_key: form.wfp_secret_key.trim(),
+          wayforpay_merchant_domain: form.wfp_merchant_domain.trim(),
+        } as any, { onConflict: "event_id" });
+      if (psErr) { toast.error("Не вдалось зберегти реквізити: " + psErr.message); setBusy(false); return; }
+    } else if (!isNew) {
+      // якщо більше не WFP — приберемо налаштування
+      await supabase.from("event_payment_settings" as any).delete().eq("event_id", eventId);
+    }
+
     // sync distances: update existing by id, insert new, hide removed
     const valid = distances.filter((d) => d.distance_km);
     const keepIds = valid.filter((d) => d.id).map((d) => d.id!);
