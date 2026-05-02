@@ -481,11 +481,23 @@ const EventEditor = () => {
 
 
             {!isNew && (
-              <div className="space-y-2 rounded-md border border-border p-4">
-                <Label>Регламент події (PDF)</Label>
+              <div className="space-y-3 rounded-md border border-border p-4">
+                <Label>Регламент події</Label>
                 <p className="text-xs text-muted-foreground">
-                  Учасники зможуть переглянути регламент безпосередньо на сторінці події у модальному вікні.
+                  Завантажте PDF або вставте посилання на Google Doc / іншу сторінку. Учасники зможуть переглянути регламент у модальному вікні на сторінці події.
                 </p>
+
+                <div className="space-y-1.5">
+                  <Label htmlFor="regulations_url" className="text-xs text-muted-foreground">Посилання (Google Doc, PDF тощо)</Label>
+                  <Input
+                    id="regulations_url"
+                    type="url"
+                    placeholder="https://docs.google.com/document/d/..."
+                    value={form.regulations_pdf_url}
+                    onChange={(e) => setForm((f) => ({ ...f, regulations_pdf_url: e.target.value }))}
+                  />
+                </div>
+
                 <div className="flex flex-wrap items-center gap-3 pt-1">
                   {form.regulations_pdf_url && (
                     <a
