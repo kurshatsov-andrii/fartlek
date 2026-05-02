@@ -46,6 +46,7 @@ const EventEditor = () => {
     liqpay_public_key: "",
     liqpay_private_key: "",
   });
+  const [paymentMethod, setPaymentMethod] = useState<"link" | "wfp" | "liqpay">("link");
 
   const isWayForPayUrl = (url: string) => /wayforpay/i.test(url || "");
   const isLiqPayUrl = (url: string) => /liqpay/i.test(url || "");
@@ -97,6 +98,9 @@ const EventEditor = () => {
           liqpay_public_key: (pset as any)?.liqpay_public_key ?? "",
           liqpay_private_key: (pset as any)?.liqpay_private_key ?? "",
         });
+        const wfpFilled = !!((pset as any)?.wayforpay_merchant_login || (pset as any)?.wayforpay_secret_key);
+        const liqFilled = !!((pset as any)?.liqpay_public_key || (pset as any)?.liqpay_private_key);
+        setPaymentMethod(wfpFilled ? "wfp" : liqFilled ? "liqpay" : "link");
       }
       const { data: ds } = await supabase.from("distances").select("*").eq("event_id", id).eq("is_active", true).order("distance_km");
       if (ds) setDistances(ds.map((d: any) => ({ id: d.id, distance_km: String(d.distance_km), name: d.name ?? "", price: String(d.price), bib_start: d.bib_start != null ? String(d.bib_start) : "" })));
@@ -172,10 +176,8 @@ const EventEditor = () => {
     if (!user) return;
     if (!form.image_url) { toast.error("Додай фото обкладинки"); return; }
 
-    const wfpFilled = !!(form.wfp_merchant_login.trim() || form.wfp_secret_key.trim() || form.wfp_merchant_domain.trim());
-    const liqpayFilled = !!(form.liqpay_public_key.trim() || form.liqpay_private_key.trim());
-    const wfp = form.is_paid && wfpFilled;
-    const liqpay = form.is_paid && liqpayFilled && !wfp;
+    const wfp = form.is_paid && paymentMethod === "wfp";
+    const liqpay = form.is_paid && paymentMethod === "liqpay";
     if (wfp) {
       if (!form.wfp_merchant_login.trim() || !form.wfp_secret_key.trim() || !form.wfp_merchant_domain.trim()) {
         toast.error("Заповни всі поля WayForPay (Merchant Login, Secret Key, Merchant Domain)");
@@ -199,7 +201,7 @@ const EventEditor = () => {
       image_url: form.image_url || null,
       location: form.location,
       description: form.description || null,
-      payment_url: form.is_paid ? (form.payment_url || null) : null,
+      payment_url: form.is_paid && paymentMethod === "link" ? (form.payment_url || null) : null,
       results_pdf_url: form.results_pdf_url || null,
       regulations_pdf_url: form.regulations_pdf_url || null,
       results_url: form.results_url || null,
@@ -422,17 +424,66 @@ const EventEditor = () => {
                 <Label>{t.organizer.paymentUrl}</Label>
                 <Input
                   type="url"
-                  placeholder="https://... (Monobank, Privat24, WayForPay, LiqPay)"
+                  placeholder="https://... (Monobank, Privat24 тощо)"
                   value={form.payment_url}
                   onChange={(e) => setForm({ ...form, payment_url: e.target.value })}
+                  disabled={paymentMethod !== "link"}
                 />
                 <p className="text-xs text-muted-foreground">
-                  Якщо вкажеш посилання WayForPay або LiqPay — нижче з'являться додаткові поля для автоматичного підтвердження оплати.
+                  {paymentMethod === "link"
+                    ? "Просте посилання на оплату — учасник сам введе суму. Для автоматичного підтвердження оплати з правильною сумою — увімкни WayForPay або LiqPay нижче."
+                    : "Поле вимкнено: ти використовуєш автоматичну інтеграцію нижче. Сума буде підставлятись автоматично з ціни дистанції."}
                 </p>
               </div>
             )}
 
             {form.is_paid && (
+              <div className="space-y-3 rounded-md border border-border p-4">
+                <div>
+                  <h3 className="font-semibold text-sm">Спосіб прийому оплати</h3>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Обери один із способів. WayForPay та LiqPay автоматично підставляють суму дистанції і самі підтверджують оплату.
+                  </p>
+                </div>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between rounded-md border border-border p-3">
+                    <div className="space-y-0.5">
+                      <Label htmlFor="pm-link" className="cursor-pointer text-sm font-medium">Тільки посилання</Label>
+                      <p className="text-xs text-muted-foreground">Учасник вводить суму вручну на сторінці оплати</p>
+                    </div>
+                    <Switch
+                      id="pm-link"
+                      checked={paymentMethod === "link"}
+                      onCheckedChange={(v) => v && setPaymentMethod("link")}
+                    />
+                  </div>
+                  <div className="flex items-center justify-between rounded-md border border-border p-3">
+                    <div className="space-y-0.5">
+                      <Label htmlFor="pm-wfp" className="cursor-pointer text-sm font-medium">WayForPay (автосума)</Label>
+                      <p className="text-xs text-muted-foreground">Сума підставляється автоматично, оплата підтверджується сама</p>
+                    </div>
+                    <Switch
+                      id="pm-wfp"
+                      checked={paymentMethod === "wfp"}
+                      onCheckedChange={(v) => v && setPaymentMethod("wfp")}
+                    />
+                  </div>
+                  <div className="flex items-center justify-between rounded-md border border-border p-3">
+                    <div className="space-y-0.5">
+                      <Label htmlFor="pm-liqpay" className="cursor-pointer text-sm font-medium">LiqPay (автосума)</Label>
+                      <p className="text-xs text-muted-foreground">Сума підставляється автоматично, оплата підтверджується сама</p>
+                    </div>
+                    <Switch
+                      id="pm-liqpay"
+                      checked={paymentMethod === "liqpay"}
+                      onCheckedChange={(v) => v && setPaymentMethod("liqpay")}
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {form.is_paid && paymentMethod === "wfp" && (
               <div className="space-y-3 rounded-md border border-primary/40 bg-primary/5 p-4">
                 <div>
                   <h3 className="font-semibold">Реквізити WayForPay</h3>
@@ -511,7 +562,7 @@ const EventEditor = () => {
               </div>
             )}
 
-            {form.is_paid && (
+            {form.is_paid && paymentMethod === "liqpay" && (
               <div className="space-y-3 rounded-md border border-primary/40 bg-primary/5 p-4">
                 <div>
                   <h3 className="font-semibold">Реквізити LiqPay</h3>
