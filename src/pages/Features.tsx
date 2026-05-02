@@ -1,9 +1,10 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
 import {
   Users, Calendar, Ticket, MessageSquare, BarChart3, Tag, Mail, Shield, QrCode,
   Trophy, Bell, UserCircle, Edit3, Smile, Reply, AtSign, Image as ImageIcon,
   CalendarPlus, FileSpreadsheet, CreditCard, Globe, Clock, MapPin, Sparkles,
-  Megaphone, Building2, CheckCircle2
+  Megaphone, Building2, CheckCircle2, ArrowDown
 } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
