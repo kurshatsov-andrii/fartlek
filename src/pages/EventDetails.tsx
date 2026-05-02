@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { AthleteFormDialog, Athlete } from "@/components/AthleteFormDialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useApp } from "@/contexts/AppContext";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
@@ -29,6 +30,7 @@ interface EventRow {
   format: "offline" | "online" | "hybrid";
   results_pdf_url: string | null;
   results_url: string | null;
+  regulations_pdf_url: string | null;
   description_image_url: string | null;
 }
 interface DistanceRow { id: string; distance_km: number; name: string | null; price: number; is_active?: boolean; }
@@ -52,6 +54,7 @@ const EventDetails = () => {
   const [promo, setPromo] = useState<PromoPreview | null>(null);
   const [hasPromoCodes, setHasPromoCodes] = useState(false);
   const [clubSlug, setClubSlug] = useState<string | null>(null);
+  const [regulationsOpen, setRegulationsOpen] = useState(false);
 
   // Reset promo if distance changes
   useEffect(() => { setPromo(null); }, [selectedDistance]);
@@ -295,6 +298,19 @@ const EventDetails = () => {
               {event.description && (
                 <div className="prose prose-sm max-w-none text-foreground whitespace-pre-wrap break-words">
                   {linkifyText(event.description)}
+                </div>
+              )}
+              {event.regulations_pdf_url && (
+                <div>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setRegulationsOpen(true)}
+                    className="gap-2"
+                  >
+                    <FileText className="h-4 w-4" />
+                    {lang === "uk" ? "Регламент" : "Regulations"}
+                  </Button>
                 </div>
               )}
               {event.description_image_url && (
