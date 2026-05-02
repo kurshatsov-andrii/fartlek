@@ -108,6 +108,9 @@ const Survey = () => {
   const [wouldChange, setWouldChange] = useState("");
   const [suggestions, setSuggestions] = useState("");
   const [contactEmail, setContactEmail] = useState("");
+  const [discoverySource, setDiscoverySource] = useState<string>("");
+  const [participationFrequency, setParticipationFrequency] = useState<string>("");
+  const [eventChoiceFactors, setEventChoiceFactors] = useState<string[]>([]);
 
   const isOrganizer = roles.includes("organizer") || roles.includes("admin");
   const userRole = !user ? "guest" : isOrganizer ? "organizer" : "participant";
