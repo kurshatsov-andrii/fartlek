@@ -15,7 +15,6 @@ import { toast } from "sonner";
 import { CheckCircle2, MessageSquareHeart } from "lucide-react";
 
 const MISSING_FEATURES = [
-  { v: "mobile_app", l: "📱 Мобільний застосунок (iOS/Android)" },
   { v: "race_history", l: "📊 Історія стартів та особисті рекорди" },
   { v: "race_photos", l: "📸 Фото з забігів (пошук за номером)" },
   { v: "virtual_races", l: "🏆 Віртуальні забіги / челенджі" },
@@ -24,7 +23,6 @@ const MISSING_FEATURES = [
   { v: "training_plans", l: "📅 Тренувальні плани" },
   { v: "race_series", l: "🏅 Серії змагань / кубки" },
   { v: "strava", l: "🔗 Інтеграція зі Strava" },
-  { v: "gpx_route", l: "🗺️ Карта маршруту з GPX" },
   { v: "team_registration", l: "👥 Командні реєстрації / естафети" },
   { v: "other", l: "✏️ Інше" },
 ];
@@ -126,6 +124,20 @@ const Survey = () => {
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (
+      easeOfUse === null ||
+      nps === null ||
+      designRating === null ||
+      !easyFind ||
+      regClarity === null ||
+      missing.length === 0 ||
+      eventChoiceFactors.length === 0 ||
+      !discoverySource ||
+      !participationFrequency
+    ) {
+      toast.error("Будь ласка, дайте відповідь на всі обов'язкові питання (позначені *)");
+      return;
+    }
     setBusy(true);
     try {
       const { error } = await supabase.from("survey_responses").insert({
@@ -201,22 +213,22 @@ const Survey = () => {
               <Card>
                 <CardContent className="pt-6 space-y-8">
                   <div className="space-y-3">
-                    <Label className="text-base">1. Наскільки зручно користуватися платформою?</Label>
+                    <Label className="text-base">1. Наскільки зручно користуватися платформою? *</Label>
                     <Scale value={easeOfUse} onChange={setEaseOfUse} max={10} minLabel="Незручно" maxLabel="Дуже зручно" />
                   </div>
 
                   <div className="space-y-3">
-                    <Label className="text-base">2. Чи рекомендували б ви Fartlek друзям?</Label>
+                    <Label className="text-base">2. Чи рекомендували б ви Fartlek друзям? *</Label>
                     <Scale value={nps} onChange={setNps} max={10} minLabel="Точно ні" maxLabel="Точно так" />
                   </div>
 
                   <div className="space-y-3">
-                    <Label className="text-base">3. Як ви оцінюєте дизайн та зовнішній вигляд?</Label>
+                    <Label className="text-base">3. Як ви оцінюєте дизайн та зовнішній вигляд? *</Label>
                     <Scale value={designRating} onChange={setDesignRating} max={5} minLabel="Поганий" maxLabel="Чудовий" />
                   </div>
 
                   <div className="space-y-3">
-                    <Label className="text-base">4. Чи легко знайти потрібну подію?</Label>
+                    <Label className="text-base">4. Чи легко знайти потрібну подію? *</Label>
                     <RadioGroup value={easyFind} onValueChange={setEasyFind} className="flex flex-wrap gap-4">
                       {[
                         { v: "yes", l: "Так" },
@@ -232,7 +244,7 @@ const Survey = () => {
                   </div>
 
                   <div className="space-y-3">
-                    <Label className="text-base">5. Наскільки зрозумілий процес реєстрації?</Label>
+                    <Label className="text-base">5. Наскільки зрозумілий процес реєстрації? *</Label>
                     <Scale value={regClarity} onChange={setRegClarity} max={5} minLabel="Заплутаний" maxLabel="Дуже зрозумілий" />
                   </div>
 
@@ -248,7 +260,7 @@ const Survey = () => {
                   </div>
 
                   <div className="space-y-3">
-                    <Label className="text-base">7. Яких функцій вам не вистачає?</Label>
+                    <Label className="text-base">7. Яких функцій вам не вистачає? *</Label>
                     <p className="text-xs text-muted-foreground">Можна обрати кілька варіантів</p>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                       {MISSING_FEATURES.map((f) => (
@@ -265,7 +277,7 @@ const Survey = () => {
                   </div>
 
                   <div className="space-y-3">
-                    <Label className="text-base">8. Що для вас найважливіше при виборі події?</Label>
+                    <Label className="text-base">8. Що для вас найважливіше при виборі події? *</Label>
                     <p className="text-xs text-muted-foreground">Можна обрати кілька варіантів</p>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                       {EVENT_CHOICE_FACTORS.map((f) => (
@@ -282,7 +294,7 @@ const Survey = () => {
                   </div>
 
                   <div className="space-y-3">
-                    <Label className="text-base">9. Як ви дізналися про Fartlek?</Label>
+                    <Label className="text-base">9. Як ви дізналися про Fartlek? *</Label>
                     <RadioGroup value={discoverySource} onValueChange={setDiscoverySource} className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                       {DISCOVERY_SOURCES.map((o) => (
                         <div key={o.v} className="flex items-center gap-2">
@@ -294,7 +306,7 @@ const Survey = () => {
                   </div>
 
                   <div className="space-y-3">
-                    <Label className="text-base">10. Як часто берете участь у забігах?</Label>
+                    <Label className="text-base">10. Як часто берете участь у забігах? *</Label>
                     <RadioGroup value={participationFrequency} onValueChange={setParticipationFrequency} className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                       {PARTICIPATION_FREQUENCY.map((o) => (
                         <div key={o.v} className="flex items-center gap-2">
