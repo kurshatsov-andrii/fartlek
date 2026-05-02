@@ -299,7 +299,7 @@ const Features = () => {
                   onClick={scrollToPayments}
                   variant="outline"
                   size="lg"
-                  className="border-primary/40 bg-primary/5 hover:bg-primary/10 text-foreground"
+                  className="border-primary/40 bg-primary/10 text-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary"
                 >
                   <CreditCard className="h-4 w-4" />
                   {isUk ? "Перейти до блоку «Оплата»" : "Jump to «Payments» section"}
