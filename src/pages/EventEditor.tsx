@@ -179,8 +179,8 @@ const EventEditor = () => {
     const wfp = form.is_paid && paymentMethod === "wfp";
     const liqpay = form.is_paid && paymentMethod === "liqpay";
     if (wfp) {
-      if (!form.wfp_merchant_login.trim() || !form.wfp_secret_key.trim() || !form.wfp_merchant_domain.trim()) {
-        toast.error("Заповни всі поля WayForPay (Merchant Login, Secret Key, Merchant Domain)");
+      if (!form.wfp_merchant_login.trim() || !form.wfp_secret_key.trim()) {
+        toast.error("Заповни всі поля WayForPay (Merchant Login та Secret Key)");
         return;
       }
     }
@@ -226,7 +226,7 @@ const EventEditor = () => {
           provider: "wayforpay",
           wayforpay_merchant_login: form.wfp_merchant_login.trim(),
           wayforpay_secret_key: form.wfp_secret_key.trim(),
-          wayforpay_merchant_domain: form.wfp_merchant_domain.trim(),
+          wayforpay_merchant_domain: null,
           liqpay_public_key: null,
           liqpay_private_key: null,
         } as any, { onConflict: "event_id" });
@@ -510,17 +510,8 @@ const EventEditor = () => {
                     maxLength={200}
                   />
                 </div>
-                <div className="space-y-2">
-                  <Label>Merchant Domain *</Label>
-                  <Input
-                    placeholder="наприклад: fartlek.lovable.app"
-                    value={form.wfp_merchant_domain}
-                    onChange={(e) => setForm({ ...form, wfp_merchant_domain: e.target.value })}
-                    maxLength={200}
-                  />
-                  <p className="text-xs text-muted-foreground">
-                    Має співпадати з доменом, вказаним у WayForPay при реєстрації мерчанта.
-                  </p>
+                <div className="rounded-md bg-background border border-border p-3 text-xs text-muted-foreground">
+                  Домен мерчанта підставляється автоматично з адреси сайту, де користувач натискає «Сплатити». У кабінеті WayForPay вкажи домен <code className="font-mono">fartlek.lovable.app</code> (або свій кастомний домен, якщо підключиш).
                 </div>
                 <div className="rounded-md bg-background border border-border p-3 text-xs space-y-3">
                   <p className="font-semibold">⚙️ Налаштуй у кабінеті WayForPay:</p>
