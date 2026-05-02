@@ -279,7 +279,7 @@ const Features = () => {
 
         {/* Tabs */}
         <section className="container mx-auto px-4 py-12 md:py-16">
-          <Tabs defaultValue="participant" className="w-full">
+          <Tabs value={tab} onValueChange={setTab} className="w-full">
             <TabsList className="grid w-full max-w-md mx-auto grid-cols-2 h-auto">
               <TabsTrigger value="participant" className="py-3 text-sm md:text-base">
                 <UserCircle className="h-4 w-4 mr-2" />
@@ -293,10 +293,24 @@ const Features = () => {
 
             <TabsContent value="participant">{renderGroups(participantGroups)}</TabsContent>
             <TabsContent value="organizer">
+              {/* Швидкий перехід до блоку Оплата */}
+              <div className="mt-8 flex justify-center">
+                <Button
+                  onClick={scrollToPayments}
+                  variant="outline"
+                  size="lg"
+                  className="border-primary/40 bg-primary/5 hover:bg-primary/10 text-foreground"
+                >
+                  <CreditCard className="h-4 w-4" />
+                  {isUk ? "Перейти до блоку «Оплата»" : "Jump to «Payments» section"}
+                  <ArrowDown className="h-4 w-4" />
+                </Button>
+              </div>
+
               {renderGroups(organizerGroups)}
 
               {/* Розгорнутий блок про оплату */}
-              <section className="mt-14 rounded-2xl border-2 border-primary/30 bg-gradient-to-br from-primary/5 via-card to-card p-6 md:p-10">
+              <section id="payments" className="scroll-mt-24 mt-14 rounded-2xl border-2 border-primary/30 bg-gradient-to-br from-primary/5 via-card to-card p-6 md:p-10">
                 <div className="flex items-center gap-3 mb-2">
                   <div className="h-12 w-12 rounded-xl bg-primary/15 text-primary flex items-center justify-center">
                     <CreditCard className="h-6 w-6" />
