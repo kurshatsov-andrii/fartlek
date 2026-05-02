@@ -226,7 +226,7 @@ const EventEditor = () => {
           provider: "wayforpay",
           wayforpay_merchant_login: form.wfp_merchant_login.trim(),
           wayforpay_secret_key: form.wfp_secret_key.trim(),
-          wayforpay_merchant_domain: form.wfp_merchant_domain.trim(),
+          wayforpay_merchant_domain: null,
           liqpay_public_key: null,
           liqpay_private_key: null,
         } as any, { onConflict: "event_id" });
