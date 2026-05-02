@@ -74,6 +74,7 @@ const App = () => (
               <Route path="/clubs" element={<ClubsCatalog />} />
               <Route path="/clubs/edit" element={<ClubEditor />} />
               <Route path="/clubs/:slug" element={<ClubDetails />} />
+              <Route path="/features" element={<Features />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
