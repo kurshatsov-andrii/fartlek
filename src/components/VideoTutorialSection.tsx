@@ -21,6 +21,7 @@ export const VideoTutorialSection = () => {
         cta: "Дивитись на YouTube",
         features: "Усі можливості платформи",
         play: "Відтворити відео",
+        survey: "Пройти опитування",
       }
     : {
         eyebrow: "Guide",
@@ -30,6 +31,7 @@ export const VideoTutorialSection = () => {
         cta: "Watch on YouTube",
         features: "All platform features",
         play: "Play video",
+        survey: "Take the survey",
       };
 
   return (
@@ -60,6 +62,11 @@ export const VideoTutorialSection = () => {
                   {copy.cta}
                 </a>
               </Button>
+            </div>
+            <div className="pt-1 text-sm text-muted-foreground">
+              <Link to="/survey" className="text-primary font-medium hover:underline">
+                💬 {copy.survey}
+              </Link>
             </div>
           </div>
 

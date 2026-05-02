@@ -33,6 +33,8 @@ import ClubsCatalog from "./pages/ClubsCatalog.tsx";
 import ClubDetails from "./pages/ClubDetails.tsx";
 import ClubEditor from "./pages/ClubEditor.tsx";
 import Features from "./pages/Features.tsx";
+import Survey from "./pages/Survey.tsx";
+import AdminSurvey from "./pages/AdminSurvey.tsx";
 import { ProfileCompletionGate } from "./components/ProfileCompletionGate";
 
 const queryClient = new QueryClient();
@@ -75,6 +77,8 @@ const App = () => (
               <Route path="/clubs/edit" element={<ClubEditor />} />
               <Route path="/clubs/:slug" element={<ClubDetails />} />
               <Route path="/features" element={<Features />} />
+              <Route path="/survey" element={<Survey />} />
+              <Route path="/admin/survey" element={<AdminSurvey />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
