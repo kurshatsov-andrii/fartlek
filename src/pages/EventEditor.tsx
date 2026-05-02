@@ -483,7 +483,7 @@ const EventEditor = () => {
               </div>
             )}
 
-            {form.is_paid && (
+            {form.is_paid && paymentMethod === "wfp" && (
               <div className="space-y-3 rounded-md border border-primary/40 bg-primary/5 p-4">
                 <div>
                   <h3 className="font-semibold">Реквізити WayForPay</h3>
@@ -562,7 +562,7 @@ const EventEditor = () => {
               </div>
             )}
 
-            {form.is_paid && (
+            {form.is_paid && paymentMethod === "liqpay" && (
               <div className="space-y-3 rounded-md border border-primary/40 bg-primary/5 p-4">
                 <div>
                   <h3 className="font-semibold">Реквізити LiqPay</h3>
