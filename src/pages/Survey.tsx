@@ -261,6 +261,47 @@ const Survey = () => {
                       ))}
                     </div>
                   </div>
+
+                  <div className="space-y-3">
+                    <Label className="text-base">8. Що для вас найважливіше при виборі події?</Label>
+                    <p className="text-xs text-muted-foreground">Можна обрати кілька варіантів</p>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      {EVENT_CHOICE_FACTORS.map((f) => (
+                        <div key={f.v} className="flex items-center gap-2">
+                          <Checkbox
+                            id={`fac-${f.v}`}
+                            checked={eventChoiceFactors.includes(f.v)}
+                            onCheckedChange={() => toggleFactor(f.v)}
+                          />
+                          <Label htmlFor={`fac-${f.v}`} className="font-normal cursor-pointer">{f.l}</Label>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="space-y-3">
+                    <Label className="text-base">9. Як ви дізналися про Fartlek?</Label>
+                    <RadioGroup value={discoverySource} onValueChange={setDiscoverySource} className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      {DISCOVERY_SOURCES.map((o) => (
+                        <div key={o.v} className="flex items-center gap-2">
+                          <RadioGroupItem value={o.v} id={`disc-${o.v}`} />
+                          <Label htmlFor={`disc-${o.v}`} className="font-normal cursor-pointer">{o.l}</Label>
+                        </div>
+                      ))}
+                    </RadioGroup>
+                  </div>
+
+                  <div className="space-y-3">
+                    <Label className="text-base">10. Як часто берете участь у забігах?</Label>
+                    <RadioGroup value={participationFrequency} onValueChange={setParticipationFrequency} className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      {PARTICIPATION_FREQUENCY.map((o) => (
+                        <div key={o.v} className="flex items-center gap-2">
+                          <RadioGroupItem value={o.v} id={`freq-${o.v}`} />
+                          <Label htmlFor={`freq-${o.v}`} className="font-normal cursor-pointer">{o.l}</Label>
+                        </div>
+                      ))}
+                    </RadioGroup>
+                  </div>
                 </CardContent>
               </Card>
 
