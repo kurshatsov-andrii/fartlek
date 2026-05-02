@@ -43,9 +43,12 @@ const EventEditor = () => {
     wfp_merchant_login: "",
     wfp_secret_key: "",
     wfp_merchant_domain: "",
+    liqpay_public_key: "",
+    liqpay_private_key: "",
   });
 
   const isWayForPayUrl = (url: string) => /wayforpay/i.test(url || "");
+  const isLiqPayUrl = (url: string) => /liqpay/i.test(url || "");
   const [uploadingResults, setUploadingResults] = useState(false);
   const [uploadingRegulations, setUploadingRegulations] = useState(false);
   const [uploadingDescImage, setUploadingDescImage] = useState(false);
@@ -70,7 +73,7 @@ const EventEditor = () => {
       if (ev) {
         const { data: pset } = await supabase
           .from("event_payment_settings" as any)
-          .select("wayforpay_merchant_login, wayforpay_secret_key, wayforpay_merchant_domain")
+          .select("wayforpay_merchant_login, wayforpay_secret_key, wayforpay_merchant_domain, liqpay_public_key, liqpay_private_key")
           .eq("event_id", id)
           .maybeSingle();
         setForm({
@@ -89,6 +92,8 @@ const EventEditor = () => {
           wfp_merchant_login: (pset as any)?.wayforpay_merchant_login ?? "",
           wfp_secret_key: (pset as any)?.wayforpay_secret_key ?? "",
           wfp_merchant_domain: (pset as any)?.wayforpay_merchant_domain ?? "",
+          liqpay_public_key: (pset as any)?.liqpay_public_key ?? "",
+          liqpay_private_key: (pset as any)?.liqpay_private_key ?? "",
         });
       }
       const { data: ds } = await supabase.from("distances").select("*").eq("event_id", id).eq("is_active", true).order("distance_km");
