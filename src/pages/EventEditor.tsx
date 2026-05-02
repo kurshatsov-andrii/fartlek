@@ -424,13 +424,62 @@ const EventEditor = () => {
                 <Label>{t.organizer.paymentUrl}</Label>
                 <Input
                   type="url"
-                  placeholder="https://... (Monobank, Privat24, WayForPay, LiqPay)"
+                  placeholder="https://... (Monobank, Privat24 тощо)"
                   value={form.payment_url}
                   onChange={(e) => setForm({ ...form, payment_url: e.target.value })}
+                  disabled={paymentMethod !== "link"}
                 />
                 <p className="text-xs text-muted-foreground">
-                  Якщо вкажеш посилання WayForPay або LiqPay — нижче з'являться додаткові поля для автоматичного підтвердження оплати.
+                  {paymentMethod === "link"
+                    ? "Просте посилання на оплату — учасник сам введе суму. Для автоматичного підтвердження оплати з правильною сумою — увімкни WayForPay або LiqPay нижче."
+                    : "Поле вимкнено: ти використовуєш автоматичну інтеграцію нижче. Сума буде підставлятись автоматично з ціни дистанції."}
                 </p>
+              </div>
+            )}
+
+            {form.is_paid && (
+              <div className="space-y-3 rounded-md border border-border p-4">
+                <div>
+                  <h3 className="font-semibold text-sm">Спосіб прийому оплати</h3>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Обери один із способів. WayForPay та LiqPay автоматично підставляють суму дистанції і самі підтверджують оплату.
+                  </p>
+                </div>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between rounded-md border border-border p-3">
+                    <div className="space-y-0.5">
+                      <Label htmlFor="pm-link" className="cursor-pointer text-sm font-medium">Тільки посилання</Label>
+                      <p className="text-xs text-muted-foreground">Учасник вводить суму вручну на сторінці оплати</p>
+                    </div>
+                    <Switch
+                      id="pm-link"
+                      checked={paymentMethod === "link"}
+                      onCheckedChange={(v) => v && setPaymentMethod("link")}
+                    />
+                  </div>
+                  <div className="flex items-center justify-between rounded-md border border-border p-3">
+                    <div className="space-y-0.5">
+                      <Label htmlFor="pm-wfp" className="cursor-pointer text-sm font-medium">WayForPay (автосума)</Label>
+                      <p className="text-xs text-muted-foreground">Сума підставляється автоматично, оплата підтверджується сама</p>
+                    </div>
+                    <Switch
+                      id="pm-wfp"
+                      checked={paymentMethod === "wfp"}
+                      onCheckedChange={(v) => v && setPaymentMethod("wfp")}
+                    />
+                  </div>
+                  <div className="flex items-center justify-between rounded-md border border-border p-3">
+                    <div className="space-y-0.5">
+                      <Label htmlFor="pm-liqpay" className="cursor-pointer text-sm font-medium">LiqPay (автосума)</Label>
+                      <p className="text-xs text-muted-foreground">Сума підставляється автоматично, оплата підтверджується сама</p>
+                    </div>
+                    <Switch
+                      id="pm-liqpay"
+                      checked={paymentMethod === "liqpay"}
+                      onCheckedChange={(v) => v && setPaymentMethod("liqpay")}
+                    />
+                  </div>
+                </div>
               </div>
             )}
 
