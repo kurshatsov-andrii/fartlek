@@ -63,8 +63,10 @@ const EventEditor = () => {
     })();
   }, []);
 
+  const [loadedFor, setLoadedFor] = useState<string | null>(null);
   useEffect(() => {
     if (isNew || !user) return;
+    if (loadedFor === id) return;
     (async () => {
       const { data: ev } = await supabase.from("events").select("*").eq("id", id).maybeSingle();
       if (ev) {
