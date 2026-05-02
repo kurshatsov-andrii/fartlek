@@ -179,8 +179,8 @@ const EventEditor = () => {
     const wfp = form.is_paid && paymentMethod === "wfp";
     const liqpay = form.is_paid && paymentMethod === "liqpay";
     if (wfp) {
-      if (!form.wfp_merchant_login.trim() || !form.wfp_secret_key.trim() || !form.wfp_merchant_domain.trim()) {
-        toast.error("Заповни всі поля WayForPay (Merchant Login, Secret Key, Merchant Domain)");
+      if (!form.wfp_merchant_login.trim() || !form.wfp_secret_key.trim()) {
+        toast.error("Заповни всі поля WayForPay (Merchant Login та Secret Key)");
         return;
       }
     }
