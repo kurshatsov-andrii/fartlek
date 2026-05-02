@@ -119,6 +119,10 @@ const Survey = () => {
     setMissing((prev) => (prev.includes(v) ? prev.filter((x) => x !== v) : [...prev, v]));
   };
 
+  const toggleFactor = (v: string) => {
+    setEventChoiceFactors((prev) => (prev.includes(v) ? prev.filter((x) => x !== v) : [...prev, v]));
+  };
+
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setBusy(true);
@@ -133,6 +137,9 @@ const Survey = () => {
         registration_clarity: regClarity,
         registration_difficulty: regDifficulty || null,
         missing_features: missing,
+        discovery_source: discoverySource || null,
+        participation_frequency: participationFrequency || null,
+        event_choice_factors: eventChoiceFactors,
         organizer_event_creation: isOrganizer ? orgEventCreation : null,
         organizer_payments_clear: isOrganizer ? orgPaymentsClear || null : null,
         organizer_missing_tools: isOrganizer ? orgMissingTools.trim() || null : null,
