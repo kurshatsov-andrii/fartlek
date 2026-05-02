@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
-import { ArrowLeft, Loader2, Plus, X, Upload, ChevronsUpDown, Check } from "lucide-react";
+import { ArrowLeft, Loader2, Plus, X, Upload, ChevronsUpDown, Check, Copy } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -417,16 +417,42 @@ const EventEditor = () => {
                     Має співпадати з доменом, вказаним у WayForPay при реєстрації мерчанта.
                   </p>
                 </div>
-                <div className="rounded-md bg-background border border-border p-3 text-xs space-y-2">
+                <div className="rounded-md bg-background border border-border p-3 text-xs space-y-3">
                   <p className="font-semibold">⚙️ Налаштуй у кабінеті WayForPay:</p>
-                  <p><strong>Service URL:</strong></p>
-                  <code className="block bg-muted p-2 rounded text-[10px] break-all">
-                    https://{import.meta.env.VITE_SUPABASE_PROJECT_ID}.supabase.co/functions/v1/wayforpay-callback
-                  </code>
-                  <p className="mt-2"><strong>Return URL:</strong></p>
-                  <code className="block bg-muted p-2 rounded text-[10px] break-all">
-                    {window.location.origin}/payment-success
-                  </code>
+                  {(() => {
+                    const serviceUrl = `https://${import.meta.env.VITE_SUPABASE_PROJECT_ID}.supabase.co/functions/v1/wayforpay-callback`;
+                    const returnUrl = `${window.location.origin}/payment-success`;
+                    const copy = async (val: string, label: string) => {
+                      try {
+                        await navigator.clipboard.writeText(val);
+                        toast.success(`${label} скопійовано`);
+                      } catch {
+                        toast.error("Не вдалося скопіювати");
+                      }
+                    };
+                    return (
+                      <>
+                        <div>
+                          <p className="mb-1"><strong>Service URL:</strong></p>
+                          <div className="flex items-stretch gap-1">
+                            <code className="flex-1 bg-muted p-2 rounded text-[10px] break-all">{serviceUrl}</code>
+                            <Button type="button" variant="outline" size="sm" className="shrink-0" onClick={() => copy(serviceUrl, "Service URL")}>
+                              <Copy className="h-3 w-3 mr-1" /> Копіювати
+                            </Button>
+                          </div>
+                        </div>
+                        <div>
+                          <p className="mb-1"><strong>Return URL:</strong></p>
+                          <div className="flex items-stretch gap-1">
+                            <code className="flex-1 bg-muted p-2 rounded text-[10px] break-all">{returnUrl}</code>
+                            <Button type="button" variant="outline" size="sm" className="shrink-0" onClick={() => copy(returnUrl, "Return URL")}>
+                              <Copy className="h-3 w-3 mr-1" /> Копіювати
+                            </Button>
+                          </div>
+                        </div>
+                      </>
+                    );
+                  })()}
                 </div>
               </div>
             )}
