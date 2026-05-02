@@ -51,7 +51,12 @@ Deno.serve(async (req) => {
 
     const MERCHANT = settings?.wayforpay_merchant_login;
     const SECRET = settings?.wayforpay_secret_key;
-    const DOMAIN = settings?.wayforpay_merchant_domain;
+    // Домен беремо з origin запиту (де користувач натиснув «Сплатити»),
+    // з фолбеком на збережене значення для зворотної сумісності.
+    const originHeader = req.headers.get("origin") ?? req.headers.get("referer") ?? "";
+    let originDomain = "";
+    try { originDomain = originHeader ? new URL(originHeader).hostname : ""; } catch { originDomain = ""; }
+    const DOMAIN = originDomain || settings?.wayforpay_merchant_domain || "";
 
     if (!MERCHANT || !SECRET || !DOMAIN) {
       return new Response(JSON.stringify({ error: "Організатор не налаштував реквізити WayForPay для цієї події" }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
