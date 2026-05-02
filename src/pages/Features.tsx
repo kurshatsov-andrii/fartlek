@@ -19,6 +19,27 @@ type Group = { title: string; items: Feature[] };
 const Features = () => {
   const { lang } = useApp();
   const isUk = lang === "uk";
+  const location = useLocation();
+  const [tab, setTab] = useState<string>(() =>
+    location.hash === "#payments" ? "organizer" : "participant"
+  );
+
+  useEffect(() => {
+    if (location.hash === "#payments") {
+      setTab("organizer");
+      // wait for tab content to mount
+      setTimeout(() => {
+        document.getElementById("payments")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 100);
+    }
+  }, [location.hash]);
+
+  const scrollToPayments = () => {
+    setTab("organizer");
+    setTimeout(() => {
+      document.getElementById("payments")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 50);
+  };
 
   const seo = isUk
     ? {
