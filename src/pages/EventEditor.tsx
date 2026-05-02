@@ -39,7 +39,12 @@ const EventEditor = () => {
     results_pdf_url: "",
     results_url: "",
     description_image_url: "",
+    wfp_merchant_login: "",
+    wfp_secret_key: "",
+    wfp_merchant_domain: "",
   });
+
+  const isWayForPayUrl = (url: string) => /wayforpay/i.test(url || "");
   const [uploadingResults, setUploadingResults] = useState(false);
   const [uploadingDescImage, setUploadingDescImage] = useState(false);
   const [distances, setDistances] = useState<DistanceForm[]>([{ distance_km: "10", name: "", price: "0", bib_start: "" }]);
