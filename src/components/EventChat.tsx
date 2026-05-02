@@ -9,6 +9,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
 import { z } from "zod";
+import { linkifyText } from "@/lib/linkify";
 
 interface ChatMessage {
   id: string;
@@ -447,7 +448,7 @@ export const EventChat = ({ eventId, eventOrganizerId }: Props) => {
                 isOwn ? "bg-primary text-primary-foreground" : "bg-muted"
               }`}
             >
-              {m.content}
+              {linkifyText(m.content)}
             </div>
           )}
 
