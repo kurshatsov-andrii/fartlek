@@ -129,7 +129,7 @@ const Features = () => {
       items: [
         { icon: Tag, title: "Промокоди", desc: "Створюйте знижкові коди (фіксована сума або відсоток) з лімітом використання." },
         { icon: Mail, title: "Email-розсилки", desc: "Маркетингові кампанії учасникам події з готових шаблонів." },
-        { icon: CreditCard, title: "Прийом оплат WayForPay (автопідтвердження)", desc: "Підключіть свій акаунт WayForPay — гроші йдуть напряму вам, а статус оплати ✅ ставиться автоматично. Деталі — у блоці «Оплата» нижче." },
+        { icon: CreditCard, title: "Прийом оплат WayForPay та LiqPay (автопідтвердження)", desc: "Підключіть свій акаунт WayForPay або LiqPay — гроші йдуть напряму вам, а статус оплати ✅ ставиться автоматично. Деталі — у блоці «Оплата» нижче." },
         { icon: Megaphone, title: "Профіль клубу/організатора", desc: "Окрема сторінка з усіма вашими подіями та інформацією про клуб." },
       ],
     },
@@ -166,7 +166,7 @@ const Features = () => {
       items: [
         { icon: Tag, title: "Promo codes", desc: "Discount codes (fixed amount or percentage) with usage limits." },
         { icon: Mail, title: "Email campaigns", desc: "Send marketing emails to participants from ready-made templates." },
-        { icon: CreditCard, title: "WayForPay payments (auto-confirm)", desc: "Connect your own WayForPay account — money goes directly to you, payment status ✅ is set automatically. See the «Payments» block below." },
+        { icon: CreditCard, title: "WayForPay & LiqPay payments (auto-confirm)", desc: "Connect your WayForPay or LiqPay account — money goes directly to you, payment status ✅ is set automatically. See the «Payments» block below." },
         { icon: Megaphone, title: "Club / organizer page", desc: "A dedicated page with all your events and club information." },
       ],
     },
@@ -285,8 +285,8 @@ const Features = () => {
                 </div>
                 <p className="text-muted-foreground mb-8 max-w-3xl">
                   {isUk
-                    ? "Fartlek Events не бере комісію з оплат — гроші учасників надходять напряму на ваш рахунок. Підтримуємо два сценарії: автоматичне підтвердження через WayForPay або ручну перевірку квитанції за будь-яким посиланням."
-                    : "Fartlek Events takes no payment commission — participants pay you directly. Two flows are supported: WayForPay auto-confirmation or manual receipt approval for any other payment link."}
+                    ? "Fartlek Events не бере комісію з оплат — гроші учасників надходять напряму на ваш рахунок. Підтримуємо три сценарії: автоматичне підтвердження через WayForPay, автоматичне через LiqPay, або ручну перевірку квитанції за будь-яким посиланням."
+                    : "Fartlek Events takes no payment commission — participants pay you directly. Three flows are supported: WayForPay auto-confirmation, LiqPay auto-confirmation, or manual receipt approval for any other payment link."}
                 </p>
 
                 {/* Сценарій 1 — WayForPay */}
@@ -345,18 +345,75 @@ const Features = () => {
                   </div>
                 </div>
 
-                {/* Сценарій 2 — інші посилання */}
+                {/* Сценарій 2 — LiqPay */}
+                <div className="rounded-xl border border-primary/40 bg-background p-5 md:p-6 mb-6">
+                  <div className="flex items-start gap-3 mb-4">
+                    <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground text-sm font-bold">2</span>
+                    <div>
+                      <h4 className="text-lg md:text-xl font-bold">
+                        {isUk ? "LiqPay — автоматичне підтвердження ✅" : "LiqPay — automatic confirmation ✅"}
+                      </h4>
+                      <p className="text-sm text-muted-foreground mt-1">
+                        {isUk
+                          ? "Те саме, що й WayForPay, але через LiqPay від ПриватБанку. Зелена галочка «Сплачено» виставляється автоматично після успішної оплати."
+                          : "Same as WayForPay, but via LiqPay from PrivatBank. The «Paid» check is set automatically after a successful payment."}
+                      </p>
+                    </div>
+                  </div>
+
+                  <ol className="space-y-3 text-sm md:text-base ml-10">
+                    <li>
+                      <strong>{isUk ? "1. Заведіть магазин у LiqPay." : "1. Set up a shop in LiqPay."}</strong>{" "}
+                      {isUk ? "Зареєструйтесь або увійдіть на " : "Sign up or log in at "}
+                      <a href="https://www.liqpay.ua" target="_blank" rel="noopener noreferrer" className="text-primary underline">liqpay.ua</a>{" "}
+                      {isUk ? "і створіть магазин (Merchant)." : "and create a shop (merchant)."}
+                    </li>
+                    <li>
+                      <strong>{isUk ? "2. Створіть/відредагуйте подію" : "2. Create or edit your event"}</strong>{" "}
+                      {isUk ? "у кабінеті організатора, увімкніть «Платна подія» і вставте будь-яке посилання LiqPay (наприклад " : "in the organizer dashboard, enable «Paid event» and paste any LiqPay link (e.g. "}
+                      <code className="text-foreground">https://www.liqpay.ua/...</code>{isUk ? ") у поле «Посилання на оплату» — система розпізнає LiqPay автоматично." : ") in the «Payment URL» field — the system detects LiqPay automatically."}
+                    </li>
+                    <li>
+                      <strong>{isUk ? "3. З'являться 2 додаткові поля" : "3. Two extra fields will appear"}</strong>{" "}
+                      {isUk ? "(із вашого кабінету LiqPay → Налаштування → API):" : "(from your LiqPay account → Settings → API):"}
+                      <ul className="list-disc ml-5 mt-1 text-muted-foreground space-y-0.5">
+                        <li><code className="text-foreground">Public Key</code></li>
+                        <li><code className="text-foreground">Private Key</code></li>
+                      </ul>
+                    </li>
+                    <li>
+                      <strong>{isUk ? "4. У налаштуваннях магазину LiqPay" : "4. In your LiqPay shop settings"}</strong>{" "}
+                      {isUk ? "вкажіть два URL (ми покажемо їх готові для копіювання просто на сторінці події):" : "set two URLs (we show them ready-to-copy right on the event page):"}
+                      <ul className="list-disc ml-5 mt-1 text-muted-foreground space-y-1">
+                        <li><strong className="text-foreground">Server URL</strong> — {isUk ? "куди LiqPay надішле callback з результатом оплати" : "where LiqPay will send the payment callback"}</li>
+                        <li><strong className="text-foreground">Result URL</strong> — {isUk ? "куди повернути учасника після оплати" : "where to redirect the participant after payment"}</li>
+                      </ul>
+                    </li>
+                    <li>
+                      <strong>{isUk ? "5. Готово!" : "5. Done!"}</strong>{" "}
+                      {isUk ? "Учасник реєструється → натискає «Сплатити» → переходить на LiqPay → після оплати галочка «Сплачено» виставляється автоматично." : "Participant registers → clicks «Pay» → goes to LiqPay → the «Paid» check is set automatically after payment."}
+                    </li>
+                  </ol>
+
+                  <div className="mt-5 ml-10 rounded-md bg-primary/10 border border-primary/30 p-3 text-sm">
+                    🔒 {isUk
+                      ? "Ваш Private Key зберігається приватно — його бачите тільки ви, ваші співорганізатори та адміністратор платформи."
+                      : "Your Private Key is stored privately — only you, your co-organizers, and the platform admin can see it."}
+                  </div>
+                </div>
+
+                {/* Сценарій 3 — інші посилання */}
                 <div className="rounded-xl border border-border bg-background p-5 md:p-6">
                   <div className="flex items-start gap-3 mb-4">
-                    <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-muted text-foreground text-sm font-bold">2</span>
+                    <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-muted text-foreground text-sm font-bold">3</span>
                     <div>
                       <h4 className="text-lg md:text-xl font-bold">
                         {isUk ? "Будь-яке інше посилання — ручне підтвердження" : "Any other payment link — manual confirmation"}
                       </h4>
                       <p className="text-sm text-muted-foreground mt-1">
                         {isUk
-                          ? "Monobank банка, Privat24, LiqPay, IBAN — учасник платить, завантажує квитанцію, ви підтверджуєте одним кліком."
-                          : "Monobank jar, Privat24, LiqPay, IBAN — participant pays, uploads a receipt, you confirm with one click."}
+                          ? "Monobank банка, Privat24, IBAN — учасник платить, завантажує квитанцію, ви підтверджуєте одним кліком."
+                          : "Monobank jar, Privat24, IBAN — participant pays, uploads a receipt, you confirm with one click."}
                       </p>
                     </div>
                   </div>
@@ -376,8 +433,8 @@ const Features = () => {
                     </h5>
                     <p className="text-sm text-muted-foreground">
                       {isUk
-                        ? "Ні. Гроші йдуть напряму на ваш рахунок. Ви платите тільки комісію WayForPay (≈ 2.7%) за свою угоду з ними."
-                        : "No. Money goes directly to your account. You only pay WayForPay's fee (~2.7%) per your contract with them."}
+                        ? "Ні. Гроші йдуть напряму на ваш рахунок. Ви платите тільки комісію платіжної системи (WayForPay ≈ 2.7%, LiqPay ≈ 2.75%) за вашою угодою з ними."
+                        : "No. Money goes directly to your account. You only pay the payment provider's fee (WayForPay ~2.7%, LiqPay ~2.75%) per your contract with them."}
                     </p>
                   </div>
                   <div className="rounded-lg bg-muted/40 p-4">
@@ -386,8 +443,8 @@ const Features = () => {
                     </h5>
                     <p className="text-sm text-muted-foreground">
                       {isUk
-                        ? "Повернення робите ви через свій кабінет WayForPay або вручну для інших методів. На сайті можна змінити статус оплати назад."
-                        : "You handle refunds via your WayForPay dashboard or manually for other methods. Payment status can be reverted on the site."}
+                        ? "Повернення робите ви через свій кабінет WayForPay/LiqPay або вручну для інших методів. На сайті можна змінити статус оплати назад."
+                        : "You handle refunds via your WayForPay/LiqPay dashboard or manually for other methods. Payment status can be reverted on the site."}
                     </p>
                   </div>
                 </div>

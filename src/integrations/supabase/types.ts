@@ -418,6 +418,8 @@ export type Database = {
           created_at: string
           event_id: string
           id: string
+          liqpay_private_key: string | null
+          liqpay_public_key: string | null
           provider: string
           updated_at: string
           wayforpay_merchant_domain: string | null
@@ -428,6 +430,8 @@ export type Database = {
           created_at?: string
           event_id: string
           id?: string
+          liqpay_private_key?: string | null
+          liqpay_public_key?: string | null
           provider?: string
           updated_at?: string
           wayforpay_merchant_domain?: string | null
@@ -438,6 +442,8 @@ export type Database = {
           created_at?: string
           event_id?: string
           id?: string
+          liqpay_private_key?: string | null
+          liqpay_public_key?: string | null
           provider?: string
           updated_at?: string
           wayforpay_merchant_domain?: string | null
@@ -515,6 +521,45 @@ export type Database = {
           status?: Database["public"]["Enums"]["event_status"]
           title?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      liqpay_orders: {
+        Row: {
+          amount: number
+          created_at: string
+          currency: string
+          id: string
+          order_reference: string
+          raw_callback: Json | null
+          registration_id: string
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          currency?: string
+          id?: string
+          order_reference: string
+          raw_callback?: Json | null
+          registration_id: string
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          currency?: string
+          id?: string
+          order_reference?: string
+          raw_callback?: Json | null
+          registration_id?: string
+          status?: string
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }

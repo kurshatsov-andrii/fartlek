@@ -43,9 +43,12 @@ const EventEditor = () => {
     wfp_merchant_login: "",
     wfp_secret_key: "",
     wfp_merchant_domain: "",
+    liqpay_public_key: "",
+    liqpay_private_key: "",
   });
 
   const isWayForPayUrl = (url: string) => /wayforpay/i.test(url || "");
+  const isLiqPayUrl = (url: string) => /liqpay/i.test(url || "");
   const [uploadingResults, setUploadingResults] = useState(false);
   const [uploadingRegulations, setUploadingRegulations] = useState(false);
   const [uploadingDescImage, setUploadingDescImage] = useState(false);
@@ -70,7 +73,7 @@ const EventEditor = () => {
       if (ev) {
         const { data: pset } = await supabase
           .from("event_payment_settings" as any)
-          .select("wayforpay_merchant_login, wayforpay_secret_key, wayforpay_merchant_domain")
+          .select("wayforpay_merchant_login, wayforpay_secret_key, wayforpay_merchant_domain, liqpay_public_key, liqpay_private_key")
           .eq("event_id", id)
           .maybeSingle();
         setForm({
@@ -89,6 +92,8 @@ const EventEditor = () => {
           wfp_merchant_login: (pset as any)?.wayforpay_merchant_login ?? "",
           wfp_secret_key: (pset as any)?.wayforpay_secret_key ?? "",
           wfp_merchant_domain: (pset as any)?.wayforpay_merchant_domain ?? "",
+          liqpay_public_key: (pset as any)?.liqpay_public_key ?? "",
+          liqpay_private_key: (pset as any)?.liqpay_private_key ?? "",
         });
       }
       const { data: ds } = await supabase.from("distances").select("*").eq("event_id", id).eq("is_active", true).order("distance_km");
@@ -165,15 +170,22 @@ const EventEditor = () => {
     if (!form.image_url) { toast.error("Додай фото обкладинки"); return; }
 
     const wfp = form.is_paid && isWayForPayUrl(form.payment_url);
+    const liqpay = form.is_paid && isLiqPayUrl(form.payment_url);
     if (wfp) {
       if (!form.wfp_merchant_login.trim() || !form.wfp_secret_key.trim() || !form.wfp_merchant_domain.trim()) {
         toast.error("Заповни всі поля WayForPay (Merchant Login, Secret Key, Merchant Domain)");
         return;
       }
     }
+    if (liqpay) {
+      if (!form.liqpay_public_key.trim() || !form.liqpay_private_key.trim()) {
+        toast.error("Заповни обидва ключі LiqPay (Public Key і Private Key)");
+        return;
+      }
+    }
 
     setBusy(true);
-    const { wfp_merchant_login, wfp_secret_key, wfp_merchant_domain, ...rest } = form;
+    const { wfp_merchant_login, wfp_secret_key, wfp_merchant_domain, liqpay_public_key, liqpay_private_key, ...rest } = form;
     const payload = {
       ...rest,
       organizer_id: !isNew && originalOrganizerId ? originalOrganizerId : user.id,
@@ -198,7 +210,7 @@ const EventEditor = () => {
       if (error) { toast.error(error.message); setBusy(false); return; }
     }
 
-    // Зберігаємо платіжні реквізити WayForPay (upsert)
+    // Зберігаємо платіжні реквізити (WayForPay або LiqPay) — upsert
     if (wfp) {
       const { error: psErr } = await supabase
         .from("event_payment_settings" as any)
@@ -208,10 +220,25 @@ const EventEditor = () => {
           wayforpay_merchant_login: form.wfp_merchant_login.trim(),
           wayforpay_secret_key: form.wfp_secret_key.trim(),
           wayforpay_merchant_domain: form.wfp_merchant_domain.trim(),
+          liqpay_public_key: null,
+          liqpay_private_key: null,
+        } as any, { onConflict: "event_id" });
+      if (psErr) { toast.error("Не вдалось зберегти реквізити: " + psErr.message); setBusy(false); return; }
+    } else if (liqpay) {
+      const { error: psErr } = await supabase
+        .from("event_payment_settings" as any)
+        .upsert({
+          event_id: eventId,
+          provider: "liqpay",
+          liqpay_public_key: form.liqpay_public_key.trim(),
+          liqpay_private_key: form.liqpay_private_key.trim(),
+          wayforpay_merchant_login: null,
+          wayforpay_secret_key: null,
+          wayforpay_merchant_domain: null,
         } as any, { onConflict: "event_id" });
       if (psErr) { toast.error("Не вдалось зберегти реквізити: " + psErr.message); setBusy(false); return; }
     } else if (!isNew) {
-      // якщо більше не WFP — приберемо налаштування
+      // якщо більше не WFP/LiqPay — приберемо налаштування
       await supabase.from("event_payment_settings" as any).delete().eq("event_id", eventId);
     }
 
@@ -395,7 +422,7 @@ const EventEditor = () => {
                   onChange={(e) => setForm({ ...form, payment_url: e.target.value })}
                 />
                 <p className="text-xs text-muted-foreground">
-                  Якщо вкажеш посилання WayForPay — нижче з'являться додаткові поля для автоматичного підтвердження оплати.
+                  Якщо вкажеш посилання WayForPay або LiqPay — нижче з'являться додаткові поля для автоматичного підтвердження оплати.
                 </p>
               </div>
             )}
@@ -479,6 +506,75 @@ const EventEditor = () => {
               </div>
             )}
 
+            {form.is_paid && isLiqPayUrl(form.payment_url) && (
+              <div className="space-y-3 rounded-md border border-primary/40 bg-primary/5 p-4">
+                <div>
+                  <h3 className="font-semibold">Реквізити LiqPay</h3>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Дані з твого кабінету LiqPay → Налаштування → API. Зберігаються приватно — їх бачиш тільки ти.
+                  </p>
+                </div>
+                <div className="space-y-2">
+                  <Label>Public Key *</Label>
+                  <Input
+                    placeholder="наприклад: i12345678901"
+                    value={form.liqpay_public_key}
+                    onChange={(e) => setForm({ ...form, liqpay_public_key: e.target.value })}
+                    maxLength={100}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Private Key *</Label>
+                  <Input
+                    type="password"
+                    placeholder="приватний ключ"
+                    value={form.liqpay_private_key}
+                    onChange={(e) => setForm({ ...form, liqpay_private_key: e.target.value })}
+                    maxLength={200}
+                  />
+                </div>
+                <div className="rounded-md bg-background border border-border p-3 text-xs space-y-3">
+                  <p className="font-semibold">⚙️ Налаштуй у кабінеті LiqPay:</p>
+                  {(() => {
+                    const serverUrl = `https://${import.meta.env.VITE_SUPABASE_PROJECT_ID}.supabase.co/functions/v1/liqpay-callback`;
+                    const resultUrl = `${window.location.origin}/payment-success`;
+                    const copy = async (val: string, label: string) => {
+                      try {
+                        await navigator.clipboard.writeText(val);
+                        toast.success(`${label} скопійовано`);
+                      } catch {
+                        toast.error("Не вдалося скопіювати");
+                      }
+                    };
+                    return (
+                      <>
+                        <div>
+                          <p className="mb-1"><strong>Server URL (callback):</strong></p>
+                          <div className="flex items-stretch gap-1">
+                            <code className="flex-1 bg-muted p-2 rounded text-[10px] break-all">{serverUrl}</code>
+                            <Button type="button" variant="outline" size="sm" className="shrink-0" onClick={() => copy(serverUrl, "Server URL")}>
+                              <Copy className="h-3 w-3 mr-1" /> Копіювати
+                            </Button>
+                          </div>
+                        </div>
+                        <div>
+                          <p className="mb-1"><strong>Result URL (повернення):</strong></p>
+                          <div className="flex items-stretch gap-1">
+                            <code className="flex-1 bg-muted p-2 rounded text-[10px] break-all">{resultUrl}</code>
+                            <Button type="button" variant="outline" size="sm" className="shrink-0" onClick={() => copy(resultUrl, "Result URL")}>
+                              <Copy className="h-3 w-3 mr-1" /> Копіювати
+                            </Button>
+                          </div>
+                        </div>
+                        <p className="text-muted-foreground pt-1">
+                          Server URL вкажи у налаштуваннях магазину LiqPay як URL для callback. Result URL — куди повертається учасник після оплати.
+                        </p>
+                      </>
+                    );
+                  })()}
+                </div>
+              </div>
+            )}
 
             {!isNew && (
               <div className="space-y-3 rounded-md border border-border p-4">

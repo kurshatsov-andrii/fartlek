@@ -14,6 +14,7 @@ import { useApp } from "@/contexts/AppContext";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { startWayForPayCheckout } from "@/lib/wayforpay";
+import { startLiqPayCheckout } from "@/lib/liqpay";
 import { PromoCodeInput, PromoPreview } from "@/components/PromoCodeInput";
 
 const Ticket = () => {
@@ -281,8 +282,9 @@ const Ticket = () => {
 
             {(() => {
               const isWfp = ev.payment_url && /wayforpay/i.test(ev.payment_url);
-              // Якщо WayForPay — через API (автопідтвердження). Інакше — звичайне посилання.
-              if (ev.payment_url && !isWfp) {
+              const isLiqPay = ev.payment_url && /liqpay/i.test(ev.payment_url);
+              // WayForPay або LiqPay — через API (автопідтвердження). Інакше — звичайне посилання.
+              if (ev.payment_url && !isWfp && !isLiqPay) {
                 return (
                   <Button asChild className="w-full sm:w-auto" onClick={async () => {
                     if (promo && !redemption) {
@@ -316,7 +318,11 @@ const Ticket = () => {
                         setRedemption({ discount_amount: promo.discount_amount, promo_code_id: promo.promo_id, code: promo.code });
                         setPromo(null);
                       }
-                      await startWayForPayCheckout(data.id);
+                      if (isLiqPay) {
+                        await startLiqPayCheckout(data.id);
+                      } else {
+                        await startWayForPayCheckout(data.id);
+                      }
                     }
                     catch (e: any) { toast.error(e.message ?? t.common.error); setPayingBusy(false); }
                   }}
