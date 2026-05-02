@@ -98,6 +98,9 @@ const EventEditor = () => {
           liqpay_public_key: (pset as any)?.liqpay_public_key ?? "",
           liqpay_private_key: (pset as any)?.liqpay_private_key ?? "",
         });
+        const wfpFilled = !!((pset as any)?.wayforpay_merchant_login || (pset as any)?.wayforpay_secret_key);
+        const liqFilled = !!((pset as any)?.liqpay_public_key || (pset as any)?.liqpay_private_key);
+        setPaymentMethod(wfpFilled ? "wfp" : liqFilled ? "liqpay" : "link");
       }
       const { data: ds } = await supabase.from("distances").select("*").eq("event_id", id).eq("is_active", true).order("distance_km");
       if (ds) setDistances(ds.map((d: any) => ({ id: d.id, distance_km: String(d.distance_km), name: d.name ?? "", price: String(d.price), bib_start: d.bib_start != null ? String(d.bib_start) : "" })));
