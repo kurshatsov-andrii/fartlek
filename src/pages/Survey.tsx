@@ -124,6 +124,20 @@ const Survey = () => {
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (
+      easeOfUse === null ||
+      nps === null ||
+      designRating === null ||
+      !easyFind ||
+      regClarity === null ||
+      missing.length === 0 ||
+      eventChoiceFactors.length === 0 ||
+      !discoverySource ||
+      !participationFrequency
+    ) {
+      toast.error("Будь ласка, дайте відповідь на всі обов'язкові питання (позначені *)");
+      return;
+    }
     setBusy(true);
     try {
       const { error } = await supabase.from("survey_responses").insert({
