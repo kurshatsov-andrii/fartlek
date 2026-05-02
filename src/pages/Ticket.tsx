@@ -279,46 +279,53 @@ const Ticket = () => {
               );
             })()}
 
-            {ev.payment_url ? (
-              <Button asChild className="w-full sm:w-auto" onClick={async () => {
-                if (promo && !redemption) {
-                  const { error } = await supabase.rpc("apply_promo_code", {
-                    _code: promo.code, _event_id: ev.id, _distance_id: dist.id,
-                    _registration_id: data.id, _base_price: Number(dist.price),
-                  });
-                  if (error) toast.error(error.message);
-                  else { setRedemption({ discount_amount: promo.discount_amount, promo_code_id: promo.promo_id, code: promo.code }); setPromo(null); }
-                }
-              }}>
-                <a href={ev.payment_url} target="_blank" rel="noopener noreferrer">
-                  <CreditCard className="h-4 w-4" /> {t.ticket.payNow}
-                </a>
-              </Button>
-            ) : (
-              <Button
-                className="w-full sm:w-auto"
-                disabled={payingBusy}
-                onClick={async () => {
-                  setPayingBusy(true);
-                  try {
+            {(() => {
+              const isWfp = ev.payment_url && /wayforpay/i.test(ev.payment_url);
+              // Якщо WayForPay — через API (автопідтвердження). Інакше — звичайне посилання.
+              if (ev.payment_url && !isWfp) {
+                return (
+                  <Button asChild className="w-full sm:w-auto" onClick={async () => {
                     if (promo && !redemption) {
-                      const { error: pErr } = await supabase.rpc("apply_promo_code", {
+                      const { error } = await supabase.rpc("apply_promo_code", {
                         _code: promo.code, _event_id: ev.id, _distance_id: dist.id,
                         _registration_id: data.id, _base_price: Number(dist.price),
                       });
-                      if (pErr) throw pErr;
-                      setRedemption({ discount_amount: promo.discount_amount, promo_code_id: promo.promo_id, code: promo.code });
-                      setPromo(null);
+                      if (error) toast.error(error.message);
+                      else { setRedemption({ discount_amount: promo.discount_amount, promo_code_id: promo.promo_id, code: promo.code }); setPromo(null); }
                     }
-                    await startWayForPayCheckout(data.id);
-                  }
-                  catch (e: any) { toast.error(e.message ?? t.common.error); setPayingBusy(false); }
-                }}
-              >
-                {payingBusy ? <Loader2 className="h-4 w-4 animate-spin" /> : <CreditCard className="h-4 w-4" />}
-                {t.ticket.payNow}
-              </Button>
-            )}
+                  }}>
+                    <a href={ev.payment_url} target="_blank" rel="noopener noreferrer">
+                      <CreditCard className="h-4 w-4" /> {t.ticket.payNow}
+                    </a>
+                  </Button>
+                );
+              }
+              return (
+                <Button
+                  className="w-full sm:w-auto"
+                  disabled={payingBusy}
+                  onClick={async () => {
+                    setPayingBusy(true);
+                    try {
+                      if (promo && !redemption) {
+                        const { error: pErr } = await supabase.rpc("apply_promo_code", {
+                          _code: promo.code, _event_id: ev.id, _distance_id: dist.id,
+                          _registration_id: data.id, _base_price: Number(dist.price),
+                        });
+                        if (pErr) throw pErr;
+                        setRedemption({ discount_amount: promo.discount_amount, promo_code_id: promo.promo_id, code: promo.code });
+                        setPromo(null);
+                      }
+                      await startWayForPayCheckout(data.id);
+                    }
+                    catch (e: any) { toast.error(e.message ?? t.common.error); setPayingBusy(false); }
+                  }}
+                >
+                  {payingBusy ? <Loader2 className="h-4 w-4 animate-spin" /> : <CreditCard className="h-4 w-4" />}
+                  {t.ticket.payNow}
+                </Button>
+              );
+            })()}
           </div>
         )}
 
