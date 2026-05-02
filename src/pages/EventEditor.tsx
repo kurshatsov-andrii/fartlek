@@ -37,6 +37,7 @@ const EventEditor = () => {
     category: "run" as EventCategory,
     format: "offline" as "offline" | "online" | "hybrid",
     results_pdf_url: "",
+    regulations_pdf_url: "",
     results_url: "",
     description_image_url: "",
     wfp_merchant_login: "",
