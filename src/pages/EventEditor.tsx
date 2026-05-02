@@ -170,15 +170,22 @@ const EventEditor = () => {
     if (!form.image_url) { toast.error("Додай фото обкладинки"); return; }
 
     const wfp = form.is_paid && isWayForPayUrl(form.payment_url);
+    const liqpay = form.is_paid && isLiqPayUrl(form.payment_url);
     if (wfp) {
       if (!form.wfp_merchant_login.trim() || !form.wfp_secret_key.trim() || !form.wfp_merchant_domain.trim()) {
         toast.error("Заповни всі поля WayForPay (Merchant Login, Secret Key, Merchant Domain)");
         return;
       }
     }
+    if (liqpay) {
+      if (!form.liqpay_public_key.trim() || !form.liqpay_private_key.trim()) {
+        toast.error("Заповни обидва ключі LiqPay (Public Key і Private Key)");
+        return;
+      }
+    }
 
     setBusy(true);
-    const { wfp_merchant_login, wfp_secret_key, wfp_merchant_domain, ...rest } = form;
+    const { wfp_merchant_login, wfp_secret_key, wfp_merchant_domain, liqpay_public_key, liqpay_private_key, ...rest } = form;
     const payload = {
       ...rest,
       organizer_id: !isNew && originalOrganizerId ? originalOrganizerId : user.id,
@@ -203,7 +210,7 @@ const EventEditor = () => {
       if (error) { toast.error(error.message); setBusy(false); return; }
     }
 
-    // Зберігаємо платіжні реквізити WayForPay (upsert)
+    // Зберігаємо платіжні реквізити (WayForPay або LiqPay) — upsert
     if (wfp) {
       const { error: psErr } = await supabase
         .from("event_payment_settings" as any)
@@ -213,10 +220,25 @@ const EventEditor = () => {
           wayforpay_merchant_login: form.wfp_merchant_login.trim(),
           wayforpay_secret_key: form.wfp_secret_key.trim(),
           wayforpay_merchant_domain: form.wfp_merchant_domain.trim(),
+          liqpay_public_key: null,
+          liqpay_private_key: null,
+        } as any, { onConflict: "event_id" });
+      if (psErr) { toast.error("Не вдалось зберегти реквізити: " + psErr.message); setBusy(false); return; }
+    } else if (liqpay) {
+      const { error: psErr } = await supabase
+        .from("event_payment_settings" as any)
+        .upsert({
+          event_id: eventId,
+          provider: "liqpay",
+          liqpay_public_key: form.liqpay_public_key.trim(),
+          liqpay_private_key: form.liqpay_private_key.trim(),
+          wayforpay_merchant_login: null,
+          wayforpay_secret_key: null,
+          wayforpay_merchant_domain: null,
         } as any, { onConflict: "event_id" });
       if (psErr) { toast.error("Не вдалось зберегти реквізити: " + psErr.message); setBusy(false); return; }
     } else if (!isNew) {
-      // якщо більше не WFP — приберемо налаштування
+      // якщо більше не WFP/LiqPay — приберемо налаштування
       await supabase.from("event_payment_settings" as any).delete().eq("event_id", eventId);
     }
 
