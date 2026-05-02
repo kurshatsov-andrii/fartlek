@@ -58,7 +58,19 @@ Deno.serve(async (req) => {
     }
 
     // @ts-ignore embedded
-    const amount = Number(reg.distances?.price ?? 0);
+    const basePrice = Number(reg.distances?.price ?? 0);
+
+    // Враховуємо знижку від промокоду (якщо застосований до цієї реєстрації)
+    const { data: redemptions } = await supabase
+      .from("promo_code_redemptions")
+      .select("discount_amount")
+      .eq("registration_id", reg.id);
+    const discount = (redemptions ?? []).reduce(
+      (sum, r) => sum + Number(r.discount_amount ?? 0),
+      0,
+    );
+    const amount = Math.max(Number((basePrice - discount).toFixed(2)), 0);
+
     if (amount <= 0) return new Response(JSON.stringify({ error: "free registration" }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
 
     const orderRef = `reg_${reg.id}_${Date.now()}`;
