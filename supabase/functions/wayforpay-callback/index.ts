@@ -6,10 +6,8 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-const SECRET = Deno.env.get("WAYFORPAY_SECRET_KEY")!;
-
-function sign(fields: (string | number)[]) {
-  return createHmac("md5", SECRET).update(fields.join(";")).digest("hex");
+function sign(secret: string, fields: (string | number)[]) {
+  return createHmac("md5", secret).update(fields.join(";")).digest("hex");
 }
 
 Deno.serve(async (req) => {
@@ -36,7 +34,42 @@ Deno.serve(async (req) => {
       authCode, cardPan, transactionStatus, reasonCode, merchantSignature,
     } = payload;
 
-    const expected = sign([
+    if (!orderReference) {
+      return new Response("missing orderReference", { status: 400, headers: corsHeaders });
+    }
+
+    // Знаходимо order та через нього — реєстрацію та подію
+    const { data: order } = await supabase
+      .from("wayforpay_orders")
+      .select("*, registrations(event_id)")
+      .eq("order_reference", orderReference)
+      .maybeSingle();
+
+    if (!order) {
+      console.error("Order not found:", orderReference);
+      return new Response("order not found", { status: 404, headers: corsHeaders });
+    }
+
+    // @ts-ignore embedded
+    const eventId = order.registrations?.event_id;
+    if (!eventId) {
+      return new Response("event not found", { status: 404, headers: corsHeaders });
+    }
+
+    // Беремо секрет цього організатора
+    const { data: settings } = await supabase
+      .from("event_payment_settings")
+      .select("wayforpay_secret_key")
+      .eq("event_id", eventId)
+      .maybeSingle();
+
+    const SECRET = settings?.wayforpay_secret_key;
+    if (!SECRET) {
+      console.error("No secret configured for event", eventId);
+      return new Response("merchant not configured", { status: 400, headers: corsHeaders });
+    }
+
+    const expected = sign(SECRET, [
       merchantAccount, orderReference, amount, currency,
       authCode ?? "", cardPan ?? "", transactionStatus, reasonCode,
     ]);
@@ -46,28 +79,20 @@ Deno.serve(async (req) => {
       return new Response("invalid signature", { status: 400, headers: corsHeaders });
     }
 
-    const { data: order } = await supabase
-      .from("wayforpay_orders")
-      .select("*")
-      .eq("order_reference", orderReference)
-      .maybeSingle();
+    const newStatus = transactionStatus === "Approved" ? "paid" : "declined";
+    await supabase.from("wayforpay_orders").update({
+      status: newStatus,
+      raw_callback: payload,
+    }).eq("id", order.id);
 
-    if (order) {
-      const newStatus = transactionStatus === "Approved" ? "paid" : "declined";
-      await supabase.from("wayforpay_orders").update({
-        status: newStatus,
-        raw_callback: payload,
-      }).eq("id", order.id);
-
-      if (transactionStatus === "Approved") {
-        await supabase.from("registrations").update({
-          payment_status: "paid",
-        }).eq("id", order.registration_id);
-      }
+    if (transactionStatus === "Approved") {
+      await supabase.from("registrations").update({
+        payment_status: "paid",
+      }).eq("id", order.registration_id);
     }
 
     const time = Math.floor(Date.now() / 1000);
-    const responseSig = sign([orderReference, "accept", time]);
+    const responseSig = sign(SECRET, [orderReference, "accept", time]);
 
     return new Response(JSON.stringify({
       orderReference,

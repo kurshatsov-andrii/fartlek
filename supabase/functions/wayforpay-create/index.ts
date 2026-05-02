@@ -6,12 +6,8 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-const MERCHANT = Deno.env.get("WAYFORPAY_MERCHANT_LOGIN")!;
-const SECRET = Deno.env.get("WAYFORPAY_SECRET_KEY")!;
-const DOMAIN = Deno.env.get("WAYFORPAY_MERCHANT_DOMAIN")!;
-
-function sign(fields: (string | number)[]) {
-  return createHmac("md5", SECRET).update(fields.join(";")).digest("hex");
+function sign(secret: string, fields: (string | number)[]) {
+  return createHmac("md5", secret).update(fields.join(";")).digest("hex");
 }
 
 Deno.serve(async (req) => {
@@ -46,6 +42,21 @@ Deno.serve(async (req) => {
     if (reg.user_id !== user.id) return new Response(JSON.stringify({ error: "forbidden" }), { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } });
     if (reg.payment_status === "paid") return new Response(JSON.stringify({ error: "already paid" }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
 
+    // Беремо реквізити організатора з event_payment_settings
+    const { data: settings } = await supabase
+      .from("event_payment_settings")
+      .select("wayforpay_merchant_login, wayforpay_secret_key, wayforpay_merchant_domain")
+      .eq("event_id", reg.event_id)
+      .maybeSingle();
+
+    const MERCHANT = settings?.wayforpay_merchant_login;
+    const SECRET = settings?.wayforpay_secret_key;
+    const DOMAIN = settings?.wayforpay_merchant_domain;
+
+    if (!MERCHANT || !SECRET || !DOMAIN) {
+      return new Response(JSON.stringify({ error: "Організатор не налаштував реквізити WayForPay для цієї події" }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    }
+
     // @ts-ignore embedded
     const amount = Number(reg.distances?.price ?? 0);
     if (amount <= 0) return new Response(JSON.stringify({ error: "free registration" }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
@@ -58,7 +69,7 @@ Deno.serve(async (req) => {
     const orderDate = Math.floor(Date.now() / 1000);
     const currency = "UAH";
 
-    const signature = sign([
+    const signature = sign(SECRET, [
       MERCHANT, DOMAIN, orderRef, orderDate, amount, currency,
       productName, productCount, productPrice,
     ]);
@@ -74,7 +85,8 @@ Deno.serve(async (req) => {
 
     const projectId = Deno.env.get("SUPABASE_URL")!.match(/https:\/\/(.+?)\./)?.[1];
     const serviceUrl = `https://${projectId}.supabase.co/functions/v1/wayforpay-callback`;
-    const returnUrl = `https://${DOMAIN}/payment/success?order=${orderRef}`;
+    const origin = req.headers.get("origin") ?? `https://${DOMAIN}`;
+    const returnUrl = `${origin}/payment/success?order=${orderRef}`;
 
     return new Response(JSON.stringify({
       checkout: {

@@ -39,7 +39,12 @@ const EventEditor = () => {
     results_pdf_url: "",
     results_url: "",
     description_image_url: "",
+    wfp_merchant_login: "",
+    wfp_secret_key: "",
+    wfp_merchant_domain: "",
   });
+
+  const isWayForPayUrl = (url: string) => /wayforpay/i.test(url || "");
   const [uploadingResults, setUploadingResults] = useState(false);
   const [uploadingDescImage, setUploadingDescImage] = useState(false);
   const [distances, setDistances] = useState<DistanceForm[]>([{ distance_km: "10", name: "", price: "0", bib_start: "" }]);
@@ -60,19 +65,29 @@ const EventEditor = () => {
       if (ev) {
         setOriginalOrganizerId(ev.organizer_id);
       }
-      if (ev) setForm({
-        title: ev.title, description: ev.description ?? "",
-        organizer_name: ev.organizer_name, event_date: ev.event_date,
-        event_time: ev.event_time.slice(0, 5), location: ev.location ?? "",
-        image_url: ev.image_url ?? "", is_paid: ev.is_paid,
-        payment_url: (ev as any).payment_url ?? "",
-        status: ev.status,
-        category: ((ev as any).category ?? "run") as EventCategory,
-        format: ((ev as any).format ?? "offline") as "offline" | "online" | "hybrid",
-        results_pdf_url: (ev as any).results_pdf_url ?? "",
-        results_url: (ev as any).results_url ?? "",
-        description_image_url: (ev as any).description_image_url ?? "",
-      });
+      if (ev) {
+        const { data: pset } = await supabase
+          .from("event_payment_settings" as any)
+          .select("wayforpay_merchant_login, wayforpay_secret_key, wayforpay_merchant_domain")
+          .eq("event_id", id)
+          .maybeSingle();
+        setForm({
+          title: ev.title, description: ev.description ?? "",
+          organizer_name: ev.organizer_name, event_date: ev.event_date,
+          event_time: ev.event_time.slice(0, 5), location: ev.location ?? "",
+          image_url: ev.image_url ?? "", is_paid: ev.is_paid,
+          payment_url: (ev as any).payment_url ?? "",
+          status: ev.status,
+          category: ((ev as any).category ?? "run") as EventCategory,
+          format: ((ev as any).format ?? "offline") as "offline" | "online" | "hybrid",
+          results_pdf_url: (ev as any).results_pdf_url ?? "",
+          results_url: (ev as any).results_url ?? "",
+          description_image_url: (ev as any).description_image_url ?? "",
+          wfp_merchant_login: (pset as any)?.wayforpay_merchant_login ?? "",
+          wfp_secret_key: (pset as any)?.wayforpay_secret_key ?? "",
+          wfp_merchant_domain: (pset as any)?.wayforpay_merchant_domain ?? "",
+        });
+      }
       const { data: ds } = await supabase.from("distances").select("*").eq("event_id", id).eq("is_active", true).order("distance_km");
       if (ds) setDistances(ds.map((d: any) => ({ id: d.id, distance_km: String(d.distance_km), name: d.name ?? "", price: String(d.price), bib_start: d.bib_start != null ? String(d.bib_start) : "" })));
       setLoading(false);
@@ -127,9 +142,19 @@ const EventEditor = () => {
     e.preventDefault();
     if (!user) return;
     if (!form.image_url) { toast.error("Додай фото обкладинки"); return; }
+
+    const wfp = form.is_paid && isWayForPayUrl(form.payment_url);
+    if (wfp) {
+      if (!form.wfp_merchant_login.trim() || !form.wfp_secret_key.trim() || !form.wfp_merchant_domain.trim()) {
+        toast.error("Заповни всі поля WayForPay (Merchant Login, Secret Key, Merchant Domain)");
+        return;
+      }
+    }
+
     setBusy(true);
+    const { wfp_merchant_login, wfp_secret_key, wfp_merchant_domain, ...rest } = form;
     const payload = {
-      ...form,
+      ...rest,
       organizer_id: !isNew && originalOrganizerId ? originalOrganizerId : user.id,
       status: form.status as any,
       event_time: form.event_time + ":00",
@@ -150,6 +175,24 @@ const EventEditor = () => {
       const { error } = await supabase.from("events").update(payload).eq("id", id);
       if (error) { toast.error(error.message); setBusy(false); return; }
     }
+
+    // Зберігаємо платіжні реквізити WayForPay (upsert)
+    if (wfp) {
+      const { error: psErr } = await supabase
+        .from("event_payment_settings" as any)
+        .upsert({
+          event_id: eventId,
+          provider: "wayforpay",
+          wayforpay_merchant_login: form.wfp_merchant_login.trim(),
+          wayforpay_secret_key: form.wfp_secret_key.trim(),
+          wayforpay_merchant_domain: form.wfp_merchant_domain.trim(),
+        } as any, { onConflict: "event_id" });
+      if (psErr) { toast.error("Не вдалось зберегти реквізити: " + psErr.message); setBusy(false); return; }
+    } else if (!isNew) {
+      // якщо більше не WFP — приберемо налаштування
+      await supabase.from("event_payment_settings" as any).delete().eq("event_id", eventId);
+    }
+
     // sync distances: update existing by id, insert new, hide removed
     const valid = distances.filter((d) => d.distance_km);
     const keepIds = valid.filter((d) => d.id).map((d) => d.id!);
@@ -325,12 +368,69 @@ const EventEditor = () => {
                 <Label>{t.organizer.paymentUrl}</Label>
                 <Input
                   type="url"
-                  placeholder="https://..."
+                  placeholder="https://... (Monobank, Privat24, WayForPay, LiqPay)"
                   value={form.payment_url}
                   onChange={(e) => setForm({ ...form, payment_url: e.target.value })}
                 />
+                <p className="text-xs text-muted-foreground">
+                  Якщо вкажеш посилання WayForPay — нижче з'являться додаткові поля для автоматичного підтвердження оплати.
+                </p>
               </div>
             )}
+
+            {form.is_paid && isWayForPayUrl(form.payment_url) && (
+              <div className="space-y-3 rounded-md border border-primary/40 bg-primary/5 p-4">
+                <div>
+                  <h3 className="font-semibold">Реквізити WayForPay</h3>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Дані з твого кабінету WayForPay → Налаштування → Реквізити мерчанта. Зберігаються приватно — їх бачиш тільки ти.
+                  </p>
+                </div>
+                <div className="space-y-2">
+                  <Label>Merchant Login *</Label>
+                  <Input
+                    placeholder="наприклад: my_shop_com"
+                    value={form.wfp_merchant_login}
+                    onChange={(e) => setForm({ ...form, wfp_merchant_login: e.target.value })}
+                    maxLength={100}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Merchant Secret Key *</Label>
+                  <Input
+                    type="password"
+                    placeholder="секретний ключ (32 символи)"
+                    value={form.wfp_secret_key}
+                    onChange={(e) => setForm({ ...form, wfp_secret_key: e.target.value })}
+                    maxLength={200}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Merchant Domain *</Label>
+                  <Input
+                    placeholder="наприклад: fartlek.lovable.app"
+                    value={form.wfp_merchant_domain}
+                    onChange={(e) => setForm({ ...form, wfp_merchant_domain: e.target.value })}
+                    maxLength={200}
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    Має співпадати з доменом, вказаним у WayForPay при реєстрації мерчанта.
+                  </p>
+                </div>
+                <div className="rounded-md bg-background border border-border p-3 text-xs space-y-2">
+                  <p className="font-semibold">⚙️ Налаштуй у кабінеті WayForPay:</p>
+                  <p><strong>Service URL:</strong></p>
+                  <code className="block bg-muted p-2 rounded text-[10px] break-all">
+                    https://{import.meta.env.VITE_SUPABASE_PROJECT_ID}.supabase.co/functions/v1/wayforpay-callback
+                  </code>
+                  <p className="mt-2"><strong>Return URL:</strong></p>
+                  <code className="block bg-muted p-2 rounded text-[10px] break-all">
+                    {window.location.origin}/payment-success
+                  </code>
+                </div>
+              </div>
+            )}
+
 
             {!isNew && (
               <div className="space-y-2 rounded-md border border-border p-4">
