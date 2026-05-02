@@ -46,6 +46,7 @@ const EventEditor = () => {
     liqpay_public_key: "",
     liqpay_private_key: "",
   });
+  const [paymentMethod, setPaymentMethod] = useState<"link" | "wfp" | "liqpay">("link");
 
   const isWayForPayUrl = (url: string) => /wayforpay/i.test(url || "");
   const isLiqPayUrl = (url: string) => /liqpay/i.test(url || "");
