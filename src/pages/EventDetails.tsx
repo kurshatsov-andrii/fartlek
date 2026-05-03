@@ -117,7 +117,7 @@ const EventDetails = () => {
         supabase.from("distances").select("*").eq("event_id", ev.id).eq("is_active", true).order("distance_km"),
         supabase.rpc("get_event_participants_count", { _event_id: ev.id }),
       ]);
-      setDistances(ds ?? []);
+      setDistances((ds ?? []) as any);
       setParticipantsCount((cnt as number) ?? 0);
       if (ds && ds.length > 0) setSelectedDistance(ds[0].id);
       const { count: promoCnt } = await supabase
