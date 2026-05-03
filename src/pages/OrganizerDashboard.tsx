@@ -5,6 +5,7 @@ import * as XLSX from "xlsx";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
+import { DocumentDialog } from "@/components/DocumentDialog";
 import { useApp } from "@/contexts/AppContext";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
@@ -16,6 +17,7 @@ const OrganizerDashboard = () => {
   const [events, setEvents] = useState<any[]>([]);
   const [unreadByEvent, setUnreadByEvent] = useState<Record<string, number>>({});
   const [loading, setLoading] = useState(true);
+  const [docDialog, setDocDialog] = useState<{ url: string; title: string } | null>(null);
 
   useEffect(() => {
     if (!user) return;
@@ -238,17 +240,21 @@ const OrganizerDashboard = () => {
                     
                     <Button onClick={() => exportData(ev.id, ev.title)} variant="outline" size="sm"><Download className="h-4 w-4" /> XLSX</Button>
                     {(ev.results_pdf_url || ev.results_url) && (
-                      <Button asChild variant="outline" size="sm">
-                        <a href={ev.results_pdf_url || ev.results_url} target="_blank" rel="noopener noreferrer">
-                          <FileText className="h-4 w-4" /> {t.events.results}
-                        </a>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setDocDialog({ url: (ev.results_pdf_url || ev.results_url) as string, title: t.events.results })}
+                      >
+                        <FileText className="h-4 w-4" /> {t.events.results}
                       </Button>
                     )}
                     {ev.photos_url && (
-                      <Button asChild variant="outline" size="sm">
-                        <a href={ev.photos_url} target="_blank" rel="noopener noreferrer">
-                          <FileText className="h-4 w-4" /> {t.events.openPhotos}
-                        </a>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setDocDialog({ url: ev.photos_url, title: t.events.openPhotos })}
+                      >
+                        <FileText className="h-4 w-4" /> {t.events.openPhotos}
                       </Button>
                     )}
                     <Button asChild variant="outline" size="sm">
@@ -267,6 +273,14 @@ const OrganizerDashboard = () => {
         )}
       </main>
       <Footer />
+      {docDialog && (
+        <DocumentDialog
+          open={!!docDialog}
+          onOpenChange={(o) => !o && setDocDialog(null)}
+          url={docDialog.url}
+          title={docDialog.title}
+        />
+      )}
     </div>
   );
 };

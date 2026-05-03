@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { AthleteFormDialog, Athlete } from "@/components/AthleteFormDialog";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { DocumentDialog } from "@/components/DocumentDialog";
 import { useApp } from "@/contexts/AppContext";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
@@ -56,6 +56,7 @@ const EventDetails = () => {
   const [hasPromoCodes, setHasPromoCodes] = useState(false);
   const [clubSlug, setClubSlug] = useState<string | null>(null);
   const [regulationsOpen, setRegulationsOpen] = useState(false);
+  const [docDialog, setDocDialog] = useState<{ url: string; title: string } | null>(null);
 
   // Reset promo if distance changes
   useEffect(() => { setPromo(null); }, [selectedDistance]);
@@ -344,24 +345,29 @@ const EventDetails = () => {
                       <p className="text-sm text-muted-foreground">{t.events.resultsHint}</p>
                       <div className="flex flex-col gap-2">
                         {event.results_pdf_url && (
-                          <Button asChild className="w-full">
-                            <a href={event.results_pdf_url} target="_blank" rel="noopener noreferrer">
-                              <FileText className="h-4 w-4" /> {t.events.downloadResults}
-                            </a>
+                          <Button
+                            className="w-full"
+                            onClick={() => setDocDialog({ url: event.results_pdf_url!, title: t.events.resultsTitle })}
+                          >
+                            <FileText className="h-4 w-4" /> {t.events.downloadResults}
                           </Button>
                         )}
                         {event.results_url && (
-                          <Button asChild variant={event.results_pdf_url ? "outline" : "default"} className="w-full">
-                            <a href={event.results_url} target="_blank" rel="noopener noreferrer">
-                              <FileText className="h-4 w-4" /> {t.events.openResults}
-                            </a>
+                          <Button
+                            variant={event.results_pdf_url ? "outline" : "default"}
+                            className="w-full"
+                            onClick={() => setDocDialog({ url: event.results_url!, title: t.events.resultsTitle })}
+                          >
+                            <FileText className="h-4 w-4" /> {t.events.openResults}
                           </Button>
                         )}
                         {event.photos_url && (
-                          <Button asChild variant="outline" className="w-full">
-                            <a href={event.photos_url} target="_blank" rel="noopener noreferrer">
-                              <FileText className="h-4 w-4" /> {t.events.openPhotos}
-                            </a>
+                          <Button
+                            variant="outline"
+                            className="w-full"
+                            onClick={() => setDocDialog({ url: event.photos_url!, title: t.events.openPhotos })}
+                          >
+                            <FileText className="h-4 w-4" /> {t.events.openPhotos}
                           </Button>
                         )}
                       </div>
@@ -528,40 +534,20 @@ const EventDetails = () => {
         </div>
 
         {event.regulations_pdf_url && (
-          <Dialog open={regulationsOpen} onOpenChange={setRegulationsOpen}>
-            <DialogContent className="max-w-5xl w-[95vw] h-[90vh] flex flex-col p-0 gap-0">
-              <DialogHeader className="p-4 border-b border-border">
-                <DialogTitle className="flex items-center gap-2">
-                  <FileText className="h-5 w-5 text-primary" />
-                  {lang === "uk" ? "Регламент події" : "Event regulations"}
-                </DialogTitle>
-              </DialogHeader>
-              <div className="flex-1 overflow-hidden bg-muted">
-                {(() => {
-                  const url = event.regulations_pdf_url!;
-                  // Google Docs: convert /edit or any tail to /preview for iframe embedding
-                  const gdocMatch = url.match(/^https:\/\/docs\.google\.com\/document\/d\/([^/]+)/i);
-                  const embedSrc = gdocMatch
-                    ? `https://docs.google.com/document/d/${gdocMatch[1]}/preview`
-                    : url;
-                  return (
-                    <iframe
-                      src={embedSrc}
-                      title={lang === "uk" ? "Регламент" : "Regulations"}
-                      className="w-full h-full"
-                    />
-                  );
-                })()}
-              </div>
-              <div className="p-3 border-t border-border flex justify-end">
-                <Button asChild variant="outline" size="sm">
-                  <a href={event.regulations_pdf_url} target="_blank" rel="noopener noreferrer">
-                    {lang === "uk" ? "Відкрити в новій вкладці" : "Open in new tab"}
-                  </a>
-                </Button>
-              </div>
-            </DialogContent>
-          </Dialog>
+          <DocumentDialog
+            open={regulationsOpen}
+            onOpenChange={setRegulationsOpen}
+            url={event.regulations_pdf_url}
+            title={lang === "uk" ? "Регламент події" : "Event regulations"}
+          />
+        )}
+        {docDialog && (
+          <DocumentDialog
+            open={!!docDialog}
+            onOpenChange={(o) => !o && setDocDialog(null)}
+            url={docDialog.url}
+            title={docDialog.title}
+          />
         )}
       </main>
       <Footer />

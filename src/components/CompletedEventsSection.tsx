@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Calendar, MapPin, FileText, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { DocumentDialog } from "@/components/DocumentDialog";
 import { useApp } from "@/contexts/AppContext";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -21,6 +22,7 @@ export const CompletedEventsSection = () => {
   const { t, lang } = useApp();
   const [events, setEvents] = useState<CompletedEvent[]>([]);
   const [loading, setLoading] = useState(true);
+  const [docDialog, setDocDialog] = useState<{ url: string; title: string } | null>(null);
 
   useEffect(() => {
     supabase
@@ -113,14 +115,18 @@ export const CompletedEventsSection = () => {
                 </div>
                 <div className="mt-4 pt-3 border-t border-border space-y-2">
                   {ev.results_pdf_url || ev.results_url ? (
-                    <Button asChild size="sm" variant="outline" className="w-full">
-                      <a
-                        href={ev.results_pdf_url || ev.results_url || "#"}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <FileText className="h-4 w-4" /> {t.events.results}
-                      </a>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="w-full"
+                      onClick={() =>
+                        setDocDialog({
+                          url: (ev.results_pdf_url || ev.results_url) as string,
+                          title: t.events.results,
+                        })
+                      }
+                    >
+                      <FileText className="h-4 w-4" /> {t.events.results}
                     </Button>
                   ) : (
                     !ev.photos_url && (
@@ -130,10 +136,13 @@ export const CompletedEventsSection = () => {
                     )
                   )}
                   {ev.photos_url && (
-                    <Button asChild size="sm" variant="outline" className="w-full">
-                      <a href={ev.photos_url} target="_blank" rel="noopener noreferrer">
-                        <FileText className="h-4 w-4" /> {t.events.openPhotos}
-                      </a>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="w-full"
+                      onClick={() => setDocDialog({ url: ev.photos_url!, title: t.events.openPhotos })}
+                    >
+                      <FileText className="h-4 w-4" /> {t.events.openPhotos}
                     </Button>
                   )}
                 </div>
@@ -142,6 +151,14 @@ export const CompletedEventsSection = () => {
           ))}
         </div>
       </div>
+      {docDialog && (
+        <DocumentDialog
+          open={!!docDialog}
+          onOpenChange={(o) => !o && setDocDialog(null)}
+          url={docDialog.url}
+          title={docDialog.title}
+        />
+      )}
     </section>
   );
 };

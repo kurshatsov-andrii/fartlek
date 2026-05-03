@@ -4,6 +4,7 @@ import { Loader2, QrCode, Calendar, FileText, Users } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
+import { DocumentDialog } from "@/components/DocumentDialog";
 import { useApp } from "@/contexts/AppContext";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
@@ -13,6 +14,7 @@ const MyEvents = () => {
   const { user, loading: authLoading } = useAuth();
   const [regs, setRegs] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [docDialog, setDocDialog] = useState<{ url: string; title: string } | null>(null);
 
   useEffect(() => {
     if (!user) return;
@@ -80,17 +82,19 @@ const MyEvents = () => {
                   </div>
                   <div className="flex flex-col sm:flex-row gap-2 sm:items-center shrink-0">
                     {isCompleted && resultsHref && (
-                      <Button asChild variant="outline">
-                        <a href={resultsHref} target="_blank" rel="noopener noreferrer">
-                          <FileText className="h-4 w-4" /> {t.events.results}
-                        </a>
+                      <Button
+                        variant="outline"
+                        onClick={() => setDocDialog({ url: resultsHref, title: t.events.results })}
+                      >
+                        <FileText className="h-4 w-4" /> {t.events.results}
                       </Button>
                     )}
                     {isCompleted && r.events.photos_url && (
-                      <Button asChild variant="outline">
-                        <a href={r.events.photos_url} target="_blank" rel="noopener noreferrer">
-                          <FileText className="h-4 w-4" /> {t.events.openPhotos}
-                        </a>
+                      <Button
+                        variant="outline"
+                        onClick={() => setDocDialog({ url: r.events.photos_url, title: t.events.openPhotos })}
+                      >
+                        <FileText className="h-4 w-4" /> {t.events.openPhotos}
                       </Button>
                     )}
                     <Button asChild variant="outline">
@@ -107,6 +111,14 @@ const MyEvents = () => {
         )}
       </main>
       <Footer />
+      {docDialog && (
+        <DocumentDialog
+          open={!!docDialog}
+          onOpenChange={(o) => !o && setDocDialog(null)}
+          url={docDialog.url}
+          title={docDialog.title}
+        />
+      )}
     </div>
   );
 };
