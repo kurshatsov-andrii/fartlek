@@ -267,7 +267,18 @@ const EventEditor = () => {
     }
 
     // sync distances: update existing by id, insert new, hide removed
-    const valid = distances.filter((d) => d.distance_km);
+    // For relay distances, auto-derive total distance_km from sum of leg KM if not provided
+    const computeKm = (d: DistanceForm): number => {
+      const direct = parseFloat(d.distance_km);
+      if (!isNaN(direct) && direct > 0) return direct;
+      if (d.is_relay) {
+        const legs = d.relay_legs.slice(0, parseInt(d.relay_legs_count || "0", 10) || d.relay_legs.length);
+        const sum = legs.reduce((acc, v) => acc + (parseFloat(v) || 0), 0);
+        return sum;
+      }
+      return 0;
+    };
+    const valid = distances.filter((d) => computeKm(d) > 0);
     const keepIds = valid.filter((d) => d.id).map((d) => d.id!);
 
     // fetch existing active distances to know what to hide
@@ -286,7 +297,7 @@ const EventEditor = () => {
     // update existing
     for (const d of valid.filter((x) => x.id)) {
       const { error: uErr } = await supabase.from("distances").update({
-        distance_km: parseFloat(d.distance_km),
+        distance_km: computeKm(d),
         name: d.name || null,
         price: parseFloat(d.price) || 0,
         bib_start: d.bib_start ? parseInt(d.bib_start, 10) : null,
@@ -301,7 +312,7 @@ const EventEditor = () => {
     // insert new
     const newRows = valid.filter((x) => !x.id).map((d) => ({
       event_id: eventId,
-      distance_km: parseFloat(d.distance_km),
+      distance_km: computeKm(d),
       name: d.name || null,
       price: parseFloat(d.price) || 0,
       bib_start: d.bib_start ? parseInt(d.bib_start, 10) : null,
