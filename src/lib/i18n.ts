@@ -222,6 +222,9 @@ export const translations: Record<Lang, Dict> = {
       relayLegsHint: "Скільки учасників у команді (2–10).",
       relayCategories: "Категорії команд",
       relayCategoriesHint: "Які типи команд можуть реєструватись.",
+      relayLegsKm: "Дистанція кожного етапу (км)",
+      relayLegsKmHint: "Наприклад: 2, 6, 21 — для трьох етапів.",
+      kmPlaceholder: "км",
     },
     relay: {
       teamName: "Назва команди",
