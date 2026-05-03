@@ -781,6 +781,30 @@ const Participants = () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+      <Dialog open={!!receiptDialog} onOpenChange={(o) => !o && setReceiptDialog(null)}>
+        <DialogContent className="max-w-5xl w-[95vw] h-[90vh] flex flex-col p-0 gap-0">
+          <DialogHeader className="p-4 border-b border-border">
+            <DialogTitle className="flex items-center gap-2 pr-8">
+              <FileText className="h-5 w-5 text-primary" />
+              {lang === "uk" ? "Квитанція" : "Receipt"}
+            </DialogTitle>
+          </DialogHeader>
+          <div className="flex-1 overflow-auto bg-muted flex items-center justify-center">
+            {receiptDialog?.isImage ? (
+              <img src={receiptDialog.url} alt="receipt" className="max-w-full max-h-full object-contain" />
+            ) : receiptDialog ? (
+              <iframe src={receiptDialog.url} title="receipt" className="w-full h-full" />
+            ) : null}
+          </div>
+          <div className="p-3 border-t border-border flex justify-end">
+            <Button asChild variant="outline" size="sm">
+              <a href={receiptDialog?.url} target="_blank" rel="noopener noreferrer">
+                {lang === "uk" ? "Відкрити в новій вкладці" : "Open in new tab"}
+              </a>
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
       <Footer />
     </div>
   );
