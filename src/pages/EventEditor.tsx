@@ -309,6 +309,7 @@ const EventEditor = () => {
       is_relay: d.is_relay,
       relay_legs_count: d.is_relay && d.relay_legs_count ? parseInt(d.relay_legs_count, 10) : null,
       relay_categories: d.is_relay && d.relay_categories.length > 0 ? d.relay_categories : ["mix", "men", "women"],
+      relay_legs: d.is_relay ? d.relay_legs.slice(0, parseInt(d.relay_legs_count || "0", 10) || d.relay_legs.length).map((v) => parseFloat(v) || 0) : null,
     }));
     if (newRows.length > 0) {
       const { error: iErr } = await supabase.from("distances").insert(newRows as any);
