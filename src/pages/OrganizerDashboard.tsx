@@ -244,6 +244,13 @@ const OrganizerDashboard = () => {
                         </a>
                       </Button>
                     )}
+                    {ev.photos_url && (
+                      <Button asChild variant="outline" size="sm">
+                        <a href={ev.photos_url} target="_blank" rel="noopener noreferrer">
+                          <FileText className="h-4 w-4" /> {t.events.openPhotos}
+                        </a>
+                      </Button>
+                    )}
                     <Button asChild variant="outline" size="sm">
                       <Link to={`/organizer/events/${ev.id}`}><Edit className="h-4 w-4" /></Link>
                     </Button>
