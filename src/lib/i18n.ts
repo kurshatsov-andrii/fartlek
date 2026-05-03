@@ -21,6 +21,7 @@ export interface Dict {
     resultsInvalidType: string; resultsTooBig: string;
     resultsExternalUrl: string; resultsExternalHint: string; openResults: string;
     resultsOr: string;
+    photosUrl: string; photosHint: string; openPhotos: string;
     addToCalendar: string;
   };
   auth: {
@@ -146,6 +147,9 @@ export const translations: Record<Lang, Dict> = {
       resultsExternalHint: "Якщо результати на іншому сайті — встав сюди посилання. Використовується, якщо PDF не завантажений.",
       openResults: "Відкрити результати",
       resultsOr: "або",
+      photosUrl: "Посилання на фото зі старту",
+      photosHint: "Встав посилання на альбом/галерею (Google Photos, Flickr тощо).",
+      openPhotos: "Фото зі старту",
       addToCalendar: "Додати в календар",
     },
     auth: {
@@ -308,6 +312,9 @@ export const translations: Record<Lang, Dict> = {
       resultsExternalHint: "If results are hosted elsewhere — paste the link. Used when no PDF is uploaded.",
       openResults: "Open results",
       resultsOr: "or",
+      photosUrl: "Photos link",
+      photosHint: "Paste a link to a photo album/gallery (Google Photos, Flickr, etc.).",
+      openPhotos: "Start photos",
       addToCalendar: "Add to calendar",
     },
     auth: {

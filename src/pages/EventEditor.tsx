@@ -39,6 +39,7 @@ const EventEditor = () => {
     results_pdf_url: "",
     regulations_pdf_url: "",
     results_url: "",
+    photos_url: "",
     description_image_url: "",
     wfp_merchant_login: "",
     wfp_secret_key: "",
@@ -91,6 +92,7 @@ const EventEditor = () => {
           results_pdf_url: (ev as any).results_pdf_url ?? "",
           regulations_pdf_url: (ev as any).regulations_pdf_url ?? "",
           results_url: (ev as any).results_url ?? "",
+          photos_url: (ev as any).photos_url ?? "",
           description_image_url: (ev as any).description_image_url ?? "",
           wfp_merchant_login: (pset as any)?.wayforpay_merchant_login ?? "",
           wfp_secret_key: (pset as any)?.wayforpay_secret_key ?? "",
@@ -205,6 +207,7 @@ const EventEditor = () => {
       results_pdf_url: form.results_pdf_url || null,
       regulations_pdf_url: form.regulations_pdf_url || null,
       results_url: form.results_url || null,
+      photos_url: form.photos_url || null,
       description_image_url: form.description_image_url || null,
     } as any;
     let eventId = id!;
@@ -710,6 +713,16 @@ const EventEditor = () => {
                     placeholder="https://..."
                     value={form.results_url}
                     onChange={(e) => setForm({ ...form, results_url: e.target.value })}
+                  />
+                </div>
+                <div className="pt-3 border-t border-border space-y-1.5">
+                  <Label className="text-sm">{t.events.photosUrl}</Label>
+                  <p className="text-xs text-muted-foreground">{t.events.photosHint}</p>
+                  <Input
+                    type="url"
+                    placeholder="https://..."
+                    value={form.photos_url}
+                    onChange={(e) => setForm({ ...form, photos_url: e.target.value })}
                   />
                 </div>
               </div>

@@ -86,6 +86,13 @@ const MyEvents = () => {
                         </a>
                       </Button>
                     )}
+                    {isCompleted && r.events.photos_url && (
+                      <Button asChild variant="outline">
+                        <a href={r.events.photos_url} target="_blank" rel="noopener noreferrer">
+                          <FileText className="h-4 w-4" /> {t.events.openPhotos}
+                        </a>
+                      </Button>
+                    )}
                     <Button asChild variant="outline">
                       <Link to={`/events/${r.event_id}/participants`}><Users className="h-4 w-4" /> {t.events.participants}</Link>
                     </Button>

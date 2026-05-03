@@ -14,6 +14,7 @@ interface CompletedEvent {
   image_url: string | null;
   results_pdf_url: string | null;
   results_url: string | null;
+  photos_url: string | null;
 }
 
 export const CompletedEventsSection = () => {
@@ -24,7 +25,7 @@ export const CompletedEventsSection = () => {
   useEffect(() => {
     supabase
       .from("events")
-      .select("id, slug, title, event_date, location, image_url, results_pdf_url, results_url")
+      .select("id, slug, title, event_date, location, image_url, results_pdf_url, results_url, photos_url")
       .eq("status", "completed")
       .order("event_date", { ascending: false })
       .limit(12)
@@ -110,7 +111,7 @@ export const CompletedEventsSection = () => {
                     </div>
                   )}
                 </div>
-                <div className="mt-4 pt-3 border-t border-border">
+                <div className="mt-4 pt-3 border-t border-border space-y-2">
                   {ev.results_pdf_url || ev.results_url ? (
                     <Button asChild size="sm" variant="outline" className="w-full">
                       <a
@@ -122,9 +123,18 @@ export const CompletedEventsSection = () => {
                       </a>
                     </Button>
                   ) : (
-                    <p className="text-xs text-muted-foreground text-center py-1">
-                      {t.events.resultsNone}
-                    </p>
+                    !ev.photos_url && (
+                      <p className="text-xs text-muted-foreground text-center py-1">
+                        {t.events.resultsNone}
+                      </p>
+                    )
+                  )}
+                  {ev.photos_url && (
+                    <Button asChild size="sm" variant="outline" className="w-full">
+                      <a href={ev.photos_url} target="_blank" rel="noopener noreferrer">
+                        <FileText className="h-4 w-4" /> {t.events.openPhotos}
+                      </a>
+                    </Button>
                   )}
                 </div>
               </div>

@@ -30,6 +30,7 @@ interface EventRow {
   format: "offline" | "online" | "hybrid";
   results_pdf_url: string | null;
   results_url: string | null;
+  photos_url: string | null;
   regulations_pdf_url: string | null;
   description_image_url: string | null;
 }
@@ -338,7 +339,7 @@ const EventDetails = () => {
                     <FileText className="h-5 w-5 text-primary" />
                     {t.events.resultsTitle}
                   </h3>
-                  {event.results_pdf_url || event.results_url ? (
+                  {event.results_pdf_url || event.results_url || event.photos_url ? (
                     <>
                       <p className="text-sm text-muted-foreground">{t.events.resultsHint}</p>
                       <div className="flex flex-col gap-2">
@@ -353,6 +354,13 @@ const EventDetails = () => {
                           <Button asChild variant={event.results_pdf_url ? "outline" : "default"} className="w-full">
                             <a href={event.results_url} target="_blank" rel="noopener noreferrer">
                               <FileText className="h-4 w-4" /> {t.events.openResults}
+                            </a>
+                          </Button>
+                        )}
+                        {event.photos_url && (
+                          <Button asChild variant="outline" className="w-full">
+                            <a href={event.photos_url} target="_blank" rel="noopener noreferrer">
+                              <FileText className="h-4 w-4" /> {t.events.openPhotos}
                             </a>
                           </Button>
                         )}
