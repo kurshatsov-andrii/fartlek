@@ -529,40 +529,20 @@ const EventDetails = () => {
         </div>
 
         {event.regulations_pdf_url && (
-          <Dialog open={regulationsOpen} onOpenChange={setRegulationsOpen}>
-            <DialogContent className="max-w-5xl w-[95vw] h-[90vh] flex flex-col p-0 gap-0">
-              <DialogHeader className="p-4 border-b border-border">
-                <DialogTitle className="flex items-center gap-2">
-                  <FileText className="h-5 w-5 text-primary" />
-                  {lang === "uk" ? "Регламент події" : "Event regulations"}
-                </DialogTitle>
-              </DialogHeader>
-              <div className="flex-1 overflow-hidden bg-muted">
-                {(() => {
-                  const url = event.regulations_pdf_url!;
-                  // Google Docs: convert /edit or any tail to /preview for iframe embedding
-                  const gdocMatch = url.match(/^https:\/\/docs\.google\.com\/document\/d\/([^/]+)/i);
-                  const embedSrc = gdocMatch
-                    ? `https://docs.google.com/document/d/${gdocMatch[1]}/preview`
-                    : url;
-                  return (
-                    <iframe
-                      src={embedSrc}
-                      title={lang === "uk" ? "Регламент" : "Regulations"}
-                      className="w-full h-full"
-                    />
-                  );
-                })()}
-              </div>
-              <div className="p-3 border-t border-border flex justify-end">
-                <Button asChild variant="outline" size="sm">
-                  <a href={event.regulations_pdf_url} target="_blank" rel="noopener noreferrer">
-                    {lang === "uk" ? "Відкрити в новій вкладці" : "Open in new tab"}
-                  </a>
-                </Button>
-              </div>
-            </DialogContent>
-          </Dialog>
+          <DocumentDialog
+            open={regulationsOpen}
+            onOpenChange={setRegulationsOpen}
+            url={event.regulations_pdf_url}
+            title={lang === "uk" ? "Регламент події" : "Event regulations"}
+          />
+        )}
+        {docDialog && (
+          <DocumentDialog
+            open={!!docDialog}
+            onOpenChange={(o) => !o && setDocDialog(null)}
+            url={docDialog.url}
+            title={docDialog.title}
+          />
         )}
       </main>
       <Footer />
