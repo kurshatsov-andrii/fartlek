@@ -312,6 +312,9 @@ export const translations: Record<Lang, Dict> = {
       resultsExternalHint: "If results are hosted elsewhere — paste the link. Used when no PDF is uploaded.",
       openResults: "Open results",
       resultsOr: "or",
+      photosUrl: "Photos link",
+      photosHint: "Paste a link to a photo album/gallery (Google Photos, Flickr, etc.).",
+      openPhotos: "Start photos",
       addToCalendar: "Add to calendar",
     },
     auth: {
