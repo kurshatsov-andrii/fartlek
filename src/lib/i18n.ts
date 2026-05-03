@@ -414,6 +414,9 @@ export const translations: Record<Lang, Dict> = {
       relayLegsHint: "How many runners on the team (2–10).",
       relayCategories: "Team categories",
       relayCategoriesHint: "Which team types can register.",
+      relayLegsKm: "Leg distances (km)",
+      relayLegsKmHint: "For example: 2, 6, 21 — for three legs.",
+      kmPlaceholder: "km",
     },
     relay: {
       teamName: "Team name",
