@@ -30,6 +30,7 @@ interface EventRow {
   format: "offline" | "online" | "hybrid";
   results_pdf_url: string | null;
   results_url: string | null;
+  photos_url: string | null;
   regulations_pdf_url: string | null;
   description_image_url: string | null;
 }
