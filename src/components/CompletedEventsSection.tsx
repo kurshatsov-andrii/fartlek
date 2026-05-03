@@ -25,7 +25,7 @@ export const CompletedEventsSection = () => {
   useEffect(() => {
     supabase
       .from("events")
-      .select("id, slug, title, event_date, location, image_url, results_pdf_url, results_url")
+      .select("id, slug, title, event_date, location, image_url, results_pdf_url, results_url, photos_url")
       .eq("status", "completed")
       .order("event_date", { ascending: false })
       .limit(12)
