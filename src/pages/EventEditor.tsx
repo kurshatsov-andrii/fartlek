@@ -92,6 +92,7 @@ const EventEditor = () => {
           results_pdf_url: (ev as any).results_pdf_url ?? "",
           regulations_pdf_url: (ev as any).regulations_pdf_url ?? "",
           results_url: (ev as any).results_url ?? "",
+          photos_url: (ev as any).photos_url ?? "",
           description_image_url: (ev as any).description_image_url ?? "",
           wfp_merchant_login: (pset as any)?.wayforpay_merchant_login ?? "",
           wfp_secret_key: (pset as any)?.wayforpay_secret_key ?? "",
