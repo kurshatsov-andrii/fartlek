@@ -39,6 +39,7 @@ const EventEditor = () => {
     results_pdf_url: "",
     regulations_pdf_url: "",
     results_url: "",
+    photos_url: "",
     description_image_url: "",
     wfp_merchant_login: "",
     wfp_secret_key: "",
