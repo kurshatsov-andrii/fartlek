@@ -345,24 +345,29 @@ const EventDetails = () => {
                       <p className="text-sm text-muted-foreground">{t.events.resultsHint}</p>
                       <div className="flex flex-col gap-2">
                         {event.results_pdf_url && (
-                          <Button asChild className="w-full">
-                            <a href={event.results_pdf_url} target="_blank" rel="noopener noreferrer">
-                              <FileText className="h-4 w-4" /> {t.events.downloadResults}
-                            </a>
+                          <Button
+                            className="w-full"
+                            onClick={() => setDocDialog({ url: event.results_pdf_url!, title: t.events.resultsTitle })}
+                          >
+                            <FileText className="h-4 w-4" /> {t.events.downloadResults}
                           </Button>
                         )}
                         {event.results_url && (
-                          <Button asChild variant={event.results_pdf_url ? "outline" : "default"} className="w-full">
-                            <a href={event.results_url} target="_blank" rel="noopener noreferrer">
-                              <FileText className="h-4 w-4" /> {t.events.openResults}
-                            </a>
+                          <Button
+                            variant={event.results_pdf_url ? "outline" : "default"}
+                            className="w-full"
+                            onClick={() => setDocDialog({ url: event.results_url!, title: t.events.resultsTitle })}
+                          >
+                            <FileText className="h-4 w-4" /> {t.events.openResults}
                           </Button>
                         )}
                         {event.photos_url && (
-                          <Button asChild variant="outline" className="w-full">
-                            <a href={event.photos_url} target="_blank" rel="noopener noreferrer">
-                              <FileText className="h-4 w-4" /> {t.events.openPhotos}
-                            </a>
+                          <Button
+                            variant="outline"
+                            className="w-full"
+                            onClick={() => setDocDialog({ url: event.photos_url!, title: t.events.openPhotos })}
+                          >
+                            <FileText className="h-4 w-4" /> {t.events.openPhotos}
                           </Button>
                         )}
                       </div>
