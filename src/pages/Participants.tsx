@@ -441,6 +441,125 @@ const Participants = () => {
                     </h2>
                     <span className="text-sm text-muted-foreground">{list.length}</span>
                   </div>
+                  {(() => {
+                    const isRelayGroup = list.some((r: any) => r.is_relay);
+                    if (isRelayGroup) {
+                      const teamCatLabel = (c: string) =>
+                        c === "men" ? (lang === "uk" ? "Чоловіки" : "Men")
+                        : c === "women" ? (lang === "uk" ? "Жінки" : "Women")
+                        : c === "mix" ? (lang === "uk" ? "Мікс" : "Mix")
+                        : "—";
+                      return (
+                        <table className="w-full text-sm">
+                          <thead className="bg-muted/50 text-left">
+                            <tr>
+                              <th className="p-3 font-semibold">#</th>
+                              <th className="p-3 font-semibold">{lang === "uk" ? "Назва команди" : "Team name"}</th>
+                              <th className="p-3 font-semibold">{lang === "uk" ? "Категорія" : "Category"}</th>
+                              <th className="p-3 font-semibold">{lang === "uk" ? "Учасники (етапи)" : "Members (legs)"}</th>
+                              {isOrganizer && <th className="p-3 font-semibold">{lang === "uk" ? "Доданий" : "Added by"}</th>}
+                              {isPaid && <th className="p-3 font-semibold text-center">{lang === "uk" ? "Оплата" : "Payment"}</th>}
+                              {isPaid && isOrganizer && <th className="p-3 font-semibold text-center">{lang === "uk" ? "Квитанція" : "Receipt"}</th>}
+                              {isOrganizer && <th className="p-3 font-semibold text-center">{lang === "uk" ? "Дії" : "Actions"}</th>}
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {list.map((r: any) => {
+                              const members: any[] = Array.isArray(r.relay_members) ? r.relay_members : [];
+                              return (
+                                <tr key={r.registration_id} className="border-t border-border align-top">
+                                  <td className="p-3 font-bold text-primary">{r.bib_number ?? "—"}</td>
+                                  <td className="p-3 font-semibold">{r.team_name ?? "—"}</td>
+                                  <td className="p-3">{teamCatLabel(r.team_category)}</td>
+                                  <td className="p-3">
+                                    {members.length === 0 ? "—" : (
+                                      <ol className="space-y-1 list-decimal list-inside">
+                                        {members.map((m, i) => (
+                                          <li key={i}>
+                                            <span className="font-medium">{m.full_name ?? "—"}</span>
+                                            <span className="text-muted-foreground"> · {m.leg_km ?? "—"} {lang === "uk" ? "км" : "km"}</span>
+                                            {m.gender && (
+                                              <span className="text-muted-foreground text-xs ml-1">
+                                                ({m.gender === "male" ? t.profile.male : m.gender === "female" ? t.profile.female : m.gender})
+                                              </span>
+                                            )}
+                                          </li>
+                                        ))}
+                                      </ol>
+                                    )}
+                                  </td>
+                                  {isOrganizer && (
+                                    <td className="p-3">
+                                      {r.is_self_athlete ? (
+                                        <span className="text-muted-foreground">{lang === "uk" ? "Сам зареєструвався" : "Self"}</span>
+                                      ) : r.added_by_name || r.added_by_email ? (
+                                        <div className="flex flex-col">
+                                          <span>{r.added_by_name ?? "—"}</span>
+                                          {r.added_by_email && (
+                                            <a href={`mailto:${r.added_by_email}`} className="text-xs text-muted-foreground hover:text-foreground truncate">
+                                              {r.added_by_email}
+                                            </a>
+                                          )}
+                                        </div>
+                                      ) : (
+                                        <span className="text-muted-foreground">—</span>
+                                      )}
+                                    </td>
+                                  )}
+                                  {isPaid && (
+                                    <td className="p-3 text-center">
+                                      {r.payment_status === "paid" ? (
+                                        <CheckCircle2 className="h-5 w-5 text-green-500 inline" />
+                                      ) : (
+                                        <XCircle className="h-5 w-5 text-destructive inline" />
+                                      )}
+                                    </td>
+                                  )}
+                                  {isPaid && isOrganizer && (
+                                    <td className="p-3">
+                                      <div className="flex items-center justify-center gap-1">
+                                        {r.receipt_url ? (
+                                          <Button size="sm" variant="ghost" onClick={() => openReceipt(r.receipt_url)} title={lang === "uk" ? "Переглянути" : "View"}>
+                                            <FileText className="h-4 w-4" />
+                                          </Button>
+                                        ) : (
+                                          <span className="text-xs text-muted-foreground">—</span>
+                                        )}
+                                        {r.payment_status === "paid" ? (
+                                          <Button size="sm" variant="ghost" onClick={() => revoke(r.registration_id)} disabled={busyId === r.registration_id} title={lang === "uk" ? "Відхилити" : "Revoke"}>
+                                            {busyId === r.registration_id ? <Loader2 className="h-4 w-4 animate-spin" /> : <RotateCcw className="h-4 w-4 text-destructive" />}
+                                          </Button>
+                                        ) : r.receipt_url ? (
+                                          <Button size="sm" variant="ghost" onClick={() => confirm(r.registration_id)} disabled={busyId === r.registration_id} title={lang === "uk" ? "Підтвердити" : "Confirm"}>
+                                            {busyId === r.registration_id ? <Loader2 className="h-4 w-4 animate-spin" /> : <CheckCircle2 className="h-4 w-4 text-green-500" />}
+                                          </Button>
+                                        ) : null}
+                                      </div>
+                                    </td>
+                                  )}
+                                  {isOrganizer && (
+                                    <td className="p-3">
+                                      <div className="flex items-center justify-center gap-1">
+                                        <Button
+                                          size="sm"
+                                          variant="ghost"
+                                          onClick={() => removeParticipant(r.registration_id, r.team_name)}
+                                          disabled={busyId === r.registration_id}
+                                          title={lang === "uk" ? "Видалити команду" : "Remove team"}
+                                        >
+                                          {busyId === r.registration_id ? <Loader2 className="h-4 w-4 animate-spin" /> : <Trash2 className="h-4 w-4 text-destructive" />}
+                                        </Button>
+                                      </div>
+                                    </td>
+                                  )}
+                                </tr>
+                              );
+                            })}
+                          </tbody>
+                        </table>
+                      );
+                    }
+                    return (
                   <table className="w-full text-sm">
                     <thead className="bg-muted/50 text-left">
                       <tr>
@@ -556,6 +675,8 @@ const Participants = () => {
                       ))}
                     </tbody>
                   </table>
+                    );
+                  })()}
                 </div>
               );})}
           </div>
