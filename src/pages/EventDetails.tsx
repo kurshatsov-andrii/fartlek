@@ -74,7 +74,7 @@ const EventDetails = () => {
       const target = relayLegs;
       if (prev.length === target) return prev;
       const next = [...prev];
-      while (next.length < target) next.push({ full_name: "", gender: "male", birth_year: "", leg_km: "" });
+      while (next.length < target) next.push({ full_name: "", gender: "male" });
       while (next.length > target) next.pop();
       return next;
     });
