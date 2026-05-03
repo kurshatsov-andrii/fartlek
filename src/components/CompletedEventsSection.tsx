@@ -22,6 +22,7 @@ export const CompletedEventsSection = () => {
   const { t, lang } = useApp();
   const [events, setEvents] = useState<CompletedEvent[]>([]);
   const [loading, setLoading] = useState(true);
+  const [docDialog, setDocDialog] = useState<{ url: string; title: string } | null>(null);
 
   useEffect(() => {
     supabase
