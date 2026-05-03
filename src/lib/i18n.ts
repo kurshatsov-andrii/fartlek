@@ -21,6 +21,7 @@ export interface Dict {
     resultsInvalidType: string; resultsTooBig: string;
     resultsExternalUrl: string; resultsExternalHint: string; openResults: string;
     resultsOr: string;
+    photosUrl: string; photosHint: string; openPhotos: string;
     addToCalendar: string;
   };
   auth: {
