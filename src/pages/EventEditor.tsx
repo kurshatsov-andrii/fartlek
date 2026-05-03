@@ -116,6 +116,9 @@ const EventEditor = () => {
         is_relay: !!d.is_relay,
         relay_legs_count: d.relay_legs_count != null ? String(d.relay_legs_count) : "4",
         relay_categories: (d.relay_categories ?? ["mix", "men", "women"]) as string[],
+        relay_legs: Array.isArray(d.relay_legs)
+          ? (d.relay_legs as any[]).map((x) => String(x ?? ""))
+          : Array.from({ length: d.relay_legs_count ?? 4 }, () => ""),
       })));
       setLoadedFor(id ?? null);
       setLoading(false);
