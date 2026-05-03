@@ -56,6 +56,7 @@ const EventDetails = () => {
   const [hasPromoCodes, setHasPromoCodes] = useState(false);
   const [clubSlug, setClubSlug] = useState<string | null>(null);
   const [regulationsOpen, setRegulationsOpen] = useState(false);
+  const [docDialog, setDocDialog] = useState<{ url: string; title: string } | null>(null);
 
   // Reset promo if distance changes
   useEffect(() => { setPromo(null); }, [selectedDistance]);
