@@ -165,27 +165,53 @@ const EventDetails = () => {
       navigate(`/profile?redirect=/events/${id}`);
       return;
     }
-    if (!selectedAthlete) {
+    const dist = distances.find((d) => d.id === selectedDistance)!;
+    const distIsRelay = !!dist.is_relay;
+
+    if (!distIsRelay && !selectedAthlete) {
       setBusy(false);
       toast.error(t.profile.fillRequired);
       return;
     }
-    if (isAlreadyRegistered) {
+    if (!distIsRelay && isAlreadyRegistered) {
       setBusy(false);
       toast.error(t.athletes.alreadyRegistered);
       return;
     }
-    const dist = distances.find((d) => d.id === selectedDistance)!;
+    if (distIsRelay) {
+      if (!teamName.trim()) { setBusy(false); toast.error(t.relay.teamName); return; }
+      if (!teamCategory) { setBusy(false); toast.error(t.relay.teamCategory); return; }
+      const expected = dist.relay_legs_count ?? relayMembers.length;
+      if (relayMembers.length !== expected) {
+        setBusy(false); toast.error(t.relay.legsCountMismatch); return;
+      }
+      const allFilled = relayMembers.every((m) => m.full_name.trim() && m.gender && m.birth_year && m.leg_km);
+      if (!allFilled) { setBusy(false); toast.error(t.relay.fillAllMembers); return; }
+    }
+
     const isPaidReg = event.is_paid && dist.price > 0;
-    const qrPayload = JSON.stringify({ e: event.id, u: user.id, a: selectedAthlete, d: dist.id, t: Date.now() });
-    const { data: reg, error } = await supabase.from("registrations").insert({
+    const qrPayload = JSON.stringify({ e: event.id, u: user.id, a: distIsRelay ? null : selectedAthlete, d: dist.id, t: Date.now() });
+    const insertPayload: any = {
       event_id: event.id,
       user_id: user.id,
-      athlete_id: selectedAthlete,
       distance_id: dist.id,
       payment_status: isPaidReg ? "pending" : "free",
       qr_code_data: qrPayload,
-    }).select("id").single();
+    };
+    if (distIsRelay) {
+      insertPayload.team_name = teamName.trim();
+      insertPayload.team_category = teamCategory;
+      insertPayload.relay_members = relayMembers.map((m) => ({
+        full_name: m.full_name.trim(),
+        gender: m.gender,
+        birth_year: parseInt(m.birth_year, 10),
+        leg_km: parseFloat(m.leg_km),
+      }));
+      insertPayload.athlete_id = selectedAthlete || null;
+    } else {
+      insertPayload.athlete_id = selectedAthlete;
+    }
+    const { data: reg, error } = await supabase.from("registrations").insert(insertPayload).select("id").single();
     if (error) { setBusy(false); toast.error(error.message); return; }
     // Apply promo code if previewed and event is paid
     if (isPaidReg && promo) {
