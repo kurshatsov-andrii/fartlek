@@ -1113,6 +1113,7 @@ export type Database = {
           email: string
           full_name: string
           gender: Database["public"]["Enums"]["gender_type"]
+          is_relay: boolean
           is_self_athlete: boolean
           payment_status: Database["public"]["Enums"]["payment_status_type"]
           phone: string
@@ -1120,6 +1121,9 @@ export type Database = {
           receipt_uploaded_at: string
           receipt_url: string
           registration_id: string
+          relay_members: Json
+          team_category: string
+          team_name: string
           user_id: string
         }[]
       }
