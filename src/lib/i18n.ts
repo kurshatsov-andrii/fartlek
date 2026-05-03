@@ -60,6 +60,7 @@ export interface Dict {
     confirmDelete: string;
     isRelay: string; isRelayHint: string; relayLegs: string; relayLegsHint: string;
     relayCategories: string; relayCategoriesHint: string;
+    relayLegsKm: string; relayLegsKmHint: string; kmPlaceholder: string;
   };
   relay: {
     teamName: string; teamNamePlaceholder: string;
