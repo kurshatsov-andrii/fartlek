@@ -273,6 +273,14 @@ const OrganizerDashboard = () => {
         )}
       </main>
       <Footer />
+      {docDialog && (
+        <DocumentDialog
+          open={!!docDialog}
+          onOpenChange={(o) => !o && setDocDialog(null)}
+          url={docDialog.url}
+          title={docDialog.title}
+        />
+      )}
     </div>
   );
 };
