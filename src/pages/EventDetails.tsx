@@ -201,11 +201,11 @@ const EventDetails = () => {
     if (distIsRelay) {
       insertPayload.team_name = teamName.trim();
       insertPayload.team_category = teamCategory;
-      insertPayload.relay_members = relayMembers.map((m) => ({
+      const legsKm = (dist.relay_legs && Array.isArray(dist.relay_legs)) ? dist.relay_legs : [];
+      insertPayload.relay_members = relayMembers.map((m, idx) => ({
         full_name: m.full_name.trim(),
         gender: m.gender,
-        birth_year: parseInt(m.birth_year, 10),
-        leg_km: parseFloat(m.leg_km),
+        leg_km: typeof legsKm[idx] === "number" ? legsKm[idx] : null,
       }));
       insertPayload.athlete_id = selectedAthlete || null;
     } else {
