@@ -35,6 +35,7 @@ const Participants = () => {
   const [moveTarget, setMoveTarget] = useState<any | null>(null);
   const [moveToId, setMoveToId] = useState<string>("");
   const [moving, setMoving] = useState(false);
+  const [receiptDialog, setReceiptDialog] = useState<{ url: string; isImage: boolean } | null>(null);
 
   // Filters
   const [fGender, setFGender] = useState<string>("all");
@@ -79,7 +80,8 @@ const Participants = () => {
       .from("payment-receipts")
       .createSignedUrl(path, 60 * 10);
     if (error || !data?.signedUrl) { toast.error(error?.message ?? "Error"); return; }
-    window.open(data.signedUrl, "_blank", "noopener,noreferrer");
+    const isImage = /\.(png|jpe?g|gif|webp|heic|heif|bmp)$/i.test(path);
+    setReceiptDialog({ url: data.signedUrl, isImage });
   };
 
   const revoke = async (regId: string) => {
