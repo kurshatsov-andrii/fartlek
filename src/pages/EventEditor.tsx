@@ -297,7 +297,7 @@ const EventEditor = () => {
     // update existing
     for (const d of valid.filter((x) => x.id)) {
       const { error: uErr } = await supabase.from("distances").update({
-        distance_km: parseFloat(d.distance_km),
+        distance_km: computeKm(d),
         name: d.name || null,
         price: parseFloat(d.price) || 0,
         bib_start: d.bib_start ? parseInt(d.bib_start, 10) : null,
@@ -312,7 +312,7 @@ const EventEditor = () => {
     // insert new
     const newRows = valid.filter((x) => !x.id).map((d) => ({
       event_id: eventId,
-      distance_km: parseFloat(d.distance_km),
+      distance_km: computeKm(d),
       name: d.name || null,
       price: parseFloat(d.price) || 0,
       bib_start: d.bib_start ? parseInt(d.bib_start, 10) : null,
