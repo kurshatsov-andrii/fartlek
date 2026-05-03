@@ -561,7 +561,6 @@ const EventDetails = () => {
                         );
                       })}
                     </div>
-                    </div>
                   </div>
                 )}
 
