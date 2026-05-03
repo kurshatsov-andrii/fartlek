@@ -675,6 +675,8 @@ const Participants = () => {
                       ))}
                     </tbody>
                   </table>
+                    );
+                  })()}
                 </div>
               );})}
           </div>
