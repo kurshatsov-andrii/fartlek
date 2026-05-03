@@ -793,38 +793,89 @@ const EventEditor = () => {
                 <span className="col-span-1" />
               </div>
               {distances.map((d, i) => (
-                <div key={i} className="rounded-lg border border-border p-3 sm:p-0 sm:border-0 sm:grid sm:grid-cols-12 sm:gap-2 space-y-3 sm:space-y-0">
-                  <div className="flex items-center justify-between sm:hidden">
-                    <span className="text-sm font-medium text-muted-foreground">#{i + 1}</span>
-                    <Button type="button" variant="ghost" size="sm"
+                <div key={i} className="rounded-lg border border-border p-3 space-y-3">
+                  <div className="sm:grid sm:grid-cols-12 sm:gap-2 space-y-3 sm:space-y-0">
+                    <div className="flex items-center justify-between sm:hidden">
+                      <span className="text-sm font-medium text-muted-foreground">#{i + 1}</span>
+                      <Button type="button" variant="ghost" size="sm"
+                        onClick={() => setDistances(distances.filter((_, k) => k !== i))}>
+                        <X className="h-4 w-4" /> {t.organizer.cancel}
+                      </Button>
+                    </div>
+                    <div className="sm:col-span-2 space-y-1">
+                      <Label className="sm:hidden text-xs text-muted-foreground">{t.organizer.distanceKm}</Label>
+                      <Input type="number" step="0.1" placeholder="км" value={d.distance_km}
+                        onChange={(e) => { const c = [...distances]; c[i].distance_km = e.target.value; setDistances(c); }} />
+                    </div>
+                    <div className="sm:col-span-5 space-y-1">
+                      <Label className="sm:hidden text-xs text-muted-foreground">{t.organizer.distanceName}</Label>
+                      <Input placeholder={t.organizer.distanceName} value={d.name}
+                        onChange={(e) => { const c = [...distances]; c[i].name = e.target.value; setDistances(c); }} />
+                    </div>
+                    <div className="sm:col-span-2 space-y-1">
+                      <Label className="sm:hidden text-xs text-muted-foreground">{t.organizer.distancePrice}</Label>
+                      <Input type="number" step="1" placeholder="₴" value={d.price}
+                        onChange={(e) => { const c = [...distances]; c[i].price = e.target.value; setDistances(c); }} />
+                    </div>
+                    <div className="sm:col-span-2 space-y-1">
+                      <Label className="sm:hidden text-xs text-muted-foreground">{t.organizer.bibStart}</Label>
+                      <Input type="number" step="1" placeholder="1001" value={d.bib_start}
+                        onChange={(e) => { const c = [...distances]; c[i].bib_start = e.target.value; setDistances(c); }} />
+                    </div>
+                    <Button type="button" variant="ghost" size="icon" className="hidden sm:inline-flex sm:col-span-1"
                       onClick={() => setDistances(distances.filter((_, k) => k !== i))}>
-                      <X className="h-4 w-4" /> {t.organizer.cancel}
+                      <X className="h-4 w-4" />
                     </Button>
                   </div>
-                  <div className="sm:col-span-2 space-y-1">
-                    <Label className="sm:hidden text-xs text-muted-foreground">{t.organizer.distanceKm}</Label>
-                    <Input type="number" step="0.1" placeholder="км" value={d.distance_km}
-                      onChange={(e) => { const c = [...distances]; c[i].distance_km = e.target.value; setDistances(c); }} />
+
+                  <div className="pt-2 border-t border-border space-y-3">
+                    <div className="flex items-center gap-3">
+                      <Switch
+                        id={`relay-${i}`}
+                        checked={d.is_relay}
+                        onCheckedChange={(v) => { const c = [...distances]; c[i].is_relay = v; setDistances(c); }}
+                      />
+                      <div className="flex-1">
+                        <Label htmlFor={`relay-${i}`} className="cursor-pointer">{t.organizer.isRelay}</Label>
+                        <p className="text-xs text-muted-foreground">{t.organizer.isRelayHint}</p>
+                      </div>
+                    </div>
+                    {d.is_relay && (
+                      <div className="grid sm:grid-cols-2 gap-3 pl-1">
+                        <div className="space-y-1">
+                          <Label className="text-xs">{t.organizer.relayLegs}</Label>
+                          <Input type="number" min={2} max={10} step="1" value={d.relay_legs_count}
+                            onChange={(e) => { const c = [...distances]; c[i].relay_legs_count = e.target.value; setDistances(c); }} />
+                          <p className="text-xs text-muted-foreground">{t.organizer.relayLegsHint}</p>
+                        </div>
+                        <div className="space-y-1">
+                          <Label className="text-xs">{t.organizer.relayCategories}</Label>
+                          <div className="flex flex-wrap gap-2 pt-1">
+                            {RELAY_CAT_OPTIONS.map((cat) => {
+                              const checked = d.relay_categories.includes(cat);
+                              return (
+                                <button
+                                  type="button"
+                                  key={cat}
+                                  onClick={() => {
+                                    const c = [...distances];
+                                    const cur = new Set(c[i].relay_categories);
+                                    if (cur.has(cat)) cur.delete(cat); else cur.add(cat);
+                                    c[i].relay_categories = Array.from(cur);
+                                    setDistances(c);
+                                  }}
+                                  className={`px-3 py-1 rounded-full text-xs border transition-base ${checked ? "bg-primary text-primary-foreground border-primary" : "bg-background text-foreground border-input hover:border-primary/40"}`}
+                                >
+                                  {cat === "mix" ? t.relay.categoryMix : cat === "men" ? t.relay.categoryMen : t.relay.categoryWomen}
+                                </button>
+                              );
+                            })}
+                          </div>
+                          <p className="text-xs text-muted-foreground">{t.organizer.relayCategoriesHint}</p>
+                        </div>
+                      </div>
+                    )}
                   </div>
-                  <div className="sm:col-span-5 space-y-1">
-                    <Label className="sm:hidden text-xs text-muted-foreground">{t.organizer.distanceName}</Label>
-                    <Input placeholder={t.organizer.distanceName} value={d.name}
-                      onChange={(e) => { const c = [...distances]; c[i].name = e.target.value; setDistances(c); }} />
-                  </div>
-                  <div className="sm:col-span-2 space-y-1">
-                    <Label className="sm:hidden text-xs text-muted-foreground">{t.organizer.distancePrice}</Label>
-                    <Input type="number" step="1" placeholder="₴" value={d.price}
-                      onChange={(e) => { const c = [...distances]; c[i].price = e.target.value; setDistances(c); }} />
-                  </div>
-                  <div className="sm:col-span-2 space-y-1">
-                    <Label className="sm:hidden text-xs text-muted-foreground">{t.organizer.bibStart}</Label>
-                    <Input type="number" step="1" placeholder="1001" value={d.bib_start}
-                      onChange={(e) => { const c = [...distances]; c[i].bib_start = e.target.value; setDistances(c); }} />
-                  </div>
-                  <Button type="button" variant="ghost" size="icon" className="hidden sm:inline-flex sm:col-span-1"
-                    onClick={() => setDistances(distances.filter((_, k) => k !== i))}>
-                    <X className="h-4 w-4" />
-                  </Button>
                 </div>
               ))}
               <Button type="button" variant="outline" size="sm"
