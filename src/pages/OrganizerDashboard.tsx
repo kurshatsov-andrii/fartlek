@@ -17,6 +17,7 @@ const OrganizerDashboard = () => {
   const [events, setEvents] = useState<any[]>([]);
   const [unreadByEvent, setUnreadByEvent] = useState<Record<string, number>>({});
   const [loading, setLoading] = useState(true);
+  const [docDialog, setDocDialog] = useState<{ url: string; title: string } | null>(null);
 
   useEffect(() => {
     if (!user) return;
