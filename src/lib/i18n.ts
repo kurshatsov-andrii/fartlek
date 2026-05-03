@@ -60,6 +60,7 @@ export interface Dict {
     confirmDelete: string;
     isRelay: string; isRelayHint: string; relayLegs: string; relayLegsHint: string;
     relayCategories: string; relayCategoriesHint: string;
+    relayLegsKm: string; relayLegsKmHint: string; kmPlaceholder: string;
   };
   relay: {
     teamName: string; teamNamePlaceholder: string;
@@ -221,6 +222,9 @@ export const translations: Record<Lang, Dict> = {
       relayLegsHint: "Скільки учасників у команді (2–10).",
       relayCategories: "Категорії команд",
       relayCategoriesHint: "Які типи команд можуть реєструватись.",
+      relayLegsKm: "Дистанція кожного етапу (км)",
+      relayLegsKmHint: "Наприклад: 2, 6, 21 — для трьох етапів.",
+      kmPlaceholder: "км",
     },
     relay: {
       teamName: "Назва команди",
@@ -410,6 +414,9 @@ export const translations: Record<Lang, Dict> = {
       relayLegsHint: "How many runners on the team (2–10).",
       relayCategories: "Team categories",
       relayCategoriesHint: "Which team types can register.",
+      relayLegsKm: "Leg distances (km)",
+      relayLegsKmHint: "For example: 2, 6, 21 — for three legs.",
+      kmPlaceholder: "km",
     },
     relay: {
       teamName: "Team name",

@@ -149,6 +149,7 @@ export type Database = {
           name: string | null
           price: number
           relay_categories: string[]
+          relay_legs: Json | null
           relay_legs_count: number | null
         }
         Insert: {
@@ -163,6 +164,7 @@ export type Database = {
           name?: string | null
           price?: number
           relay_categories?: string[]
+          relay_legs?: Json | null
           relay_legs_count?: number | null
         }
         Update: {
@@ -177,6 +179,7 @@ export type Database = {
           name?: string | null
           price?: number
           relay_categories?: string[]
+          relay_legs?: Json | null
           relay_legs_count?: number | null
         }
         Relationships: [

@@ -34,9 +34,9 @@ interface EventRow {
   regulations_pdf_url: string | null;
   description_image_url: string | null;
 }
-interface DistanceRow { id: string; distance_km: number; name: string | null; price: number; is_active?: boolean; is_relay?: boolean; relay_legs_count?: number | null; relay_categories?: string[] | null; }
+interface DistanceRow { id: string; distance_km: number; name: string | null; price: number; is_active?: boolean; is_relay?: boolean; relay_legs_count?: number | null; relay_categories?: string[] | null; relay_legs?: number[] | null; }
 
-interface RelayMember { full_name: string; gender: string; birth_year: string; leg_km: string; }
+interface RelayMember { full_name: string; gender: string; }
 
 const EventDetails = () => {
   const { id } = useParams<{ id: string }>();
@@ -74,7 +74,7 @@ const EventDetails = () => {
       const target = relayLegs;
       if (prev.length === target) return prev;
       const next = [...prev];
-      while (next.length < target) next.push({ full_name: "", gender: "male", birth_year: "", leg_km: "" });
+      while (next.length < target) next.push({ full_name: "", gender: "male" });
       while (next.length > target) next.pop();
       return next;
     });
@@ -117,7 +117,7 @@ const EventDetails = () => {
         supabase.from("distances").select("*").eq("event_id", ev.id).eq("is_active", true).order("distance_km"),
         supabase.rpc("get_event_participants_count", { _event_id: ev.id }),
       ]);
-      setDistances(ds ?? []);
+      setDistances((ds ?? []) as any);
       setParticipantsCount((cnt as number) ?? 0);
       if (ds && ds.length > 0) setSelectedDistance(ds[0].id);
       const { count: promoCnt } = await supabase
@@ -185,7 +185,7 @@ const EventDetails = () => {
       if (relayMembers.length !== expected) {
         setBusy(false); toast.error(t.relay.legsCountMismatch); return;
       }
-      const allFilled = relayMembers.every((m) => m.full_name.trim() && m.gender && m.birth_year && m.leg_km);
+      const allFilled = relayMembers.every((m) => m.full_name.trim() && m.gender);
       if (!allFilled) { setBusy(false); toast.error(t.relay.fillAllMembers); return; }
     }
 
@@ -201,11 +201,11 @@ const EventDetails = () => {
     if (distIsRelay) {
       insertPayload.team_name = teamName.trim();
       insertPayload.team_category = teamCategory;
-      insertPayload.relay_members = relayMembers.map((m) => ({
+      const legsKm = (dist.relay_legs && Array.isArray(dist.relay_legs)) ? dist.relay_legs : [];
+      insertPayload.relay_members = relayMembers.map((m, idx) => ({
         full_name: m.full_name.trim(),
         gender: m.gender,
-        birth_year: parseInt(m.birth_year, 10),
-        leg_km: parseFloat(m.leg_km),
+        leg_km: typeof legsKm[idx] === "number" ? legsKm[idx] : null,
       }));
       insertPayload.athlete_id = selectedAthlete || null;
     } else {
@@ -533,17 +533,23 @@ const EventDetails = () => {
                     </div>
                     <div className="space-y-2">
                       <Label className="text-sm">{t.relay.membersTitle} ({relayMembers.length}/{relayLegs})</Label>
-                      {relayMembers.map((m, idx) => (
-                        <div key={idx} className="rounded-md border border-border p-2 space-y-2">
-                          <div className="text-xs font-semibold text-muted-foreground">{t.relay.member} #{idx + 1}</div>
-                          <input
-                            className="flex h-9 w-full rounded-md border border-input bg-background px-3 text-sm"
-                            placeholder={t.relay.memberFullName}
-                            value={m.full_name}
-                            maxLength={120}
-                            onChange={(e) => { const c = [...relayMembers]; c[idx].full_name = e.target.value; setRelayMembers(c); }}
-                          />
-                          <div className="grid grid-cols-3 gap-2">
+                      {relayMembers.map((m, idx) => {
+                        const legKm = selectedDist?.relay_legs?.[idx];
+                        return (
+                          <div key={idx} className="rounded-md border border-border p-2 space-y-2">
+                            <div className="flex items-center justify-between">
+                              <div className="text-xs font-semibold text-muted-foreground">{t.relay.member} #{idx + 1}</div>
+                              {typeof legKm === "number" && legKm > 0 && (
+                                <div className="text-xs text-primary font-medium">{legKm} км</div>
+                              )}
+                            </div>
+                            <input
+                              className="flex h-9 w-full rounded-md border border-input bg-background px-3 text-sm"
+                              placeholder={t.relay.memberFullName}
+                              value={m.full_name}
+                              maxLength={120}
+                              onChange={(e) => { const c = [...relayMembers]; c[idx].full_name = e.target.value; setRelayMembers(c); }}
+                            />
                             <Select value={m.gender} onValueChange={(v) => { const c = [...relayMembers]; c[idx].gender = v; setRelayMembers(c); }}>
                               <SelectTrigger className="h-9"><SelectValue placeholder={t.relay.memberGender} /></SelectTrigger>
                               <SelectContent>
@@ -551,23 +557,9 @@ const EventDetails = () => {
                                 <SelectItem value="female">{t.profile.female}</SelectItem>
                               </SelectContent>
                             </Select>
-                            <input
-                              className="flex h-9 w-full rounded-md border border-input bg-background px-3 text-sm"
-                              type="number" min={1900} max={new Date().getFullYear()}
-                              placeholder={t.relay.memberBirthYear}
-                              value={m.birth_year}
-                              onChange={(e) => { const c = [...relayMembers]; c[idx].birth_year = e.target.value; setRelayMembers(c); }}
-                            />
-                            <input
-                              className="flex h-9 w-full rounded-md border border-input bg-background px-3 text-sm"
-                              type="number" min={1} max={42} step="0.1"
-                              placeholder={t.relay.memberLegKm}
-                              value={m.leg_km}
-                              onChange={(e) => { const c = [...relayMembers]; c[idx].leg_km = e.target.value; setRelayMembers(c); }}
-                            />
                           </div>
-                        </div>
-                      ))}
+                        );
+                      })}
                     </div>
                   </div>
                 )}
