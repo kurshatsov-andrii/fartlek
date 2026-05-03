@@ -14,6 +14,7 @@ interface CompletedEvent {
   image_url: string | null;
   results_pdf_url: string | null;
   results_url: string | null;
+  photos_url: string | null;
 }
 
 export const CompletedEventsSection = () => {
