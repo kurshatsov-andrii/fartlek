@@ -185,7 +185,7 @@ const EventDetails = () => {
       if (relayMembers.length !== expected) {
         setBusy(false); toast.error(t.relay.legsCountMismatch); return;
       }
-      const allFilled = relayMembers.every((m) => m.full_name.trim() && m.gender && m.birth_year && m.leg_km);
+      const allFilled = relayMembers.every((m) => m.full_name.trim() && m.gender);
       if (!allFilled) { setBusy(false); toast.error(t.relay.fillAllMembers); return; }
     }
 
