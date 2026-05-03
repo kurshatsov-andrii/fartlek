@@ -287,6 +287,9 @@ const EventEditor = () => {
         name: d.name || null,
         price: parseFloat(d.price) || 0,
         bib_start: d.bib_start ? parseInt(d.bib_start, 10) : null,
+        is_relay: d.is_relay,
+        relay_legs_count: d.is_relay && d.relay_legs_count ? parseInt(d.relay_legs_count, 10) : null,
+        relay_categories: d.is_relay && d.relay_categories.length > 0 ? d.relay_categories : ["mix", "men", "women"],
       } as any).eq("id", d.id!);
       if (uErr) { toast.error(uErr.message); setBusy(false); return; }
     }
@@ -299,6 +302,9 @@ const EventEditor = () => {
       price: parseFloat(d.price) || 0,
       bib_start: d.bib_start ? parseInt(d.bib_start, 10) : null,
       is_active: true,
+      is_relay: d.is_relay,
+      relay_legs_count: d.is_relay && d.relay_legs_count ? parseInt(d.relay_legs_count, 10) : null,
+      relay_categories: d.is_relay && d.relay_categories.length > 0 ? d.relay_categories : ["mix", "men", "women"],
     }));
     if (newRows.length > 0) {
       const { error: iErr } = await supabase.from("distances").insert(newRows as any);
