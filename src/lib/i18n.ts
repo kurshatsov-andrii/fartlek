@@ -147,6 +147,9 @@ export const translations: Record<Lang, Dict> = {
       resultsExternalHint: "Якщо результати на іншому сайті — встав сюди посилання. Використовується, якщо PDF не завантажений.",
       openResults: "Відкрити результати",
       resultsOr: "або",
+      photosUrl: "Посилання на фото зі старту",
+      photosHint: "Встав посилання на альбом/галерею (Google Photos, Flickr тощо).",
+      openPhotos: "Фото зі старту",
       addToCalendar: "Додати в календар",
     },
     auth: {
