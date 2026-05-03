@@ -151,6 +151,14 @@ export const CompletedEventsSection = () => {
           ))}
         </div>
       </div>
+      {docDialog && (
+        <DocumentDialog
+          open={!!docDialog}
+          onOpenChange={(o) => !o && setDocDialog(null)}
+          url={docDialog.url}
+          title={docDialog.title}
+        />
+      )}
     </section>
   );
 };
