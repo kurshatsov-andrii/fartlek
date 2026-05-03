@@ -822,7 +822,7 @@ const EventEditor = () => {
                 </div>
               ))}
               <Button type="button" variant="outline" size="sm"
-                onClick={() => setDistances([...distances, { distance_km: "", name: "", price: "0", bib_start: "" }])}>
+                onClick={() => setDistances([...distances, { distance_km: "", name: "", price: "0", bib_start: "", is_relay: false, relay_legs_count: "4", relay_categories: ["mix", "men", "women"] }])}>
                 <Plus className="h-4 w-4" /> {t.organizer.addDistance}
               </Button>
             </div>
