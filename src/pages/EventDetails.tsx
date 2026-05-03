@@ -59,8 +59,29 @@ const EventDetails = () => {
   const [clubSlug, setClubSlug] = useState<string | null>(null);
   const [regulationsOpen, setRegulationsOpen] = useState(false);
   const [docDialog, setDocDialog] = useState<{ url: string; title: string } | null>(null);
+  const [teamName, setTeamName] = useState("");
+  const [teamCategory, setTeamCategory] = useState<string>("");
+  const [relayMembers, setRelayMembers] = useState<RelayMember[]>([]);
 
-  // Reset promo if distance changes
+  const selectedDist = distances.find((d) => d.id === selectedDistance);
+  const isRelay = !!selectedDist?.is_relay;
+  const relayLegs = selectedDist?.relay_legs_count ?? 4;
+
+  // Sync relay members count to the selected relay distance
+  useEffect(() => {
+    if (!isRelay) return;
+    setRelayMembers((prev) => {
+      const target = relayLegs;
+      if (prev.length === target) return prev;
+      const next = [...prev];
+      while (next.length < target) next.push({ full_name: "", gender: "male", birth_year: "", leg_km: "" });
+      while (next.length > target) next.pop();
+      return next;
+    });
+    if (!teamCategory && selectedDist?.relay_categories?.length) {
+      setTeamCategory(selectedDist.relay_categories[0]);
+    }
+  }, [isRelay, relayLegs, selectedDistance]);
   useEffect(() => { setPromo(null); }, [selectedDistance]);
 
   const reloadAthletes = async (uid: string, eventId: string) => {
