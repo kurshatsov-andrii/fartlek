@@ -611,7 +611,7 @@ const EventDetails = () => {
                 <Button
                   onClick={register}
                   className="w-full"
-                  disabled={busy || !selectedDistance || (!!user && !selectedAthlete) || isAlreadyRegistered}
+                  disabled={busy || !selectedDistance || (!isRelay && !!user && !selectedAthlete) || (!isRelay && isAlreadyRegistered)}
                 >
                   {busy && <Loader2 className="h-4 w-4 animate-spin" />} {t.events.confirmRegister}
                 </Button>
