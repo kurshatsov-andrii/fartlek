@@ -715,6 +715,16 @@ const EventEditor = () => {
                     onChange={(e) => setForm({ ...form, results_url: e.target.value })}
                   />
                 </div>
+                <div className="pt-3 border-t border-border space-y-1.5">
+                  <Label className="text-sm">{t.events.photosUrl}</Label>
+                  <p className="text-xs text-muted-foreground">{t.events.photosHint}</p>
+                  <Input
+                    type="url"
+                    placeholder="https://..."
+                    value={form.photos_url}
+                    onChange={(e) => setForm({ ...form, photos_url: e.target.value })}
+                  />
+                </div>
               </div>
             )}
 
