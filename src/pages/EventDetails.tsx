@@ -460,7 +460,7 @@ const EventDetails = () => {
 
                 <h3 className="font-display text-lg font-bold">{t.events.selectDistance}</h3>
 
-                {user && athletes.length > 0 && (
+                {!isRelay && user && athletes.length > 0 && (
                   <div className="space-y-2">
                     <Label>{t.athletes.pickerLabel}</Label>
                     <Select value={selectedAthlete} onValueChange={setSelectedAthlete}>
