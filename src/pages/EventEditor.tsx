@@ -846,37 +846,46 @@ const EventEditor = () => {
                       </div>
                     </div>
                     {d.is_relay && (
-                      <div className="grid sm:grid-cols-2 gap-3 pl-1">
-                        <div className="space-y-1">
+                      <div className="space-y-3 pl-1">
+                        <div className="space-y-1 max-w-[200px]">
                           <Label className="text-xs">{t.organizer.relayLegs}</Label>
                           <Input type="number" min={2} max={10} step="1" value={d.relay_legs_count}
-                            onChange={(e) => { const c = [...distances]; c[i].relay_legs_count = e.target.value; setDistances(c); }} />
+                            onChange={(e) => {
+                              const c = [...distances];
+                              const n = Math.max(2, Math.min(10, parseInt(e.target.value || "0", 10) || 0));
+                              c[i].relay_legs_count = e.target.value;
+                              const cur = [...c[i].relay_legs];
+                              while (cur.length < n) cur.push("");
+                              while (cur.length > n) cur.pop();
+                              c[i].relay_legs = cur;
+                              setDistances(c);
+                            }} />
                           <p className="text-xs text-muted-foreground">{t.organizer.relayLegsHint}</p>
                         </div>
-                        <div className="space-y-1">
-                          <Label className="text-xs">{t.organizer.relayCategories}</Label>
-                          <div className="flex flex-wrap gap-2 pt-1">
-                            {RELAY_CAT_OPTIONS.map((cat) => {
-                              const checked = d.relay_categories.includes(cat);
-                              return (
-                                <button
-                                  type="button"
-                                  key={cat}
-                                  onClick={() => {
+                        <div className="space-y-2">
+                          <Label className="text-xs">{t.organizer.relayLegsKm}</Label>
+                          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                            {Array.from({ length: parseInt(d.relay_legs_count || "0", 10) || 0 }).map((_, idx) => (
+                              <div key={idx} className="flex items-center gap-2">
+                                <span className="text-xs text-muted-foreground w-10">#{idx + 1}</span>
+                                <Input
+                                  type="number"
+                                  step="0.1"
+                                  min="0"
+                                  placeholder={t.organizer.kmPlaceholder}
+                                  value={d.relay_legs[idx] ?? ""}
+                                  onChange={(e) => {
                                     const c = [...distances];
-                                    const cur = new Set(c[i].relay_categories);
-                                    if (cur.has(cat)) cur.delete(cat); else cur.add(cat);
-                                    c[i].relay_categories = Array.from(cur);
+                                    const arr = [...c[i].relay_legs];
+                                    arr[idx] = e.target.value;
+                                    c[i].relay_legs = arr;
                                     setDistances(c);
                                   }}
-                                  className={`px-3 py-1 rounded-full text-xs border transition-base ${checked ? "bg-primary text-primary-foreground border-primary" : "bg-background text-foreground border-input hover:border-primary/40"}`}
-                                >
-                                  {cat === "mix" ? t.relay.categoryMix : cat === "men" ? t.relay.categoryMen : t.relay.categoryWomen}
-                                </button>
-                              );
-                            })}
+                                />
+                              </div>
+                            ))}
                           </div>
-                          <p className="text-xs text-muted-foreground">{t.organizer.relayCategoriesHint}</p>
+                          <p className="text-xs text-muted-foreground">{t.organizer.relayLegsKmHint}</p>
                         </div>
                       </div>
                     )}
