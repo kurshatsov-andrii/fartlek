@@ -533,17 +533,23 @@ const EventDetails = () => {
                     </div>
                     <div className="space-y-2">
                       <Label className="text-sm">{t.relay.membersTitle} ({relayMembers.length}/{relayLegs})</Label>
-                      {relayMembers.map((m, idx) => (
-                        <div key={idx} className="rounded-md border border-border p-2 space-y-2">
-                          <div className="text-xs font-semibold text-muted-foreground">{t.relay.member} #{idx + 1}</div>
-                          <input
-                            className="flex h-9 w-full rounded-md border border-input bg-background px-3 text-sm"
-                            placeholder={t.relay.memberFullName}
-                            value={m.full_name}
-                            maxLength={120}
-                            onChange={(e) => { const c = [...relayMembers]; c[idx].full_name = e.target.value; setRelayMembers(c); }}
-                          />
-                          <div className="grid grid-cols-3 gap-2">
+                      {relayMembers.map((m, idx) => {
+                        const legKm = selectedDist?.relay_legs?.[idx];
+                        return (
+                          <div key={idx} className="rounded-md border border-border p-2 space-y-2">
+                            <div className="flex items-center justify-between">
+                              <div className="text-xs font-semibold text-muted-foreground">{t.relay.member} #{idx + 1}</div>
+                              {typeof legKm === "number" && legKm > 0 && (
+                                <div className="text-xs text-primary font-medium">{legKm} км</div>
+                              )}
+                            </div>
+                            <input
+                              className="flex h-9 w-full rounded-md border border-input bg-background px-3 text-sm"
+                              placeholder={t.relay.memberFullName}
+                              value={m.full_name}
+                              maxLength={120}
+                              onChange={(e) => { const c = [...relayMembers]; c[idx].full_name = e.target.value; setRelayMembers(c); }}
+                            />
                             <Select value={m.gender} onValueChange={(v) => { const c = [...relayMembers]; c[idx].gender = v; setRelayMembers(c); }}>
                               <SelectTrigger className="h-9"><SelectValue placeholder={t.relay.memberGender} /></SelectTrigger>
                               <SelectContent>
@@ -551,23 +557,10 @@ const EventDetails = () => {
                                 <SelectItem value="female">{t.profile.female}</SelectItem>
                               </SelectContent>
                             </Select>
-                            <input
-                              className="flex h-9 w-full rounded-md border border-input bg-background px-3 text-sm"
-                              type="number" min={1900} max={new Date().getFullYear()}
-                              placeholder={t.relay.memberBirthYear}
-                              value={m.birth_year}
-                              onChange={(e) => { const c = [...relayMembers]; c[idx].birth_year = e.target.value; setRelayMembers(c); }}
-                            />
-                            <input
-                              className="flex h-9 w-full rounded-md border border-input bg-background px-3 text-sm"
-                              type="number" min={1} max={42} step="0.1"
-                              placeholder={t.relay.memberLegKm}
-                              value={m.leg_km}
-                              onChange={(e) => { const c = [...relayMembers]; c[idx].leg_km = e.target.value; setRelayMembers(c); }}
-                            />
                           </div>
-                        </div>
-                      ))}
+                        );
+                      })}
+                    </div>
                     </div>
                   </div>
                 )}
