@@ -144,9 +144,12 @@ export type Database = {
           event_id: string
           id: string
           is_active: boolean
+          is_relay: boolean
           max_participants: number | null
           name: string | null
           price: number
+          relay_categories: string[]
+          relay_legs_count: number | null
         }
         Insert: {
           bib_start?: number | null
@@ -155,9 +158,12 @@ export type Database = {
           event_id: string
           id?: string
           is_active?: boolean
+          is_relay?: boolean
           max_participants?: number | null
           name?: string | null
           price?: number
+          relay_categories?: string[]
+          relay_legs_count?: number | null
         }
         Update: {
           bib_start?: number | null
@@ -166,9 +172,12 @@ export type Database = {
           event_id?: string
           id?: string
           is_active?: boolean
+          is_relay?: boolean
           max_participants?: number | null
           name?: string | null
           price?: number
+          relay_categories?: string[]
+          relay_legs_count?: number | null
         }
         Relationships: [
           {
@@ -812,6 +821,9 @@ export type Database = {
           receipt_revoked_reason: string | null
           receipt_uploaded_at: string | null
           receipt_url: string | null
+          relay_members: Json | null
+          team_category: string | null
+          team_name: string | null
           updated_at: string
           user_id: string
         }
@@ -828,6 +840,9 @@ export type Database = {
           receipt_revoked_reason?: string | null
           receipt_uploaded_at?: string | null
           receipt_url?: string | null
+          relay_members?: Json | null
+          team_category?: string | null
+          team_name?: string | null
           updated_at?: string
           user_id: string
         }
@@ -844,6 +859,9 @@ export type Database = {
           receipt_revoked_reason?: string | null
           receipt_uploaded_at?: string | null
           receipt_url?: string | null
+          relay_members?: Json | null
+          team_category?: string | null
+          team_name?: string | null
           updated_at?: string
           user_id?: string
         }

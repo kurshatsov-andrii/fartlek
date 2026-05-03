@@ -58,6 +58,15 @@ export interface Dict {
     exportCsv: string; exportXlsx: string; backToDashboard: string;
     noEvents: string; createFirst: string; bibNumber: string; assignBibs: string;
     confirmDelete: string;
+    isRelay: string; isRelayHint: string; relayLegs: string; relayLegsHint: string;
+    relayCategories: string; relayCategoriesHint: string;
+  };
+  relay: {
+    teamName: string; teamNamePlaceholder: string;
+    teamCategory: string; categoryMix: string; categoryMen: string; categoryWomen: string;
+    member: string; memberFullName: string; memberGender: string; memberBirthYear: string; memberLegKm: string;
+    membersTitle: string; addMember: string; removeMember: string;
+    fillAllMembers: string; legsCountMismatch: string;
   };
   footer: { tagline: string; rights: string };
   common: { backHome: string; loading: string; required: string; error: string };
@@ -206,6 +215,30 @@ export const translations: Record<Lang, Dict> = {
       backToDashboard: "← До панелі", noEvents: "У тебе ще немає подій",
       createFirst: "Створити першу", bibNumber: "Стартовий №", assignBibs: "Розставити номери",
       confirmDelete: "Видалити подію? Цю дію неможливо скасувати.",
+      isRelay: "Естафета",
+      isRelayHint: "Команда з кількох учасників, кожен біжить свій етап.",
+      relayLegs: "Кількість етапів",
+      relayLegsHint: "Скільки учасників у команді (2–10).",
+      relayCategories: "Категорії команд",
+      relayCategoriesHint: "Які типи команд можуть реєструватись.",
+    },
+    relay: {
+      teamName: "Назва команди",
+      teamNamePlaceholder: "Напр. Швидкі носороги",
+      teamCategory: "Категорія команди",
+      categoryMix: "Мікс",
+      categoryMen: "Чоловіки",
+      categoryWomen: "Жінки",
+      member: "Учасник",
+      memberFullName: "Ім'я та прізвище",
+      memberGender: "Стать",
+      memberBirthYear: "Рік народження",
+      memberLegKm: "Етап (км)",
+      membersTitle: "Склад команди",
+      addMember: "+ Додати учасника",
+      removeMember: "Прибрати",
+      fillAllMembers: "Заповни дані всіх учасників команди",
+      legsCountMismatch: "Кількість учасників має дорівнювати кількості етапів",
     },
     footer: { tagline: "Створено для бігунів і організаторів.", rights: "Усі права захищено." },
     common: { backHome: "На головну", loading: "Завантаження...", required: "Обов'язкове поле", error: "Сталася помилка" },
@@ -371,6 +404,30 @@ export const translations: Record<Lang, Dict> = {
       backToDashboard: "← To dashboard", noEvents: "You don't have any events yet",
       createFirst: "Create your first", bibNumber: "Bib #", assignBibs: "Assign bibs",
       confirmDelete: "Delete this event? This cannot be undone.",
+      isRelay: "Relay",
+      isRelayHint: "A team of multiple runners, each running their own leg.",
+      relayLegs: "Number of legs",
+      relayLegsHint: "How many runners on the team (2–10).",
+      relayCategories: "Team categories",
+      relayCategoriesHint: "Which team types can register.",
+    },
+    relay: {
+      teamName: "Team name",
+      teamNamePlaceholder: "e.g. Speedy Rhinos",
+      teamCategory: "Team category",
+      categoryMix: "Mixed",
+      categoryMen: "Men",
+      categoryWomen: "Women",
+      member: "Member",
+      memberFullName: "Full name",
+      memberGender: "Gender",
+      memberBirthYear: "Birth year",
+      memberLegKm: "Leg (km)",
+      membersTitle: "Team roster",
+      addMember: "+ Add member",
+      removeMember: "Remove",
+      fillAllMembers: "Fill in details for all team members",
+      legsCountMismatch: "Members count must match the number of legs",
     },
     footer: { tagline: "Built for runners and organizers.", rights: "All rights reserved." },
     common: { backHome: "Back home", loading: "Loading...", required: "Required field", error: "An error occurred" },

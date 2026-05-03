@@ -34,7 +34,9 @@ interface EventRow {
   regulations_pdf_url: string | null;
   description_image_url: string | null;
 }
-interface DistanceRow { id: string; distance_km: number; name: string | null; price: number; is_active?: boolean; }
+interface DistanceRow { id: string; distance_km: number; name: string | null; price: number; is_active?: boolean; is_relay?: boolean; relay_legs_count?: number | null; relay_categories?: string[] | null; }
+
+interface RelayMember { full_name: string; gender: string; birth_year: string; leg_km: string; }
 
 const EventDetails = () => {
   const { id } = useParams<{ id: string }>();
@@ -57,8 +59,29 @@ const EventDetails = () => {
   const [clubSlug, setClubSlug] = useState<string | null>(null);
   const [regulationsOpen, setRegulationsOpen] = useState(false);
   const [docDialog, setDocDialog] = useState<{ url: string; title: string } | null>(null);
+  const [teamName, setTeamName] = useState("");
+  const [teamCategory, setTeamCategory] = useState<string>("");
+  const [relayMembers, setRelayMembers] = useState<RelayMember[]>([]);
 
-  // Reset promo if distance changes
+  const selectedDist = distances.find((d) => d.id === selectedDistance);
+  const isRelay = !!selectedDist?.is_relay;
+  const relayLegs = selectedDist?.relay_legs_count ?? 4;
+
+  // Sync relay members count to the selected relay distance
+  useEffect(() => {
+    if (!isRelay) return;
+    setRelayMembers((prev) => {
+      const target = relayLegs;
+      if (prev.length === target) return prev;
+      const next = [...prev];
+      while (next.length < target) next.push({ full_name: "", gender: "male", birth_year: "", leg_km: "" });
+      while (next.length > target) next.pop();
+      return next;
+    });
+    if (!teamCategory && selectedDist?.relay_categories?.length) {
+      setTeamCategory(selectedDist.relay_categories[0]);
+    }
+  }, [isRelay, relayLegs, selectedDistance]);
   useEffect(() => { setPromo(null); }, [selectedDistance]);
 
   const reloadAthletes = async (uid: string, eventId: string) => {
@@ -142,27 +165,53 @@ const EventDetails = () => {
       navigate(`/profile?redirect=/events/${id}`);
       return;
     }
-    if (!selectedAthlete) {
+    const dist = distances.find((d) => d.id === selectedDistance)!;
+    const distIsRelay = !!dist.is_relay;
+
+    if (!distIsRelay && !selectedAthlete) {
       setBusy(false);
       toast.error(t.profile.fillRequired);
       return;
     }
-    if (isAlreadyRegistered) {
+    if (!distIsRelay && isAlreadyRegistered) {
       setBusy(false);
       toast.error(t.athletes.alreadyRegistered);
       return;
     }
-    const dist = distances.find((d) => d.id === selectedDistance)!;
+    if (distIsRelay) {
+      if (!teamName.trim()) { setBusy(false); toast.error(t.relay.teamName); return; }
+      if (!teamCategory) { setBusy(false); toast.error(t.relay.teamCategory); return; }
+      const expected = dist.relay_legs_count ?? relayMembers.length;
+      if (relayMembers.length !== expected) {
+        setBusy(false); toast.error(t.relay.legsCountMismatch); return;
+      }
+      const allFilled = relayMembers.every((m) => m.full_name.trim() && m.gender && m.birth_year && m.leg_km);
+      if (!allFilled) { setBusy(false); toast.error(t.relay.fillAllMembers); return; }
+    }
+
     const isPaidReg = event.is_paid && dist.price > 0;
-    const qrPayload = JSON.stringify({ e: event.id, u: user.id, a: selectedAthlete, d: dist.id, t: Date.now() });
-    const { data: reg, error } = await supabase.from("registrations").insert({
+    const qrPayload = JSON.stringify({ e: event.id, u: user.id, a: distIsRelay ? null : selectedAthlete, d: dist.id, t: Date.now() });
+    const insertPayload: any = {
       event_id: event.id,
       user_id: user.id,
-      athlete_id: selectedAthlete,
       distance_id: dist.id,
       payment_status: isPaidReg ? "pending" : "free",
       qr_code_data: qrPayload,
-    }).select("id").single();
+    };
+    if (distIsRelay) {
+      insertPayload.team_name = teamName.trim();
+      insertPayload.team_category = teamCategory;
+      insertPayload.relay_members = relayMembers.map((m) => ({
+        full_name: m.full_name.trim(),
+        gender: m.gender,
+        birth_year: parseInt(m.birth_year, 10),
+        leg_km: parseFloat(m.leg_km),
+      }));
+      insertPayload.athlete_id = selectedAthlete || null;
+    } else {
+      insertPayload.athlete_id = selectedAthlete;
+    }
+    const { data: reg, error } = await supabase.from("registrations").insert(insertPayload).select("id").single();
     if (error) { setBusy(false); toast.error(error.message); return; }
     // Apply promo code if previewed and event is paid
     if (isPaidReg && promo) {
@@ -411,7 +460,7 @@ const EventDetails = () => {
 
                 <h3 className="font-display text-lg font-bold">{t.events.selectDistance}</h3>
 
-                {user && athletes.length > 0 && (
+                {!isRelay && user && athletes.length > 0 && (
                   <div className="space-y-2">
                     <Label>{t.athletes.pickerLabel}</Label>
                     <Select value={selectedAthlete} onValueChange={setSelectedAthlete}>
@@ -440,7 +489,14 @@ const EventDetails = () => {
                     >
                       <div className="flex items-center justify-between">
                         <div>
-                          <div className="font-bold">{d.distance_km} km</div>
+                          <div className="font-bold flex items-center gap-2">
+                            {d.distance_km} km
+                            {d.is_relay && (
+                              <span className="text-[10px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded bg-accent text-accent-foreground">
+                                {t.organizer.isRelay} · {d.relay_legs_count ?? "?"}×
+                              </span>
+                            )}
+                          </div>
                           {d.name && <div className="text-xs text-muted-foreground">{d.name}</div>}
                         </div>
                         <div className="text-sm font-semibold">{event.is_paid && d.price > 0 ? `${d.price} ₴` : t.events.free}</div>
@@ -450,11 +506,77 @@ const EventDetails = () => {
                   {distances.length === 0 && <p className="text-sm text-muted-foreground">—</p>}
                 </div>
 
-                {isAlreadyRegistered && (
+                {isRelay && user && (
+                  <div className="space-y-3 rounded-lg border border-primary/40 bg-primary/5 p-3">
+                    <div className="space-y-1.5">
+                      <Label>{t.relay.teamName} *</Label>
+                      <input
+                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                        placeholder={t.relay.teamNamePlaceholder}
+                        value={teamName}
+                        maxLength={100}
+                        onChange={(e) => setTeamName(e.target.value)}
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <Label>{t.relay.teamCategory} *</Label>
+                      <Select value={teamCategory} onValueChange={setTeamCategory}>
+                        <SelectTrigger><SelectValue placeholder="—" /></SelectTrigger>
+                        <SelectContent>
+                          {(selectedDist?.relay_categories ?? ["mix", "men", "women"]).map((c) => (
+                            <SelectItem key={c} value={c}>
+                              {c === "mix" ? t.relay.categoryMix : c === "men" ? t.relay.categoryMen : t.relay.categoryWomen}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-sm">{t.relay.membersTitle} ({relayMembers.length}/{relayLegs})</Label>
+                      {relayMembers.map((m, idx) => (
+                        <div key={idx} className="rounded-md border border-border p-2 space-y-2">
+                          <div className="text-xs font-semibold text-muted-foreground">{t.relay.member} #{idx + 1}</div>
+                          <input
+                            className="flex h-9 w-full rounded-md border border-input bg-background px-3 text-sm"
+                            placeholder={t.relay.memberFullName}
+                            value={m.full_name}
+                            maxLength={120}
+                            onChange={(e) => { const c = [...relayMembers]; c[idx].full_name = e.target.value; setRelayMembers(c); }}
+                          />
+                          <div className="grid grid-cols-3 gap-2">
+                            <Select value={m.gender} onValueChange={(v) => { const c = [...relayMembers]; c[idx].gender = v; setRelayMembers(c); }}>
+                              <SelectTrigger className="h-9"><SelectValue placeholder={t.relay.memberGender} /></SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="male">{t.profile.male}</SelectItem>
+                                <SelectItem value="female">{t.profile.female}</SelectItem>
+                              </SelectContent>
+                            </Select>
+                            <input
+                              className="flex h-9 w-full rounded-md border border-input bg-background px-3 text-sm"
+                              type="number" min={1900} max={new Date().getFullYear()}
+                              placeholder={t.relay.memberBirthYear}
+                              value={m.birth_year}
+                              onChange={(e) => { const c = [...relayMembers]; c[idx].birth_year = e.target.value; setRelayMembers(c); }}
+                            />
+                            <input
+                              className="flex h-9 w-full rounded-md border border-input bg-background px-3 text-sm"
+                              type="number" min={1} max={42} step="0.1"
+                              placeholder={t.relay.memberLegKm}
+                              value={m.leg_km}
+                              onChange={(e) => { const c = [...relayMembers]; c[idx].leg_km = e.target.value; setRelayMembers(c); }}
+                            />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {!isRelay && isAlreadyRegistered && (
                   <p className="text-xs text-destructive">{t.athletes.alreadyRegistered}</p>
                 )}
 
-                {!!user && athletes.length === 0 && !isAlreadyRegistered && (
+                {!isRelay && !!user && athletes.length === 0 && !isAlreadyRegistered && (
                   <Link
                     to="/profile"
                     className="block text-xs text-destructive hover:underline"
@@ -489,7 +611,7 @@ const EventDetails = () => {
                 <Button
                   onClick={register}
                   className="w-full"
-                  disabled={busy || !selectedDistance || (!!user && !selectedAthlete) || isAlreadyRegistered}
+                  disabled={busy || !selectedDistance || (!isRelay && !!user && !selectedAthlete) || (!isRelay && isAlreadyRegistered)}
                 >
                   {busy && <Loader2 className="h-4 w-4 animate-spin" />} {t.events.confirmRegister}
                 </Button>
