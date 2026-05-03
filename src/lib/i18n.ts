@@ -58,6 +58,15 @@ export interface Dict {
     exportCsv: string; exportXlsx: string; backToDashboard: string;
     noEvents: string; createFirst: string; bibNumber: string; assignBibs: string;
     confirmDelete: string;
+    isRelay: string; isRelayHint: string; relayLegs: string; relayLegsHint: string;
+    relayCategories: string; relayCategoriesHint: string;
+  };
+  relay: {
+    teamName: string; teamNamePlaceholder: string;
+    teamCategory: string; categoryMix: string; categoryMen: string; categoryWomen: string;
+    member: string; memberFullName: string; memberGender: string; memberBirthYear: string; memberLegKm: string;
+    membersTitle: string; addMember: string; removeMember: string;
+    fillAllMembers: string; legsCountMismatch: string;
   };
   footer: { tagline: string; rights: string };
   common: { backHome: string; loading: string; required: string; error: string };
