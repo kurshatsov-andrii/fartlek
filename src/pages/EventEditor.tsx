@@ -18,7 +18,9 @@ import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
-interface DistanceForm { id?: string; distance_km: string; name: string; price: string; bib_start: string; }
+interface DistanceForm { id?: string; distance_km: string; name: string; price: string; bib_start: string; is_relay: boolean; relay_legs_count: string; relay_categories: string[]; }
+
+const RELAY_CAT_OPTIONS = ["mix", "men", "women"] as const;
 
 const EventEditor = () => {
   const { id } = useParams<{ id: string }>();
