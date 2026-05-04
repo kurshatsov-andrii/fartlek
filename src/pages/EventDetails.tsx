@@ -35,7 +35,7 @@ interface EventRow {
   regulations_pdf_url: string | null;
   description_image_url: string | null;
 }
-interface DistanceRow { id: string; distance_km: number; name: string | null; price: number; is_active?: boolean; is_relay?: boolean; relay_legs_count?: number | null; relay_categories?: string[] | null; relay_legs?: number[] | null; }
+interface DistanceRow { id: string; distance_km: number; name: string | null; price: number; is_active?: boolean; is_relay?: boolean; relay_legs_count?: number | null; relay_categories?: string[] | null; relay_legs?: number[] | null; delivery_enabled?: boolean; }
 
 interface RelayMember { full_name: string; gender: string; }
 
@@ -85,6 +85,10 @@ const EventDetails = () => {
     }
   }, [isRelay, relayLegs, selectedDistance]);
   useEffect(() => { setPromo(null); }, [selectedDistance]);
+  useEffect(() => {
+    const dist = distances.find((d) => d.id === selectedDistance);
+    if (!dist?.delivery_enabled) setDelivery(emptyDelivery());
+  }, [selectedDistance, distances]);
 
   const reloadAthletes = async (uid: string, eventId: string) => {
     const { data: ats } = await supabase.from("athletes").select("*").eq("owner_id", uid)
@@ -615,7 +619,7 @@ const EventDetails = () => {
                   );
                 })()}
 
-                {!!user && !isAlreadyRegistered && (
+                {!!user && !isAlreadyRegistered && selectedDist?.delivery_enabled && (
                   <NovaPoshtaDelivery value={delivery} onChange={setDelivery} />
                 )}
 

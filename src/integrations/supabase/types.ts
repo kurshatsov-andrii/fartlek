@@ -185,6 +185,7 @@ export type Database = {
         Row: {
           bib_start: number | null
           created_at: string
+          delivery_enabled: boolean
           distance_km: number
           event_id: string
           id: string
@@ -200,6 +201,7 @@ export type Database = {
         Insert: {
           bib_start?: number | null
           created_at?: string
+          delivery_enabled?: boolean
           distance_km: number
           event_id: string
           id?: string
@@ -215,6 +217,7 @@ export type Database = {
         Update: {
           bib_start?: number | null
           created_at?: string
+          delivery_enabled?: boolean
           distance_km?: number
           event_id?: string
           id?: string

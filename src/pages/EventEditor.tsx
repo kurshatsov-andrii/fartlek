@@ -18,7 +18,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
-interface DistanceForm { id?: string; distance_km: string; name: string; price: string; bib_start: string; is_relay: boolean; relay_legs_count: string; relay_categories: string[]; relay_legs: string[]; }
+interface DistanceForm { id?: string; distance_km: string; name: string; price: string; bib_start: string; is_relay: boolean; relay_legs_count: string; relay_categories: string[]; relay_legs: string[]; delivery_enabled: boolean; }
 
 const RELAY_CAT_OPTIONS = ["mix", "men", "women"] as const;
 
@@ -56,7 +56,7 @@ const EventEditor = () => {
   const [uploadingResults, setUploadingResults] = useState(false);
   const [uploadingRegulations, setUploadingRegulations] = useState(false);
   const [uploadingDescImage, setUploadingDescImage] = useState(false);
-  const [distances, setDistances] = useState<DistanceForm[]>([{ distance_km: "10", name: "", price: "0", bib_start: "", is_relay: false, relay_legs_count: "4", relay_categories: ["mix", "men", "women"], relay_legs: ["", "", "", ""] }]);
+  const [distances, setDistances] = useState<DistanceForm[]>([{ distance_km: "10", name: "", price: "0", bib_start: "", is_relay: false, relay_legs_count: "4", relay_categories: ["mix", "men", "women"], relay_legs: ["", "", "", ""], delivery_enabled: false }]);
   const [clubOptions, setClubOptions] = useState<{ id: string; name: string; city: string | null }[]>([]);
   const [clubPickerOpen, setClubPickerOpen] = useState(false);
 
@@ -119,6 +119,7 @@ const EventEditor = () => {
         relay_legs: Array.isArray(d.relay_legs)
           ? (d.relay_legs as any[]).map((x) => String(x ?? ""))
           : Array.from({ length: d.relay_legs_count ?? 4 }, () => ""),
+        delivery_enabled: !!d.delivery_enabled,
       })));
       setLoadedFor(id ?? null);
       setLoading(false);
@@ -305,6 +306,7 @@ const EventEditor = () => {
         relay_legs_count: d.is_relay && d.relay_legs_count ? parseInt(d.relay_legs_count, 10) : null,
         relay_categories: d.is_relay && d.relay_categories.length > 0 ? d.relay_categories : ["mix", "men", "women"],
         relay_legs: d.is_relay ? d.relay_legs.slice(0, parseInt(d.relay_legs_count || "0", 10) || d.relay_legs.length).map((v) => parseFloat(v) || 0) : null,
+        delivery_enabled: d.delivery_enabled,
       } as any).eq("id", d.id!);
       if (uErr) { toast.error(uErr.message); setBusy(false); return; }
     }
@@ -321,6 +323,7 @@ const EventEditor = () => {
       relay_legs_count: d.is_relay && d.relay_legs_count ? parseInt(d.relay_legs_count, 10) : null,
       relay_categories: d.is_relay && d.relay_categories.length > 0 ? d.relay_categories : ["mix", "men", "women"],
       relay_legs: d.is_relay ? d.relay_legs.slice(0, parseInt(d.relay_legs_count || "0", 10) || d.relay_legs.length).map((v) => parseFloat(v) || 0) : null,
+      delivery_enabled: d.delivery_enabled,
     }));
     if (newRows.length > 0) {
       const { error: iErr } = await supabase.from("distances").insert(newRows as any);
@@ -900,11 +903,29 @@ const EventEditor = () => {
                         </div>
                       </div>
                     )}
+
+                    <div className="flex items-center gap-3 pt-3 border-t border-border">
+                      <Switch
+                        id={`delivery-${i}`}
+                        checked={d.delivery_enabled}
+                        onCheckedChange={(v) => { const c = [...distances]; c[i].delivery_enabled = v; setDistances(c); }}
+                      />
+                      <div className="flex-1">
+                        <Label htmlFor={`delivery-${i}`} className="cursor-pointer">
+                          {lang === "uk" ? "Доставка Новою Поштою" : "Nova Poshta delivery"}
+                        </Label>
+                        <p className="text-xs text-muted-foreground">
+                          {lang === "uk"
+                            ? "Дозволити учасникам цієї дистанції замовити доставку медалі / стартового пакету (рекомендовано для онлайн-дистанцій)."
+                            : "Let participants on this distance order delivery of the medal / starter pack (recommended for online distances)."}
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 </div>
               ))}
               <Button type="button" variant="outline" size="sm"
-                onClick={() => setDistances([...distances, { distance_km: "", name: "", price: "0", bib_start: "", is_relay: false, relay_legs_count: "4", relay_categories: ["mix", "men", "women"], relay_legs: ["", "", "", ""] }])}>
+                onClick={() => setDistances([...distances, { distance_km: "", name: "", price: "0", bib_start: "", is_relay: false, relay_legs_count: "4", relay_categories: ["mix", "men", "women"], relay_legs: ["", "", "", ""], delivery_enabled: false }])}>
                 <Plus className="h-4 w-4" /> {t.organizer.addDistance}
               </Button>
             </div>
