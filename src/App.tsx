@@ -67,6 +67,7 @@ const App = () => (
               <Route path="/organizer" element={<OrganizerDashboard />} />
               <Route path="/organizer/events/new" element={<EventEditor />} />
               <Route path="/organizer/events/:id/analytics" element={<EventAnalytics />} />
+              <Route path="/organizer/events/:id/changes" element={<EventChangesAdmin />} />
               <Route path="/organizer/events/:id/promo-codes" element={<PromoCodes />} />
               <Route path="/organizer/events/:id/campaign" element={<OrganizerEventCampaign />} />
               <Route path="/organizer/events/:id" element={<EventEditor />} />
