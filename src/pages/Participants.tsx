@@ -675,6 +675,26 @@ const Participants = () => {
                           <td className="p-3">{r.club ?? "—"}</td>
                           {isOrganizer && (
                             <td className="p-3">
+                              {r.delivery_enabled ? (
+                                <div className="flex flex-col text-xs">
+                                  <span className="font-medium text-primary inline-flex items-center gap-1">
+                                    <Package className="h-3 w-3" />
+                                    {r.delivery_warehouse_type === "postomat"
+                                      ? (lang === "uk" ? "Поштомат" : "Postomat")
+                                      : (lang === "uk" ? "Відділення" : "Branch")}
+                                  </span>
+                                  <span>{r.delivery_recipient_name}</span>
+                                  <span className="text-muted-foreground">{r.delivery_phone}</span>
+                                  <span className="text-muted-foreground">{r.delivery_city_name}</span>
+                                  <span className="text-muted-foreground">{r.delivery_warehouse_name}</span>
+                                </div>
+                              ) : (
+                                <span className="text-muted-foreground">—</span>
+                              )}
+                            </td>
+                          )}
+                          {isOrganizer && (
+                            <td className="p-3">
                               {r.is_self_athlete ? (
                                 <span className="text-muted-foreground">{lang === "uk" ? "Сам зареєструвався" : "Self"}</span>
                               ) : r.added_by_name || r.added_by_email ? (
