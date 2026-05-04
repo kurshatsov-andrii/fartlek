@@ -13,6 +13,7 @@ interface EventCard {
   image_url: string | null; is_paid: boolean;
   category: EventCategory;
   format: "offline" | "online" | "hybrid";
+  registration_closed?: boolean;
   distances: { distance_km: number; price: number; is_active?: boolean }[];
 }
 
