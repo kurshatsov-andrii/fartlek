@@ -356,20 +356,47 @@ const Participants = () => {
               {filteredRows.length !== rows.length && <span className="text-muted-foreground/70"> / {rows.length}</span>}
             </p>
           </div>
-          {isOrganizer && isPaid && reminderTargets.length > 0 && (
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setReminderOpen(true)}
-              className="gap-2"
-            >
-              <Bell className="h-4 w-4" />
-              {lang === "uk" ? "Надіслати нагадування" : "Send reminders"}
-              <span className="ml-1 inline-flex items-center justify-center rounded-full bg-primary text-primary-foreground text-xs h-5 min-w-5 px-1.5">
-                {reminderTargets.length}
-              </span>
-            </Button>
-          )}
+          <div className="flex flex-wrap gap-2">
+            {isOrganizer && rows.length > 0 && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => exportToExcel(false)}
+                className="gap-2"
+              >
+                <Download className="h-4 w-4" />
+                {lang === "uk" ? "Excel" : "Excel"}
+              </Button>
+            )}
+            {isOrganizer && deliveryRows.length > 0 && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => exportToExcel(true)}
+                className="gap-2"
+              >
+                <Package className="h-4 w-4" />
+                {lang === "uk" ? "Доставка" : "Delivery"}
+                <span className="ml-1 inline-flex items-center justify-center rounded-full bg-primary text-primary-foreground text-xs h-5 min-w-5 px-1.5">
+                  {deliveryRows.length}
+                </span>
+              </Button>
+            )}
+            {isOrganizer && isPaid && reminderTargets.length > 0 && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setReminderOpen(true)}
+                className="gap-2"
+              >
+                <Bell className="h-4 w-4" />
+                {lang === "uk" ? "Надіслати нагадування" : "Send reminders"}
+                <span className="ml-1 inline-flex items-center justify-center rounded-full bg-primary text-primary-foreground text-xs h-5 min-w-5 px-1.5">
+                  {reminderTargets.length}
+                </span>
+              </Button>
+            )}
+          </div>
         </div>
 
         {!loading && rows.length > 0 && (
