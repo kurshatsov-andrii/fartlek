@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, Navigate } from "react-router-dom";
-import { Plus, Edit, Trash2, Users, Loader2, Download, FileText, Eye, BarChart3, Ticket, UsersRound, Mail, MessageCircle } from "lucide-react";
+import { Plus, Edit, Trash2, Users, Loader2, Download, FileText, Eye, BarChart3, Ticket, UsersRound, Mail, MessageCircle, History } from "lucide-react";
 import * as XLSX from "xlsx";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
@@ -214,6 +214,9 @@ const OrganizerDashboard = () => {
                     </Button>
                     <Button asChild variant="outline" size="sm" title={t.analytics.title}>
                       <Link to={`/organizer/events/${ev.id}/analytics`}><BarChart3 className="h-4 w-4" /></Link>
+                    </Button>
+                    <Button asChild variant="outline" size="sm" title={lang === "uk" ? "Зміни та відміни" : "Changes & cancellations"}>
+                      <Link to={`/organizer/events/${ev.id}/changes`}><History className="h-4 w-4" /></Link>
                     </Button>
                     <Button asChild variant="outline" size="sm" title={t.promo.manage}>
                       <Link to={`/organizer/events/${ev.id}/promo-codes`}><Ticket className="h-4 w-4" /></Link>

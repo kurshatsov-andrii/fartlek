@@ -35,7 +35,7 @@ const EventEditor = () => {
   const [form, setForm] = useState({
     title: "", description: "", organizer_name: "",
     event_date: "", event_time: "", location: "",
-    image_url: "", is_paid: false, payment_url: "", status: "draft", registration_closed: false,
+    image_url: "", is_paid: false, payment_url: "", status: "draft", registration_closed: false, changes_deadline_days: 1,
     category: "run" as EventCategory,
     format: "offline" as "offline" | "online" | "hybrid",
     results_pdf_url: "",
@@ -90,6 +90,7 @@ const EventEditor = () => {
           payment_url: (ev as any).payment_url ?? "",
           status: ev.status,
           registration_closed: !!(ev as any).registration_closed,
+          changes_deadline_days: (ev as any).changes_deadline_days ?? 1,
           category: ((ev as any).category ?? "run") as EventCategory,
           format: ((ev as any).format ?? "offline") as "offline" | "online" | "hybrid",
           results_pdf_url: (ev as any).results_pdf_url ?? "",
@@ -794,6 +795,25 @@ const EventEditor = () => {
                     : "Event stays visible, but new registrations will be disabled."}
                 </p>
               </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="changes_deadline_days">
+                {lang === "uk" ? "За скільки днів до події припинити самостійні зміни" : "Stop self-service changes N days before event"}
+              </Label>
+              <Input
+                id="changes_deadline_days"
+                type="number"
+                min={0}
+                max={60}
+                value={form.changes_deadline_days ?? 1}
+                onChange={(e) => setForm({ ...form, changes_deadline_days: Number(e.target.value) })}
+              />
+              <p className="text-xs text-muted-foreground">
+                {lang === "uk"
+                  ? "Учасник зможе сам змінювати дистанцію, передавати реєстрацію або просити відміну до цього дедлайну."
+                  : "Participants can change distance, transfer or request cancellation only before this deadline."}
+              </p>
             </div>
 
             <div className="space-y-2">

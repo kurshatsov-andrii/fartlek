@@ -1,13 +1,16 @@
 import { useEffect, useState } from "react";
 import { Link, Navigate } from "react-router-dom";
-import { Loader2, QrCode, Calendar, FileText, Users } from "lucide-react";
+import { Loader2, QrCode, Calendar, FileText, Users, Inbox } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { DocumentDialog } from "@/components/DocumentDialog";
 import { useApp } from "@/contexts/AppContext";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 const MyEvents = () => {
   const { t, lang } = useApp();
@@ -15,15 +18,37 @@ const MyEvents = () => {
   const [regs, setRegs] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [docDialog, setDocDialog] = useState<{ url: string; title: string } | null>(null);
+  const [transferOpen, setTransferOpen] = useState(false);
+  const [transferCode, setTransferCode] = useState("");
+  const [acceptingTransfer, setAcceptingTransfer] = useState(false);
 
-  useEffect(() => {
+  const reload = () => {
     if (!user) return;
     supabase.from("registrations")
       .select("*, events(*), distances(*), athletes(full_name, is_self)")
       .eq("user_id", user.id)
       .order("created_at", { ascending: false })
       .then(({ data }) => { setRegs(data ?? []); setLoading(false); });
-  }, [user]);
+  };
+
+  const acceptTransfer = async () => {
+    if (!transferCode.trim()) return;
+    setAcceptingTransfer(true);
+    try {
+      const { error } = await supabase.rpc("participant_accept_transfer", { _code: transferCode.trim() });
+      if (error) throw error;
+      toast.success(lang === "uk" ? "Реєстрацію передано вам" : "Registration transferred to you");
+      setTransferOpen(false);
+      setTransferCode("");
+      reload();
+    } catch (e: any) {
+      toast.error(e.message);
+    } finally {
+      setAcceptingTransfer(false);
+    }
+  };
+
+  useEffect(() => { reload(); /* eslint-disable-next-line */ }, [user]);
 
   if (authLoading) return null;
   if (!user) return <Navigate to="/auth" replace />;
@@ -32,7 +57,12 @@ const MyEvents = () => {
     <div className="min-h-screen flex flex-col bg-background">
       <Header />
       <main className="flex-1 container max-w-4xl py-12">
-        <h1 className="font-display text-4xl font-bold">{t.nav.myEvents}</h1>
+        <div className="flex items-center justify-between gap-4 flex-wrap">
+          <h1 className="font-display text-4xl font-bold">{t.nav.myEvents}</h1>
+          <Button variant="outline" onClick={() => setTransferOpen(true)}>
+            <Inbox className="h-4 w-4" /> {lang === "uk" ? "Прийняти передачу" : "Accept transfer"}
+          </Button>
+        </div>
         {loading ? (
           <div className="flex justify-center py-20"><Loader2 className="h-6 w-6 animate-spin" /></div>
         ) : regs.length === 0 ? (
@@ -119,6 +149,35 @@ const MyEvents = () => {
           title={docDialog.title}
         />
       )}
+
+      <Dialog open={transferOpen} onOpenChange={setTransferOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{lang === "uk" ? "Прийняти передачу реєстрації" : "Accept registration transfer"}</DialogTitle>
+          </DialogHeader>
+          <p className="text-sm text-muted-foreground">
+            {lang === "uk"
+              ? "Введіть код передачі, який вам надав інший учасник."
+              : "Enter the transfer code provided by another participant."}
+          </p>
+          <Input
+            placeholder="ABCD1234"
+            value={transferCode}
+            onChange={(e) => setTransferCode(e.target.value.toUpperCase())}
+            maxLength={32}
+            className="font-mono"
+          />
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setTransferOpen(false)}>
+              {lang === "uk" ? "Скасувати" : "Cancel"}
+            </Button>
+            <Button onClick={acceptTransfer} disabled={acceptingTransfer || !transferCode.trim()}>
+              {acceptingTransfer && <Loader2 className="h-4 w-4 animate-spin" />}
+              {lang === "uk" ? "Прийняти" : "Accept"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

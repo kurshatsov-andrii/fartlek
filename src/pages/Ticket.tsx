@@ -19,6 +19,7 @@ import { startLiqPayCheckout } from "@/lib/liqpay";
 import { startAutomatedPaymentCheckout } from "@/lib/paymentCheckout";
 import { PromoCodeInput, PromoPreview } from "@/components/PromoCodeInput";
 import { NovaPoshtaDelivery, emptyDelivery, validateDelivery, type DeliveryData } from "@/components/NovaPoshtaDelivery";
+import { RegistrationSelfService } from "@/components/RegistrationSelfService";
 
 const Ticket = () => {
   const { id } = useParams<{ id: string }>();
@@ -441,6 +442,18 @@ const Ticket = () => {
             </Button>
           </div>
         )}
+
+        <RegistrationSelfService
+          registration={data}
+          onChanged={async () => {
+            const { data: reg } = await supabase
+              .from("registrations")
+              .select(`*, events(*), distances(*), athletes(full_name, birth_date, gender, city, club)`)
+              .eq("id", data.id)
+              .maybeSingle();
+            if (reg) setData(reg);
+          }}
+        />
 
         <Dialog open={deliveryOpen} onOpenChange={setDeliveryOpen}>
           <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
