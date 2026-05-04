@@ -389,6 +389,146 @@ const Ticket = () => {
             </div>
           </div>
         )}
+
+        {dist?.delivery_enabled && (
+          <div className="mt-6 bg-card rounded-2xl shadow-card p-6 space-y-4">
+            <div className="flex items-start gap-3">
+              <Package className="h-6 w-6 text-primary shrink-0 mt-0.5" />
+              <div className="flex-1">
+                <h2 className="font-display text-lg font-bold">
+                  {lang === "uk" ? "Доставка Новою Поштою" : "Nova Poshta delivery"}
+                </h2>
+                {data.delivery_enabled ? (
+                  <div className="text-sm text-muted-foreground mt-2 space-y-1">
+                    <div><span className="font-medium text-foreground">{data.delivery_recipient_name}</span> · {data.delivery_phone}</div>
+                    <div>{data.delivery_city_name}</div>
+                    <div>{data.delivery_warehouse_name}</div>
+                  </div>
+                ) : (
+                  <p className="text-sm text-muted-foreground mt-1">
+                    {lang === "uk"
+                      ? "Не зможеш забрати на місці? Замов доставку медалі / стартового пакету Новою Поштою."
+                      : "Can't pick it up on site? Order Nova Poshta delivery for your medal / starter pack."}
+                  </p>
+                )}
+              </div>
+            </div>
+            <Button
+              variant={data.delivery_enabled ? "outline" : "default"}
+              onClick={() => {
+                setDeliveryDraft(
+                  data.delivery_enabled
+                    ? {
+                        enabled: true,
+                        recipient_name: data.delivery_recipient_name ?? "",
+                        phone: data.delivery_phone ?? "",
+                        city_ref: data.delivery_city_ref ?? "",
+                        city_name: data.delivery_city_name ?? "",
+                        warehouse_ref: data.delivery_warehouse_ref ?? "",
+                        warehouse_name: data.delivery_warehouse_name ?? "",
+                        warehouse_type: (data.delivery_warehouse_type as "branch" | "postomat") ?? "branch",
+                      }
+                    : { ...emptyDelivery(), enabled: true },
+                );
+                setDeliveryOpen(true);
+              }}
+            >
+              {data.delivery_enabled ? (
+                <><Pencil className="h-4 w-4" /> {lang === "uk" ? "Змінити дані доставки" : "Edit delivery details"}</>
+              ) : (
+                <><Package className="h-4 w-4" /> {lang === "uk" ? "Замовити доставку" : "Order delivery"}</>
+              )}
+            </Button>
+          </div>
+        )}
+
+        <Dialog open={deliveryOpen} onOpenChange={setDeliveryOpen}>
+          <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>
+                {lang === "uk" ? "Доставка Новою Поштою" : "Nova Poshta delivery"}
+              </DialogTitle>
+            </DialogHeader>
+            <NovaPoshtaDelivery value={deliveryDraft} onChange={setDeliveryDraft} />
+            <DialogFooter className="gap-2">
+              {data?.delivery_enabled && (
+                <Button
+                  variant="ghost"
+                  disabled={savingDelivery}
+                  onClick={async () => {
+                    setSavingDelivery(true);
+                    try {
+                      const { data: upd, error } = await supabase
+                        .from("registrations")
+                        .update({
+                          delivery_enabled: false,
+                          delivery_recipient_name: null,
+                          delivery_phone: null,
+                          delivery_city_ref: null,
+                          delivery_city_name: null,
+                          delivery_warehouse_ref: null,
+                          delivery_warehouse_name: null,
+                          delivery_warehouse_type: null,
+                        })
+                        .eq("id", data.id)
+                        .select(`*, events(*), distances(*), athletes(full_name, birth_date, gender, city, club)`)
+                        .single();
+                      if (error) throw error;
+                      setData(upd);
+                      setDeliveryOpen(false);
+                      toast.success(lang === "uk" ? "Доставку скасовано" : "Delivery cancelled");
+                    } catch (e: any) {
+                      toast.error(e.message ?? t.common.error);
+                    } finally {
+                      setSavingDelivery(false);
+                    }
+                  }}
+                >
+                  {lang === "uk" ? "Скасувати доставку" : "Cancel delivery"}
+                </Button>
+              )}
+              <Button variant="outline" onClick={() => setDeliveryOpen(false)} disabled={savingDelivery}>
+                {lang === "uk" ? "Закрити" : "Close"}
+              </Button>
+              <Button
+                disabled={savingDelivery}
+                onClick={async () => {
+                  const err = validateDelivery({ ...deliveryDraft, enabled: true }, lang);
+                  if (err) { toast.error(err); return; }
+                  setSavingDelivery(true);
+                  try {
+                    const { data: upd, error } = await supabase
+                      .from("registrations")
+                      .update({
+                        delivery_enabled: true,
+                        delivery_recipient_name: deliveryDraft.recipient_name.trim(),
+                        delivery_phone: deliveryDraft.phone,
+                        delivery_city_ref: deliveryDraft.city_ref,
+                        delivery_city_name: deliveryDraft.city_name,
+                        delivery_warehouse_ref: deliveryDraft.warehouse_ref,
+                        delivery_warehouse_name: deliveryDraft.warehouse_name,
+                        delivery_warehouse_type: deliveryDraft.warehouse_type,
+                      })
+                      .eq("id", data.id)
+                      .select(`*, events(*), distances(*), athletes(full_name, birth_date, gender, city, club)`)
+                      .single();
+                    if (error) throw error;
+                    setData(upd);
+                    setDeliveryOpen(false);
+                    toast.success(lang === "uk" ? "Дані доставки збережено" : "Delivery details saved");
+                  } catch (e: any) {
+                    toast.error(e.message ?? t.common.error);
+                  } finally {
+                    setSavingDelivery(false);
+                  }
+                }}
+              >
+                {savingDelivery ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
+                {lang === "uk" ? "Зберегти" : "Save"}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </main>
       <Footer />
     </div>
