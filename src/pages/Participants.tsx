@@ -292,6 +292,52 @@ const Participants = () => {
   const hasActiveFilters =
     fGender !== "all" || fYear !== "all" || fAge !== "all" || fCity !== "all" || fClub !== "all" || fPayment !== "all" || search.trim() !== "";
 
+  const deliveryRows = useMemo(() => rows.filter((r) => r.delivery_enabled), [rows]);
+
+  const exportToExcel = (onlyDelivery: boolean) => {
+    const source = onlyDelivery ? deliveryRows : filteredRows;
+    if (source.length === 0) {
+      toast.info(lang === "uk" ? "Немає даних для експорту" : "No data to export");
+      return;
+    }
+    const data = source.map((r: any) => {
+      const base: Record<string, any> = {
+        [lang === "uk" ? "Номер" : "Bib"]: r.bib_number ?? "",
+        [lang === "uk" ? "ПІБ" : "Full name"]: r.full_name ?? "",
+        [lang === "uk" ? "Стать" : "Gender"]: r.gender ?? "",
+        [lang === "uk" ? "Рік" : "Year"]: r.birth_year ?? "",
+        [lang === "uk" ? "Місто" : "City"]: r.city ?? "",
+        [lang === "uk" ? "Клуб" : "Club"]: r.club ?? "",
+        [lang === "uk" ? "Дистанція (км)" : "Distance (km)"]: r.distance_km ?? "",
+        [lang === "uk" ? "Назва дистанції" : "Distance name"]: r.distance_name ?? "",
+        [lang === "uk" ? "Email" : "Email"]: r.email ?? "",
+      };
+      if (isPaid) base[lang === "uk" ? "Оплата" : "Payment"] = r.payment_status ?? "";
+      base[lang === "uk" ? "Доставка НП" : "NP delivery"] = r.delivery_enabled
+        ? (lang === "uk" ? "Так" : "Yes") : "";
+      base[lang === "uk" ? "Отримувач" : "Recipient"] = r.delivery_recipient_name ?? "";
+      base[lang === "uk" ? "Телефон" : "Phone"] = r.delivery_phone ?? "";
+      base[lang === "uk" ? "Місто (НП)" : "NP city"] = r.delivery_city_name ?? "";
+      base[lang === "uk" ? "Відділення / Поштомат" : "Branch / Postomat"] = r.delivery_warehouse_name ?? "";
+      base[lang === "uk" ? "Тип" : "Type"] = r.delivery_warehouse_type === "postomat"
+        ? (lang === "uk" ? "Поштомат" : "Postomat")
+        : r.delivery_warehouse_type === "branch"
+          ? (lang === "uk" ? "Відділення" : "Branch") : "";
+      return base;
+    });
+    const ws = XLSX.utils.json_to_sheet(data);
+    // Auto width
+    const colWidths = Object.keys(data[0] ?? {}).map((k) => ({
+      wch: Math.min(40, Math.max(k.length + 2, ...data.map((d) => String(d[k] ?? "").length + 2))),
+    }));
+    (ws as any)["!cols"] = colWidths;
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, lang === "uk" ? "Учасники" : "Participants");
+    const safeTitle = (eventTitle || "event").replace(/[\\/:*?"<>|]/g, "_").slice(0, 60);
+    const suffix = onlyDelivery ? (lang === "uk" ? "_доставка" : "_delivery") : "";
+    XLSX.writeFile(wb, `${safeTitle}${suffix}.xlsx`);
+  };
+
   if (authLoading) return null;
   if (!user) return <Navigate to={`/auth?redirect=/events/${id}/participants`} replace />;
 
