@@ -3,13 +3,14 @@ import { Link, useParams, Navigate } from "react-router-dom";
 import QRCode from "qrcode";
 import { jsPDF } from "jspdf";
 import html2canvas from "html2canvas";
-import { Download, Loader2, ArrowLeft, Upload, FileCheck2, ExternalLink, CreditCard, CalendarPlus } from "lucide-react";
+import { Download, Loader2, ArrowLeft, Upload, FileCheck2, ExternalLink, CreditCard, CalendarPlus, Package, Pencil } from "lucide-react";
 import { AddToCalendarButton } from "@/components/AddToCalendarButton";
 import { downloadIcs } from "@/lib/calendar";
 import { toast } from "sonner";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useApp } from "@/contexts/AppContext";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
@@ -17,6 +18,7 @@ import { startWayForPayCheckout } from "@/lib/wayforpay";
 import { startLiqPayCheckout } from "@/lib/liqpay";
 import { startAutomatedPaymentCheckout } from "@/lib/paymentCheckout";
 import { PromoCodeInput, PromoPreview } from "@/components/PromoCodeInput";
+import { NovaPoshtaDelivery, emptyDelivery, validateDelivery, type DeliveryData } from "@/components/NovaPoshtaDelivery";
 
 const Ticket = () => {
   const { id } = useParams<{ id: string }>();
