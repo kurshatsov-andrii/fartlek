@@ -417,7 +417,7 @@ const CalendarPage = () => {
                               </Button>
                             ) : (
                               <div className="flex justify-end gap-1">
-                                {isAdmin && (
+                                {(isAdmin || (isOrganizer && r.created_by === user?.id)) && (
                                   <>
                                     <Button size="icon" variant="ghost" onClick={() => openEdit(r)} title={lang === "uk" ? "Редагувати" : "Edit"}>
                                       <Pencil className="h-4 w-4" />
