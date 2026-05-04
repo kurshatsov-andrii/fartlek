@@ -860,6 +860,14 @@ export type Database = {
           athlete_id: string | null
           bib_number: number | null
           created_at: string
+          delivery_city_name: string | null
+          delivery_city_ref: string | null
+          delivery_enabled: boolean
+          delivery_phone: string | null
+          delivery_recipient_name: string | null
+          delivery_warehouse_name: string | null
+          delivery_warehouse_ref: string | null
+          delivery_warehouse_type: string | null
           distance_id: string
           event_id: string
           id: string
@@ -879,6 +887,14 @@ export type Database = {
           athlete_id?: string | null
           bib_number?: number | null
           created_at?: string
+          delivery_city_name?: string | null
+          delivery_city_ref?: string | null
+          delivery_enabled?: boolean
+          delivery_phone?: string | null
+          delivery_recipient_name?: string | null
+          delivery_warehouse_name?: string | null
+          delivery_warehouse_ref?: string | null
+          delivery_warehouse_type?: string | null
           distance_id: string
           event_id: string
           id?: string
@@ -898,6 +914,14 @@ export type Database = {
           athlete_id?: string | null
           bib_number?: number | null
           created_at?: string
+          delivery_city_name?: string | null
+          delivery_city_ref?: string | null
+          delivery_enabled?: boolean
+          delivery_phone?: string | null
+          delivery_recipient_name?: string | null
+          delivery_warehouse_name?: string | null
+          delivery_warehouse_ref?: string | null
+          delivery_warehouse_type?: string | null
           distance_id?: string
           event_id?: string
           id?: string
@@ -1153,6 +1177,12 @@ export type Database = {
           birth_year: number
           city: string
           club: string
+          delivery_city_name: string
+          delivery_enabled: boolean
+          delivery_phone: string
+          delivery_recipient_name: string
+          delivery_warehouse_name: string
+          delivery_warehouse_type: string
           distance_km: number
           distance_name: string
           email: string

@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
-import { ArrowLeft, Loader2, CheckCircle2, XCircle, FileText, RotateCcw, Trash2, X, Bell, ArrowRightLeft } from "lucide-react";
+import { ArrowLeft, Loader2, CheckCircle2, XCircle, FileText, RotateCcw, Trash2, X, Bell, ArrowRightLeft, Download, Package } from "lucide-react";
+import * as XLSX from "xlsx";
 import { toast } from "sonner";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
@@ -291,6 +292,52 @@ const Participants = () => {
   const hasActiveFilters =
     fGender !== "all" || fYear !== "all" || fAge !== "all" || fCity !== "all" || fClub !== "all" || fPayment !== "all" || search.trim() !== "";
 
+  const deliveryRows = useMemo(() => rows.filter((r) => r.delivery_enabled), [rows]);
+
+  const exportToExcel = (onlyDelivery: boolean) => {
+    const source = onlyDelivery ? deliveryRows : filteredRows;
+    if (source.length === 0) {
+      toast.info(lang === "uk" ? "Немає даних для експорту" : "No data to export");
+      return;
+    }
+    const data = source.map((r: any) => {
+      const base: Record<string, any> = {
+        [lang === "uk" ? "Номер" : "Bib"]: r.bib_number ?? "",
+        [lang === "uk" ? "ПІБ" : "Full name"]: r.full_name ?? "",
+        [lang === "uk" ? "Стать" : "Gender"]: r.gender ?? "",
+        [lang === "uk" ? "Рік" : "Year"]: r.birth_year ?? "",
+        [lang === "uk" ? "Місто" : "City"]: r.city ?? "",
+        [lang === "uk" ? "Клуб" : "Club"]: r.club ?? "",
+        [lang === "uk" ? "Дистанція (км)" : "Distance (km)"]: r.distance_km ?? "",
+        [lang === "uk" ? "Назва дистанції" : "Distance name"]: r.distance_name ?? "",
+        [lang === "uk" ? "Email" : "Email"]: r.email ?? "",
+      };
+      if (isPaid) base[lang === "uk" ? "Оплата" : "Payment"] = r.payment_status ?? "";
+      base[lang === "uk" ? "Доставка НП" : "NP delivery"] = r.delivery_enabled
+        ? (lang === "uk" ? "Так" : "Yes") : "";
+      base[lang === "uk" ? "Отримувач" : "Recipient"] = r.delivery_recipient_name ?? "";
+      base[lang === "uk" ? "Телефон" : "Phone"] = r.delivery_phone ?? "";
+      base[lang === "uk" ? "Місто (НП)" : "NP city"] = r.delivery_city_name ?? "";
+      base[lang === "uk" ? "Відділення / Поштомат" : "Branch / Postomat"] = r.delivery_warehouse_name ?? "";
+      base[lang === "uk" ? "Тип" : "Type"] = r.delivery_warehouse_type === "postomat"
+        ? (lang === "uk" ? "Поштомат" : "Postomat")
+        : r.delivery_warehouse_type === "branch"
+          ? (lang === "uk" ? "Відділення" : "Branch") : "";
+      return base;
+    });
+    const ws = XLSX.utils.json_to_sheet(data);
+    // Auto width
+    const colWidths = Object.keys(data[0] ?? {}).map((k) => ({
+      wch: Math.min(40, Math.max(k.length + 2, ...data.map((d) => String(d[k] ?? "").length + 2))),
+    }));
+    (ws as any)["!cols"] = colWidths;
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, lang === "uk" ? "Учасники" : "Participants");
+    const safeTitle = (eventTitle || "event").replace(/[\\/:*?"<>|]/g, "_").slice(0, 60);
+    const suffix = onlyDelivery ? (lang === "uk" ? "_доставка" : "_delivery") : "";
+    XLSX.writeFile(wb, `${safeTitle}${suffix}.xlsx`);
+  };
+
   if (authLoading) return null;
   if (!user) return <Navigate to={`/auth?redirect=/events/${id}/participants`} replace />;
 
@@ -309,20 +356,47 @@ const Participants = () => {
               {filteredRows.length !== rows.length && <span className="text-muted-foreground/70"> / {rows.length}</span>}
             </p>
           </div>
-          {isOrganizer && isPaid && reminderTargets.length > 0 && (
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setReminderOpen(true)}
-              className="gap-2"
-            >
-              <Bell className="h-4 w-4" />
-              {lang === "uk" ? "Надіслати нагадування" : "Send reminders"}
-              <span className="ml-1 inline-flex items-center justify-center rounded-full bg-primary text-primary-foreground text-xs h-5 min-w-5 px-1.5">
-                {reminderTargets.length}
-              </span>
-            </Button>
-          )}
+          <div className="flex flex-wrap gap-2">
+            {isOrganizer && rows.length > 0 && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => exportToExcel(false)}
+                className="gap-2"
+              >
+                <Download className="h-4 w-4" />
+                {lang === "uk" ? "Excel" : "Excel"}
+              </Button>
+            )}
+            {isOrganizer && deliveryRows.length > 0 && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => exportToExcel(true)}
+                className="gap-2"
+              >
+                <Package className="h-4 w-4" />
+                {lang === "uk" ? "Доставка" : "Delivery"}
+                <span className="ml-1 inline-flex items-center justify-center rounded-full bg-primary text-primary-foreground text-xs h-5 min-w-5 px-1.5">
+                  {deliveryRows.length}
+                </span>
+              </Button>
+            )}
+            {isOrganizer && isPaid && reminderTargets.length > 0 && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setReminderOpen(true)}
+                className="gap-2"
+              >
+                <Bell className="h-4 w-4" />
+                {lang === "uk" ? "Надіслати нагадування" : "Send reminders"}
+                <span className="ml-1 inline-flex items-center justify-center rounded-full bg-primary text-primary-foreground text-xs h-5 min-w-5 px-1.5">
+                  {reminderTargets.length}
+                </span>
+              </Button>
+            )}
+          </div>
         </div>
 
         {!loading && rows.length > 0 && (
@@ -571,6 +645,7 @@ const Participants = () => {
                         <th className="p-3 font-semibold">{lang === "uk" ? "Рік" : "Year"}</th>
                         <th className="p-3 font-semibold">{t.profile.city}</th>
                         <th className="p-3 font-semibold">{t.profile.club}</th>
+                        {isOrganizer && <th className="p-3 font-semibold">{lang === "uk" ? "Доставка НП" : "NP delivery"}</th>}
                         {isOrganizer && <th className="p-3 font-semibold">{lang === "uk" ? "Доданий" : "Added by"}</th>}
                         {isPaid && <th className="p-3 font-semibold text-center">{lang === "uk" ? "Оплата" : "Payment"}</th>}
                         {isPaid && isOrganizer && <th className="p-3 font-semibold text-center">{lang === "uk" ? "Квитанція" : "Receipt"}</th>}
@@ -598,6 +673,26 @@ const Participants = () => {
                           <td className="p-3">{r.birth_year ?? "—"}</td>
                           <td className="p-3">{r.city ?? "—"}</td>
                           <td className="p-3">{r.club ?? "—"}</td>
+                          {isOrganizer && (
+                            <td className="p-3">
+                              {r.delivery_enabled ? (
+                                <div className="flex flex-col text-xs">
+                                  <span className="font-medium text-primary inline-flex items-center gap-1">
+                                    <Package className="h-3 w-3" />
+                                    {r.delivery_warehouse_type === "postomat"
+                                      ? (lang === "uk" ? "Поштомат" : "Postomat")
+                                      : (lang === "uk" ? "Відділення" : "Branch")}
+                                  </span>
+                                  <span>{r.delivery_recipient_name}</span>
+                                  <span className="text-muted-foreground">{r.delivery_phone}</span>
+                                  <span className="text-muted-foreground">{r.delivery_city_name}</span>
+                                  <span className="text-muted-foreground">{r.delivery_warehouse_name}</span>
+                                </div>
+                              ) : (
+                                <span className="text-muted-foreground">—</span>
+                              )}
+                            </td>
+                          )}
                           {isOrganizer && (
                             <td className="p-3">
                               {r.is_self_athlete ? (
