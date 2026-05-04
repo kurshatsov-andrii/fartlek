@@ -312,11 +312,22 @@ const CalendarPage = () => {
               </DialogContent>
             </Dialog>
           ) : (
-            <Button asChild variant="outline" title={lang === "uk" ? "Увійдіть як організатор або адмін, щоб додати подію" : "Sign in as organizer or admin to add an event"}>
-              <Link to={user ? "/auth?role=organizer" : "/auth?role=organizer"}>
-                <Plus className="h-4 w-4" />
-                {lang === "uk" ? "Додати подію" : "Add event"}
-              </Link>
+            <Button
+              variant="outline"
+              onClick={() => {
+                if (!user) {
+                  toast.info(lang === "uk"
+                    ? "Щоб додати подію, увійдіть як організатор або адмін"
+                    : "Sign in as organizer or admin to add an event");
+                } else {
+                  toast.warning(lang === "uk"
+                    ? "Лише організатори та адміністратори можуть додавати події в календар. Перейдіть у профіль і подайте заявку як організатор."
+                    : "Only organizers and admins can add calendar events. Apply as an organizer in your profile.");
+                }
+              }}
+            >
+              <Plus className="h-4 w-4" />
+              {lang === "uk" ? "Додати подію" : "Add event"}
             </Button>
           )}
         </div>
