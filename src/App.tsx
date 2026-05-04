@@ -35,6 +35,7 @@ import ClubEditor from "./pages/ClubEditor.tsx";
 import Features from "./pages/Features.tsx";
 import Survey from "./pages/Survey.tsx";
 import AdminSurvey from "./pages/AdminSurvey.tsx";
+import CalendarPage from "./pages/Calendar.tsx";
 import { ProfileCompletionGate } from "./components/ProfileCompletionGate";
 
 const queryClient = new QueryClient();
@@ -54,6 +55,7 @@ const App = () => (
               <Route path="/reset-password" element={<ResetPassword />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/my-events" element={<MyEvents />} />
+              <Route path="/calendar" element={<CalendarPage />} />
               <Route path="/category" element={<CategoriesIndex />} />
               <Route path="/category/:category" element={<CategoryPage />} />
               <Route path="/events/:id" element={<EventDetails />} />
