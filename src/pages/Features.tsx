@@ -231,6 +231,7 @@ const Features = () => {
         { icon: MessageSquare, title: "Chat with participants", desc: "«Organizer» badge next to your name, ability to pin messages." },
         { icon: Bell, title: "Unread counter", desc: "Dashboard shows how many new chat messages each event has." },
         { icon: Shield, title: "Chat moderation", desc: "Delete any message, edit your own announcements." },
+        { icon: Activity, title: "Online users (admin) 🆕", desc: "The platform admin sees the number of authenticated users on the site in real time — a floating indicator in the corner." },
       ],
     },
   ];
