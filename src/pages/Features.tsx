@@ -4,7 +4,8 @@ import {
   Users, Calendar, Ticket, MessageSquare, BarChart3, Tag, Mail, Shield, QrCode,
   Trophy, Bell, UserCircle, Edit3, Smile, Reply, AtSign, Image as ImageIcon,
   CalendarPlus, FileSpreadsheet, CreditCard, Globe, Clock, MapPin, Sparkles,
-  Megaphone, Building2, CheckCircle2, ArrowDown
+  Megaphone, Building2, CheckCircle2, ArrowDown, Truck, Repeat, Send, XCircle,
+  History, Lock, Activity
 } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
@@ -82,6 +83,15 @@ const Features = () => {
       ],
     },
     {
+      title: "Керування власною реєстрацією 🆕",
+      items: [
+        { icon: Repeat, title: "Зміна дистанції", desc: "Самостійно перейдіть на іншу дистанцію до дедлайну події. Якщо нова дорожча — доплачуєте різницю, якщо дешевша — без повернення." },
+        { icon: Send, title: "Передача реєстрації", desc: "Не можете бігти? Згенеруйте 8-символьний код передачі — інший учасник вводить його у «Мої події» і отримує ваш слот." },
+        { icon: XCircle, title: "Заявка на скасування", desc: "Подайте запит на скасування реєстрації — організатор розглядає вручну та вирішує щодо повернення коштів." },
+        { icon: Truck, title: "Доставка стартового пакету Новою Поштою", desc: "Якщо подія підтримує доставку — оберіть місто та відділення/поштомат прямо при реєстрації. Можна замовити пізніше зі сторінки квитка." },
+      ],
+    },
+    {
       title: "Профіль",
       items: [
         { icon: UserCircle, title: "Особистий профіль", desc: "Ім'я, дата народження, стать, місто, клуб і телефон — заповнюється один раз." },
@@ -120,6 +130,15 @@ const Features = () => {
       ],
     },
     {
+      title: "Manage your registration 🆕",
+      items: [
+        { icon: Repeat, title: "Change distance", desc: "Switch to another distance yourself before the event deadline. If the new one costs more — pay the difference, if less — no refund." },
+        { icon: Send, title: "Transfer registration", desc: "Can't run? Generate an 8-character transfer code — another participant enters it in «My events» and gets your slot." },
+        { icon: XCircle, title: "Cancellation request", desc: "Submit a cancellation request — the organizer reviews it manually and decides on refund." },
+        { icon: Truck, title: "Nova Poshta race kit delivery", desc: "If the event supports delivery — pick a city and branch/parcel locker right at registration. You can also order it later from the ticket page." },
+      ],
+    },
+    {
       title: "Profile",
       items: [
         { icon: UserCircle, title: "Personal profile", desc: "Name, date of birth, gender, city, club and phone — filled once." },
@@ -138,6 +157,8 @@ const Features = () => {
         { icon: Clock, title: "Статуси події", desc: "Чернетка → Опубліковано → Завершено. Контролюйте видимість на сайті." },
         { icon: Users, title: "Співорганізатори", desc: "Додавайте кілька організаторів до однієї події — кожен має повний доступ." },
         { icon: CalendarPlus, title: "Додавання у Календар подій", desc: "Розміщуйте власні майбутні старти у спільному Календарі подій — навіть якщо реєстрація йде поза платформою. Редагуєте та видаляєте лише свої записи." },
+        { icon: Lock, title: "Реєстрація закрита 🆕", desc: "Коли слоти вичерпано — позначте подію як «Реєстрація закрита». Учасники бачать спеціальний бейдж, але подія залишається на сайті до дати старту." },
+        { icon: Clock, title: "Дедлайн самообслуговування 🆕", desc: "Налаштуйте за скільки днів до події учасники можуть самостійно змінювати дистанцію, передавати слот або просити скасування." },
       ],
     },
     {
@@ -147,6 +168,8 @@ const Features = () => {
         { icon: FileSpreadsheet, title: "Експорт у CSV / Excel", desc: "Вивантаження учасників одним кліком для стартової реєстрації офлайн." },
         { icon: Ticket, title: "Призначення BIB-номерів", desc: "Автоматичне призначення номерів від заданого старту або вручну." },
         { icon: Trophy, title: "Завантаження результатів", desc: "Завантажте файл або вкажіть посилання — учасники одразу побачать свій час." },
+        { icon: Truck, title: "Доставка стартового пакету Новою Поштою 🆕", desc: "Увімкніть доставку — учасники під час реєстрації обирають місто та відділення/поштомат. Ви бачите адреси у списку учасників та експорті." },
+        { icon: History, title: "Історія змін реєстрацій 🆕", desc: "Окрема вкладка з повним аудитом: зміни дистанцій, передачі слотів, заявки на скасування — хто, коли і що зробив." },
       ],
     },
     {
@@ -165,6 +188,7 @@ const Features = () => {
         { icon: MessageSquare, title: "Чат із учасниками", desc: "Бейдж «Організатор» біля імені, можливість закріплювати повідомлення." },
         { icon: Bell, title: "Лічильник непрочитаних", desc: "На дашборді видно скільки нових повідомлень у чаті кожної події." },
         { icon: Shield, title: "Модерація чату", desc: "Видалення будь-яких повідомлень, редагування своїх анонсів." },
+        { icon: Activity, title: "Онлайн-користувачі (адмін) 🆕", desc: "Адміністратор платформи в реальному часі бачить кількість авторизованих користувачів на сайті — плаваючий індикатор у куті екрана." },
       ],
     },
   ] : [
@@ -176,6 +200,8 @@ const Features = () => {
         { icon: Clock, title: "Event status", desc: "Draft → Published → Completed. Control visibility on the site." },
         { icon: Users, title: "Co-organizers", desc: "Add multiple organizers to one event — each gets full access." },
         { icon: CalendarPlus, title: "Add to events calendar", desc: "Publish your upcoming races in the shared Events Calendar — even if registration runs outside the platform. You can only edit and delete your own entries." },
+        { icon: Lock, title: "Registration closed 🆕", desc: "When slots are sold out — mark the event as «Registration closed». Participants see a dedicated badge but the event stays on the site until race day." },
+        { icon: Clock, title: "Self-service deadline 🆕", desc: "Configure how many days before the event participants can change distance, transfer slots or request cancellation by themselves." },
       ],
     },
     {
@@ -185,6 +211,8 @@ const Features = () => {
         { icon: FileSpreadsheet, title: "CSV / Excel export", desc: "One-click export for offline race-day check-in." },
         { icon: Ticket, title: "Assign BIB numbers", desc: "Auto-assign from a starting number or set manually." },
         { icon: Trophy, title: "Upload results", desc: "Upload a file or paste a link — participants instantly see their time." },
+        { icon: Truck, title: "Nova Poshta race kit delivery 🆕", desc: "Enable delivery — participants pick a city and branch/parcel locker at registration. You see the addresses in the participants list and exports." },
+        { icon: History, title: "Registration changes history 🆕", desc: "A dedicated tab with full audit: distance changes, slot transfers, cancellation requests — who, when and what changed." },
       ],
     },
     {
@@ -203,6 +231,7 @@ const Features = () => {
         { icon: MessageSquare, title: "Chat with participants", desc: "«Organizer» badge next to your name, ability to pin messages." },
         { icon: Bell, title: "Unread counter", desc: "Dashboard shows how many new chat messages each event has." },
         { icon: Shield, title: "Chat moderation", desc: "Delete any message, edit your own announcements." },
+        { icon: Activity, title: "Online users (admin) 🆕", desc: "The platform admin sees the number of authenticated users on the site in real time — a floating indicator in the corner." },
       ],
     },
   ];
