@@ -445,6 +445,18 @@ const EventDetails = () => {
                     <p className="text-sm text-muted-foreground">{t.events.resultsNone}</p>
                   )}
                 </div>
+              ) : event.registration_closed ? (
+                <div className="sticky top-24 rounded-2xl border border-border bg-card p-6 space-y-3">
+                  <h3 className="font-display text-xl font-bold text-foreground">
+                    {t.events.registrationClosedTitle}
+                  </h3>
+                  <p className="text-sm text-muted-foreground">{t.events.registrationClosedHint}</p>
+                  {registration && (
+                    <Button asChild variant="outline" className="w-full">
+                      <Link to={`/ticket/${registration.id}`}>{t.events.viewTicket}</Link>
+                    </Button>
+                  )}
+                </div>
               ) : (
               <div className="sticky top-24 bg-card p-6 rounded-2xl shadow-card space-y-4">
                 {registration && (
