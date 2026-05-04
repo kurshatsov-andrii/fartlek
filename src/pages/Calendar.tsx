@@ -359,62 +359,79 @@ const CalendarPage = () => {
               {lang === "uk" ? "Подій не знайдено" : "No events found"}
             </div>
           ) : (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>{lang === "uk" ? "Дата" : "Date"}</TableHead>
-                  <TableHead>{lang === "uk" ? "Назва" : "Title"}</TableHead>
-                  <TableHead>{lang === "uk" ? "Місце" : "Location"}</TableHead>
-                  <TableHead>{lang === "uk" ? "Дистанції" : "Distances"}</TableHead>
-                  <TableHead>{lang === "uk" ? "Організатор" : "Organizer"}</TableHead>
-                  <TableHead className="text-right">{lang === "uk" ? "Дії" : "Actions"}</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filtered.map((r) => (
-                  <TableRow key={`${r.source}-${r.id}`}>
-                    <TableCell className="whitespace-nowrap text-sm">{fmtDate(r.event_date)}</TableCell>
-                    <TableCell className="font-medium">
-                      {r.source === "platform" ? (
-                        <Link to={r.url ?? "#"} className="hover:text-primary">{r.title}</Link>
-                      ) : r.url ? (
-                        <a href={r.url} target="_blank" rel="noreferrer" className="hover:text-primary inline-flex items-center gap-1">
-                          {r.title}<ExternalLink className="h-3 w-3" />
-                        </a>
-                      ) : r.title}
-                      {r.category && (
-                        <div className="text-[10px] uppercase tracking-wider text-muted-foreground mt-0.5">
-                          {t.categories[r.category as EventCategory] ?? r.category}
-                        </div>
-                      )}
-                    </TableCell>
-                    <TableCell className="text-sm text-muted-foreground">{r.location || "—"}</TableCell>
-                    <TableCell className="text-sm">{r.distances || "—"}</TableCell>
-                    <TableCell className="text-sm text-muted-foreground">{r.organizer_name || "—"}</TableCell>
-                    <TableCell className="text-right">
-                      {r.source === "platform" ? (
-                        <Button asChild size="sm" variant="outline">
-                          <Link to={r.url ?? "#"}>{lang === "uk" ? "Деталі" : "Details"}</Link>
-                        </Button>
-                      ) : (
-                        <div className="flex justify-end gap-1">
-                          {isAdmin && (
-                            <>
-                              <Button size="icon" variant="ghost" onClick={() => openEdit(r)} title={lang === "uk" ? "Редагувати" : "Edit"}>
-                                <Pencil className="h-4 w-4" />
+            <div className="divide-y divide-border">
+              {grouped.map((group) => (
+                <section key={group.key}>
+                  <div className="sticky top-0 z-10 bg-primary/10 backdrop-blur px-4 py-2 border-b border-border">
+                    <h2 className="font-display text-lg font-semibold tracking-tight">
+                      {group.label}
+                      <span className="ml-2 text-xs font-normal text-muted-foreground">
+                        {group.rows.length}
+                      </span>
+                    </h2>
+                  </div>
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>{lang === "uk" ? "Дата" : "Date"}</TableHead>
+                        <TableHead>{lang === "uk" ? "Назва" : "Title"}</TableHead>
+                        <TableHead>{lang === "uk" ? "Місце" : "Location"}</TableHead>
+                        <TableHead>{lang === "uk" ? "Дистанції" : "Distances"}</TableHead>
+                        <TableHead>{lang === "uk" ? "Організатор" : "Organizer"}</TableHead>
+                        <TableHead className="text-right">{lang === "uk" ? "Дії" : "Actions"}</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {group.rows.map((r, idx) => (
+                        <TableRow
+                          key={`${r.source}-${r.id}`}
+                          className={idx % 2 === 0 ? "bg-background" : "bg-muted/40"}
+                        >
+                          <TableCell className="whitespace-nowrap text-sm">{fmtDate(r.event_date)}</TableCell>
+                          <TableCell className="font-medium">
+                            {r.source === "platform" ? (
+                              <Link to={r.url ?? "#"} className="hover:text-primary">{r.title}</Link>
+                            ) : r.url ? (
+                              <a href={r.url} target="_blank" rel="noreferrer" className="hover:text-primary inline-flex items-center gap-1">
+                                {r.title}<ExternalLink className="h-3 w-3" />
+                              </a>
+                            ) : r.title}
+                            {r.category && (
+                              <div className="text-[10px] uppercase tracking-wider text-muted-foreground mt-0.5">
+                                {t.categories[r.category as EventCategory] ?? r.category}
+                              </div>
+                            )}
+                          </TableCell>
+                          <TableCell className="text-sm text-muted-foreground">{r.location || "—"}</TableCell>
+                          <TableCell className="text-sm">{r.distances || "—"}</TableCell>
+                          <TableCell className="text-sm text-muted-foreground">{r.organizer_name || "—"}</TableCell>
+                          <TableCell className="text-right">
+                            {r.source === "platform" ? (
+                              <Button asChild size="sm" variant="outline">
+                                <Link to={r.url ?? "#"}>{lang === "uk" ? "Деталі" : "Details"}</Link>
                               </Button>
-                              <Button size="icon" variant="ghost" onClick={() => remove(r.id)} title={lang === "uk" ? "Видалити" : "Delete"}>
-                                <Trash2 className="h-4 w-4" />
-                              </Button>
-                            </>
-                          )}
-                        </div>
-                      )}
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                            ) : (
+                              <div className="flex justify-end gap-1">
+                                {isAdmin && (
+                                  <>
+                                    <Button size="icon" variant="ghost" onClick={() => openEdit(r)} title={lang === "uk" ? "Редагувати" : "Edit"}>
+                                      <Pencil className="h-4 w-4" />
+                                    </Button>
+                                    <Button size="icon" variant="ghost" onClick={() => remove(r.id)} title={lang === "uk" ? "Видалити" : "Delete"}>
+                                      <Trash2 className="h-4 w-4" />
+                                    </Button>
+                                  </>
+                                )}
+                              </div>
+                            )}
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </section>
+              ))}
+            </div>
           )}
         </div>
       </main>
