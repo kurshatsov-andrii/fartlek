@@ -443,6 +443,18 @@ const Ticket = () => {
           </div>
         )}
 
+        <RegistrationSelfService
+          registration={data}
+          onChanged={async () => {
+            const { data: reg } = await supabase
+              .from("registrations")
+              .select(`*, events(*), distances(*), athletes(full_name, birth_date, gender, city, club)`)
+              .eq("id", data.id)
+              .maybeSingle();
+            if (reg) setData(reg);
+          }}
+        />
+
         <Dialog open={deliveryOpen} onOpenChange={setDeliveryOpen}>
           <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
             <DialogHeader>
