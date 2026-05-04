@@ -903,6 +903,24 @@ const EventEditor = () => {
                         </div>
                       </div>
                     )}
+
+                    <div className="flex items-center gap-3 pt-3 border-t border-border">
+                      <Switch
+                        id={`delivery-${i}`}
+                        checked={d.delivery_enabled}
+                        onCheckedChange={(v) => { const c = [...distances]; c[i].delivery_enabled = v; setDistances(c); }}
+                      />
+                      <div className="flex-1">
+                        <Label htmlFor={`delivery-${i}`} className="cursor-pointer">
+                          {lang === "uk" ? "Доставка Новою Поштою" : "Nova Poshta delivery"}
+                        </Label>
+                        <p className="text-xs text-muted-foreground">
+                          {lang === "uk"
+                            ? "Дозволити учасникам цієї дистанції замовити доставку медалі / стартового пакету (рекомендовано для онлайн-дистанцій)."
+                            : "Let participants on this distance order delivery of the medal / starter pack (recommended for online distances)."}
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 </div>
               ))}
