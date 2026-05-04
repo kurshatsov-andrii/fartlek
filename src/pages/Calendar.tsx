@@ -311,6 +311,13 @@ const CalendarPage = () => {
                 </DialogFooter>
               </DialogContent>
             </Dialog>
+          ) : (
+            <Button asChild variant="outline" title={lang === "uk" ? "Увійдіть як організатор або адмін, щоб додати подію" : "Sign in as organizer or admin to add an event"}>
+              <Link to={user ? "/auth?role=organizer" : "/auth?role=organizer"}>
+                <Plus className="h-4 w-4" />
+                {lang === "uk" ? "Додати подію" : "Add event"}
+              </Link>
+            </Button>
           )}
         </div>
 
