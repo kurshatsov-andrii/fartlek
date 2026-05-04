@@ -85,6 +85,10 @@ const EventDetails = () => {
     }
   }, [isRelay, relayLegs, selectedDistance]);
   useEffect(() => { setPromo(null); }, [selectedDistance]);
+  useEffect(() => {
+    const dist = distances.find((d) => d.id === selectedDistance);
+    if (!dist?.delivery_enabled) setDelivery(emptyDelivery());
+  }, [selectedDistance, distances]);
 
   const reloadAthletes = async (uid: string, eventId: string) => {
     const { data: ats } = await supabase.from("athletes").select("*").eq("owner_id", uid)
