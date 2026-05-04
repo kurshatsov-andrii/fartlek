@@ -117,7 +117,7 @@ export interface Dict {
   };
 }
 
-export const EVENT_CATEGORIES = ["run", "half_marathon", "marathon", "ultra", "trail", "ocr", "online"] as const;
+export const EVENT_CATEGORIES = ["run", "half_marathon", "marathon", "ultra", "trail", "ocr", "online", "swim", "aquathlon", "duathlon", "cycling", "triathlon"] as const;
 export type EventCategory = typeof EVENT_CATEGORIES[number];
 
 export const translations: Record<Lang, Dict> = {
