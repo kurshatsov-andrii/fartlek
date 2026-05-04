@@ -61,6 +61,51 @@ export type Database = {
           },
         ]
       }
+      calendar_events: {
+        Row: {
+          category: string | null
+          created_at: string
+          created_by: string | null
+          distances: string | null
+          event_date: string
+          id: string
+          location: string | null
+          notes: string | null
+          organizer_name: string | null
+          title: string
+          updated_at: string
+          url: string | null
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string
+          created_by?: string | null
+          distances?: string | null
+          event_date: string
+          id?: string
+          location?: string | null
+          notes?: string | null
+          organizer_name?: string | null
+          title: string
+          updated_at?: string
+          url?: string | null
+        }
+        Update: {
+          category?: string | null
+          created_at?: string
+          created_by?: string | null
+          distances?: string | null
+          event_date?: string
+          id?: string
+          location?: string | null
+          notes?: string | null
+          organizer_name?: string | null
+          title?: string
+          updated_at?: string
+          url?: string | null
+        }
+        Relationships: []
+      }
       clubs: {
         Row: {
           activity_types: Database["public"]["Enums"]["club_activity_type"][]
