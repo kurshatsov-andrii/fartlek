@@ -50,7 +50,8 @@ const emptyForm = {
 
 const CalendarPage = () => {
   const { lang, t } = useApp();
-  const { isAdmin } = useAuth();
+  const { isAdmin, isOrganizer, user } = useAuth();
+  const canManage = isAdmin || isOrganizer;
   const [loading, setLoading] = useState(true);
   const [platformRows, setPlatformRows] = useState<Row[]>([]);
   const [calendarRows, setCalendarRows] = useState<Row[]>([]);
