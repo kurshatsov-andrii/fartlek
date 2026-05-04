@@ -57,6 +57,8 @@ const MyEvents = () => {
       .then(({ data }) => { setRegs(data ?? []); setLoading(false); });
   }, [user]);
 
+  useEffect(() => { reload(); /* eslint-disable-next-line */ }, [user]);
+
   if (authLoading) return null;
   if (!user) return <Navigate to="/auth" replace />;
 
@@ -64,7 +66,12 @@ const MyEvents = () => {
     <div className="min-h-screen flex flex-col bg-background">
       <Header />
       <main className="flex-1 container max-w-4xl py-12">
-        <h1 className="font-display text-4xl font-bold">{t.nav.myEvents}</h1>
+        <div className="flex items-center justify-between gap-4 flex-wrap">
+          <h1 className="font-display text-4xl font-bold">{t.nav.myEvents}</h1>
+          <Button variant="outline" onClick={() => setTransferOpen(true)}>
+            <Inbox className="h-4 w-4" /> {lang === "uk" ? "Прийняти передачу" : "Accept transfer"}
+          </Button>
+        </div>
         {loading ? (
           <div className="flex justify-center py-20"><Loader2 className="h-6 w-6 animate-spin" /></div>
         ) : regs.length === 0 ? (
