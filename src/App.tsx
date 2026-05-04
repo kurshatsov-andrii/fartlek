@@ -16,6 +16,7 @@ import MyEvents from "./pages/MyEvents.tsx";
 import Participants from "./pages/Participants.tsx";
 import OrganizerDashboard from "./pages/OrganizerDashboard.tsx";
 import EventAnalytics from "./pages/EventAnalytics.tsx";
+import EventChangesAdmin from "./pages/EventChangesAdmin.tsx";
 import PromoCodes from "./pages/PromoCodes.tsx";
 import EventEditor from "./pages/EventEditor.tsx";
 import OrganizerEventCampaign from "./pages/OrganizerEventCampaign.tsx";
