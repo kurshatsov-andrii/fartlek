@@ -18,6 +18,35 @@ const MyEvents = () => {
   const [regs, setRegs] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [docDialog, setDocDialog] = useState<{ url: string; title: string } | null>(null);
+  const [transferOpen, setTransferOpen] = useState(false);
+  const [transferCode, setTransferCode] = useState("");
+  const [acceptingTransfer, setAcceptingTransfer] = useState(false);
+
+  const reload = () => {
+    if (!user) return;
+    supabase.from("registrations")
+      .select("*, events(*), distances(*), athletes(full_name, is_self)")
+      .eq("user_id", user.id)
+      .order("created_at", { ascending: false })
+      .then(({ data }) => { setRegs(data ?? []); setLoading(false); });
+  };
+
+  const acceptTransfer = async () => {
+    if (!transferCode.trim()) return;
+    setAcceptingTransfer(true);
+    try {
+      const { error } = await supabase.rpc("participant_accept_transfer", { _code: transferCode.trim() });
+      if (error) throw error;
+      toast.success(lang === "uk" ? "Реєстрацію передано вам" : "Registration transferred to you");
+      setTransferOpen(false);
+      setTransferCode("");
+      reload();
+    } catch (e: any) {
+      toast.error(e.message);
+    } finally {
+      setAcceptingTransfer(false);
+    }
+  };
 
   useEffect(() => {
     if (!user) return;
