@@ -142,6 +142,25 @@ const CalendarPage = () => {
     return list;
   }, [allRows, search, catFilter, monthFilter, sortBy, lang]);
 
+  const grouped = useMemo(() => {
+    const map = new Map<string, Row[]>();
+    filtered.forEach((r) => {
+      const key = r.event_date.slice(0, 7);
+      if (!map.has(key)) map.set(key, []);
+      map.get(key)!.push(r);
+    });
+    const keys = Array.from(map.keys()).sort((a, b) =>
+      sortBy === "date_desc" ? b.localeCompare(a) : a.localeCompare(b)
+    );
+    return keys.map((k) => {
+      const d = new Date(k + "-01");
+      const label = d.toLocaleDateString(lang === "uk" ? "uk-UA" : "en-US", {
+        month: "long", year: "numeric",
+      });
+      return { key: k, label: label.charAt(0).toUpperCase() + label.slice(1), rows: map.get(k)! };
+    });
+  }, [filtered, sortBy, lang]);
+
   const fmtDate = (iso: string) => {
     const d = new Date(iso);
     return d.toLocaleDateString(lang === "uk" ? "uk-UA" : "en-US", {
