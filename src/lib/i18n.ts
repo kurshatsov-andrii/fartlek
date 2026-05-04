@@ -14,6 +14,7 @@ export interface Dict {
     description: string; location: string; selectDistance: string;
     confirmRegister: string; alreadyRegistered: string; viewTicket: string;
     backToEvents: string;
+    registrationClosedTitle: string; registrationClosedHint: string;
     completedHeading: string; completedSub: string; completedEmpty: string;
     results: string; resultsTitle: string; resultsHint: string; resultsNone: string;
     downloadResults: string; uploadResults: string; uploadingResults: string;
