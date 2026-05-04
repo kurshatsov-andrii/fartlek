@@ -140,6 +140,8 @@ export const translations: Record<Lang, Dict> = {
       selectDistance: "Обери дистанцію", confirmRegister: "Підтвердити реєстрацію",
       alreadyRegistered: "Ти вже зареєстрований", viewTicket: "Переглянути квиток",
       backToEvents: "До списку подій",
+      registrationClosedTitle: "Реєстрація закрита",
+      registrationClosedHint: "Слоти на цю подію закінчилися. Слідкуй за оновленнями організатора.",
       completedHeading: "Завершені події",
       completedSub: "Архів подій з протоколами результатів.",
       completedEmpty: "Поки що немає завершених подій",
