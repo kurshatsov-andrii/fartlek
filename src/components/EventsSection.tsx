@@ -137,7 +137,15 @@ export const EventsSection = () => {
                     </div>
                     
                     <div className="mt-6 flex items-center gap-2 pt-4 border-t border-border">
-                      <Button asChild className="flex-1"><Link to={`/events/${ev.slug ?? ev.id}`}>{t.events.register}</Link></Button>
+                      {ev.registration_closed ? (
+                        <Button asChild variant="outline" className="flex-1" disabled>
+                          <Link to={`/events/${ev.slug ?? ev.id}`}>
+                            {lang === "uk" ? "Реєстрація закрита" : "Registration closed"}
+                          </Link>
+                        </Button>
+                      ) : (
+                        <Button asChild className="flex-1"><Link to={`/events/${ev.slug ?? ev.id}`}>{t.events.register}</Link></Button>
+                      )}
                       <Button asChild variant="outline" size="icon" aria-label={t.events.details}>
                         <Link to={`/events/${ev.slug ?? ev.id}`}><ArrowUpRight className="h-4 w-4" /></Link>
                       </Button>
