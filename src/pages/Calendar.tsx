@@ -362,10 +362,10 @@ const CalendarPage = () => {
             <div className="divide-y divide-border">
               {grouped.map((group) => (
                 <section key={group.key}>
-                  <div className="sticky top-0 z-10 bg-primary/10 backdrop-blur px-4 py-2 border-b border-border">
+                  <div className="sticky top-0 z-10 bg-primary text-primary-foreground px-4 py-2 border-b border-border">
                     <h2 className="font-display text-lg font-semibold tracking-tight">
                       {group.label}
-                      <span className="ml-2 text-xs font-normal text-muted-foreground">
+                      <span className="ml-2 text-xs font-normal opacity-80">
                         {group.rows.length}
                       </span>
                     </h2>
@@ -385,7 +385,7 @@ const CalendarPage = () => {
                       {group.rows.map((r, idx) => (
                         <TableRow
                           key={`${r.source}-${r.id}`}
-                          className={idx % 2 === 0 ? "bg-background" : "bg-muted/40"}
+                          className={`hover:bg-inherit ${idx % 2 === 0 ? "bg-background" : "bg-muted/40"}`}
                         >
                           <TableCell className="whitespace-nowrap text-sm">{fmtDate(r.event_date)}</TableCell>
                           <TableCell className="font-medium">
