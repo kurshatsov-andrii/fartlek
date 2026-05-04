@@ -205,7 +205,7 @@ const CalendarPage = () => {
     };
     const { error } = form.id
       ? await supabase.from("calendar_events" as any).update(payload).eq("id", form.id)
-      : await supabase.from("calendar_events" as any).insert(payload);
+      : await supabase.from("calendar_events" as any).insert({ ...payload, created_by: user?.id });
     setBusy(false);
     if (error) return toast.error(error.message);
     toast.success(lang === "uk" ? "Збережено" : "Saved");
