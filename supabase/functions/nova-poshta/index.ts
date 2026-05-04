@@ -76,7 +76,7 @@ Deno.serve(async (req) => {
     if (action === "searchCities") {
       const addresses = json?.data?.[0]?.Addresses ?? [];
       const cities = addresses.map((a: any) => ({
-        ref: a.DeliveryCity || a.Ref,
+        ref: a.Ref || a.DeliveryCity,
         name: a.MainDescription || a.Present,
         area: a.Area,
         region: a.Region,
