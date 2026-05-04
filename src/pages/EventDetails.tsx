@@ -615,6 +615,10 @@ const EventDetails = () => {
                   );
                 })()}
 
+                {!!user && !isAlreadyRegistered && (
+                  <NovaPoshtaDelivery value={delivery} onChange={setDelivery} />
+                )}
+
                 <Button
                   onClick={register}
                   className="w-full"
