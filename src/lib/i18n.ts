@@ -444,6 +444,7 @@ export const translations: Record<Lang, Dict> = {
       label: "Category", all: "All",
       run: "Runs", half_marathon: "Half marathons", marathon: "Marathons",
       ultra: "Ultra", trail: "Trail", ocr: "OCR", online: "Online",
+      swim: "Swim", aquathlon: "Aquathlon", duathlon: "Duathlon", cycling: "Cycling", triathlon: "Triathlon",
     },
     format: {
       label: "Event format",
