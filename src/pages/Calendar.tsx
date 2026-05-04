@@ -240,7 +240,7 @@ const CalendarPage = () => {
             </h1>
             <p className="mt-3 text-muted-foreground max-w-2xl">{seoDesc}</p>
           </div>
-          {canManage && (
+          {canManage ? (
             <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
               <DialogTrigger asChild>
                 <Button onClick={openCreate}>
