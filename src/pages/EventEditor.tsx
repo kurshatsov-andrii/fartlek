@@ -56,7 +56,7 @@ const EventEditor = () => {
   const [uploadingResults, setUploadingResults] = useState(false);
   const [uploadingRegulations, setUploadingRegulations] = useState(false);
   const [uploadingDescImage, setUploadingDescImage] = useState(false);
-  const [distances, setDistances] = useState<DistanceForm[]>([{ distance_km: "10", name: "", price: "0", bib_start: "", is_relay: false, relay_legs_count: "4", relay_categories: ["mix", "men", "women"], relay_legs: ["", "", "", ""] }]);
+  const [distances, setDistances] = useState<DistanceForm[]>([{ distance_km: "10", name: "", price: "0", bib_start: "", is_relay: false, relay_legs_count: "4", relay_categories: ["mix", "men", "women"], relay_legs: ["", "", "", ""], delivery_enabled: false }]);
   const [clubOptions, setClubOptions] = useState<{ id: string; name: string; city: string | null }[]>([]);
   const [clubPickerOpen, setClubPickerOpen] = useState(false);
 
@@ -119,6 +119,7 @@ const EventEditor = () => {
         relay_legs: Array.isArray(d.relay_legs)
           ? (d.relay_legs as any[]).map((x) => String(x ?? ""))
           : Array.from({ length: d.relay_legs_count ?? 4 }, () => ""),
+        delivery_enabled: !!d.delivery_enabled,
       })));
       setLoadedFor(id ?? null);
       setLoading(false);
@@ -305,6 +306,7 @@ const EventEditor = () => {
         relay_legs_count: d.is_relay && d.relay_legs_count ? parseInt(d.relay_legs_count, 10) : null,
         relay_categories: d.is_relay && d.relay_categories.length > 0 ? d.relay_categories : ["mix", "men", "women"],
         relay_legs: d.is_relay ? d.relay_legs.slice(0, parseInt(d.relay_legs_count || "0", 10) || d.relay_legs.length).map((v) => parseFloat(v) || 0) : null,
+        delivery_enabled: d.delivery_enabled,
       } as any).eq("id", d.id!);
       if (uErr) { toast.error(uErr.message); setBusy(false); return; }
     }
@@ -321,6 +323,7 @@ const EventEditor = () => {
       relay_legs_count: d.is_relay && d.relay_legs_count ? parseInt(d.relay_legs_count, 10) : null,
       relay_categories: d.is_relay && d.relay_categories.length > 0 ? d.relay_categories : ["mix", "men", "women"],
       relay_legs: d.is_relay ? d.relay_legs.slice(0, parseInt(d.relay_legs_count || "0", 10) || d.relay_legs.length).map((v) => parseFloat(v) || 0) : null,
+      delivery_enabled: d.delivery_enabled,
     }));
     if (newRows.length > 0) {
       const { error: iErr } = await supabase.from("distances").insert(newRows as any);
@@ -904,7 +907,7 @@ const EventEditor = () => {
                 </div>
               ))}
               <Button type="button" variant="outline" size="sm"
-                onClick={() => setDistances([...distances, { distance_km: "", name: "", price: "0", bib_start: "", is_relay: false, relay_legs_count: "4", relay_categories: ["mix", "men", "women"], relay_legs: ["", "", "", ""] }])}>
+                onClick={() => setDistances([...distances, { distance_km: "", name: "", price: "0", bib_start: "", is_relay: false, relay_legs_count: "4", relay_categories: ["mix", "men", "women"], relay_legs: ["", "", "", ""], delivery_enabled: false }])}>
                 <Plus className="h-4 w-4" /> {t.organizer.addDistance}
               </Button>
             </div>
