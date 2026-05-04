@@ -33,6 +33,9 @@ const Ticket = () => {
   const [redemption, setRedemption] = useState<{ discount_amount: number; promo_code_id: string; code?: string } | null>(null);
   const [promo, setPromo] = useState<PromoPreview | null>(null);
   const [hasPromoCodes, setHasPromoCodes] = useState(false);
+  const [deliveryOpen, setDeliveryOpen] = useState(false);
+  const [deliveryDraft, setDeliveryDraft] = useState<DeliveryData>(emptyDelivery());
+  const [savingDelivery, setSavingDelivery] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
