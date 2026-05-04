@@ -109,6 +109,7 @@ const CalendarPage = () => {
       category: c.category,
       url: c.url,
       notes: c.notes,
+      created_by: c.created_by,
     })));
 
     setLoading(false);
