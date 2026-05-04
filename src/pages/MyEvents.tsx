@@ -149,6 +149,35 @@ const MyEvents = () => {
           title={docDialog.title}
         />
       )}
+
+      <Dialog open={transferOpen} onOpenChange={setTransferOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{lang === "uk" ? "Прийняти передачу реєстрації" : "Accept registration transfer"}</DialogTitle>
+          </DialogHeader>
+          <p className="text-sm text-muted-foreground">
+            {lang === "uk"
+              ? "Введіть код передачі, який вам надав інший учасник."
+              : "Enter the transfer code provided by another participant."}
+          </p>
+          <Input
+            placeholder="ABCD1234"
+            value={transferCode}
+            onChange={(e) => setTransferCode(e.target.value.toUpperCase())}
+            maxLength={32}
+            className="font-mono"
+          />
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setTransferOpen(false)}>
+              {lang === "uk" ? "Скасувати" : "Cancel"}
+            </Button>
+            <Button onClick={acceptTransfer} disabled={acceptingTransfer || !transferCode.trim()}>
+              {acceptingTransfer && <Loader2 className="h-4 w-4 animate-spin" />}
+              {lang === "uk" ? "Прийняти" : "Accept"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
