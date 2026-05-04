@@ -50,6 +50,7 @@ const App = () => (
           <Sonner />
           <BrowserRouter>
             <ProfileCompletionGate />
+            <AdminOnlinePresence />
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/auth" element={<Auth />} />
