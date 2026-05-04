@@ -34,6 +34,7 @@ interface Row {
   category: string | null;
   url: string | null;
   notes?: string | null;
+  created_by?: string | null;
 }
 
 const emptyForm = {
