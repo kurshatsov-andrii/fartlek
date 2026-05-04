@@ -385,7 +385,7 @@ const CalendarPage = () => {
                       {group.rows.map((r, idx) => (
                         <TableRow
                           key={`${r.source}-${r.id}`}
-                          className={idx % 2 === 0 ? "bg-background" : "bg-muted/40"}
+                          className={`hover:bg-inherit ${idx % 2 === 0 ? "bg-background" : "bg-muted/40"}`}
                         >
                           <TableCell className="whitespace-nowrap text-sm">{fmtDate(r.event_date)}</TableCell>
                           <TableCell className="font-medium">
