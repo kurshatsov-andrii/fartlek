@@ -35,7 +35,7 @@ const EventEditor = () => {
   const [form, setForm] = useState({
     title: "", description: "", organizer_name: "",
     event_date: "", event_time: "", location: "",
-    image_url: "", is_paid: false, payment_url: "", status: "draft",
+    image_url: "", is_paid: false, payment_url: "", status: "draft", registration_closed: false,
     category: "run" as EventCategory,
     format: "offline" as "offline" | "online" | "hybrid",
     results_pdf_url: "",
