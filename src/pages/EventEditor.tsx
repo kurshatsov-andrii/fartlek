@@ -778,6 +778,24 @@ const EventEditor = () => {
               </Select>
             </div>
 
+            <div className="flex items-center gap-3 rounded-xl border border-border bg-muted/30 p-3">
+              <Switch
+                id="registration_closed"
+                checked={form.registration_closed}
+                onCheckedChange={(v) => setForm({ ...form, registration_closed: v })}
+              />
+              <div className="flex-1">
+                <Label htmlFor="registration_closed" className="cursor-pointer">
+                  {lang === "uk" ? "Реєстрація закрита (слоти закінчились)" : "Registration closed (slots full)"}
+                </Label>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  {lang === "uk"
+                    ? "Подія залишиться на сайті, але учасники не зможуть зареєструватись."
+                    : "Event stays visible, but new registrations will be disabled."}
+                </p>
+              </div>
+            </div>
+
             <div className="space-y-2">
               <Label>{t.categories.label} *</Label>
               <Select value={form.category} onValueChange={(v) => setForm({ ...form, category: v as EventCategory })}>
