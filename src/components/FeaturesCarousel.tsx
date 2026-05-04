@@ -8,8 +8,10 @@ import organizers1 from "@/assets/features/organizers-1.png";
 import organizers2 from "@/assets/features/organizers-2.png";
 import technical from "@/assets/features/technical.png";
 import admin from "@/assets/features/admin.png";
+import toolkit from "@/assets/features/toolkit.png";
 
 const slides = [
+  { src: toolkit, uk: "Повний набір інструментів", en: "Complete toolkit" },
   { src: participants, uk: "Для учасників", en: "For participants" },
   { src: organizers1, uk: "Для організаторів", en: "For organizers" },
   { src: organizers2, uk: "Промокоди, фінанси, результати", en: "Promo codes, finances, results" },
