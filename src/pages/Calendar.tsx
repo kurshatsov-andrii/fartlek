@@ -34,6 +34,7 @@ interface Row {
   category: string | null;
   url: string | null;
   notes?: string | null;
+  created_by?: string | null;
 }
 
 const emptyForm = {
@@ -50,7 +51,8 @@ const emptyForm = {
 
 const CalendarPage = () => {
   const { lang, t } = useApp();
-  const { isAdmin } = useAuth();
+  const { isAdmin, isOrganizer, user } = useAuth();
+  const canManage = isAdmin || isOrganizer;
   const [loading, setLoading] = useState(true);
   const [platformRows, setPlatformRows] = useState<Row[]>([]);
   const [calendarRows, setCalendarRows] = useState<Row[]>([]);
@@ -107,6 +109,7 @@ const CalendarPage = () => {
       category: c.category,
       url: c.url,
       notes: c.notes,
+      created_by: c.created_by,
     })));
 
     setLoading(false);
@@ -202,7 +205,7 @@ const CalendarPage = () => {
     };
     const { error } = form.id
       ? await supabase.from("calendar_events" as any).update(payload).eq("id", form.id)
-      : await supabase.from("calendar_events" as any).insert(payload);
+      : await supabase.from("calendar_events" as any).insert({ ...payload, created_by: user?.id });
     setBusy(false);
     if (error) return toast.error(error.message);
     toast.success(lang === "uk" ? "Збережено" : "Saved");
@@ -237,7 +240,7 @@ const CalendarPage = () => {
             </h1>
             <p className="mt-3 text-muted-foreground max-w-2xl">{seoDesc}</p>
           </div>
-          {isAdmin && (
+          {canManage && (
             <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
               <DialogTrigger asChild>
                 <Button onClick={openCreate}>
@@ -414,7 +417,7 @@ const CalendarPage = () => {
                               </Button>
                             ) : (
                               <div className="flex justify-end gap-1">
-                                {isAdmin && (
+                                {(isAdmin || (isOrganizer && r.created_by === user?.id)) && (
                                   <>
                                     <Button size="icon" variant="ghost" onClick={() => openEdit(r)} title={lang === "uk" ? "Редагувати" : "Edit"}>
                                       <Pencil className="h-4 w-4" />
