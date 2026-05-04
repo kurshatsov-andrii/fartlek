@@ -37,6 +37,7 @@ import Survey from "./pages/Survey.tsx";
 import AdminSurvey from "./pages/AdminSurvey.tsx";
 import CalendarPage from "./pages/Calendar.tsx";
 import { ProfileCompletionGate } from "./components/ProfileCompletionGate";
+import { AdminOnlinePresence } from "./components/AdminOnlinePresence";
 
 const queryClient = new QueryClient();
 
@@ -49,6 +50,7 @@ const App = () => (
           <Sonner />
           <BrowserRouter>
             <ProfileCompletionGate />
+            <AdminOnlinePresence />
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/auth" element={<Auth />} />
