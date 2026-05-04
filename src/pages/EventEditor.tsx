@@ -89,6 +89,7 @@ const EventEditor = () => {
           image_url: ev.image_url ?? "", is_paid: ev.is_paid,
           payment_url: (ev as any).payment_url ?? "",
           status: ev.status,
+          registration_closed: !!(ev as any).registration_closed,
           category: ((ev as any).category ?? "run") as EventCategory,
           format: ((ev as any).format ?? "offline") as "offline" | "online" | "hybrid",
           results_pdf_url: (ev as any).results_pdf_url ?? "",
