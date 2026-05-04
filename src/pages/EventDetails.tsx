@@ -20,6 +20,7 @@ import { buildEventSeo } from "@/lib/seo";
 import { linkifyText } from "@/lib/linkify";
 import { PromoCodeInput, PromoPreview } from "@/components/PromoCodeInput";
 import { EventChat } from "@/components/EventChat";
+import { NovaPoshtaDelivery, DeliveryData, emptyDelivery, validateDelivery } from "@/components/NovaPoshtaDelivery";
 import type { EventCategory } from "@/lib/i18n";
 
 interface EventRow {
@@ -62,6 +63,7 @@ const EventDetails = () => {
   const [teamName, setTeamName] = useState("");
   const [teamCategory, setTeamCategory] = useState<string>("");
   const [relayMembers, setRelayMembers] = useState<RelayMember[]>([]);
+  const [delivery, setDelivery] = useState<DeliveryData>(emptyDelivery());
 
   const selectedDist = distances.find((d) => d.id === selectedDistance);
   const isRelay = !!selectedDist?.is_relay;
@@ -189,6 +191,9 @@ const EventDetails = () => {
       if (!allFilled) { setBusy(false); toast.error(t.relay.fillAllMembers); return; }
     }
 
+    const deliveryError = validateDelivery(delivery, lang);
+    if (deliveryError) { setBusy(false); toast.error(deliveryError); return; }
+
     const isPaidReg = event.is_paid && dist.price > 0;
     const qrPayload = JSON.stringify({ e: event.id, u: user.id, a: distIsRelay ? null : selectedAthlete, d: dist.id, t: Date.now() });
     const insertPayload: any = {
@@ -210,6 +215,16 @@ const EventDetails = () => {
       insertPayload.athlete_id = selectedAthlete || null;
     } else {
       insertPayload.athlete_id = selectedAthlete;
+    }
+    if (delivery.enabled) {
+      insertPayload.delivery_enabled = true;
+      insertPayload.delivery_recipient_name = delivery.recipient_name.trim();
+      insertPayload.delivery_phone = delivery.phone;
+      insertPayload.delivery_city_ref = delivery.city_ref;
+      insertPayload.delivery_city_name = delivery.city_name;
+      insertPayload.delivery_warehouse_ref = delivery.warehouse_ref;
+      insertPayload.delivery_warehouse_name = delivery.warehouse_name;
+      insertPayload.delivery_warehouse_type = delivery.warehouse_type;
     }
     const { data: reg, error } = await supabase.from("registrations").insert(insertPayload).select("id").single();
     if (error) { setBusy(false); toast.error(error.message); return; }
