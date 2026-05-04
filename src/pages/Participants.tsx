@@ -645,6 +645,7 @@ const Participants = () => {
                         <th className="p-3 font-semibold">{lang === "uk" ? "Рік" : "Year"}</th>
                         <th className="p-3 font-semibold">{t.profile.city}</th>
                         <th className="p-3 font-semibold">{t.profile.club}</th>
+                        {isOrganizer && <th className="p-3 font-semibold">{lang === "uk" ? "Доставка НП" : "NP delivery"}</th>}
                         {isOrganizer && <th className="p-3 font-semibold">{lang === "uk" ? "Доданий" : "Added by"}</th>}
                         {isPaid && <th className="p-3 font-semibold text-center">{lang === "uk" ? "Оплата" : "Payment"}</th>}
                         {isPaid && isOrganizer && <th className="p-3 font-semibold text-center">{lang === "uk" ? "Квитанція" : "Receipt"}</th>}
