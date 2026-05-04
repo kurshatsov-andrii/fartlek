@@ -118,6 +118,7 @@ const Features = () => {
         { icon: Ticket, title: "Bib number", desc: "Assigned by the organizer and shown on your ticket." },
         { icon: CalendarPlus, title: "Add to calendar", desc: "One click to add the event to Google Calendar, Outlook or Apple Calendar." },
         { icon: Trophy, title: "Race results", desc: "After the finish, organizers upload results — see your time and position." },
+        { icon: ImageIcon, title: "Event photos", desc: "Organizers attach a photo album link — open it right from the completed event card." },
       ],
     },
     {
