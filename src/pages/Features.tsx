@@ -97,6 +97,7 @@ const Features = () => {
         { icon: MapPin, title: "Filters by category", desc: "Quickly find races by type, format (offline / online / hybrid) and location." },
         { icon: CheckCircle2, title: "Register yourself or a child", desc: "One account — multiple athlete profiles. Register yourself, children or family." },
         { icon: CreditCard, title: "Online payments", desc: "Secure WayForPay payments via Visa/Mastercard, Apple Pay, Google Pay." },
+        { icon: Calendar, title: "Upcoming events calendar", desc: "Dedicated page with every upcoming race in Ukraine — both from the platform and added by admins or organizers. Filters by category, month, search and sorting." },
       ],
     },
     {
