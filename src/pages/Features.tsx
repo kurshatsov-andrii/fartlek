@@ -175,6 +175,7 @@ const Features = () => {
         { icon: Tag, title: "Paid & free races", desc: "Flexible pricing per distance or fully free registration." },
         { icon: Clock, title: "Event status", desc: "Draft → Published → Completed. Control visibility on the site." },
         { icon: Users, title: "Co-organizers", desc: "Add multiple organizers to one event — each gets full access." },
+        { icon: CalendarPlus, title: "Add to events calendar", desc: "Publish your upcoming races in the shared Events Calendar — even if registration runs outside the platform. You can only edit and delete your own entries." },
       ],
     },
     {
