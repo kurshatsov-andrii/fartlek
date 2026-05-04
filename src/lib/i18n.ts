@@ -335,6 +335,8 @@ export const translations: Record<Lang, Dict> = {
       selectDistance: "Select a distance", confirmRegister: "Confirm registration",
       alreadyRegistered: "You're already registered", viewTicket: "View ticket",
       backToEvents: "Back to events",
+      registrationClosedTitle: "Registration closed",
+      registrationClosedHint: "Slots for this event are full. Watch for updates from the organizer.",
       completedHeading: "Past events",
       completedSub: "Archive of finished events with result protocols.",
       completedEmpty: "No completed events yet",
