@@ -515,6 +515,7 @@ export type Database = {
       events: {
         Row: {
           category: Database["public"]["Enums"]["event_category"]
+          changes_deadline_days: number
           created_at: string
           description: string | null
           description_image_url: string | null
@@ -540,6 +541,7 @@ export type Database = {
         }
         Insert: {
           category?: Database["public"]["Enums"]["event_category"]
+          changes_deadline_days?: number
           created_at?: string
           description?: string | null
           description_image_url?: string | null
@@ -565,6 +567,7 @@ export type Database = {
         }
         Update: {
           category?: Database["public"]["Enums"]["event_category"]
+          changes_deadline_days?: number
           created_at?: string
           description?: string | null
           description_image_url?: string | null
@@ -861,6 +864,114 @@ export type Database = {
         }
         Relationships: []
       }
+      registration_cancellation_requests: {
+        Row: {
+          created_at: string
+          event_id: string
+          id: string
+          reason: string | null
+          registration_id: string
+          resolution_note: string | null
+          resolved_at: string | null
+          resolved_by: string | null
+          status: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          event_id: string
+          id?: string
+          reason?: string | null
+          registration_id: string
+          resolution_note?: string | null
+          resolved_at?: string | null
+          resolved_by?: string | null
+          status?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          event_id?: string
+          id?: string
+          reason?: string | null
+          registration_id?: string
+          resolution_note?: string | null
+          resolved_at?: string | null
+          resolved_by?: string | null
+          status?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      registration_history: {
+        Row: {
+          action: string
+          actor_id: string | null
+          created_at: string
+          event_id: string
+          id: string
+          payload: Json
+          registration_id: string | null
+        }
+        Insert: {
+          action: string
+          actor_id?: string | null
+          created_at?: string
+          event_id: string
+          id?: string
+          payload?: Json
+          registration_id?: string | null
+        }
+        Update: {
+          action?: string
+          actor_id?: string | null
+          created_at?: string
+          event_id?: string
+          id?: string
+          payload?: Json
+          registration_id?: string | null
+        }
+        Relationships: []
+      }
+      registration_transfers: {
+        Row: {
+          accepted_at: string | null
+          code: string
+          created_at: string
+          event_id: string
+          expires_at: string
+          from_user_id: string
+          id: string
+          registration_id: string
+          status: string
+          to_user_id: string | null
+        }
+        Insert: {
+          accepted_at?: string | null
+          code: string
+          created_at?: string
+          event_id: string
+          expires_at?: string
+          from_user_id: string
+          id?: string
+          registration_id: string
+          status?: string
+          to_user_id?: string | null
+        }
+        Update: {
+          accepted_at?: string | null
+          code?: string
+          created_at?: string
+          event_id?: string
+          expires_at?: string
+          from_user_id?: string
+          id?: string
+          registration_id?: string
+          status?: string
+          to_user_id?: string | null
+        }
+        Relationships: []
+      }
       registrations: {
         Row: {
           athlete_id: string | null
@@ -1153,6 +1264,7 @@ export type Database = {
           promo_id: string
         }[]
       }
+      are_changes_allowed: { Args: { _event_id: string }; Returns: boolean }
       can_manage_event: {
         Args: { _event_id: string; _user_id: string }
         Returns: boolean
@@ -1279,6 +1391,32 @@ export type Database = {
           source_queue: string
         }
         Returns: number
+      }
+      organizer_resolve_cancellation: {
+        Args: { _approve: boolean; _note: string; _request_id: string }
+        Returns: undefined
+      }
+      participant_accept_transfer: { Args: { _code: string }; Returns: string }
+      participant_change_distance: {
+        Args: { _new_distance_id: string; _registration_id: string }
+        Returns: {
+          new_bib_number: number
+          new_distance_id: string
+          price_diff: number
+          requires_payment: boolean
+        }[]
+      }
+      participant_create_transfer: {
+        Args: { _registration_id: string }
+        Returns: {
+          code: string
+          expires_at: string
+          transfer_id: string
+        }[]
+      }
+      participant_request_cancellation: {
+        Args: { _reason: string; _registration_id: string }
+        Returns: string
       }
       read_email_batch: {
         Args: { batch_size: number; queue_name: string; vt: number }
