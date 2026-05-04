@@ -797,6 +797,25 @@ const EventEditor = () => {
             </div>
 
             <div className="space-y-2">
+              <Label htmlFor="changes_deadline_days">
+                {lang === "uk" ? "За скільки днів до події припинити самостійні зміни" : "Stop self-service changes N days before event"}
+              </Label>
+              <Input
+                id="changes_deadline_days"
+                type="number"
+                min={0}
+                max={60}
+                value={form.changes_deadline_days ?? 1}
+                onChange={(e) => setForm({ ...form, changes_deadline_days: Number(e.target.value) })}
+              />
+              <p className="text-xs text-muted-foreground">
+                {lang === "uk"
+                  ? "Учасник зможе сам змінювати дистанцію, передавати реєстрацію або просити відміну до цього дедлайну."
+                  : "Participants can change distance, transfer or request cancellation only before this deadline."}
+              </p>
+            </div>
+
+            <div className="space-y-2">
               <Label>{t.categories.label} *</Label>
               <Select value={form.category} onValueChange={(v) => setForm({ ...form, category: v as EventCategory })}>
                 <SelectTrigger><SelectValue /></SelectTrigger>
