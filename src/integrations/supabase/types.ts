@@ -529,6 +529,7 @@ export type Database = {
           organizer_name: string
           payment_url: string | null
           photos_url: string | null
+          registration_closed: boolean
           regulations_pdf_url: string | null
           results_pdf_url: string | null
           results_url: string | null
@@ -553,6 +554,7 @@ export type Database = {
           organizer_name: string
           payment_url?: string | null
           photos_url?: string | null
+          registration_closed?: boolean
           regulations_pdf_url?: string | null
           results_pdf_url?: string | null
           results_url?: string | null
@@ -577,6 +579,7 @@ export type Database = {
           organizer_name?: string
           payment_url?: string | null
           photos_url?: string | null
+          registration_closed?: boolean
           regulations_pdf_url?: string | null
           results_pdf_url?: string | null
           results_url?: string | null

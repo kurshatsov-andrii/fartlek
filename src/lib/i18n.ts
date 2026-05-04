@@ -14,6 +14,7 @@ export interface Dict {
     description: string; location: string; selectDistance: string;
     confirmRegister: string; alreadyRegistered: string; viewTicket: string;
     backToEvents: string;
+    registrationClosedTitle: string; registrationClosedHint: string;
     completedHeading: string; completedSub: string; completedEmpty: string;
     results: string; resultsTitle: string; resultsHint: string; resultsNone: string;
     downloadResults: string; uploadResults: string; uploadingResults: string;
@@ -139,6 +140,8 @@ export const translations: Record<Lang, Dict> = {
       selectDistance: "Обери дистанцію", confirmRegister: "Підтвердити реєстрацію",
       alreadyRegistered: "Ти вже зареєстрований", viewTicket: "Переглянути квиток",
       backToEvents: "До списку подій",
+      registrationClosedTitle: "Реєстрація закрита",
+      registrationClosedHint: "Слоти на цю подію закінчилися. Слідкуй за оновленнями організатора.",
       completedHeading: "Завершені події",
       completedSub: "Архів подій з протоколами результатів.",
       completedEmpty: "Поки що немає завершених подій",
@@ -332,6 +335,8 @@ export const translations: Record<Lang, Dict> = {
       selectDistance: "Select a distance", confirmRegister: "Confirm registration",
       alreadyRegistered: "You're already registered", viewTicket: "View ticket",
       backToEvents: "Back to events",
+      registrationClosedTitle: "Registration closed",
+      registrationClosedHint: "Slots for this event are full. Watch for updates from the organizer.",
       completedHeading: "Past events",
       completedSub: "Archive of finished events with result protocols.",
       completedEmpty: "No completed events yet",

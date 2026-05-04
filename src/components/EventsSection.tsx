@@ -13,6 +13,7 @@ interface EventCard {
   image_url: string | null; is_paid: boolean;
   category: EventCategory;
   format: "offline" | "online" | "hybrid";
+  registration_closed?: boolean;
   distances: { distance_km: number; price: number; is_active?: boolean }[];
 }
 
@@ -26,7 +27,7 @@ export const EventsSection = () => {
 
   useEffect(() => {
     supabase.from("events")
-      .select("id, slug, title, description, organizer_name, event_date, event_time, location, image_url, is_paid, category, format, distances(distance_km, price, is_active)")
+      .select("id, slug, title, description, organizer_name, event_date, event_time, location, image_url, is_paid, category, format, registration_closed, distances(distance_km, price, is_active)")
       .eq("status", "published")
       .order("event_date", { ascending: true })
       .then(({ data }) => { setEvents((data as any) ?? []); setLoading(false); });
@@ -136,7 +137,15 @@ export const EventsSection = () => {
                     </div>
                     
                     <div className="mt-6 flex items-center gap-2 pt-4 border-t border-border">
-                      <Button asChild className="flex-1"><Link to={`/events/${ev.slug ?? ev.id}`}>{t.events.register}</Link></Button>
+                      {ev.registration_closed ? (
+                        <Button asChild variant="outline" className="flex-1" disabled>
+                          <Link to={`/events/${ev.slug ?? ev.id}`}>
+                            {lang === "uk" ? "Реєстрація закрита" : "Registration closed"}
+                          </Link>
+                        </Button>
+                      ) : (
+                        <Button asChild className="flex-1"><Link to={`/events/${ev.slug ?? ev.id}`}>{t.events.register}</Link></Button>
+                      )}
                       <Button asChild variant="outline" size="icon" aria-label={t.events.details}>
                         <Link to={`/events/${ev.slug ?? ev.id}`}><ArrowUpRight className="h-4 w-4" /></Link>
                       </Button>

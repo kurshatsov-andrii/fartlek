@@ -35,7 +35,7 @@ const EventEditor = () => {
   const [form, setForm] = useState({
     title: "", description: "", organizer_name: "",
     event_date: "", event_time: "", location: "",
-    image_url: "", is_paid: false, payment_url: "", status: "draft",
+    image_url: "", is_paid: false, payment_url: "", status: "draft", registration_closed: false,
     category: "run" as EventCategory,
     format: "offline" as "offline" | "online" | "hybrid",
     results_pdf_url: "",
@@ -89,6 +89,7 @@ const EventEditor = () => {
           image_url: ev.image_url ?? "", is_paid: ev.is_paid,
           payment_url: (ev as any).payment_url ?? "",
           status: ev.status,
+          registration_closed: !!(ev as any).registration_closed,
           category: ((ev as any).category ?? "run") as EventCategory,
           format: ((ev as any).format ?? "offline") as "offline" | "online" | "hybrid",
           results_pdf_url: (ev as any).results_pdf_url ?? "",
@@ -775,6 +776,24 @@ const EventEditor = () => {
                   <SelectItem value="completed">{t.organizer.completed}</SelectItem>
                 </SelectContent>
               </Select>
+            </div>
+
+            <div className="flex items-center gap-3 rounded-xl border border-border bg-muted/30 p-3">
+              <Switch
+                id="registration_closed"
+                checked={form.registration_closed}
+                onCheckedChange={(v) => setForm({ ...form, registration_closed: v })}
+              />
+              <div className="flex-1">
+                <Label htmlFor="registration_closed" className="cursor-pointer">
+                  {lang === "uk" ? "Реєстрація закрита (слоти закінчились)" : "Registration closed (slots full)"}
+                </Label>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  {lang === "uk"
+                    ? "Подія залишиться на сайті, але учасники не зможуть зареєструватись."
+                    : "Event stays visible, but new registrations will be disabled."}
+                </p>
+              </div>
             </div>
 
             <div className="space-y-2">
