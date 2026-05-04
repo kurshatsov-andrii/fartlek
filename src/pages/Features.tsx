@@ -4,7 +4,8 @@ import {
   Users, Calendar, Ticket, MessageSquare, BarChart3, Tag, Mail, Shield, QrCode,
   Trophy, Bell, UserCircle, Edit3, Smile, Reply, AtSign, Image as ImageIcon,
   CalendarPlus, FileSpreadsheet, CreditCard, Globe, Clock, MapPin, Sparkles,
-  Megaphone, Building2, CheckCircle2, ArrowDown
+  Megaphone, Building2, CheckCircle2, ArrowDown, Truck, Repeat, Send, XCircle,
+  History, Lock, Activity
 } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
