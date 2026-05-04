@@ -8,13 +8,17 @@ import organizers1 from "@/assets/features/organizers-1.png";
 import organizers2 from "@/assets/features/organizers-2.png";
 import technical from "@/assets/features/technical.png";
 import admin from "@/assets/features/admin.png";
-import toolkit from "@/assets/features/toolkit.png";
+import calendar from "@/assets/features/calendar.png";
+import payments from "@/assets/features/payments.png";
+import clubs from "@/assets/features/clubs.png";
 
 const slides = [
-  { src: toolkit, uk: "Повний набір інструментів", en: "Complete toolkit" },
   { src: participants, uk: "Для учасників", en: "For participants" },
   { src: organizers1, uk: "Для організаторів", en: "For organizers" },
   { src: organizers2, uk: "Промокоди, фінанси, результати", en: "Promo codes, finances, results" },
+  { src: calendar, uk: "Календар подій", en: "Events calendar" },
+  { src: payments, uk: "Оплата участі", en: "Payments" },
+  { src: clubs, uk: "Клуби", en: "Clubs" },
   { src: technical, uk: "Технічні можливості", en: "Technical features" },
   { src: admin, uk: "Для адміністратора", en: "For administrator" },
 ];
