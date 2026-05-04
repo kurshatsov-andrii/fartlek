@@ -74,6 +74,7 @@ export interface Dict {
   categories: {
     label: string; all: string;
     run: string; half_marathon: string; marathon: string; ultra: string; trail: string; ocr: string; online: string;
+    swim: string; aquathlon: string; duathlon: string; cycling: string; triathlon: string;
   };
   format: {
     label: string; hint: string;
@@ -116,7 +117,7 @@ export interface Dict {
   };
 }
 
-export const EVENT_CATEGORIES = ["run", "half_marathon", "marathon", "ultra", "trail", "ocr", "online"] as const;
+export const EVENT_CATEGORIES = ["run", "half_marathon", "marathon", "ultra", "trail", "ocr", "online", "swim", "aquathlon", "duathlon", "cycling", "triathlon"] as const;
 export type EventCategory = typeof EVENT_CATEGORIES[number];
 
 export const translations: Record<Lang, Dict> = {
@@ -250,6 +251,7 @@ export const translations: Record<Lang, Dict> = {
       label: "Категорія", all: "Всі",
       run: "Забіги", half_marathon: "Напівмарафони", marathon: "Марафони",
       ultra: "Ультра", trail: "Трейл", ocr: "OCR", online: "Онлайн",
+      swim: "Запливи", aquathlon: "Акватлон", duathlon: "Дуатлон", cycling: "Велогонки", triathlon: "Триатлон",
     },
     format: {
       label: "Формат проведення",
@@ -442,6 +444,7 @@ export const translations: Record<Lang, Dict> = {
       label: "Category", all: "All",
       run: "Runs", half_marathon: "Half marathons", marathon: "Marathons",
       ultra: "Ultra", trail: "Trail", ocr: "OCR", online: "Online",
+      swim: "Swim", aquathlon: "Aquathlon", duathlon: "Duathlon", cycling: "Cycling", triathlon: "Triathlon",
     },
     format: {
       label: "Event format",

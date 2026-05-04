@@ -1316,6 +1316,11 @@ export type Database = {
         | "trail"
         | "ocr"
         | "online"
+        | "swim"
+        | "aquathlon"
+        | "duathlon"
+        | "cycling"
+        | "triathlon"
       event_format: "offline" | "online" | "hybrid"
       event_status: "draft" | "published" | "cancelled" | "completed"
       gender_type: "male" | "female" | "other" | "boy" | "girl"
@@ -1467,6 +1472,11 @@ export const Constants = {
         "trail",
         "ocr",
         "online",
+        "swim",
+        "aquathlon",
+        "duathlon",
+        "cycling",
+        "triathlon",
       ],
       event_format: ["offline", "online", "hybrid"],
       event_status: ["draft", "published", "cancelled", "completed"],

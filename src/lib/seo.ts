@@ -55,6 +55,11 @@ const CAT_TITLES: Record<Lang, Record<EventCategory, string>> = {
     trail: "Трейли в Україні — реєстрація онлайн | Fartlek Events",
     ocr: "OCR-забіги з перешкодами в Україні | Fartlek Events",
     online: "Онлайн-забіги в Україні — реєстрація | Fartlek Events",
+    swim: "Запливи в Україні — реєстрація онлайн | Fartlek Events",
+    aquathlon: "Акватлон в Україні — реєстрація | Fartlek Events",
+    duathlon: "Дуатлон в Україні — реєстрація | Fartlek Events",
+    cycling: "Велогонки в Україні — реєстрація онлайн | Fartlek Events",
+    triathlon: "Триатлон в Україні — реєстрація онлайн | Fartlek Events",
   },
   en: {
     run: "Road runs in Ukraine — online registration | Fartlek Events",
@@ -64,6 +69,11 @@ const CAT_TITLES: Record<Lang, Record<EventCategory, string>> = {
     trail: "Trail runs in Ukraine — online registration | Fartlek Events",
     ocr: "OCR obstacle races in Ukraine | Fartlek Events",
     online: "Online races in Ukraine — registration | Fartlek Events",
+    swim: "Open water swims in Ukraine — registration | Fartlek Events",
+    aquathlon: "Aquathlon races in Ukraine — registration | Fartlek Events",
+    duathlon: "Duathlon races in Ukraine — registration | Fartlek Events",
+    cycling: "Cycling races in Ukraine — online registration | Fartlek Events",
+    triathlon: "Triathlon races in Ukraine — online registration | Fartlek Events",
   },
 };
 
@@ -76,6 +86,11 @@ const CAT_DESCS: Record<Lang, Record<EventCategory, string>> = {
     trail: "Трейлові забіги в горах і лісах України. Онлайн-реєстрація, QR-квитки, миттєві результати.",
     ocr: "OCR-забіги з перешкодами в Україні. Hyrox, Spartan-формат, командні старти. Онлайн-реєстрація.",
     online: "Онлайн-забіги в Україні: біжи будь-де, завантажуй результат і отримуй медаль. Зручна реєстрація.",
+    swim: "Запливи на відкритій воді в Україні. Онлайн-реєстрація, QR-квитки, миттєві результати.",
+    aquathlon: "Старти з акватлону в Україні: плавання + біг. Онлайн-реєстрація, QR-квитки, протоколи.",
+    duathlon: "Дуатлон в Україні: біг + вело + біг. Календар стартів, онлайн-реєстрація, миттєві результати.",
+    cycling: "Велогонки в Україні — шосе, гравій, МТБ. Онлайн-реєстрація, QR-квитки, миттєві результати.",
+    triathlon: "Триатлон в Україні: плавання + вело + біг. Спринт, олімпійка, повна дистанція. Онлайн-реєстрація.",
   },
   en: {
     run: "Catalog of road runs in Ukraine. 5K, 10K, 15K. Online registration, QR start packs, instant results.",
@@ -85,6 +100,11 @@ const CAT_DESCS: Record<Lang, Record<EventCategory, string>> = {
     trail: "Trail runs across Ukrainian mountains and forests. Online registration, QR tickets, instant results.",
     ocr: "OCR obstacle races in Ukraine. Hyrox, Spartan-style, team starts. Online registration.",
     online: "Online races in Ukraine: run anywhere, upload your result, get a medal. Easy registration.",
+    swim: "Open water swim races in Ukraine. Online registration, QR tickets, instant results.",
+    aquathlon: "Aquathlon races in Ukraine: swim + run. Online registration, QR tickets, protocols.",
+    duathlon: "Duathlon races in Ukraine: run + bike + run. Race calendar, online registration, instant results.",
+    cycling: "Cycling races in Ukraine — road, gravel, MTB. Online registration, QR tickets, instant results.",
+    triathlon: "Triathlon races in Ukraine: swim + bike + run. Sprint, Olympic, full distance. Online registration.",
   },
 };
 
