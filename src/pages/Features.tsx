@@ -70,6 +70,7 @@ const Features = () => {
         { icon: Ticket, title: "Стартовий номер (BIB)", desc: "Номер призначається організатором і відображається у вашому квитку." },
         { icon: CalendarPlus, title: "Додати в календар", desc: "Один клік — і подія в Google Calendar, Outlook або Apple Calendar з правильним часом." },
         { icon: Trophy, title: "Результати забігу", desc: "Після фінішу організатор завантажує результати — ви бачите свій час і місце." },
+        { icon: ImageIcon, title: "Світлини з події", desc: "Організатор додає посилання на фотоальбом — переглядайте світлини прямо з картки завершеної події." },
       ],
     },
     {
@@ -117,6 +118,7 @@ const Features = () => {
         { icon: Ticket, title: "Bib number", desc: "Assigned by the organizer and shown on your ticket." },
         { icon: CalendarPlus, title: "Add to calendar", desc: "One click to add the event to Google Calendar, Outlook or Apple Calendar." },
         { icon: Trophy, title: "Race results", desc: "After the finish, organizers upload results — see your time and position." },
+        { icon: ImageIcon, title: "Event photos", desc: "Organizers attach a photo album link — open it right from the completed event card." },
       ],
     },
     {
