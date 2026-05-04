@@ -59,6 +59,7 @@ const Features = () => {
         { icon: MapPin, title: "Фільтри за категоріями", desc: "Швидкий пошук за типом події, форматом (offline / online / гібрид) та локацією." },
         { icon: CheckCircle2, title: "Реєстрація себе або дитини", desc: "Один акаунт — кілька профілів спортсменів. Реєструйте себе, дітей чи родичів." },
         { icon: CreditCard, title: "Оплата онлайн", desc: "Безпечна оплата через WayForPay картками Visa/Mastercard, Apple Pay, Google Pay." },
+        { icon: Calendar, title: "Календар майбутніх подій", desc: "Окрема сторінка з усіма майбутніми стартами України — і платформними, і доданими адміном чи організаторами. Фільтри за категорією, місяцем, пошук та сортування." },
       ],
     },
     {
@@ -96,6 +97,7 @@ const Features = () => {
         { icon: MapPin, title: "Filters by category", desc: "Quickly find races by type, format (offline / online / hybrid) and location." },
         { icon: CheckCircle2, title: "Register yourself or a child", desc: "One account — multiple athlete profiles. Register yourself, children or family." },
         { icon: CreditCard, title: "Online payments", desc: "Secure WayForPay payments via Visa/Mastercard, Apple Pay, Google Pay." },
+        { icon: Calendar, title: "Upcoming events calendar", desc: "Dedicated page with every upcoming race in Ukraine — both from the platform and added by admins or organizers. Filters by category, month, search and sorting." },
       ],
     },
     {
@@ -135,6 +137,7 @@ const Features = () => {
         { icon: Tag, title: "Платні та безкоштовні старти", desc: "Гнучке налаштування цін на кожну дистанцію або повністю безкоштовна реєстрація." },
         { icon: Clock, title: "Статуси події", desc: "Чернетка → Опубліковано → Завершено. Контролюйте видимість на сайті." },
         { icon: Users, title: "Співорганізатори", desc: "Додавайте кілька організаторів до однієї події — кожен має повний доступ." },
+        { icon: CalendarPlus, title: "Додавання у Календар подій", desc: "Розміщуйте власні майбутні старти у спільному Календарі подій — навіть якщо реєстрація йде поза платформою. Редагуєте та видаляєте лише свої записи." },
       ],
     },
     {
@@ -172,6 +175,7 @@ const Features = () => {
         { icon: Tag, title: "Paid & free races", desc: "Flexible pricing per distance or fully free registration." },
         { icon: Clock, title: "Event status", desc: "Draft → Published → Completed. Control visibility on the site." },
         { icon: Users, title: "Co-organizers", desc: "Add multiple organizers to one event — each gets full access." },
+        { icon: CalendarPlus, title: "Add to events calendar", desc: "Publish your upcoming races in the shared Events Calendar — even if registration runs outside the platform. You can only edit and delete your own entries." },
       ],
     },
     {
