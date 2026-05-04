@@ -74,6 +74,7 @@ export interface Dict {
   categories: {
     label: string; all: string;
     run: string; half_marathon: string; marathon: string; ultra: string; trail: string; ocr: string; online: string;
+    swim: string; aquathlon: string; duathlon: string; cycling: string; triathlon: string;
   };
   format: {
     label: string; hint: string;
