@@ -215,6 +215,9 @@ const OrganizerDashboard = () => {
                     <Button asChild variant="outline" size="sm" title={t.analytics.title}>
                       <Link to={`/organizer/events/${ev.id}/analytics`}><BarChart3 className="h-4 w-4" /></Link>
                     </Button>
+                    <Button asChild variant="outline" size="sm" title={lang === "uk" ? "Зміни та відміни" : "Changes & cancellations"}>
+                      <Link to={`/organizer/events/${ev.id}/changes`}><History className="h-4 w-4" /></Link>
+                    </Button>
                     <Button asChild variant="outline" size="sm" title={t.promo.manage}>
                       <Link to={`/organizer/events/${ev.id}/promo-codes`}><Ticket className="h-4 w-4" /></Link>
                     </Button>
