@@ -436,7 +436,7 @@ const CalendarPage = () => {
                             ) : (
                               <div className="flex justify-end items-center gap-1">
                                 {r.url && (
-                                  <Button asChild size="sm" variant="secondary">
+                                  <Button asChild size="sm" variant="secondary" className="hover:bg-primary hover:text-primary-foreground transition-colors">
                                     <a href={r.url} target="_blank" rel="noreferrer">
                                       {lang === "uk" ? "Перейти" : "Open"}
                                       <ExternalLink className="h-3 w-3" />
