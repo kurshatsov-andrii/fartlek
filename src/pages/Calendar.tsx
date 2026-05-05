@@ -434,7 +434,15 @@ const CalendarPage = () => {
                                 <Link to={r.url ?? "#"}>{lang === "uk" ? "Деталі" : "Details"}</Link>
                               </Button>
                             ) : (
-                              <div className="flex justify-end gap-1">
+                              <div className="flex justify-end items-center gap-1">
+                                {r.url && (
+                                  <Button asChild size="sm" variant="secondary">
+                                    <a href={r.url} target="_blank" rel="noreferrer">
+                                      {lang === "uk" ? "Перейти" : "Open"}
+                                      <ExternalLink className="h-3 w-3" />
+                                    </a>
+                                  </Button>
+                                )}
                                 {(isAdmin || (isOrganizer && r.created_by === user?.id)) && (
                                   <>
                                     <Button size="icon" variant="ghost" onClick={() => openEdit(r)} title={lang === "uk" ? "Редагувати" : "Edit"}>
