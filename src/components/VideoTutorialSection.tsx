@@ -22,6 +22,7 @@ export const VideoTutorialSection = () => {
         features: "Усі можливості платформи",
         play: "Відтворити відео",
         survey: "Пройти опитування",
+        testimonials: "Відгуки користувачів",
       }
     : {
         eyebrow: "Guide",
@@ -32,6 +33,7 @@ export const VideoTutorialSection = () => {
         features: "All platform features",
         play: "Play video",
         survey: "Take the survey",
+        testimonials: "User testimonials",
       };
 
   return (
@@ -63,9 +65,12 @@ export const VideoTutorialSection = () => {
                 </a>
               </Button>
             </div>
-            <div className="pt-1 text-sm text-muted-foreground">
+            <div className="pt-1 text-sm text-muted-foreground flex flex-wrap gap-x-4 gap-y-1 justify-center lg:justify-start">
               <Link to="/survey" className="text-primary font-medium hover:underline">
                 💬 {copy.survey}
+              </Link>
+              <Link to="/testimonials" className="text-primary font-medium hover:underline">
+                ⭐ {copy.testimonials}
               </Link>
             </div>
           </div>
