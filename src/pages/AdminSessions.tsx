@@ -160,7 +160,7 @@ export default function AdminSessions() {
                         <td className="p-3 whitespace-nowrap text-muted-foreground">
                           {formatDate(r.last_seen_at)}
                         </td>
-                        <td className="p-3 whitespace-nowrap">{formatDuration(r.duration_seconds)}</td>
+                        <td className="p-3 whitespace-nowrap">{formatDuration(computeDuration(r))}</td>
                         <td className="p-3">
                           {online ? (
                             <Badge className="bg-green-500/15 text-green-500 border-green-500/30">Онлайн</Badge>
