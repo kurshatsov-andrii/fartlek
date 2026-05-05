@@ -35,6 +35,7 @@ import ClubDetails from "./pages/ClubDetails.tsx";
 import ClubEditor from "./pages/ClubEditor.tsx";
 import Features from "./pages/Features.tsx";
 import Survey from "./pages/Survey.tsx";
+import Testimonials from "./pages/Testimonials.tsx";
 import AdminSurvey from "./pages/AdminSurvey.tsx";
 import CalendarPage from "./pages/Calendar.tsx";
 import { ProfileCompletionGate } from "./components/ProfileCompletionGate";
