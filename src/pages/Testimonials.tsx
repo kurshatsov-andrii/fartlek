@@ -11,7 +11,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Star, Quote, Trash2 } from "lucide-react";
+import { Star, Quote, Trash2, Pencil } from "lucide-react";
+import { linkifyText } from "@/lib/linkify";
 
 interface Testimonial {
   id: string;
@@ -26,25 +27,34 @@ const Stars = ({
   value,
   onChange,
   size = 24,
-}: { value: number; onChange?: (n: number) => void; size?: number }) => (
-  <div className="flex gap-1">
-    {[1, 2, 3, 4, 5].map((n) => (
-      <button
-        key={n}
-        type="button"
-        onClick={onChange ? () => onChange(n) : undefined}
-        className={onChange ? "transition-transform hover:scale-110" : "cursor-default"}
-        aria-label={`${n} star${n > 1 ? "s" : ""}`}
-        disabled={!onChange}
-      >
-        <Star
-          style={{ width: size, height: size }}
-          className={n <= value ? "fill-primary text-primary" : "text-muted-foreground/40"}
-        />
-      </button>
-    ))}
-  </div>
-);
+}: { value: number; onChange?: (n: number) => void; size?: number }) => {
+  const [hover, setHover] = useState(0);
+  const display = onChange ? (hover || value) : value;
+  return (
+    <div className="flex gap-1" onMouseLeave={() => onChange && setHover(0)}>
+      {[1, 2, 3, 4, 5].map((n) => (
+        <button
+          key={n}
+          type="button"
+          onClick={onChange ? () => onChange(n) : undefined}
+          onMouseEnter={() => onChange && setHover(n)}
+          className={onChange ? "transition-transform hover:scale-110" : "cursor-default"}
+          aria-label={`${n} star${n > 1 ? "s" : ""}`}
+          disabled={!onChange}
+        >
+          <Star
+            style={{ width: size, height: size }}
+            className={
+              n <= display
+                ? "fill-yellow-400 text-yellow-400 drop-shadow-[0_0_4px_rgba(250,204,21,0.5)]"
+                : "text-muted-foreground/30"
+            }
+          />
+        </button>
+      ))}
+    </div>
+  );
+};
 
 const Testimonials = () => {
   const { user, isAdmin } = useAuth();
@@ -244,6 +254,21 @@ const Testimonials = () => {
                               <span className="text-xs text-muted-foreground">
                                 {new Date(it.created_at).toLocaleDateString("uk-UA")}
                               </span>
+                              {it.user_id === user?.id && (
+                                <Button
+                                  size="icon"
+                                  variant="ghost"
+                                  onClick={() => {
+                                    setRating(it.rating);
+                                    setContent(it.content);
+                                    window.scrollTo({ top: 0, behavior: "smooth" });
+                                  }}
+                                  className="h-7 w-7"
+                                  aria-label="Редагувати"
+                                >
+                                  <Pencil className="h-3.5 w-3.5" />
+                                </Button>
+                              )}
                               {canDelete && (
                                 <Button
                                   size="icon"
@@ -257,7 +282,7 @@ const Testimonials = () => {
                               )}
                             </div>
                           </div>
-                          <p className="whitespace-pre-wrap text-sm text-foreground/90">{it.content}</p>
+                          <p className="whitespace-pre-wrap break-words text-sm text-foreground/90">{linkifyText(it.content)}</p>
                         </div>
                       </div>
                     </CardContent>
