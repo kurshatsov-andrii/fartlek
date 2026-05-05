@@ -37,9 +37,11 @@ import Features from "./pages/Features.tsx";
 import Survey from "./pages/Survey.tsx";
 import Testimonials from "./pages/Testimonials.tsx";
 import AdminSurvey from "./pages/AdminSurvey.tsx";
+import AdminSessions from "./pages/AdminSessions.tsx";
 import CalendarPage from "./pages/Calendar.tsx";
 import { ProfileCompletionGate } from "./components/ProfileCompletionGate";
 import { AdminOnlinePresence } from "./components/AdminOnlinePresence";
+import { SessionTracker } from "./components/SessionTracker";
 
 const queryClient = new QueryClient();
 
@@ -53,6 +55,7 @@ const App = () => (
           <BrowserRouter>
             <ProfileCompletionGate />
             <AdminOnlinePresence />
+            <SessionTracker />
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/auth" element={<Auth />} />
@@ -87,6 +90,7 @@ const App = () => (
               <Route path="/survey" element={<Survey />} />
               <Route path="/testimonials" element={<Testimonials />} />
               <Route path="/admin/survey" element={<AdminSurvey />} />
+              <Route path="/admin/sessions" element={<AdminSessions />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>

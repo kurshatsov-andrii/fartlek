@@ -1225,6 +1225,42 @@ export type Database = {
         }
         Relationships: []
       }
+      user_sessions: {
+        Row: {
+          created_at: string
+          duration_seconds: number | null
+          id: string
+          ip_address: string | null
+          last_seen_at: string
+          login_at: string
+          logout_at: string | null
+          user_agent: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          duration_seconds?: number | null
+          id?: string
+          ip_address?: string | null
+          last_seen_at?: string
+          login_at?: string
+          logout_at?: string | null
+          user_agent?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          duration_seconds?: number | null
+          id?: string
+          ip_address?: string | null
+          last_seen_at?: string
+          login_at?: string
+          logout_at?: string | null
+          user_agent?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       wayforpay_orders: {
         Row: {
           amount: number
@@ -1390,6 +1426,22 @@ export type Database = {
           total_unsubscribed: number
           unsubscribed_last_30d: number
           unsubscribed_last_7d: number
+        }[]
+      }
+      get_user_sessions_admin: {
+        Args: { _limit?: number }
+        Returns: {
+          duration_seconds: number
+          email: string
+          full_name: string
+          id: string
+          ip_address: string
+          last_seen_at: string
+          login_at: string
+          logout_at: string
+          phone: string
+          user_agent: string
+          user_id: string
         }[]
       }
       has_role: {
