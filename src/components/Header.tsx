@@ -79,6 +79,7 @@ export const Header = () => {
                 {isAdmin && (
                   <DropdownMenuItem asChild><Link to="/admin"><Shield className="h-4 w-4" />Адмін-панель</Link></DropdownMenuItem>
                 )}
+                <DropdownMenuItem asChild className="md:hidden"><Link to="/calendar"><LayoutDashboard className="h-4 w-4" />Календар</Link></DropdownMenuItem>
                 <DropdownMenuItem asChild className="md:hidden"><Link to="/clubs"><Users className="h-4 w-4" />Клуби</Link></DropdownMenuItem>
                 <DropdownMenuItem asChild className="md:hidden"><Link to="/features"><Sparkles className="h-4 w-4" />Можливості</Link></DropdownMenuItem>
                 <DropdownMenuItem asChild className="md:hidden"><Link to="/contacts"><Mail className="h-4 w-4" />{t.nav.contacts}</Link></DropdownMenuItem>
@@ -91,6 +92,9 @@ export const Header = () => {
               <a href="/#events" onClick={handleEventsClick} className="md:hidden text-xs font-medium text-muted-foreground hover:text-foreground transition-base px-1 cursor-pointer">
                 {t.nav.events}
               </a>
+              <Link to="/calendar" className="md:hidden text-xs font-medium text-muted-foreground hover:text-foreground transition-base px-1">
+                Календар
+              </Link>
               <Link to="/clubs" className="md:hidden text-xs font-medium text-muted-foreground hover:text-foreground transition-base px-1">
                 Клуби
               </Link>
