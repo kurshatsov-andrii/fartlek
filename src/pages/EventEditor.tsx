@@ -963,9 +963,31 @@ const EventEditor = () => {
                   </div>
                 </div>
               ))}
+              <div className="space-y-2">
+                <Label className="text-xs text-muted-foreground">
+                  {lang === "uk" ? "Швидко додати стандартну дистанцію" : "Quick add a standard distance"}
+                </Label>
+                <div className="flex flex-wrap gap-2">
+                  {[1, 3, 5, 10, 21.1, 42.2, 50, 100].map((km) => {
+                    const exists = distances.some((d) => parseFloat(d.distance_km) === km);
+                    return (
+                      <Button
+                        key={km}
+                        type="button"
+                        variant={exists ? "secondary" : "outline"}
+                        size="sm"
+                        disabled={exists}
+                        onClick={() => setDistances([...distances, { distance_km: String(km), name: `${km} ${lang === "uk" ? "км" : "km"}`, price: "0", bib_start: "", is_relay: false, relay_legs_count: "4", relay_categories: ["mix", "men", "women"], relay_legs: ["", "", "", ""], delivery_enabled: false }])}
+                      >
+                        {km} {lang === "uk" ? "км" : "km"}
+                      </Button>
+                    );
+                  })}
+                </div>
+              </div>
               <Button type="button" variant="outline" size="sm"
                 onClick={() => setDistances([...distances, { distance_km: "", name: "", price: "0", bib_start: "", is_relay: false, relay_legs_count: "4", relay_categories: ["mix", "men", "women"], relay_legs: ["", "", "", ""], delivery_enabled: false }])}>
-                <Plus className="h-4 w-4" /> {t.organizer.addDistance}
+                <Plus className="h-4 w-4" /> {t.organizer.addDistance} ({lang === "uk" ? "нестандартна" : "custom"})
               </Button>
             </div>
 
