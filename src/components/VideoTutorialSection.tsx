@@ -22,6 +22,7 @@ export const VideoTutorialSection = () => {
         features: "Усі можливості платформи",
         play: "Відтворити відео",
         survey: "Пройти опитування",
+        testimonials: "Відгуки користувачів",
       }
     : {
         eyebrow: "Guide",
@@ -32,6 +33,7 @@ export const VideoTutorialSection = () => {
         features: "All platform features",
         play: "Play video",
         survey: "Take the survey",
+        testimonials: "User testimonials",
       };
 
   return (
