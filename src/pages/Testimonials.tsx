@@ -254,6 +254,21 @@ const Testimonials = () => {
                               <span className="text-xs text-muted-foreground">
                                 {new Date(it.created_at).toLocaleDateString("uk-UA")}
                               </span>
+                              {it.user_id === user?.id && (
+                                <Button
+                                  size="icon"
+                                  variant="ghost"
+                                  onClick={() => {
+                                    setRating(it.rating);
+                                    setContent(it.content);
+                                    window.scrollTo({ top: 0, behavior: "smooth" });
+                                  }}
+                                  className="h-7 w-7"
+                                  aria-label="Редагувати"
+                                >
+                                  <Pencil className="h-3.5 w-3.5" />
+                                </Button>
+                              )}
                               {canDelete && (
                                 <Button
                                   size="icon"
@@ -267,7 +282,7 @@ const Testimonials = () => {
                               )}
                             </div>
                           </div>
-                          <p className="whitespace-pre-wrap text-sm text-foreground/90">{it.content}</p>
+                          <p className="whitespace-pre-wrap break-words text-sm text-foreground/90">{linkifyText(it.content)}</p>
                         </div>
                       </div>
                     </CardContent>
