@@ -285,7 +285,34 @@ const CalendarPage = () => {
                   </div>
                   <div className="grid gap-1.5">
                     <Label>{lang === "uk" ? "Дистанції" : "Distances"}</Label>
-                    <Input placeholder="5 км, 10 км, 21 км" value={form.distances} onChange={(e) => setForm({ ...form, distances: e.target.value })} />
+                    <div className="flex flex-wrap gap-2">
+                      {[1, 3, 5, 10, 21.1, 42.2, 50, 100].map((km) => {
+                        const label = `${km} ${lang === "uk" ? "км" : "km"}`;
+                        const parts = form.distances.split(",").map((s) => s.trim()).filter(Boolean);
+                        const active = parts.includes(label);
+                        return (
+                          <Button
+                            key={km}
+                            type="button"
+                            size="sm"
+                            variant={active ? "default" : "outline"}
+                            onClick={() => {
+                              const next = active
+                                ? parts.filter((p) => p !== label)
+                                : [...parts, label];
+                              setForm({ ...form, distances: next.join(", ") });
+                            }}
+                          >
+                            {label}
+                          </Button>
+                        );
+                      })}
+                    </div>
+                    <Input
+                      placeholder={lang === "uk" ? "5 км, 10 км, 21 км або своя дистанція" : "5 km, 10 km, 21 km or custom"}
+                      value={form.distances}
+                      onChange={(e) => setForm({ ...form, distances: e.target.value })}
+                    />
                   </div>
                   <div className="grid gap-1.5">
                     <Label>{lang === "uk" ? "Організатор" : "Organizer"}</Label>
