@@ -26,13 +26,20 @@ interface SessionRow {
 }
 
 const formatDuration = (sec: number | null) => {
-  if (!sec || sec < 0) return "—";
+  if (sec === null || sec === undefined || sec < 0) return "—";
   const h = Math.floor(sec / 3600);
   const m = Math.floor((sec % 3600) / 60);
   const s = sec % 60;
   if (h > 0) return `${h}г ${m}хв`;
   if (m > 0) return `${m}хв ${s}с`;
   return `${s}с`;
+};
+
+const computeDuration = (s: SessionRow): number => {
+  if (s.duration_seconds && s.duration_seconds > 0) return s.duration_seconds;
+  const end = s.logout_at ? new Date(s.logout_at).getTime() : new Date(s.last_seen_at).getTime();
+  const start = new Date(s.login_at).getTime();
+  return Math.max(0, Math.round((end - start) / 1000));
 };
 
 const formatDate = (iso: string) =>
@@ -153,7 +160,7 @@ export default function AdminSessions() {
                         <td className="p-3 whitespace-nowrap text-muted-foreground">
                           {formatDate(r.last_seen_at)}
                         </td>
-                        <td className="p-3 whitespace-nowrap">{formatDuration(r.duration_seconds)}</td>
+                        <td className="p-3 whitespace-nowrap">{formatDuration(computeDuration(r))}</td>
                         <td className="p-3">
                           {online ? (
                             <Badge className="bg-green-500/15 text-green-500 border-green-500/30">Онлайн</Badge>
