@@ -3,6 +3,16 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="dark" />
+    <script>
+      (function(){
+        try {
+          document.documentElement.classList.add('dark');
+          localStorage.setItem('fe.theme','dark');
+        } catch(e){}
+      })();
+    </script>
+    <style>html,body{background:#0a0a0a;color:#fafafa;}</style>
     <link rel="icon" href="https://fartlek.com.ua/favicon.ico" type="image/x-icon" />
     <title>Fartlek Events. Реєстрація на спортивні події в Україні</title>
     <meta name="description" content="Реєструйся на забіги, трейли та спортивні події по всій Україні. QR-стартові пакети, миттєві результати, зручні протоколи.">
