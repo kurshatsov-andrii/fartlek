@@ -11,7 +11,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Star, Quote, Trash2 } from "lucide-react";
+import { Star, Quote, Trash2, Pencil } from "lucide-react";
+import { linkifyText } from "@/lib/linkify";
+import { useRef } from "react";
 
 interface Testimonial {
   id: string;
