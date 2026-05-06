@@ -448,7 +448,7 @@ export const EventChat = ({ eventId, eventOrganizerId }: Props) => {
                 isOwn ? "bg-primary text-primary-foreground" : "bg-muted"
               }`}
             >
-              {linkifyText(m.content)}
+              {linkifyText(m.content, isOwn)}
             </div>
           )}
 
