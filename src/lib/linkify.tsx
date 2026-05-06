@@ -44,19 +44,22 @@ function tokenize(text: string): Token[] {
   return tokens;
 }
 
-export function linkifyText(text: string): React.ReactNode[] {
+export function linkifyText(text: string, onPrimary = false): React.ReactNode[] {
+  const linkClass = onPrimary
+    ? "font-semibold underline underline-offset-2 hover:opacity-80"
+    : "text-primary underline underline-offset-2 hover:opacity-80";
   return tokenize(text).map((t, i) => {
     if (t.type === "url") {
       const href = t.value.startsWith("http") ? t.value : `https://${t.value}`;
       return (
-        <a key={i} href={href} target="_blank" rel="noopener noreferrer" className="text-primary underline underline-offset-2 hover:opacity-80">
+        <a key={i} href={href} target="_blank" rel="noopener noreferrer" className={linkClass}>
           {t.value}
         </a>
       );
     }
     if (t.type === "email") {
       return (
-        <a key={i} href={`mailto:${t.value}`} className="text-primary underline underline-offset-2 hover:opacity-80">
+        <a key={i} href={`mailto:${t.value}`} className={linkClass}>
           {t.value}
         </a>
       );
@@ -64,7 +67,7 @@ export function linkifyText(text: string): React.ReactNode[] {
     if (t.type === "phone") {
       const tel = t.value.replace(/[^\d+]/g, "");
       return (
-        <a key={i} href={`tel:${tel}`} className="text-primary underline underline-offset-2 hover:opacity-80">
+        <a key={i} href={`tel:${tel}`} className={linkClass}>
           {t.value}
         </a>
       );
