@@ -66,6 +66,7 @@ const App = () => (
               <Route path="/category" element={<CategoriesIndex />} />
               <Route path="/category/:category" element={<CategoryPage />} />
               <Route path="/events/:id" element={<EventDetails />} />
+              <Route path="/event/:id" element={<Navigate to="/events/:id" replace />} />
               <Route path="/events/:id/participants" element={<Participants />} />
               <Route path="/ticket/:id" element={<Ticket />} />
               <Route path="/organizer" element={<OrganizerDashboard />} />
