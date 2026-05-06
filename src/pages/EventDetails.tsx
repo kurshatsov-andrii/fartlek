@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { Calendar, MapPin, Users, Loader2, ArrowLeft, UserCircle2, FileText, CalendarPlus } from "lucide-react";
+import { Calendar, MapPin, Users, Loader2, ArrowLeft, UserCircle2, FileText, CalendarPlus, Calculator } from "lucide-react";
+import { PaceCalculatorDialog } from "@/components/PaceCalculatorDialog";
 import { downloadIcs } from "@/lib/calendar";
 import { AddToCalendarButton } from "@/components/AddToCalendarButton";
 import { Header } from "@/components/Header";
@@ -46,6 +47,7 @@ const EventDetails = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [event, setEvent] = useState<EventRow | null>(null);
+  const [calcOpen, setCalcOpen] = useState(false);
   const [distances, setDistances] = useState<DistanceRow[]>([]);
   const [participantsCount, setParticipantsCount] = useState(0);
   const [selectedDistance, setSelectedDistance] = useState<string>("");
@@ -379,8 +381,8 @@ const EventDetails = () => {
                   {linkifyText(event.description)}
                 </div>
               )}
-              {event.regulations_pdf_url && (
-                <div>
+              <div className="flex flex-wrap gap-2">
+                {event.regulations_pdf_url && (
                   <Button
                     type="button"
                     variant="outline"
@@ -390,8 +392,17 @@ const EventDetails = () => {
                     <FileText className="h-4 w-4" />
                     {lang === "uk" ? "Регламент" : "Regulations"}
                   </Button>
-                </div>
-              )}
+                )}
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setCalcOpen(true)}
+                  className="gap-2"
+                >
+                  <Calculator className="h-4 w-4" />
+                  {lang === "uk" ? "Біговий калькулятор" : "Running calculator"}
+                </Button>
+              </div>
               {event.description_image_url && (
                 <img
                   src={event.description_image_url}
@@ -699,6 +710,11 @@ const EventDetails = () => {
             title={docDialog.title}
           />
         )}
+        <PaceCalculatorDialog
+          open={calcOpen}
+          onOpenChange={setCalcOpen}
+          distances={distances.map((d) => ({ distance_km: d.distance_km, name: d.name }))}
+        />
       </main>
       <Footer />
     </div>
