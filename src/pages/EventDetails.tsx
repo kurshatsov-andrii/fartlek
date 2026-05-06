@@ -381,8 +381,8 @@ const EventDetails = () => {
                   {linkifyText(event.description)}
                 </div>
               )}
-              {event.regulations_pdf_url && (
-                <div>
+              <div className="flex flex-wrap gap-2">
+                {event.regulations_pdf_url && (
                   <Button
                     type="button"
                     variant="outline"
@@ -392,8 +392,17 @@ const EventDetails = () => {
                     <FileText className="h-4 w-4" />
                     {lang === "uk" ? "Регламент" : "Regulations"}
                   </Button>
-                </div>
-              )}
+                )}
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setCalcOpen(true)}
+                  className="gap-2"
+                >
+                  <Calculator className="h-4 w-4" />
+                  {lang === "uk" ? "Біговий калькулятор" : "Running calculator"}
+                </Button>
+              </div>
               {event.description_image_url && (
                 <img
                   src={event.description_image_url}
