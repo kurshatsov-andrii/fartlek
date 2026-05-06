@@ -710,6 +710,11 @@ const EventDetails = () => {
             title={docDialog.title}
           />
         )}
+        <PaceCalculatorDialog
+          open={calcOpen}
+          onOpenChange={setCalcOpen}
+          distances={distances.map((d) => ({ distance_km: d.distance_km, name: d.name }))}
+        />
       </main>
       <Footer />
     </div>
