@@ -47,6 +47,7 @@ const EventDetails = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [event, setEvent] = useState<EventRow | null>(null);
+  const [calcOpen, setCalcOpen] = useState(false);
   const [distances, setDistances] = useState<DistanceRow[]>([]);
   const [participantsCount, setParticipantsCount] = useState(0);
   const [selectedDistance, setSelectedDistance] = useState<string>("");
