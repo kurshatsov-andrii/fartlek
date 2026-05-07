@@ -37,6 +37,8 @@ const Participants = () => {
   const [moveToId, setMoveToId] = useState<string>("");
   const [moving, setMoving] = useState(false);
   const [receiptDialog, setReceiptDialog] = useState<{ url: string; isImage: boolean; isHeic?: boolean } | null>(null);
+  const [resultsMap, setResultsMap] = useState<Record<string, { time_seconds: number; distance_meters: number | null; source: string; strava_activity_id: number | null; verified: boolean }>>({});
+  const [syncingAll, setSyncingAll] = useState(false);
 
   // Filters
   const [fGender, setFGender] = useState<string>("all");
