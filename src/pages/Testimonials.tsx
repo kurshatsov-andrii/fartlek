@@ -249,14 +249,11 @@ const Testimonials = () => {
           <div className="text-center mb-10">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold tracking-widest uppercase mb-4">
               <Quote className="h-3.5 w-3.5" />
-              Відгуки 💬✨
+              Відгуки
             </div>
             <h1 className="font-display text-3xl md:text-5xl font-bold tracking-tight mb-4">
-              Що кажуть про Fartlek 🏃‍♂️🔥
+              Що кажуть про Fartlek
             </h1>
-            <p className="text-muted-foreground mb-2">
-              🌟 Ділись враженнями та надихай інших! 💪🎉
-            </p>
             {items.length > 0 && (
               <div className="flex items-center justify-center gap-3 text-muted-foreground">
                 <Stars value={Math.round(avg)} size={20} />
@@ -271,27 +268,27 @@ const Testimonials = () => {
             <Card className="mb-10">
               <CardContent className="pt-6 space-y-4">
                 <h2 className="text-lg font-semibold">
-                  {myExisting ? "Оновити свій відгук ✏️" : "Залишити відгук 💖"}
+                  {myExisting ? "Оновити свій відгук" : "Залишити відгук"}
                 </h2>
                 <form onSubmit={submit} className="space-y-4">
                   <div className="space-y-2">
-                    <Label>Ваша оцінка ⭐</Label>
+                    <Label>Ваша оцінка</Label>
                     <Stars value={rating} onChange={setRating} />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="content">Ваш відгук 💬</Label>
+                    <Label htmlFor="content">Ваш відгук</Label>
                     <Textarea
                       id="content"
                       value={content}
                       onChange={(e) => setContent(e.target.value)}
                       rows={4}
                       maxLength={2000}
-                      placeholder="Поділіться враженнями про платформу… 🏃‍♀️🎉"
+                      placeholder="Поділіться враженнями про платформу…"
                     />
                     <div className="text-xs text-muted-foreground text-right">{content.length}/2000</div>
                   </div>
                   <Button type="submit" disabled={busy}>
-                    {busy ? "Надсилаємо… 🚀" : myExisting ? "Оновити ✨" : "Надіслати 🚀"}
+                    {busy ? "Надсилаємо…" : myExisting ? "Оновити" : "Надіслати"}
                   </Button>
                 </form>
               </CardContent>
@@ -300,10 +297,10 @@ const Testimonials = () => {
             <Card className="mb-10">
               <CardContent className="py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
                 <p className="text-muted-foreground text-center sm:text-left">
-                  🔐 Лише користувачі платформи можуть залишати відгуки. Приєднуйся до нас! 🎉🏃‍♂️
+                  Лише користувачі платформи можуть залишати відгуки.
                 </p>
                 <Button asChild>
-                  <Link to="/auth">Увійти / зареєструватися ✨</Link>
+                  <Link to="/auth">Увійти / зареєструватися</Link>
                 </Button>
               </CardContent>
             </Card>
