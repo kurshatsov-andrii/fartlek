@@ -171,8 +171,6 @@ const Testimonials = () => {
   useEffect(() => {
     load();
   }, [user?.id]);
-    load();
-  }, []);
 
   const myExisting = items.find((i) => i.user_id === user?.id);
 
