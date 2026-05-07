@@ -61,7 +61,7 @@ const Participants = () => {
     setIsOrganizer(ev?.organizer_id === user.id || isAdmin);
     const { data: dists } = await supabase
       .from("distances")
-      .select("id, distance_km, name, price, max_participants, is_active")
+      .select("id, distance_km, name, price, max_participants, is_active, is_virtual")
       .eq("event_id", id)
       .order("distance_km", { ascending: true });
     const priceMap: Record<string, number> = {};
