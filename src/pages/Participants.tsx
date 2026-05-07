@@ -81,8 +81,10 @@ const Participants = () => {
       .from("payment-receipts")
       .createSignedUrl(path, 60 * 10);
     if (error || !data?.signedUrl) { toast.error(error?.message ?? "Error"); return; }
-    const isImage = /\.(png|jpe?g|gif|webp|heic|heif|bmp)$/i.test(path);
-    setReceiptDialog({ url: data.signedUrl, isImage });
+    // HEIC/HEIF are not renderable by most browsers — treat as non-image so we show a download fallback.
+    const isImage = /\.(png|jpe?g|gif|webp|bmp)$/i.test(path);
+    const isHeic = /\.(heic|heif)$/i.test(path);
+    setReceiptDialog({ url: data.signedUrl, isImage, isHeic } as any);
   };
 
   const revoke = async (regId: string) => {
