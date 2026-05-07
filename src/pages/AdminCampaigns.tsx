@@ -126,8 +126,12 @@ const AdminCampaigns = () => {
   };
 
   const createAndSend = async (mode: "test" | "real") => {
-    if (mode === "real" && selectedIds.size === 0) {
-      toast.error("Оберіть хоча б одну подію");
+    if (mode === "real" && selectedIds.size === 0 && !intro.trim()) {
+      toast.error("Оберіть хоча б одну подію або заповніть вступний текст");
+      return;
+    }
+    if (mode === "real" && audienceMode === "event" && !audienceEventId) {
+      toast.error("Оберіть подію для розсилки учасникам");
       return;
     }
     if (mode === "test" && !testEmail.trim()) {
