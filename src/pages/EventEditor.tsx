@@ -1009,6 +1009,36 @@ const EventEditor = () => {
                             </div>
                             <div className="space-y-1">
                               <Label className="text-xs flex items-center gap-1">
+                                Час початку
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <button type="button" className="text-muted-foreground hover:text-foreground"><HelpCircle className="h-3.5 w-3.5" /></button>
+                                  </TooltipTrigger>
+                                  <TooltipContent className="max-w-xs">
+                                    Не обов'язково. Якщо вказано — активність має початись не раніше цього часу. Залиште порожнім, щоб приймати з 00:00.
+                                  </TooltipContent>
+                                </Tooltip>
+                              </Label>
+                              <Input type="time" value={d.virtual_start_time}
+                                onChange={(e) => { const c = [...distances]; c[i].virtual_start_time = e.target.value; setDistances(c); }} />
+                            </div>
+                            <div className="space-y-1">
+                              <Label className="text-xs flex items-center gap-1">
+                                Час завершення
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <button type="button" className="text-muted-foreground hover:text-foreground"><HelpCircle className="h-3.5 w-3.5" /></button>
+                                  </TooltipTrigger>
+                                  <TooltipContent className="max-w-xs">
+                                    Не обов'язково. Активність має завершитись не пізніше цього часу. Залиште порожнім, щоб приймати до 23:59.
+                                  </TooltipContent>
+                                </Tooltip>
+                              </Label>
+                              <Input type="time" value={d.virtual_end_time}
+                                onChange={(e) => { const c = [...distances]; c[i].virtual_end_time = e.target.value; setDistances(c); }} />
+                            </div>
+                            <div className="space-y-1">
+                              <Label className="text-xs flex items-center gap-1">
                                 Допуск, %
                                 <Tooltip>
                                   <TooltipTrigger asChild>
