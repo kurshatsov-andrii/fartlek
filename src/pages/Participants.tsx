@@ -772,6 +772,36 @@ const Participants = () => {
                               </div>
                             </td>
                           )}
+                          {hasAnyResult && (
+                            <td className="p-3">
+                              {resultsMap[r.registration_id] ? (
+                                <div className="flex flex-col">
+                                  <span className="font-semibold inline-flex items-center gap-1">
+                                    <Trophy className="h-3 w-3 text-[#FC4C02]" />
+                                    {fmtResult(resultsMap[r.registration_id].time_seconds)}
+                                  </span>
+                                  <span className="text-xs text-muted-foreground">
+                                    {resultsMap[r.registration_id].distance_meters
+                                      ? `${(resultsMap[r.registration_id].distance_meters! / 1000).toFixed(2)} ${lang === "uk" ? "км" : "km"}`
+                                      : ""}
+                                    {resultsMap[r.registration_id].source === "strava" && " · Strava"}
+                                  </span>
+                                  {resultsMap[r.registration_id].strava_activity_id && (
+                                    <a
+                                      href={`https://www.strava.com/activities/${resultsMap[r.registration_id].strava_activity_id}`}
+                                      target="_blank"
+                                      rel="noreferrer"
+                                      className="text-xs text-[#FC4C02] hover:underline"
+                                    >
+                                      {lang === "uk" ? "Активність" : "Activity"}
+                                    </a>
+                                  )}
+                                </div>
+                              ) : (
+                                <span className="text-xs text-muted-foreground">—</span>
+                              )}
+                            </td>
+                          )}
                           {isOrganizer && (
                             <td className="p-3">
                               <div className="flex items-center justify-center gap-1">
