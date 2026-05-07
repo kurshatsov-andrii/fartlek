@@ -36,7 +36,7 @@ const Participants = () => {
   const [moveTarget, setMoveTarget] = useState<any | null>(null);
   const [moveToId, setMoveToId] = useState<string>("");
   const [moving, setMoving] = useState(false);
-  const [receiptDialog, setReceiptDialog] = useState<{ url: string; isImage: boolean } | null>(null);
+  const [receiptDialog, setReceiptDialog] = useState<{ url: string; isImage: boolean; isHeic?: boolean } | null>(null);
 
   // Filters
   const [fGender, setFGender] = useState<string>("all");
