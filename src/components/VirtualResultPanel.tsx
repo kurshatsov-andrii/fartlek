@@ -161,12 +161,15 @@ export const VirtualResultPanel = ({ eventId, userId }: Props) => {
             </div>
           ) : (
             <div className="mt-4">
-              <Button asChild className="bg-[#FC4C02] text-white hover:bg-[#e64502]">
+              <Button asChild size="sm" className="bg-[#FC4C02] text-white hover:bg-[#e64502] w-full sm:w-auto">
                 <Link to="/profile">
                   <Link2 className="h-4 w-4" />
-                  Підключити Strava у профілі
+                  Підключити Strava
                 </Link>
               </Button>
+              <p className="text-xs text-muted-foreground mt-2">
+                Підключіть акаунт у профілі, щоб синхронізувати результат.
+              </p>
             </div>
           )}
         </div>
