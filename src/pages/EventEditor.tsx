@@ -342,6 +342,8 @@ const EventEditor = () => {
       is_virtual: d.is_virtual,
       virtual_start_date: d.is_virtual && d.virtual_start_date ? d.virtual_start_date : null,
       virtual_end_date: d.is_virtual && d.virtual_end_date ? d.virtual_end_date : null,
+      virtual_start_time: d.is_virtual && d.virtual_start_time ? d.virtual_start_time : null,
+      virtual_end_time: d.is_virtual && d.virtual_end_time ? d.virtual_end_time : null,
       distance_tolerance_percent: d.is_virtual ? (parseFloat(d.distance_tolerance_percent) || 5) : 5,
     }));
     if (newRows.length > 0) {
