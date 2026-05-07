@@ -398,6 +398,14 @@ const Participants = () => {
                 </span>
               </Button>
             )}
+            {isOrganizer && (
+              <Button asChild variant="outline" size="sm" className="gap-2">
+                <Link to={`/organizer/events/${id}/campaign`}>
+                  <Mail className="h-4 w-4" />
+                  {lang === "uk" ? "Написати учасникам" : "Email participants"}
+                </Link>
+              </Button>
+            )}
           </div>
         </div>
 
