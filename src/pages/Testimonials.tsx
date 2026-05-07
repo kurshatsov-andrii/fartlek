@@ -14,6 +14,12 @@ import { toast } from "sonner";
 import { Star, Quote, Trash2, Pencil } from "lucide-react";
 import { linkifyText } from "@/lib/linkify";
 
+interface Reaction {
+  emoji: string;
+  count: number;
+  reactedByMe: boolean;
+}
+
 interface Testimonial {
   id: string;
   user_id: string;
@@ -21,7 +27,10 @@ interface Testimonial {
   content: string;
   created_at: string;
   author?: { full_name: string | null; avatar_url: string | null } | null;
+  reactions?: Reaction[];
 }
+
+const REACTION_EMOJIS = ["👍", "❤️", "🔥", "🎉", "💪", "👏"];
 
 const Stars = ({
   value,
