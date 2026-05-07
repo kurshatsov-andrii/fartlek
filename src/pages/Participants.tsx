@@ -680,6 +680,8 @@ const Participants = () => {
                         {isPaid && isOrganizer && <th className="p-3 font-semibold text-center">{lang === "uk" ? "Квитанція" : "Receipt"}</th>}
                         {hasAnyResult && <th className="p-3 font-semibold">{lang === "uk" ? "Результат" : "Result"}</th>}
                         {isOrganizer && <th className="p-3 font-semibold text-center">{lang === "uk" ? "Дії" : "Actions"}</th>}
+                      </tr>
+                    </thead>
                     <tbody>
                       {list.map((r) => (
                         <tr key={r.registration_id} className="border-t border-border">
