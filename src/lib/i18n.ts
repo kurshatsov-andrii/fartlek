@@ -174,7 +174,7 @@ export const translations: Record<Lang, Dict> = {
       haveAccount: "Вже є акаунт?", noAccount: "Ще не маєш акаунту?",
       signInTitle: "Вхід", signUpTitle: "Створи акаунт",
       signInSub: "Увійди, щоб реєструватись на події", signUpSub: "Хвилина — і ти в системі",
-      successSignUp: "Акаунт створено! Можеш увійти.",
+      successSignUp: "Підтвердіть вашу пошту — ми надіслали лист із посиланням. Після підтвердження ви зможете зайти на платформу.",
       successReset: "Перевір email — посилання надіслано.",
       successUpdate: "Пароль оновлено.",
       backToSignIn: "← Назад до входу",
