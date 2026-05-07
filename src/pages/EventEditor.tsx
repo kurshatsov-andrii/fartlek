@@ -18,7 +18,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
-interface DistanceForm { id?: string; distance_km: string; name: string; price: string; bib_start: string; is_relay: boolean; relay_legs_count: string; relay_categories: string[]; relay_legs: string[]; delivery_enabled: boolean; }
+interface DistanceForm { id?: string; distance_km: string; name: string; price: string; bib_start: string; is_relay: boolean; relay_legs_count: string; relay_categories: string[]; relay_legs: string[]; delivery_enabled: boolean; is_virtual: boolean; virtual_start_date: string; virtual_end_date: string; distance_tolerance_percent: string; }
 
 const RELAY_CAT_OPTIONS = ["mix", "men", "women"] as const;
 
@@ -56,7 +56,7 @@ const EventEditor = () => {
   const [uploadingResults, setUploadingResults] = useState(false);
   const [uploadingRegulations, setUploadingRegulations] = useState(false);
   const [uploadingDescImage, setUploadingDescImage] = useState(false);
-  const [distances, setDistances] = useState<DistanceForm[]>([{ distance_km: "10", name: "", price: "0", bib_start: "", is_relay: false, relay_legs_count: "4", relay_categories: ["mix", "men", "women"], relay_legs: ["", "", "", ""], delivery_enabled: false }]);
+  const [distances, setDistances] = useState<DistanceForm[]>([{ distance_km: "10", name: "", price: "0", bib_start: "", is_relay: false, relay_legs_count: "4", relay_categories: ["mix", "men", "women"], relay_legs: ["", "", "", ""], delivery_enabled: false, is_virtual: false, virtual_start_date: "", virtual_end_date: "", distance_tolerance_percent: "5" }]);
   const [clubOptions, setClubOptions] = useState<{ id: string; name: string; city: string | null }[]>([]);
   const [clubPickerOpen, setClubPickerOpen] = useState(false);
 
@@ -122,6 +122,10 @@ const EventEditor = () => {
           ? (d.relay_legs as any[]).map((x) => String(x ?? ""))
           : Array.from({ length: d.relay_legs_count ?? 4 }, () => ""),
         delivery_enabled: !!d.delivery_enabled,
+        is_virtual: !!(d as any).is_virtual,
+        virtual_start_date: (d as any).virtual_start_date ?? "",
+        virtual_end_date: (d as any).virtual_end_date ?? "",
+        distance_tolerance_percent: (d as any).distance_tolerance_percent != null ? String((d as any).distance_tolerance_percent) : "5",
       })));
       setLoadedFor(id ?? null);
       setLoading(false);
