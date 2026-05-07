@@ -12,6 +12,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { AthleteFormDialog, Athlete } from "@/components/AthleteFormDialog";
 import { DocumentDialog } from "@/components/DocumentDialog";
+import { VirtualResultPanel } from "@/components/VirtualResultPanel";
 import { useApp } from "@/contexts/AppContext";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
@@ -499,6 +500,10 @@ const EventDetails = () => {
                       </Button>
                     </div>
                   </div>
+                )}
+
+                {user && registration && (
+                  <VirtualResultPanel eventId={event.id} userId={user.id} />
                 )}
 
                 <h3 className="font-display text-lg font-bold">{t.events.selectDistance}</h3>

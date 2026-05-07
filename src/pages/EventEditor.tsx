@@ -18,7 +18,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
-interface DistanceForm { id?: string; distance_km: string; name: string; price: string; bib_start: string; is_relay: boolean; relay_legs_count: string; relay_categories: string[]; relay_legs: string[]; delivery_enabled: boolean; }
+interface DistanceForm { id?: string; distance_km: string; name: string; price: string; bib_start: string; is_relay: boolean; relay_legs_count: string; relay_categories: string[]; relay_legs: string[]; delivery_enabled: boolean; is_virtual: boolean; virtual_start_date: string; virtual_end_date: string; distance_tolerance_percent: string; }
 
 const RELAY_CAT_OPTIONS = ["mix", "men", "women"] as const;
 
@@ -56,7 +56,7 @@ const EventEditor = () => {
   const [uploadingResults, setUploadingResults] = useState(false);
   const [uploadingRegulations, setUploadingRegulations] = useState(false);
   const [uploadingDescImage, setUploadingDescImage] = useState(false);
-  const [distances, setDistances] = useState<DistanceForm[]>([{ distance_km: "10", name: "", price: "0", bib_start: "", is_relay: false, relay_legs_count: "4", relay_categories: ["mix", "men", "women"], relay_legs: ["", "", "", ""], delivery_enabled: false }]);
+  const [distances, setDistances] = useState<DistanceForm[]>([{ distance_km: "10", name: "", price: "0", bib_start: "", is_relay: false, relay_legs_count: "4", relay_categories: ["mix", "men", "women"], relay_legs: ["", "", "", ""], delivery_enabled: false, is_virtual: false, virtual_start_date: "", virtual_end_date: "", distance_tolerance_percent: "5" }]);
   const [clubOptions, setClubOptions] = useState<{ id: string; name: string; city: string | null }[]>([]);
   const [clubPickerOpen, setClubPickerOpen] = useState(false);
 
@@ -122,6 +122,10 @@ const EventEditor = () => {
           ? (d.relay_legs as any[]).map((x) => String(x ?? ""))
           : Array.from({ length: d.relay_legs_count ?? 4 }, () => ""),
         delivery_enabled: !!d.delivery_enabled,
+        is_virtual: !!(d as any).is_virtual,
+        virtual_start_date: (d as any).virtual_start_date ?? "",
+        virtual_end_date: (d as any).virtual_end_date ?? "",
+        distance_tolerance_percent: (d as any).distance_tolerance_percent != null ? String((d as any).distance_tolerance_percent) : "5",
       })));
       setLoadedFor(id ?? null);
       setLoading(false);
@@ -309,6 +313,10 @@ const EventEditor = () => {
         relay_categories: d.is_relay && d.relay_categories.length > 0 ? d.relay_categories : ["mix", "men", "women"],
         relay_legs: d.is_relay ? d.relay_legs.slice(0, parseInt(d.relay_legs_count || "0", 10) || d.relay_legs.length).map((v) => parseFloat(v) || 0) : null,
         delivery_enabled: d.delivery_enabled,
+        is_virtual: d.is_virtual,
+        virtual_start_date: d.is_virtual && d.virtual_start_date ? d.virtual_start_date : null,
+        virtual_end_date: d.is_virtual && d.virtual_end_date ? d.virtual_end_date : null,
+        distance_tolerance_percent: d.is_virtual ? (parseFloat(d.distance_tolerance_percent) || 5) : 5,
       } as any).eq("id", d.id!);
       if (uErr) { toast.error(uErr.message); setBusy(false); return; }
     }
@@ -326,6 +334,10 @@ const EventEditor = () => {
       relay_categories: d.is_relay && d.relay_categories.length > 0 ? d.relay_categories : ["mix", "men", "women"],
       relay_legs: d.is_relay ? d.relay_legs.slice(0, parseInt(d.relay_legs_count || "0", 10) || d.relay_legs.length).map((v) => parseFloat(v) || 0) : null,
       delivery_enabled: d.delivery_enabled,
+      is_virtual: d.is_virtual,
+      virtual_start_date: d.is_virtual && d.virtual_start_date ? d.virtual_start_date : null,
+      virtual_end_date: d.is_virtual && d.virtual_end_date ? d.virtual_end_date : null,
+      distance_tolerance_percent: d.is_virtual ? (parseFloat(d.distance_tolerance_percent) || 5) : 5,
     }));
     if (newRows.length > 0) {
       const { error: iErr } = await supabase.from("distances").insert(newRows as any);
@@ -943,6 +955,39 @@ const EventEditor = () => {
                       </div>
                     )}
 
+                    <div className="pt-3 border-t border-border space-y-3">
+                      <div className="flex items-center gap-3">
+                        <Switch
+                          id={`virtual-${i}`}
+                          checked={d.is_virtual}
+                          onCheckedChange={(v) => { const c = [...distances]; c[i].is_virtual = v; setDistances(c); }}
+                        />
+                        <div className="flex-1">
+                          <Label htmlFor={`virtual-${i}`} className="cursor-pointer">Віртуальна гонка (Strava)</Label>
+                          <p className="text-xs text-muted-foreground">Учасники синхронізують активність зі Strava — час підтверджується автоматично за дистанцією і датою.</p>
+                        </div>
+                      </div>
+                      {d.is_virtual && (
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pl-1">
+                          <div className="space-y-1">
+                            <Label className="text-xs">Початок вікна</Label>
+                            <Input type="date" value={d.virtual_start_date}
+                              onChange={(e) => { const c = [...distances]; c[i].virtual_start_date = e.target.value; setDistances(c); }} />
+                          </div>
+                          <div className="space-y-1">
+                            <Label className="text-xs">Кінець вікна</Label>
+                            <Input type="date" value={d.virtual_end_date}
+                              onChange={(e) => { const c = [...distances]; c[i].virtual_end_date = e.target.value; setDistances(c); }} />
+                          </div>
+                          <div className="space-y-1">
+                            <Label className="text-xs">Допуск, %</Label>
+                            <Input type="number" min="0" max="50" step="0.5" value={d.distance_tolerance_percent}
+                              onChange={(e) => { const c = [...distances]; c[i].distance_tolerance_percent = e.target.value; setDistances(c); }} />
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
                     <div className="flex items-center gap-3 pt-3 border-t border-border">
                       <Switch
                         id={`delivery-${i}`}
@@ -977,7 +1022,7 @@ const EventEditor = () => {
                         variant={exists ? "secondary" : "outline"}
                         size="sm"
                         disabled={exists}
-                        onClick={() => setDistances([...distances, { distance_km: String(km), name: `${km} ${lang === "uk" ? "км" : "km"}`, price: "0", bib_start: "", is_relay: false, relay_legs_count: "4", relay_categories: ["mix", "men", "women"], relay_legs: ["", "", "", ""], delivery_enabled: false }])}
+                        onClick={() => setDistances([...distances, { distance_km: String(km), name: `${km} ${lang === "uk" ? "км" : "km"}`, price: "0", bib_start: "", is_relay: false, relay_legs_count: "4", relay_categories: ["mix", "men", "women"], relay_legs: ["", "", "", ""], delivery_enabled: false, is_virtual: false, virtual_start_date: "", virtual_end_date: "", distance_tolerance_percent: "5" }])}
                       >
                         {km} {lang === "uk" ? "км" : "km"}
                       </Button>
@@ -986,7 +1031,7 @@ const EventEditor = () => {
                 </div>
               </div>
               <Button type="button" variant="outline" size="sm"
-                onClick={() => setDistances([...distances, { distance_km: "", name: "", price: "0", bib_start: "", is_relay: false, relay_legs_count: "4", relay_categories: ["mix", "men", "women"], relay_legs: ["", "", "", ""], delivery_enabled: false }])}>
+                onClick={() => setDistances([...distances, { distance_km: "", name: "", price: "0", bib_start: "", is_relay: false, relay_legs_count: "4", relay_categories: ["mix", "men", "women"], relay_legs: ["", "", "", ""], delivery_enabled: false, is_virtual: false, virtual_start_date: "", virtual_end_date: "", distance_tolerance_percent: "5" }])}>
                 <Plus className="h-4 w-4" /> {t.organizer.addDistance} ({lang === "uk" ? "нестандартна" : "custom"})
               </Button>
             </div>
