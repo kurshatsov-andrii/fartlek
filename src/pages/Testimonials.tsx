@@ -93,11 +93,84 @@ const Testimonials = () => {
       (authors ?? []).forEach((a: any) => map.set(a.id, { full_name: a.full_name, avatar_url: a.avatar_url }));
       rows.forEach((r) => (r.author = map.get(r.user_id) ?? null));
     }
+
+    // Load reactions for all testimonials
+    const tIds = rows.map((r) => r.id);
+    if (tIds.length) {
+      const { data: reactions } = await supabase
+        .from("testimonial_reactions")
+        .select("testimonial_id,emoji,user_id")
+        .in("testimonial_id", tIds);
+      const grouped = new Map<string, Map<string, { count: number; reactedByMe: boolean }>>();
+      (reactions ?? []).forEach((r: any) => {
+        if (!grouped.has(r.testimonial_id)) grouped.set(r.testimonial_id, new Map());
+        const m = grouped.get(r.testimonial_id)!;
+        const cur = m.get(r.emoji) ?? { count: 0, reactedByMe: false };
+        cur.count += 1;
+        if (r.user_id === user?.id) cur.reactedByMe = true;
+        m.set(r.emoji, cur);
+      });
+      rows.forEach((r) => {
+        const m = grouped.get(r.id);
+        r.reactions = m
+          ? Array.from(m.entries()).map(([emoji, v]) => ({ emoji, ...v }))
+          : [];
+      });
+    }
+
     setItems(rows);
     setLoading(false);
   };
 
+  const toggleReaction = async (testimonialId: string, emoji: string) => {
+    if (!user) {
+      toast.error("Увійдіть, щоб додати реакцію");
+      return;
+    }
+    const t = items.find((i) => i.id === testimonialId);
+    const existing = t?.reactions?.find((r) => r.emoji === emoji);
+    if (existing?.reactedByMe) {
+      const { error } = await supabase
+        .from("testimonial_reactions")
+        .delete()
+        .eq("testimonial_id", testimonialId)
+        .eq("user_id", user.id)
+        .eq("emoji", emoji);
+      if (error) {
+        toast.error("Не вдалося прибрати реакцію");
+        return;
+      }
+    } else {
+      const { error } = await supabase
+        .from("testimonial_reactions")
+        .insert({ testimonial_id: testimonialId, user_id: user.id, emoji });
+      if (error) {
+        toast.error("Не вдалося додати реакцію");
+        return;
+      }
+    }
+    // Optimistic refresh
+    setItems((prev) =>
+      prev.map((it) => {
+        if (it.id !== testimonialId) return it;
+        const reactions = [...(it.reactions ?? [])];
+        const idx = reactions.findIndex((r) => r.emoji === emoji);
+        if (idx >= 0) {
+          const r = reactions[idx];
+          const newCount = r.reactedByMe ? r.count - 1 : r.count + 1;
+          if (newCount <= 0) reactions.splice(idx, 1);
+          else reactions[idx] = { emoji, count: newCount, reactedByMe: !r.reactedByMe };
+        } else {
+          reactions.push({ emoji, count: 1, reactedByMe: true });
+        }
+        return { ...it, reactions };
+      })
+    );
+  };
+
   useEffect(() => {
+    load();
+  }, [user?.id]);
     load();
   }, []);
 
