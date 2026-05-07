@@ -36,7 +36,7 @@ const Participants = () => {
   const [moveTarget, setMoveTarget] = useState<any | null>(null);
   const [moveToId, setMoveToId] = useState<string>("");
   const [moving, setMoving] = useState(false);
-  const [receiptDialog, setReceiptDialog] = useState<{ url: string; isImage: boolean } | null>(null);
+  const [receiptDialog, setReceiptDialog] = useState<{ url: string; isImage: boolean; isHeic?: boolean } | null>(null);
 
   // Filters
   const [fGender, setFGender] = useState<string>("all");
@@ -81,8 +81,10 @@ const Participants = () => {
       .from("payment-receipts")
       .createSignedUrl(path, 60 * 10);
     if (error || !data?.signedUrl) { toast.error(error?.message ?? "Error"); return; }
-    const isImage = /\.(png|jpe?g|gif|webp|heic|heif|bmp)$/i.test(path);
-    setReceiptDialog({ url: data.signedUrl, isImage });
+    // HEIC/HEIF are not renderable by most browsers — treat as non-image so we show a download fallback.
+    const isImage = /\.(png|jpe?g|gif|webp|bmp)$/i.test(path);
+    const isHeic = /\.(heic|heif)$/i.test(path);
+    setReceiptDialog({ url: data.signedUrl, isImage, isHeic } as any);
   };
 
   const revoke = async (regId: string) => {
@@ -884,11 +886,25 @@ const Participants = () => {
               {lang === "uk" ? "Квитанція" : "Receipt"}
             </DialogTitle>
           </DialogHeader>
-          <div className="flex-1 overflow-auto bg-muted flex items-center justify-center">
-            {receiptDialog?.isImage ? (
-              <img src={receiptDialog.url} alt="receipt" className="max-w-full max-h-full object-contain" />
+          <div className="flex-1 overflow-auto bg-muted flex items-center justify-center p-4">
+            {receiptDialog?.isHeic ? (
+              <div className="text-center text-sm text-muted-foreground space-y-3 max-w-md">
+                <FileText className="h-10 w-10 mx-auto text-primary" />
+                <p>
+                  {lang === "uk"
+                    ? "Формат HEIC/HEIF не підтримується для попереднього перегляду в браузері. Завантажте файл, щоб переглянути."
+                    : "HEIC/HEIF preview is not supported in the browser. Download the file to view it."}
+                </p>
+                <Button asChild size="sm">
+                  <a href={receiptDialog.url} target="_blank" rel="noopener noreferrer" download>
+                    {lang === "uk" ? "Завантажити" : "Download"}
+                  </a>
+                </Button>
+              </div>
+            ) : receiptDialog?.isImage ? (
+              <img src={receiptDialog.url} alt="receipt" className="max-w-full max-h-full object-contain bg-white" />
             ) : receiptDialog ? (
-              <iframe src={receiptDialog.url} title="receipt" className="w-full h-full" />
+              <iframe src={receiptDialog.url} title="receipt" className="w-full h-full bg-white" />
             ) : null}
           </div>
           <div className="p-3 border-t border-border flex justify-end">
