@@ -8,6 +8,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -43,6 +45,9 @@ const AdminCampaigns = () => {
     "Ділимось добіркою найближчих подій на платформі. Обирай свою та реєструйся!"
   );
   const [cityFilter, setCityFilter] = useState("");
+  const [audienceMode, setAudienceMode] = useState<"all" | "event">("all");
+  const [audienceEventId, setAudienceEventId] = useState<string>("");
+  const [allEvents, setAllEvents] = useState<EventLite[]>([]);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [testEmail, setTestEmail] = useState("");
   const [batchSize, setBatchSize] = useState(50);
@@ -53,7 +58,7 @@ const AdminCampaigns = () => {
   useEffect(() => {
     if (!isAdmin) return;
     (async () => {
-      const [{ data: ev }, { data: c }] = await Promise.all([
+      const [{ data: ev }, { data: evAll }, { data: c }] = await Promise.all([
         supabase
           .from("events")
           .select("id, title, event_date, location, status")
@@ -61,12 +66,18 @@ const AdminCampaigns = () => {
           .gte("event_date", new Date().toISOString().slice(0, 10))
           .order("event_date"),
         supabase
+          .from("events")
+          .select("id, title, event_date, location, status")
+          .in("status", ["published", "completed"])
+          .order("event_date", { ascending: false }),
+        supabase
           .from("marketing_campaigns" as any)
           .select("*")
           .order("created_at", { ascending: false })
           .limit(20),
       ]);
       setEvents((ev ?? []) as EventLite[]);
+      setAllEvents((evAll ?? []) as EventLite[]);
       setCampaigns((c ?? []) as unknown as Campaign[]);
       setPageLoading(false);
     })();
@@ -75,6 +86,24 @@ const AdminCampaigns = () => {
   useEffect(() => {
     if (!isAdmin) return;
     (async () => {
+      if (audienceMode === "event") {
+        if (!audienceEventId) { setRecipientCount(0); return; }
+        // Count distinct registered users with marketing_consent
+        const { data: regs } = await supabase
+          .from("registrations")
+          .select("user_id")
+          .eq("event_id", audienceEventId);
+        const ids = Array.from(new Set((regs ?? []).map((r: any) => r.user_id)));
+        if (ids.length === 0) { setRecipientCount(0); return; }
+        const { count } = await supabase
+          .from("profiles")
+          .select("id", { count: "exact", head: true })
+          .in("id", ids)
+          .eq("marketing_consent", true)
+          .not("email", "is", null);
+        setRecipientCount(count ?? 0);
+        return;
+      }
       let q = supabase
         .from("profiles")
         .select("id", { count: "exact", head: true })
@@ -84,7 +113,7 @@ const AdminCampaigns = () => {
       const { count } = await q;
       setRecipientCount(count ?? 0);
     })();
-  }, [isAdmin, cityFilter]);
+  }, [isAdmin, cityFilter, audienceMode, audienceEventId]);
 
   if (loading || pageLoading)
     return <div className="min-h-screen flex items-center justify-center"><Loader2 className="h-8 w-8 animate-spin" /></div>;
@@ -99,8 +128,12 @@ const AdminCampaigns = () => {
   };
 
   const createAndSend = async (mode: "test" | "real") => {
-    if (mode === "real" && selectedIds.size === 0) {
-      toast.error("Оберіть хоча б одну подію");
+    if (mode === "real" && selectedIds.size === 0 && !intro.trim()) {
+      toast.error("Оберіть хоча б одну подію або заповніть вступний текст");
+      return;
+    }
+    if (mode === "real" && audienceMode === "event" && !audienceEventId) {
+      toast.error("Оберіть подію для розсилки учасникам");
       return;
     }
     if (mode === "test" && !testEmail.trim()) {
@@ -125,7 +158,9 @@ const AdminCampaigns = () => {
           subject: subject.trim(),
           intro_text: intro.trim(),
           event_ids: Array.from(selectedIds),
-          audience_filter: cityFilter.trim() ? { city: cityFilter.trim() } : {},
+          audience_filter: audienceMode === "event" && audienceEventId
+            ? { event_id: audienceEventId }
+            : (cityFilter.trim() ? { city: cityFilter.trim() } : {}),
           created_by: user.id,
         } as any)
         .select()
@@ -255,25 +290,77 @@ const AdminCampaigns = () => {
             )}
           </div>
 
-          <div className="grid sm:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label>Фільтр за містом (необов'язково)</Label>
-              <Input
-                placeholder="напр. Київ"
-                value={cityFilter}
-                onChange={(e) => setCityFilter(e.target.value)}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label>Аудиторія</Label>
-              <div className="flex items-center gap-2 h-10 px-3 rounded-md bg-muted/50 border border-border">
-                <Eye className="h-4 w-4 text-muted-foreground" />
-                <span className="text-sm">
-                  {recipientCount === null ? "..." : `${recipientCount} підписників`}
-                </span>
+          <div className="space-y-3 border border-border rounded-lg p-4">
+            <Label className="text-base">Кому надіслати</Label>
+            <RadioGroup
+              value={audienceMode}
+              onValueChange={(v) => setAudienceMode(v as "all" | "event")}
+              className="grid sm:grid-cols-2 gap-2"
+            >
+              <label className={`flex items-start gap-3 p-3 rounded-lg border cursor-pointer ${audienceMode === "all" ? "border-primary bg-primary/5" : "border-border"}`}>
+                <RadioGroupItem value="all" className="mt-1" />
+                <div>
+                  <div className="font-medium text-sm">Усім підписникам</div>
+                  <div className="text-xs text-muted-foreground">Користувачі з підпискою на розсилки</div>
+                </div>
+              </label>
+              <label className={`flex items-start gap-3 p-3 rounded-lg border cursor-pointer ${audienceMode === "event" ? "border-primary bg-primary/5" : "border-border"}`}>
+                <RadioGroupItem value="event" className="mt-1" />
+                <div>
+                  <div className="font-medium text-sm">Учасникам конкретної події</div>
+                  <div className="text-xs text-muted-foreground">Лише ті, хто зареєстрований на подію</div>
+                </div>
+              </label>
+            </RadioGroup>
+
+            {audienceMode === "all" ? (
+              <div className="grid sm:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>Фільтр за містом (необов'язково)</Label>
+                  <Input
+                    placeholder="напр. Київ"
+                    value={cityFilter}
+                    onChange={(e) => setCityFilter(e.target.value)}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Аудиторія</Label>
+                  <div className="flex items-center gap-2 h-10 px-3 rounded-md bg-muted/50 border border-border">
+                    <Eye className="h-4 w-4 text-muted-foreground" />
+                    <span className="text-sm">
+                      {recipientCount === null ? "..." : `${recipientCount} підписників`}
+                    </span>
+                  </div>
+                </div>
               </div>
-            </div>
+            ) : (
+              <div className="grid sm:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>Подія</Label>
+                  <Select value={audienceEventId} onValueChange={setAudienceEventId}>
+                    <SelectTrigger><SelectValue placeholder="Оберіть подію" /></SelectTrigger>
+                    <SelectContent>
+                      {allEvents.map((e) => (
+                        <SelectItem key={e.id} value={e.id}>
+                          {e.title} — {new Date(e.event_date).toLocaleDateString("uk-UA")}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label>Аудиторія</Label>
+                  <div className="flex items-center gap-2 h-10 px-3 rounded-md bg-muted/50 border border-border">
+                    <Eye className="h-4 w-4 text-muted-foreground" />
+                    <span className="text-sm">
+                      {recipientCount === null ? "..." : `${recipientCount} учасників`}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
+
 
           <div className="border-t border-border pt-5 space-y-4">
             <div>
@@ -290,7 +377,7 @@ const AdminCampaigns = () => {
                 />
                 <Button
                   variant="outline"
-                  disabled={busy || selectedIds.size === 0}
+                  disabled={busy}
                   onClick={() => createAndSend("test")}
                 >
                   Тест
@@ -325,7 +412,7 @@ const AdminCampaigns = () => {
             <Button
               size="lg"
               className="w-full"
-              disabled={busy || selectedIds.size === 0 || !recipientCount}
+              disabled={busy || !recipientCount || (audienceMode === "event" && !audienceEventId)}
               onClick={() => createAndSend("real")}
             >
               {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
