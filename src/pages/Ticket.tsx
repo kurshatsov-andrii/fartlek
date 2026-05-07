@@ -382,7 +382,7 @@ const Ticket = () => {
             <input
               ref={fileRef}
               type="file"
-              accept="image/jpeg,image/png,image/webp,application/pdf"
+              accept="image/*,application/pdf,.pdf,.jpg,.jpeg,.png,.webp,.heic,.heif"
               className="hidden"
               onChange={onReceiptChange}
             />
