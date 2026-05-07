@@ -377,7 +377,7 @@ const AdminCampaigns = () => {
                 />
                 <Button
                   variant="outline"
-                  disabled={busy || selectedIds.size === 0}
+                  disabled={busy}
                   onClick={() => createAndSend("test")}
                 >
                   Тест
