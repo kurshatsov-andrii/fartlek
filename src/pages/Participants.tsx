@@ -352,6 +352,16 @@ const Participants = () => {
   if (authLoading) return null;
   if (!user) return <Navigate to={`/auth?redirect=/events/${id}/participants`} replace />;
 
+  const fmtResult = (s: number) => {
+    const h = Math.floor(s / 3600);
+    const m = Math.floor((s % 3600) / 60);
+    const sec = s % 60;
+    return h > 0
+      ? `${h}:${String(m).padStart(2, "0")}:${String(sec).padStart(2, "0")}`
+      : `${m}:${String(sec).padStart(2, "0")}`;
+  };
+  const hasAnyResult = Object.keys(resultsMap).length > 0;
+
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Header />
