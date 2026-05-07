@@ -56,7 +56,7 @@ const AdminCampaigns = () => {
   useEffect(() => {
     if (!isAdmin) return;
     (async () => {
-      const [{ data: ev }, { data: c }] = await Promise.all([
+      const [{ data: ev }, { data: evAll }, { data: c }] = await Promise.all([
         supabase
           .from("events")
           .select("id, title, event_date, location, status")
@@ -64,12 +64,18 @@ const AdminCampaigns = () => {
           .gte("event_date", new Date().toISOString().slice(0, 10))
           .order("event_date"),
         supabase
+          .from("events")
+          .select("id, title, event_date, location, status")
+          .in("status", ["published", "completed"])
+          .order("event_date", { ascending: false }),
+        supabase
           .from("marketing_campaigns" as any)
           .select("*")
           .order("created_at", { ascending: false })
           .limit(20),
       ]);
       setEvents((ev ?? []) as EventLite[]);
+      setAllEvents((evAll ?? []) as EventLite[]);
       setCampaigns((c ?? []) as unknown as Campaign[]);
       setPageLoading(false);
     })();
