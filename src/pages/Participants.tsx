@@ -425,7 +425,34 @@ const Participants = () => {
                 </Link>
               </Button>
             )}
-          </div>
+            {isOrganizer && distances.some((d: any) => d.is_virtual) && (
+              <Button
+                variant="outline"
+                size="sm"
+                className="gap-2 border-[#FC4C02]/30 text-[#FC4C02] hover:bg-[#FC4C02]/10"
+                disabled={syncingAll}
+                onClick={async () => {
+                  if (!id) return;
+                  setSyncingAll(true);
+                  try {
+                    const { data, error } = await supabase.functions.invoke("strava-sync-activities", {
+                      body: { event_id: id, all_users: true },
+                    });
+                    if (error) throw error;
+                    const m = (data as any)?.matched ?? 0;
+                    toast.success(lang === "uk" ? `Синхронізовано: ${m}` : `Synced: ${m}`);
+                    await load();
+                  } catch (e: any) {
+                    toast.error(e?.message ?? "Error");
+                  } finally {
+                    setSyncingAll(false);
+                  }
+                }}
+              >
+                {syncingAll ? <Loader2 className="h-4 w-4 animate-spin" /> : <Trophy className="h-4 w-4" />}
+                {lang === "uk" ? "Синхронізувати Strava" : "Sync Strava"}
+              </Button>
+            )}
         </div>
 
         {!loading && rows.length > 0 && (
