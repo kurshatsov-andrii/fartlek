@@ -117,17 +117,33 @@ const Ticket = () => {
     e.target.value = "";
     if (!file || !data || !user) return;
 
-    const allowed = ["image/jpeg", "image/png", "image/webp", "application/pdf"];
-    if (!allowed.includes(file.type)) { toast.error(t.ticket.receiptInvalidType); return; }
+    const allowedMime = ["image/jpeg", "image/jpg", "image/png", "image/webp", "image/heic", "image/heif", "application/pdf"];
+    const allowedExt = ["jpg", "jpeg", "png", "webp", "heic", "heif", "pdf"];
+    const ext = (file.name.split(".").pop() || "").toLowerCase();
+    const mimeOk = file.type ? allowedMime.includes(file.type.toLowerCase()) : false;
+    const extOk = ext ? allowedExt.includes(ext) : false;
+    // On mobile (especially iOS), file.type can be empty or non-standard — fall back to extension.
+    if (!mimeOk && !extOk) { toast.error(t.ticket.receiptInvalidType); return; }
     if (file.size > 10 * 1024 * 1024) { toast.error(t.ticket.receiptTooBig); return; }
 
     setUploadingReceipt(true);
     try {
-      const ext = file.name.split(".").pop()?.toLowerCase() || (file.type === "application/pdf" ? "pdf" : "jpg");
-      const path = `${user.id}/${data.id}-${Date.now()}.${ext}`;
+      const safeExt = ext || (file.type === "application/pdf" ? "pdf" : "jpg");
+      const contentType =
+        file.type ||
+        (safeExt === "pdf"
+          ? "application/pdf"
+          : safeExt === "png"
+          ? "image/png"
+          : safeExt === "webp"
+          ? "image/webp"
+          : safeExt === "heic" || safeExt === "heif"
+          ? `image/${safeExt}`
+          : "image/jpeg");
+      const path = `${user.id}/${data.id}-${Date.now()}.${safeExt}`;
       const { error: upErr } = await supabase.storage
         .from("payment-receipts")
-        .upload(path, file, { contentType: file.type, upsert: false });
+        .upload(path, file, { contentType, upsert: false });
       if (upErr) throw upErr;
 
       // Cleanup previous file (best effort)
@@ -366,7 +382,7 @@ const Ticket = () => {
             <input
               ref={fileRef}
               type="file"
-              accept="image/jpeg,image/png,image/webp,application/pdf"
+              accept="image/*,application/pdf,.pdf,.jpg,.jpeg,.png,.webp,.heic,.heif"
               className="hidden"
               onChange={onReceiptChange}
             />
