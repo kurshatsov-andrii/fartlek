@@ -981,7 +981,7 @@ const EventEditor = () => {
                         variant={exists ? "secondary" : "outline"}
                         size="sm"
                         disabled={exists}
-                        onClick={() => setDistances([...distances, { distance_km: String(km), name: `${km} ${lang === "uk" ? "км" : "km"}`, price: "0", bib_start: "", is_relay: false, relay_legs_count: "4", relay_categories: ["mix", "men", "women"], relay_legs: ["", "", "", ""], delivery_enabled: false }])}
+                        onClick={() => setDistances([...distances, { distance_km: String(km), name: `${km} ${lang === "uk" ? "км" : "km"}`, price: "0", bib_start: "", is_relay: false, relay_legs_count: "4", relay_categories: ["mix", "men", "women"], relay_legs: ["", "", "", ""], delivery_enabled: false, is_virtual: false, virtual_start_date: "", virtual_end_date: "", distance_tolerance_percent: "5" }])}
                       >
                         {km} {lang === "uk" ? "км" : "km"}
                       </Button>
@@ -990,7 +990,7 @@ const EventEditor = () => {
                 </div>
               </div>
               <Button type="button" variant="outline" size="sm"
-                onClick={() => setDistances([...distances, { distance_km: "", name: "", price: "0", bib_start: "", is_relay: false, relay_legs_count: "4", relay_categories: ["mix", "men", "women"], relay_legs: ["", "", "", ""], delivery_enabled: false }])}>
+                onClick={() => setDistances([...distances, { distance_km: "", name: "", price: "0", bib_start: "", is_relay: false, relay_legs_count: "4", relay_categories: ["mix", "men", "women"], relay_legs: ["", "", "", ""], delivery_enabled: false, is_virtual: false, virtual_start_date: "", virtual_end_date: "", distance_tolerance_percent: "5" }])}>
                 <Plus className="h-4 w-4" /> {t.organizer.addDistance} ({lang === "uk" ? "нестандартна" : "custom"})
               </Button>
             </div>
