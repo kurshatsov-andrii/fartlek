@@ -152,7 +152,9 @@ const AdminCampaigns = () => {
           subject: subject.trim(),
           intro_text: intro.trim(),
           event_ids: Array.from(selectedIds),
-          audience_filter: cityFilter.trim() ? { city: cityFilter.trim() } : {},
+          audience_filter: audienceMode === "event" && audienceEventId
+            ? { event_id: audienceEventId }
+            : (cityFilter.trim() ? { city: cityFilter.trim() } : {}),
           created_by: user.id,
         } as any)
         .select()
