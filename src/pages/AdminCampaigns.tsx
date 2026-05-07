@@ -290,25 +290,77 @@ const AdminCampaigns = () => {
             )}
           </div>
 
-          <div className="grid sm:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label>Фільтр за містом (необов'язково)</Label>
-              <Input
-                placeholder="напр. Київ"
-                value={cityFilter}
-                onChange={(e) => setCityFilter(e.target.value)}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label>Аудиторія</Label>
-              <div className="flex items-center gap-2 h-10 px-3 rounded-md bg-muted/50 border border-border">
-                <Eye className="h-4 w-4 text-muted-foreground" />
-                <span className="text-sm">
-                  {recipientCount === null ? "..." : `${recipientCount} підписників`}
-                </span>
+          <div className="space-y-3 border border-border rounded-lg p-4">
+            <Label className="text-base">Кому надіслати</Label>
+            <RadioGroup
+              value={audienceMode}
+              onValueChange={(v) => setAudienceMode(v as "all" | "event")}
+              className="grid sm:grid-cols-2 gap-2"
+            >
+              <label className={`flex items-start gap-3 p-3 rounded-lg border cursor-pointer ${audienceMode === "all" ? "border-primary bg-primary/5" : "border-border"}`}>
+                <RadioGroupItem value="all" className="mt-1" />
+                <div>
+                  <div className="font-medium text-sm">Усім підписникам</div>
+                  <div className="text-xs text-muted-foreground">Користувачі з підпискою на розсилки</div>
+                </div>
+              </label>
+              <label className={`flex items-start gap-3 p-3 rounded-lg border cursor-pointer ${audienceMode === "event" ? "border-primary bg-primary/5" : "border-border"}`}>
+                <RadioGroupItem value="event" className="mt-1" />
+                <div>
+                  <div className="font-medium text-sm">Учасникам конкретної події</div>
+                  <div className="text-xs text-muted-foreground">Лише ті, хто зареєстрований на подію</div>
+                </div>
+              </label>
+            </RadioGroup>
+
+            {audienceMode === "all" ? (
+              <div className="grid sm:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>Фільтр за містом (необов'язково)</Label>
+                  <Input
+                    placeholder="напр. Київ"
+                    value={cityFilter}
+                    onChange={(e) => setCityFilter(e.target.value)}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Аудиторія</Label>
+                  <div className="flex items-center gap-2 h-10 px-3 rounded-md bg-muted/50 border border-border">
+                    <Eye className="h-4 w-4 text-muted-foreground" />
+                    <span className="text-sm">
+                      {recipientCount === null ? "..." : `${recipientCount} підписників`}
+                    </span>
+                  </div>
+                </div>
               </div>
-            </div>
+            ) : (
+              <div className="grid sm:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>Подія</Label>
+                  <Select value={audienceEventId} onValueChange={setAudienceEventId}>
+                    <SelectTrigger><SelectValue placeholder="Оберіть подію" /></SelectTrigger>
+                    <SelectContent>
+                      {allEvents.map((e) => (
+                        <SelectItem key={e.id} value={e.id}>
+                          {e.title} — {new Date(e.event_date).toLocaleDateString("uk-UA")}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label>Аудиторія</Label>
+                  <div className="flex items-center gap-2 h-10 px-3 rounded-md bg-muted/50 border border-border">
+                    <Eye className="h-4 w-4 text-muted-foreground" />
+                    <span className="text-sm">
+                      {recipientCount === null ? "..." : `${recipientCount} учасників`}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
+
 
           <div className="border-t border-border pt-5 space-y-4">
             <div>
