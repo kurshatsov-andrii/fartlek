@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
-import { ArrowLeft, Loader2, CheckCircle2, XCircle, FileText, RotateCcw, Trash2, X, Bell, ArrowRightLeft, Download, Package } from "lucide-react";
+import { ArrowLeft, Loader2, CheckCircle2, XCircle, FileText, RotateCcw, Trash2, X, Bell, ArrowRightLeft, Download, Package, Mail } from "lucide-react";
 import * as XLSX from "xlsx";
 import { toast } from "sonner";
 import { Header } from "@/components/Header";
@@ -396,6 +396,14 @@ const Participants = () => {
                 <span className="ml-1 inline-flex items-center justify-center rounded-full bg-primary text-primary-foreground text-xs h-5 min-w-5 px-1.5">
                   {reminderTargets.length}
                 </span>
+              </Button>
+            )}
+            {isOrganizer && (
+              <Button asChild variant="outline" size="sm" className="gap-2">
+                <Link to={`/organizer/events/${id}/campaign`}>
+                  <Mail className="h-4 w-4" />
+                  {lang === "uk" ? "Написати учасникам" : "Email participants"}
+                </Link>
               </Button>
             )}
           </div>
