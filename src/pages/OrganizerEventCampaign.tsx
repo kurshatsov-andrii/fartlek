@@ -197,10 +197,10 @@ const OrganizerEventCampaign = () => {
               value={intro}
               onChange={(e) => setIntro(e.target.value)}
               rows={8}
-              maxLength={2000}
+              maxLength={1000}
               placeholder="Час старту, локація, стартовий пакет, погода, важливі деталі..."
             />
-            <p className="text-xs text-muted-foreground">До 2000 символів. Переноси рядків зберігаються.</p>
+            <p className="text-xs text-muted-foreground">{intro.length} / 1000 символів. Переноси рядків зберігаються.</p>
           </div>
 
           <div className="grid sm:grid-cols-2 gap-4">

@@ -246,9 +246,10 @@ const AdminCampaigns = () => {
               value={intro}
               onChange={(e) => setIntro(e.target.value)}
               rows={3}
-              maxLength={500}
+              maxLength={1000}
               placeholder="Короткий привітальний текст перед списком подій"
             />
+            <p className="text-xs text-muted-foreground">{intro.length} / 1000 символів</p>
           </div>
 
           <div className="space-y-2">
