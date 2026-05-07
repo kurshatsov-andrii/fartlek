@@ -169,11 +169,14 @@ const Testimonials = () => {
           <div className="text-center mb-10">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold tracking-widest uppercase mb-4">
               <Quote className="h-3.5 w-3.5" />
-              Відгуки
+              Відгуки 💬✨
             </div>
             <h1 className="font-display text-3xl md:text-5xl font-bold tracking-tight mb-4">
-              Що кажуть про Fartlek
+              Що кажуть про Fartlek 🏃‍♂️🔥
             </h1>
+            <p className="text-muted-foreground mb-2">
+              🌟 Ділись враженнями та надихай інших! 💪🎉
+            </p>
             {items.length > 0 && (
               <div className="flex items-center justify-center gap-3 text-muted-foreground">
                 <Stars value={Math.round(avg)} size={20} />
