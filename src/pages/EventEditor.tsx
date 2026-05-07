@@ -313,6 +313,10 @@ const EventEditor = () => {
         relay_categories: d.is_relay && d.relay_categories.length > 0 ? d.relay_categories : ["mix", "men", "women"],
         relay_legs: d.is_relay ? d.relay_legs.slice(0, parseInt(d.relay_legs_count || "0", 10) || d.relay_legs.length).map((v) => parseFloat(v) || 0) : null,
         delivery_enabled: d.delivery_enabled,
+        is_virtual: d.is_virtual,
+        virtual_start_date: d.is_virtual && d.virtual_start_date ? d.virtual_start_date : null,
+        virtual_end_date: d.is_virtual && d.virtual_end_date ? d.virtual_end_date : null,
+        distance_tolerance_percent: d.is_virtual ? (parseFloat(d.distance_tolerance_percent) || 5) : 5,
       } as any).eq("id", d.id!);
       if (uErr) { toast.error(uErr.message); setBusy(false); return; }
     }
@@ -330,6 +334,10 @@ const EventEditor = () => {
       relay_categories: d.is_relay && d.relay_categories.length > 0 ? d.relay_categories : ["mix", "men", "women"],
       relay_legs: d.is_relay ? d.relay_legs.slice(0, parseInt(d.relay_legs_count || "0", 10) || d.relay_legs.length).map((v) => parseFloat(v) || 0) : null,
       delivery_enabled: d.delivery_enabled,
+      is_virtual: d.is_virtual,
+      virtual_start_date: d.is_virtual && d.virtual_start_date ? d.virtual_start_date : null,
+      virtual_end_date: d.is_virtual && d.virtual_end_date ? d.virtual_end_date : null,
+      distance_tolerance_percent: d.is_virtual ? (parseFloat(d.distance_tolerance_percent) || 5) : 5,
     }));
     if (newRows.length > 0) {
       const { error: iErr } = await supabase.from("distances").insert(newRows as any);
