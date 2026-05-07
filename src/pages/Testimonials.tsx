@@ -268,27 +268,27 @@ const Testimonials = () => {
             <Card className="mb-10">
               <CardContent className="pt-6 space-y-4">
                 <h2 className="text-lg font-semibold">
-                  {myExisting ? "Оновити свій відгук ✏️" : "Залишити відгук 💖"}
+                  {myExisting ? "Оновити свій відгук" : "Залишити відгук"}
                 </h2>
                 <form onSubmit={submit} className="space-y-4">
                   <div className="space-y-2">
-                    <Label>Ваша оцінка ⭐</Label>
+                    <Label>Ваша оцінка</Label>
                     <Stars value={rating} onChange={setRating} />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="content">Ваш відгук 💬</Label>
+                    <Label htmlFor="content">Ваш відгук</Label>
                     <Textarea
                       id="content"
                       value={content}
                       onChange={(e) => setContent(e.target.value)}
                       rows={4}
                       maxLength={2000}
-                      placeholder="Поділіться враженнями про платформу… 🏃‍♀️🎉"
+                      placeholder="Поділіться враженнями про платформу…"
                     />
                     <div className="text-xs text-muted-foreground text-right">{content.length}/2000</div>
                   </div>
                   <Button type="submit" disabled={busy}>
-                    {busy ? "Надсилаємо… 🚀" : myExisting ? "Оновити ✨" : "Надіслати 🚀"}
+                    {busy ? "Надсилаємо…" : myExisting ? "Оновити" : "Надіслати"}
                   </Button>
                 </form>
               </CardContent>
@@ -297,7 +297,7 @@ const Testimonials = () => {
             <Card className="mb-10">
               <CardContent className="py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
                 <p className="text-muted-foreground text-center sm:text-left">
-                  🔐 Лише користувачі платформи можуть залишати відгуки. Приєднуйся до нас! 🎉🏃‍♂️
+                  Лише користувачі платформи можуть залишати відгуки.
                 </p>
                 <Button asChild>
                   <Link to="/auth">Увійти / зареєструватися ✨</Link>
