@@ -200,7 +200,9 @@ export type Database = {
           relay_legs: Json | null
           relay_legs_count: number | null
           virtual_end_date: string | null
+          virtual_end_time: string | null
           virtual_start_date: string | null
+          virtual_start_time: string | null
         }
         Insert: {
           bib_start?: number | null
@@ -220,7 +222,9 @@ export type Database = {
           relay_legs?: Json | null
           relay_legs_count?: number | null
           virtual_end_date?: string | null
+          virtual_end_time?: string | null
           virtual_start_date?: string | null
+          virtual_start_time?: string | null
         }
         Update: {
           bib_start?: number | null
@@ -240,7 +244,9 @@ export type Database = {
           relay_legs?: Json | null
           relay_legs_count?: number | null
           virtual_end_date?: string | null
+          virtual_end_time?: string | null
           virtual_start_date?: string | null
+          virtual_start_time?: string | null
         }
         Relationships: [
           {

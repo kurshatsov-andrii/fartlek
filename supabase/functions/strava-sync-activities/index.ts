@@ -98,7 +98,7 @@ Deno.serve(async (req) => {
     // Load user's registrations (optionally filter by event)
     let regsQ = admin
       .from("registrations")
-      .select("id, event_id, distance_id, user_id, distances:distance_id(distance_km, is_virtual, virtual_start_date, virtual_end_date, distance_tolerance_percent), events:event_id(event_date)")
+      .select("id, event_id, distance_id, user_id, distances:distance_id(distance_km, is_virtual, virtual_start_date, virtual_end_date, virtual_start_time, virtual_end_time, distance_tolerance_percent), events:event_id(event_date)")
       .eq("user_id", userId);
     if (eventId) regsQ = regsQ.eq("event_id", eventId);
     const { data: regs, error: re } = await regsQ;
@@ -155,10 +155,26 @@ Deno.serve(async (req) => {
       const endDate = d.virtual_end_date ? new Date(d.virtual_end_date) : new Date(reg.events.event_date);
       endDate.setHours(23, 59, 59, 999);
 
+      // Optional time-of-day window (HH:MM[:SS])
+      const parseHM = (v: string | null | undefined): [number, number] | null => {
+        if (!v) return null;
+        const [h, m] = v.split(":").map((n) => parseInt(n, 10));
+        if (Number.isNaN(h) || Number.isNaN(m)) return null;
+        return [h, m];
+      };
+      const tStart = parseHM(d.virtual_start_time);
+      const tEnd = parseHM(d.virtual_end_time);
+
       const candidates = acts
         .filter((a) => {
-          const t = new Date(a.start_date).getTime();
+          const dt = new Date(a.start_date);
+          const t = dt.getTime();
           if (t < startDate.getTime() || t > endDate.getTime()) return false;
+          if (tStart || tEnd) {
+            const minutes = dt.getHours() * 60 + dt.getMinutes();
+            if (tStart && minutes < tStart[0] * 60 + tStart[1]) return false;
+            if (tEnd && minutes > tEnd[0] * 60 + tEnd[1]) return false;
+          }
           if (a.distance < minM || a.distance > maxM) return false;
           const sport = (a.sport_type || a.type || "").toLowerCase();
           return sport.includes("run") || sport.includes("walk") || sport.includes("ride") || sport.includes("trail");
