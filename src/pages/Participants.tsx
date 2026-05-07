@@ -73,6 +73,13 @@ const Participants = () => {
     setDistances(dists ?? []);
     const { data: participants } = await (supabase.rpc as any)("get_event_participants", { _event_id: id });
     setRows(participants ?? []);
+    const { data: resData } = await supabase
+      .from("event_results")
+      .select("registration_id, time_seconds, distance_meters, source, strava_activity_id, verified")
+      .eq("event_id", id);
+    const rmap: Record<string, any> = {};
+    (resData ?? []).forEach((r: any) => { rmap[r.registration_id] = r; });
+    setResultsMap(rmap);
     setLoading(false);
   };
 
