@@ -969,23 +969,55 @@ const EventEditor = () => {
                         </div>
                       </div>
                       {d.is_virtual && (
-                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pl-1">
-                          <div className="space-y-1">
-                            <Label className="text-xs">Початок вікна</Label>
-                            <Input type="date" value={d.virtual_start_date}
-                              onChange={(e) => { const c = [...distances]; c[i].virtual_start_date = e.target.value; setDistances(c); }} />
+                        <TooltipProvider delayDuration={150}>
+                          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pl-1">
+                            <div className="space-y-1">
+                              <Label className="text-xs flex items-center gap-1">
+                                Початкова дата
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <button type="button" className="text-muted-foreground hover:text-foreground"><HelpCircle className="h-3.5 w-3.5" /></button>
+                                  </TooltipTrigger>
+                                  <TooltipContent className="max-w-xs">
+                                    Перший день, з якого приймаються активності зі Strava. Тренування раніше цієї дати не зарахуються.
+                                  </TooltipContent>
+                                </Tooltip>
+                              </Label>
+                              <Input type="date" value={d.virtual_start_date}
+                                onChange={(e) => { const c = [...distances]; c[i].virtual_start_date = e.target.value; setDistances(c); }} />
+                            </div>
+                            <div className="space-y-1">
+                              <Label className="text-xs flex items-center gap-1">
+                                Остання дата
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <button type="button" className="text-muted-foreground hover:text-foreground"><HelpCircle className="h-3.5 w-3.5" /></button>
+                                  </TooltipTrigger>
+                                  <TooltipContent className="max-w-xs">
+                                    Останній день, коли учасник може виконати дистанцію. Активності пізніше цієї дати не зарахуються.
+                                  </TooltipContent>
+                                </Tooltip>
+                              </Label>
+                              <Input type="date" value={d.virtual_end_date}
+                                onChange={(e) => { const c = [...distances]; c[i].virtual_end_date = e.target.value; setDistances(c); }} />
+                            </div>
+                            <div className="space-y-1">
+                              <Label className="text-xs flex items-center gap-1">
+                                Допуск, %
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <button type="button" className="text-muted-foreground hover:text-foreground"><HelpCircle className="h-3.5 w-3.5" /></button>
+                                  </TooltipTrigger>
+                                  <TooltipContent className="max-w-xs">
+                                    Наскільки фактична дистанція у Strava може відрізнятися від заявленої. Наприклад, 10 км з допуском 5% — зарахуються пробіжки від 9.5 до 10.5 км. Потрібно через похибку GPS.
+                                  </TooltipContent>
+                                </Tooltip>
+                              </Label>
+                              <Input type="number" min="0" max="50" step="0.5" value={d.distance_tolerance_percent}
+                                onChange={(e) => { const c = [...distances]; c[i].distance_tolerance_percent = e.target.value; setDistances(c); }} />
+                            </div>
                           </div>
-                          <div className="space-y-1">
-                            <Label className="text-xs">Кінець вікна</Label>
-                            <Input type="date" value={d.virtual_end_date}
-                              onChange={(e) => { const c = [...distances]; c[i].virtual_end_date = e.target.value; setDistances(c); }} />
-                          </div>
-                          <div className="space-y-1">
-                            <Label className="text-xs">Допуск, %</Label>
-                            <Input type="number" min="0" max="50" step="0.5" value={d.distance_tolerance_percent}
-                              onChange={(e) => { const c = [...distances]; c[i].distance_tolerance_percent = e.target.value; setDistances(c); }} />
-                          </div>
-                        </div>
+                        </TooltipProvider>
                       )}
                     </div>
 
