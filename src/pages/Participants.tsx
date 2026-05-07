@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
-import { ArrowLeft, Loader2, CheckCircle2, XCircle, FileText, RotateCcw, Trash2, X, Bell, ArrowRightLeft, Download, Package, Mail } from "lucide-react";
+import { ArrowLeft, Loader2, CheckCircle2, XCircle, FileText, RotateCcw, Trash2, X, Bell, ArrowRightLeft, Download, Package, Mail, Trophy } from "lucide-react";
 import * as XLSX from "xlsx";
 import { toast } from "sonner";
 import { Header } from "@/components/Header";
@@ -37,6 +37,8 @@ const Participants = () => {
   const [moveToId, setMoveToId] = useState<string>("");
   const [moving, setMoving] = useState(false);
   const [receiptDialog, setReceiptDialog] = useState<{ url: string; isImage: boolean; isHeic?: boolean } | null>(null);
+  const [resultsMap, setResultsMap] = useState<Record<string, { time_seconds: number; distance_meters: number | null; source: string; strava_activity_id: number | null; verified: boolean }>>({});
+  const [syncingAll, setSyncingAll] = useState(false);
 
   // Filters
   const [fGender, setFGender] = useState<string>("all");
@@ -59,7 +61,7 @@ const Participants = () => {
     setIsOrganizer(ev?.organizer_id === user.id || isAdmin);
     const { data: dists } = await supabase
       .from("distances")
-      .select("id, distance_km, name, price, max_participants, is_active")
+      .select("id, distance_km, name, price, max_participants, is_active, is_virtual")
       .eq("event_id", id)
       .order("distance_km", { ascending: true });
     const priceMap: Record<string, number> = {};
@@ -71,6 +73,13 @@ const Participants = () => {
     setDistances(dists ?? []);
     const { data: participants } = await (supabase.rpc as any)("get_event_participants", { _event_id: id });
     setRows(participants ?? []);
+    const { data: resData } = await supabase
+      .from("event_results")
+      .select("registration_id, time_seconds, distance_meters, source, strava_activity_id, verified")
+      .eq("event_id", id);
+    const rmap: Record<string, any> = {};
+    (resData ?? []).forEach((r: any) => { rmap[r.registration_id] = r; });
+    setResultsMap(rmap);
     setLoading(false);
   };
 
@@ -343,6 +352,16 @@ const Participants = () => {
   if (authLoading) return null;
   if (!user) return <Navigate to={`/auth?redirect=/events/${id}/participants`} replace />;
 
+  const fmtResult = (s: number) => {
+    const h = Math.floor(s / 3600);
+    const m = Math.floor((s % 3600) / 60);
+    const sec = s % 60;
+    return h > 0
+      ? `${h}:${String(m).padStart(2, "0")}:${String(sec).padStart(2, "0")}`
+      : `${m}:${String(sec).padStart(2, "0")}`;
+  };
+  const hasAnyResult = Object.keys(resultsMap).length > 0;
+
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Header />
@@ -404,6 +423,34 @@ const Participants = () => {
                   <Mail className="h-4 w-4" />
                   {lang === "uk" ? "Написати учасникам" : "Email participants"}
                 </Link>
+              </Button>
+            )}
+            {isOrganizer && distances.some((d: any) => d.is_virtual) && (
+              <Button
+                variant="outline"
+                size="sm"
+                className="gap-2 border-[#FC4C02]/30 text-[#FC4C02] hover:bg-[#FC4C02]/10"
+                disabled={syncingAll}
+                onClick={async () => {
+                  if (!id) return;
+                  setSyncingAll(true);
+                  try {
+                    const { data, error } = await supabase.functions.invoke("strava-sync-activities", {
+                      body: { event_id: id, all_users: true },
+                    });
+                    if (error) throw error;
+                    const m = (data as any)?.matched ?? 0;
+                    toast.success(lang === "uk" ? `Синхронізовано: ${m}` : `Synced: ${m}`);
+                    await load();
+                  } catch (e: any) {
+                    toast.error(e?.message ?? "Error");
+                  } finally {
+                    setSyncingAll(false);
+                  }
+                }}
+              >
+                {syncingAll ? <Loader2 className="h-4 w-4 animate-spin" /> : <Trophy className="h-4 w-4" />}
+                {lang === "uk" ? "Синхронізувати Strava" : "Sync Strava"}
               </Button>
             )}
           </div>
@@ -659,6 +706,7 @@ const Participants = () => {
                         {isOrganizer && <th className="p-3 font-semibold">{lang === "uk" ? "Доданий" : "Added by"}</th>}
                         {isPaid && <th className="p-3 font-semibold text-center">{lang === "uk" ? "Оплата" : "Payment"}</th>}
                         {isPaid && isOrganizer && <th className="p-3 font-semibold text-center">{lang === "uk" ? "Квитанція" : "Receipt"}</th>}
+                        {hasAnyResult && <th className="p-3 font-semibold">{lang === "uk" ? "Результат" : "Result"}</th>}
                         {isOrganizer && <th className="p-3 font-semibold text-center">{lang === "uk" ? "Дії" : "Actions"}</th>}
                       </tr>
                     </thead>
@@ -750,6 +798,36 @@ const Participants = () => {
                                   </Button>
                                 ) : null}
                               </div>
+                            </td>
+                          )}
+                          {hasAnyResult && (
+                            <td className="p-3">
+                              {resultsMap[r.registration_id] ? (
+                                <div className="flex flex-col">
+                                  <span className="font-semibold inline-flex items-center gap-1">
+                                    <Trophy className="h-3 w-3 text-[#FC4C02]" />
+                                    {fmtResult(resultsMap[r.registration_id].time_seconds)}
+                                  </span>
+                                  <span className="text-xs text-muted-foreground">
+                                    {resultsMap[r.registration_id].distance_meters
+                                      ? `${(resultsMap[r.registration_id].distance_meters! / 1000).toFixed(2)} ${lang === "uk" ? "км" : "km"}`
+                                      : ""}
+                                    {resultsMap[r.registration_id].source === "strava" && " · Strava"}
+                                  </span>
+                                  {resultsMap[r.registration_id].strava_activity_id && (
+                                    <a
+                                      href={`https://www.strava.com/activities/${resultsMap[r.registration_id].strava_activity_id}`}
+                                      target="_blank"
+                                      rel="noreferrer"
+                                      className="text-xs text-[#FC4C02] hover:underline"
+                                    >
+                                      {lang === "uk" ? "Активність" : "Activity"}
+                                    </a>
+                                  )}
+                                </div>
+                              ) : (
+                                <span className="text-xs text-muted-foreground">—</span>
+                              )}
                             </td>
                           )}
                           {isOrganizer && (
