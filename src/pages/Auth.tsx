@@ -76,7 +76,7 @@ const Auth = () => {
     setBusy(false);
     if (error) toast.error(translateAuthError(error));
     else {
-      toast.success(t.auth.successSignUp);
+      toast.success(t.auth.successSignUp, { duration: 10000 });
       setMode("signin");
     }
   };
