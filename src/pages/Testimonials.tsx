@@ -366,6 +366,29 @@ const Testimonials = () => {
                             </div>
                           </div>
                           <p className="whitespace-pre-wrap break-words text-sm text-foreground/90">{linkifyText(it.content)}</p>
+                          <div className="mt-3 flex flex-wrap gap-1.5">
+                            {REACTION_EMOJIS.map((emoji) => {
+                              const r = it.reactions?.find((x) => x.emoji === emoji);
+                              const count = r?.count ?? 0;
+                              const active = r?.reactedByMe ?? false;
+                              return (
+                                <button
+                                  key={emoji}
+                                  type="button"
+                                  onClick={() => toggleReaction(it.id, emoji)}
+                                  className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-xs transition-all hover:scale-105 ${
+                                    active
+                                      ? "border-primary bg-primary/10 text-primary"
+                                      : "border-border bg-muted/40 text-muted-foreground hover:bg-muted"
+                                  }`}
+                                  aria-label={`React ${emoji}`}
+                                >
+                                  <span className="text-sm leading-none">{emoji}</span>
+                                  {count > 0 && <span className="font-medium">{count}</span>}
+                                </button>
+                              );
+                            })}
+                          </div>
                         </div>
                       </div>
                     </CardContent>
