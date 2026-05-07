@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { AthleteFormDialog, Athlete } from "@/components/AthleteFormDialog";
+import { StravaConnect } from "@/components/StravaConnect";
 import { useApp } from "@/contexts/AppContext";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
@@ -369,6 +370,8 @@ const Profile = () => {
                 )}
               </div>
             </section>
+
+            <StravaConnect userId={user.id} />
 
             <AthleteFormDialog
               open={dialogOpen}
