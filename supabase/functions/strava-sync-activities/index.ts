@@ -98,7 +98,7 @@ Deno.serve(async (req) => {
     // Load user's registrations (optionally filter by event)
     let regsQ = admin
       .from("registrations")
-      .select("id, event_id, distance_id, user_id, distances:distance_id(distance_km, is_virtual, virtual_start_date, virtual_end_date, distance_tolerance_percent), events:event_id(event_date)")
+      .select("id, event_id, distance_id, user_id, distances:distance_id(distance_km, is_virtual, virtual_start_date, virtual_end_date, virtual_start_time, virtual_end_time, distance_tolerance_percent), events:event_id(event_date)")
       .eq("user_id", userId);
     if (eventId) regsQ = regsQ.eq("event_id", eventId);
     const { data: regs, error: re } = await regsQ;
