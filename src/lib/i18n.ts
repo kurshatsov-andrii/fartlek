@@ -369,7 +369,7 @@ export const translations: Record<Lang, Dict> = {
       haveAccount: "Already have an account?", noAccount: "Don't have an account?",
       signInTitle: "Welcome back", signUpTitle: "Create your account",
       signInSub: "Sign in to register for events", signUpSub: "One minute and you're in",
-      successSignUp: "Account created! You can sign in.",
+      successSignUp: "Please confirm your email — we've sent you a link. After confirmation you'll be able to sign in.",
       successReset: "Check your email — reset link sent.",
       successUpdate: "Password updated.",
       backToSignIn: "← Back to sign in",
