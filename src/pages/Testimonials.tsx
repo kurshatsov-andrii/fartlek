@@ -300,7 +300,7 @@ const Testimonials = () => {
                   Лише користувачі платформи можуть залишати відгуки.
                 </p>
                 <Button asChild>
-                  <Link to="/auth">Увійти / зареєструватися ✨</Link>
+                  <Link to="/auth">Увійти / зареєструватися</Link>
                 </Button>
               </CardContent>
             </Card>
