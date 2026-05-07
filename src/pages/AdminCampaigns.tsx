@@ -412,7 +412,7 @@ const AdminCampaigns = () => {
             <Button
               size="lg"
               className="w-full"
-              disabled={busy || selectedIds.size === 0 || !recipientCount}
+              disabled={busy || !recipientCount || (audienceMode === "event" && !audienceEventId)}
               onClick={() => createAndSend("real")}
             >
               {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
