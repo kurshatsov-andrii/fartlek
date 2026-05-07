@@ -429,7 +429,7 @@ const Participants = () => {
               <Button
                 variant="outline"
                 size="sm"
-                className="gap-2 border-[#FC4C02]/30 text-[#FC4C02] hover:bg-[#FC4C02]/10"
+                className="gap-2 border-[#FC4C02] text-[#FC4C02] hover:bg-[#FC4C02] hover:text-white hover:border-[#FC4C02]"
                 disabled={syncingAll}
                 onClick={async () => {
                   if (!id) return;
