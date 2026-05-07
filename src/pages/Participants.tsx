@@ -453,6 +453,7 @@ const Participants = () => {
                 {lang === "uk" ? "Синхронізувати Strava" : "Sync Strava"}
               </Button>
             )}
+          </div>
         </div>
 
         {!loading && rows.length > 0 && (
