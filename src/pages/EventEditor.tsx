@@ -126,6 +126,8 @@ const EventEditor = () => {
         is_virtual: !!(d as any).is_virtual,
         virtual_start_date: (d as any).virtual_start_date ?? "",
         virtual_end_date: (d as any).virtual_end_date ?? "",
+        virtual_start_time: ((d as any).virtual_start_time ?? "").toString().slice(0, 5),
+        virtual_end_time: ((d as any).virtual_end_time ?? "").toString().slice(0, 5),
         distance_tolerance_percent: (d as any).distance_tolerance_percent != null ? String((d as any).distance_tolerance_percent) : "5",
       })));
       setLoadedFor(id ?? null);
