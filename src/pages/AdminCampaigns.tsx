@@ -84,6 +84,24 @@ const AdminCampaigns = () => {
   useEffect(() => {
     if (!isAdmin) return;
     (async () => {
+      if (audienceMode === "event") {
+        if (!audienceEventId) { setRecipientCount(0); return; }
+        // Count distinct registered users with marketing_consent
+        const { data: regs } = await supabase
+          .from("registrations")
+          .select("user_id")
+          .eq("event_id", audienceEventId);
+        const ids = Array.from(new Set((regs ?? []).map((r: any) => r.user_id)));
+        if (ids.length === 0) { setRecipientCount(0); return; }
+        const { count } = await supabase
+          .from("profiles")
+          .select("id", { count: "exact", head: true })
+          .in("id", ids)
+          .eq("marketing_consent", true)
+          .not("email", "is", null);
+        setRecipientCount(count ?? 0);
+        return;
+      }
       let q = supabase
         .from("profiles")
         .select("id", { count: "exact", head: true })
@@ -93,7 +111,7 @@ const AdminCampaigns = () => {
       const { count } = await q;
       setRecipientCount(count ?? 0);
     })();
-  }, [isAdmin, cityFilter]);
+  }, [isAdmin, cityFilter, audienceMode, audienceEventId]);
 
   if (loading || pageLoading)
     return <div className="min-h-screen flex items-center justify-center"><Loader2 className="h-8 w-8 animate-spin" /></div>;
