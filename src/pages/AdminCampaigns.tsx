@@ -43,6 +43,9 @@ const AdminCampaigns = () => {
     "Ділимось добіркою найближчих подій на платформі. Обирай свою та реєструйся!"
   );
   const [cityFilter, setCityFilter] = useState("");
+  const [audienceMode, setAudienceMode] = useState<"all" | "event">("all");
+  const [audienceEventId, setAudienceEventId] = useState<string>("");
+  const [allEvents, setAllEvents] = useState<EventLite[]>([]);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [testEmail, setTestEmail] = useState("");
   const [batchSize, setBatchSize] = useState(50);
