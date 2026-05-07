@@ -14,6 +14,12 @@ import { toast } from "sonner";
 import { Star, Quote, Trash2, Pencil } from "lucide-react";
 import { linkifyText } from "@/lib/linkify";
 
+interface Reaction {
+  emoji: string;
+  count: number;
+  reactedByMe: boolean;
+}
+
 interface Testimonial {
   id: string;
   user_id: string;
@@ -21,7 +27,10 @@ interface Testimonial {
   content: string;
   created_at: string;
   author?: { full_name: string | null; avatar_url: string | null } | null;
+  reactions?: Reaction[];
 }
+
+const REACTION_EMOJIS = ["👍", "❤️", "🔥", "🎉", "💪", "👏"];
 
 const Stars = ({
   value,
@@ -84,13 +93,84 @@ const Testimonials = () => {
       (authors ?? []).forEach((a: any) => map.set(a.id, { full_name: a.full_name, avatar_url: a.avatar_url }));
       rows.forEach((r) => (r.author = map.get(r.user_id) ?? null));
     }
+
+    // Load reactions for all testimonials
+    const tIds = rows.map((r) => r.id);
+    if (tIds.length) {
+      const { data: reactions } = await supabase
+        .from("testimonial_reactions")
+        .select("testimonial_id,emoji,user_id")
+        .in("testimonial_id", tIds);
+      const grouped = new Map<string, Map<string, { count: number; reactedByMe: boolean }>>();
+      (reactions ?? []).forEach((r: any) => {
+        if (!grouped.has(r.testimonial_id)) grouped.set(r.testimonial_id, new Map());
+        const m = grouped.get(r.testimonial_id)!;
+        const cur = m.get(r.emoji) ?? { count: 0, reactedByMe: false };
+        cur.count += 1;
+        if (r.user_id === user?.id) cur.reactedByMe = true;
+        m.set(r.emoji, cur);
+      });
+      rows.forEach((r) => {
+        const m = grouped.get(r.id);
+        r.reactions = m
+          ? Array.from(m.entries()).map(([emoji, v]) => ({ emoji, ...v }))
+          : [];
+      });
+    }
+
     setItems(rows);
     setLoading(false);
   };
 
+  const toggleReaction = async (testimonialId: string, emoji: string) => {
+    if (!user) {
+      toast.error("Увійдіть, щоб додати реакцію");
+      return;
+    }
+    const t = items.find((i) => i.id === testimonialId);
+    const existing = t?.reactions?.find((r) => r.emoji === emoji);
+    if (existing?.reactedByMe) {
+      const { error } = await supabase
+        .from("testimonial_reactions")
+        .delete()
+        .eq("testimonial_id", testimonialId)
+        .eq("user_id", user.id)
+        .eq("emoji", emoji);
+      if (error) {
+        toast.error("Не вдалося прибрати реакцію");
+        return;
+      }
+    } else {
+      const { error } = await supabase
+        .from("testimonial_reactions")
+        .insert({ testimonial_id: testimonialId, user_id: user.id, emoji });
+      if (error) {
+        toast.error("Не вдалося додати реакцію");
+        return;
+      }
+    }
+    // Optimistic refresh
+    setItems((prev) =>
+      prev.map((it) => {
+        if (it.id !== testimonialId) return it;
+        const reactions = [...(it.reactions ?? [])];
+        const idx = reactions.findIndex((r) => r.emoji === emoji);
+        if (idx >= 0) {
+          const r = reactions[idx];
+          const newCount = r.reactedByMe ? r.count - 1 : r.count + 1;
+          if (newCount <= 0) reactions.splice(idx, 1);
+          else reactions[idx] = { emoji, count: newCount, reactedByMe: !r.reactedByMe };
+        } else {
+          reactions.push({ emoji, count: 1, reactedByMe: true });
+        }
+        return { ...it, reactions };
+      })
+    );
+  };
+
   useEffect(() => {
     load();
-  }, []);
+  }, [user?.id]);
 
   const myExisting = items.find((i) => i.user_id === user?.id);
 
@@ -286,6 +366,29 @@ const Testimonials = () => {
                             </div>
                           </div>
                           <p className="whitespace-pre-wrap break-words text-sm text-foreground/90">{linkifyText(it.content)}</p>
+                          <div className="mt-3 flex flex-wrap gap-1.5">
+                            {REACTION_EMOJIS.map((emoji) => {
+                              const r = it.reactions?.find((x) => x.emoji === emoji);
+                              const count = r?.count ?? 0;
+                              const active = r?.reactedByMe ?? false;
+                              return (
+                                <button
+                                  key={emoji}
+                                  type="button"
+                                  onClick={() => toggleReaction(it.id, emoji)}
+                                  className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-xs transition-all hover:scale-105 ${
+                                    active
+                                      ? "border-primary bg-primary/10 text-primary"
+                                      : "border-border bg-muted/40 text-muted-foreground hover:bg-muted"
+                                  }`}
+                                  aria-label={`React ${emoji}`}
+                                >
+                                  <span className="text-sm leading-none">{emoji}</span>
+                                  {count > 0 && <span className="font-medium">{count}</span>}
+                                </button>
+                              );
+                            })}
+                          </div>
                         </div>
                       </div>
                     </CardContent>
