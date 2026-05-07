@@ -187,48 +187,60 @@ export type Database = {
           created_at: string
           delivery_enabled: boolean
           distance_km: number
+          distance_tolerance_percent: number
           event_id: string
           id: string
           is_active: boolean
           is_relay: boolean
+          is_virtual: boolean
           max_participants: number | null
           name: string | null
           price: number
           relay_categories: string[]
           relay_legs: Json | null
           relay_legs_count: number | null
+          virtual_end_date: string | null
+          virtual_start_date: string | null
         }
         Insert: {
           bib_start?: number | null
           created_at?: string
           delivery_enabled?: boolean
           distance_km: number
+          distance_tolerance_percent?: number
           event_id: string
           id?: string
           is_active?: boolean
           is_relay?: boolean
+          is_virtual?: boolean
           max_participants?: number | null
           name?: string | null
           price?: number
           relay_categories?: string[]
           relay_legs?: Json | null
           relay_legs_count?: number | null
+          virtual_end_date?: string | null
+          virtual_start_date?: string | null
         }
         Update: {
           bib_start?: number | null
           created_at?: string
           delivery_enabled?: boolean
           distance_km?: number
+          distance_tolerance_percent?: number
           event_id?: string
           id?: string
           is_active?: boolean
           is_relay?: boolean
+          is_virtual?: boolean
           max_participants?: number | null
           name?: string | null
           price?: number
           relay_categories?: string[]
           relay_legs?: Json | null
           relay_legs_count?: number | null
+          virtual_end_date?: string | null
+          virtual_start_date?: string | null
         }
         Relationships: [
           {
@@ -509,6 +521,60 @@ export type Database = {
           wayforpay_merchant_domain?: string | null
           wayforpay_merchant_login?: string | null
           wayforpay_secret_key?: string | null
+        }
+        Relationships: []
+      }
+      event_results: {
+        Row: {
+          activity_start_date: string | null
+          created_at: string
+          distance_id: string
+          distance_meters: number | null
+          event_id: string
+          id: string
+          moving_time_seconds: number | null
+          notes: string | null
+          registration_id: string
+          source: string
+          strava_activity_id: number | null
+          time_seconds: number
+          updated_at: string
+          user_id: string
+          verified: boolean
+        }
+        Insert: {
+          activity_start_date?: string | null
+          created_at?: string
+          distance_id: string
+          distance_meters?: number | null
+          event_id: string
+          id?: string
+          moving_time_seconds?: number | null
+          notes?: string | null
+          registration_id: string
+          source?: string
+          strava_activity_id?: number | null
+          time_seconds: number
+          updated_at?: string
+          user_id: string
+          verified?: boolean
+        }
+        Update: {
+          activity_start_date?: string | null
+          created_at?: string
+          distance_id?: string
+          distance_meters?: number | null
+          event_id?: string
+          id?: string
+          moving_time_seconds?: number | null
+          notes?: string | null
+          registration_id?: string
+          source?: string
+          strava_activity_id?: number | null
+          time_seconds?: number
+          updated_at?: string
+          user_id?: string
+          verified?: boolean
         }
         Relationships: []
       }
