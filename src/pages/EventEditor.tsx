@@ -955,6 +955,39 @@ const EventEditor = () => {
                       </div>
                     )}
 
+                    <div className="pt-3 border-t border-border space-y-3">
+                      <div className="flex items-center gap-3">
+                        <Switch
+                          id={`virtual-${i}`}
+                          checked={d.is_virtual}
+                          onCheckedChange={(v) => { const c = [...distances]; c[i].is_virtual = v; setDistances(c); }}
+                        />
+                        <div className="flex-1">
+                          <Label htmlFor={`virtual-${i}`} className="cursor-pointer">Віртуальна гонка (Strava)</Label>
+                          <p className="text-xs text-muted-foreground">Учасники синхронізують активність зі Strava — час підтверджується автоматично за дистанцією і датою.</p>
+                        </div>
+                      </div>
+                      {d.is_virtual && (
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pl-1">
+                          <div className="space-y-1">
+                            <Label className="text-xs">Початок вікна</Label>
+                            <Input type="date" value={d.virtual_start_date}
+                              onChange={(e) => { const c = [...distances]; c[i].virtual_start_date = e.target.value; setDistances(c); }} />
+                          </div>
+                          <div className="space-y-1">
+                            <Label className="text-xs">Кінець вікна</Label>
+                            <Input type="date" value={d.virtual_end_date}
+                              onChange={(e) => { const c = [...distances]; c[i].virtual_end_date = e.target.value; setDistances(c); }} />
+                          </div>
+                          <div className="space-y-1">
+                            <Label className="text-xs">Допуск, %</Label>
+                            <Input type="number" min="0" max="50" step="0.5" value={d.distance_tolerance_percent}
+                              onChange={(e) => { const c = [...distances]; c[i].distance_tolerance_percent = e.target.value; setDistances(c); }} />
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
                     <div className="flex items-center gap-3 pt-3 border-t border-border">
                       <Switch
                         id={`delivery-${i}`}
