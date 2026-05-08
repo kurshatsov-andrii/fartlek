@@ -23,7 +23,7 @@ const NotFound = () => {
       <Header />
       <main className="flex-1 container flex items-center justify-center py-20">
         <div className="max-w-2xl text-center">
-          <div className="font-display text-[120px] sm:text-[180px] font-bold leading-none bg-gradient-hero bg-clip-text text-transparent">
+          <div className="font-display text-[120px] sm:text-[180px] font-bold leading-none text-primary">
             404
           </div>
           <h1 className="font-display text-3xl sm:text-4xl font-bold mt-4">
