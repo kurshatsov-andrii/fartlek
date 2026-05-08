@@ -210,6 +210,7 @@ const Features = () => {
         { icon: CalendarPlus, title: "Add to events calendar", desc: "Publish your upcoming races in the shared Events Calendar — even if registration runs outside the platform. You can only edit and delete your own entries." },
         { icon: Lock, title: "Registration closed 🆕", desc: "When slots are sold out — mark the event as «Registration closed». Participants see a dedicated badge but the event stays on the site until race day." },
         { icon: Clock, title: "Self-service deadline 🆕", desc: "Configure how many days before the event participants can change distance, transfer slots or request cancellation by themselves." },
+        { icon: Activity, title: "Virtual race via Strava 🆕", desc: "Mark a distance as virtual: set a date window (from / to) and a distance tolerance in % (to account for GPS drift). Participants' Strava activities that fall in the window and match the distance are credited automatically." },
       ],
     },
     {
