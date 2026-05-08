@@ -222,11 +222,11 @@ const CalendarPage = () => {
   };
 
   const seoTitle = lang === "uk"
-    ? "Календар майбутніх подій — Фартлек"
-    : "Upcoming events calendar — Fartlek";
+    ? "Календар майбутніх спортивних подій — Фартлек"
+    : "Upcoming sports events calendar — Fartlek";
   const seoDesc = lang === "uk"
-    ? "Календар майбутніх бігових та трейлових стартів в Україні. Дата, місце, дистанції, організатор."
-    : "Upcoming running and trail race calendar in Ukraine. Dates, locations, distances, organizers.";
+    ? "Календар майбутніх бігових, трейлових, вело, свім, триатлон стартів в Україні. Дата, місце, дистанції, організатор."
+    : "Upcoming running, trail, cycling, swim and triathlon race calendar in Ukraine. Dates, locations, distances, organizers.";
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
@@ -236,7 +236,7 @@ const CalendarPage = () => {
         <div className="flex flex-wrap items-end justify-between gap-4 mb-8">
           <div>
             <h1 className="font-display text-3xl sm:text-5xl font-bold tracking-tight">
-              {lang === "uk" ? "Календар майбутніх подій" : "Upcoming events calendar"}
+              {lang === "uk" ? "Календар майбутніх спортивних подій" : "Upcoming sports events calendar"}
             </h1>
             <p className="mt-3 text-muted-foreground max-w-2xl">{seoDesc}</p>
           </div>
