@@ -222,6 +222,7 @@ const Features = () => {
         { icon: Trophy, title: "Upload results", desc: "Upload a file or paste a link — participants instantly see their time." },
         { icon: Truck, title: "Nova Poshta race kit delivery 🆕", desc: "Enable delivery — participants pick a city and branch/parcel locker at registration. You see the addresses in the participants list and exports." },
         { icon: History, title: "Registration changes history 🆕", desc: "A dedicated tab with full audit: distance changes, slot transfers, cancellation requests — who, when and what changed." },
+        { icon: Activity, title: "Sync results from Strava 🆕", desc: "«Sync Strava» button on the participants list: one click pulls activities from all connected participants and saves their result with a «verified» mark. The table shows the source (Strava) and a link to the activity." },
       ],
     },
     {
