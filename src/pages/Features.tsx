@@ -120,6 +120,7 @@ const Features = () => {
         { icon: Ticket, title: "Bib number", desc: "Assigned by the organizer and shown on your ticket." },
         { icon: CalendarPlus, title: "Add to calendar", desc: "One click to add the event to Google Calendar, Outlook or Apple Calendar." },
         { icon: Trophy, title: "Race results", desc: "After the finish, organizers upload results — see your time and position." },
+        { icon: Activity, title: "Auto-verify results via Strava 🆕", desc: "For virtual races: connect Strava in your profile — we automatically pick the matching activity within the date window and distance tolerance, count your time and mark it as «verified». Your ticket gets a direct link to the activity." },
         { icon: ImageIcon, title: "Event photos", desc: "Organizers attach a photo album link — open it right from the completed event card." },
       ],
     },
