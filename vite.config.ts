@@ -220,13 +220,13 @@ function seoPrerenderPlugin(envOrigin: string, supabaseUrl: string, supabaseKey:
               { headers: { apikey: supabaseKey, Authorization: `Bearer ${supabaseKey}` } },
             );
             if (!evRes.ok) throw new Error(`events fetch ${evRes.status}`);
-            const events: any[] = await evRes.json();
+            const events = (await evRes.json()) as any[];
 
             const distRes = await fetch(
               `${supabaseUrl}/rest/v1/distances?select=event_id,distance_km&limit=10000`,
               { headers: { apikey: supabaseKey, Authorization: `Bearer ${supabaseKey}` } },
             );
-            const distances: any[] = distRes.ok ? await distRes.json() : [];
+            const distances = (distRes.ok ? await distRes.json() : []) as any[];
             const distByEvent = new Map<string, number[]>();
             for (const d of distances) {
               const list = distByEvent.get(d.event_id) ?? [];
