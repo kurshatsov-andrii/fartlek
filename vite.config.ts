@@ -274,7 +274,7 @@ function seoPrerenderPlugin(envOrigin: string, supabaseUrl: string, supabaseKey:
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), "");
-  const origin = env.VITE_PUBLIC_SITE_URL || "https://fartlek.com.ua";
+  const origin = env.VITE_PUBLIC_SITE_URL || "https://fartlek.lovable.app";
   return {
     server: {
       host: "::",
