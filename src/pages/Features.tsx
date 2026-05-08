@@ -70,6 +70,7 @@ const Features = () => {
         { icon: Ticket, title: "Стартовий номер (BIB)", desc: "Номер призначається організатором і відображається у вашому квитку." },
         { icon: CalendarPlus, title: "Додати в календар", desc: "Один клік — і подія в Google Calendar, Outlook або Apple Calendar з правильним часом." },
         { icon: Trophy, title: "Результати забігу", desc: "Після фінішу організатор завантажує результати — ви бачите свій час і місце." },
+        { icon: Activity, title: "Автозалік результату через Strava 🆕", desc: "Для віртуальних гонок: підключіть Strava у профілі — ми самі знайдемо вашу активність у вікні дат із потрібною дистанцією, зарахуємо час і поставимо позначку «підтверджено». У квитку буде пряме посилання на активність." },
         { icon: ImageIcon, title: "Світлини з події", desc: "Організатор додає посилання на фотоальбом — переглядайте світлини прямо з картки завершеної події." },
       ],
     },
@@ -98,6 +99,7 @@ const Features = () => {
         { icon: UserCircle, title: "Особистий профіль", desc: "Ім'я, дата народження, стать, місто, клуб і телефон — заповнюється один раз." },
         { icon: ImageIcon, title: "Фото профілю", desc: "Завантажте аватар — він з'являтиметься у чатах та списках учасників." },
         { icon: Building2, title: "Прив'язка до клубу", desc: "Оберіть свій біговий клуб — він відображатиметься в результатах та списках." },
+        { icon: Activity, title: "Підключення Strava 🆕", desc: "Прив'яжіть акаунт Strava у профілі одним кліком (OAuth). Це потрібно для автоматичного зарахування результатів віртуальних гонок. Можна відключити будь-коли." },
       ],
     },
   ] : [
@@ -118,6 +120,7 @@ const Features = () => {
         { icon: Ticket, title: "Bib number", desc: "Assigned by the organizer and shown on your ticket." },
         { icon: CalendarPlus, title: "Add to calendar", desc: "One click to add the event to Google Calendar, Outlook or Apple Calendar." },
         { icon: Trophy, title: "Race results", desc: "After the finish, organizers upload results — see your time and position." },
+        { icon: Activity, title: "Auto-verify results via Strava 🆕", desc: "For virtual races: connect Strava in your profile — we automatically pick the matching activity within the date window and distance tolerance, count your time and mark it as «verified». Your ticket gets a direct link to the activity." },
         { icon: ImageIcon, title: "Event photos", desc: "Organizers attach a photo album link — open it right from the completed event card." },
       ],
     },
@@ -146,6 +149,7 @@ const Features = () => {
         { icon: UserCircle, title: "Personal profile", desc: "Name, date of birth, gender, city, club and phone — filled once." },
         { icon: ImageIcon, title: "Profile photo", desc: "Upload an avatar — it shows up in chats and participant lists." },
         { icon: Building2, title: "Club membership", desc: "Pick your running club — it appears in results and lists." },
+        { icon: Activity, title: "Connect Strava 🆕", desc: "Link your Strava account from the profile in one click (OAuth). Required to auto-credit virtual race results. Disconnect anytime." },
       ],
     },
   ];
@@ -161,6 +165,7 @@ const Features = () => {
         { icon: CalendarPlus, title: "Додавання у Календар подій", desc: "Розміщуйте власні майбутні старти у спільному Календарі подій — навіть якщо реєстрація йде поза платформою. Редагуєте та видаляєте лише свої записи." },
         { icon: Lock, title: "Реєстрація закрита 🆕", desc: "Коли слоти вичерпано — позначте подію як «Реєстрація закрита». Учасники бачать спеціальний бейдж, але подія залишається на сайті до дати старту." },
         { icon: Clock, title: "Дедлайн самообслуговування 🆕", desc: "Налаштуйте за скільки днів до події учасники можуть самостійно змінювати дистанцію, передавати слот або просити скасування." },
+        { icon: Activity, title: "Віртуальна гонка зі Strava 🆕", desc: "Позначте дистанцію як віртуальну: задайте вікно дат (з / по) і допуск дистанції у % (через похибку GPS). Активності учасників зі Strava, що потрапляють у вікно й відповідають дистанції, зараховуються автоматично." },
       ],
     },
     {
@@ -172,6 +177,7 @@ const Features = () => {
         { icon: Trophy, title: "Завантаження результатів", desc: "Завантажте файл або вкажіть посилання — учасники одразу побачать свій час." },
         { icon: Truck, title: "Доставка стартового пакету Новою Поштою 🆕", desc: "Увімкніть доставку — учасники під час реєстрації обирають місто та відділення/поштомат. Ви бачите адреси у списку учасників та експорті." },
         { icon: History, title: "Історія змін реєстрацій 🆕", desc: "Окрема вкладка з повним аудитом: зміни дистанцій, передачі слотів, заявки на скасування — хто, коли і що зробив." },
+        { icon: Activity, title: "Синхронізація результатів зі Strava 🆕", desc: "Кнопка «Синхронізувати Strava» у списку учасників: одним кліком тягнемо активності всіх підключених учасників і ставимо результат із позначкою «підтверджено». У таблиці видно джерело (Strava) та посилання на активність." },
       ],
     },
     {
@@ -204,6 +210,7 @@ const Features = () => {
         { icon: CalendarPlus, title: "Add to events calendar", desc: "Publish your upcoming races in the shared Events Calendar — even if registration runs outside the platform. You can only edit and delete your own entries." },
         { icon: Lock, title: "Registration closed 🆕", desc: "When slots are sold out — mark the event as «Registration closed». Participants see a dedicated badge but the event stays on the site until race day." },
         { icon: Clock, title: "Self-service deadline 🆕", desc: "Configure how many days before the event participants can change distance, transfer slots or request cancellation by themselves." },
+        { icon: Activity, title: "Virtual race via Strava 🆕", desc: "Mark a distance as virtual: set a date window (from / to) and a distance tolerance in % (to account for GPS drift). Participants' Strava activities that fall in the window and match the distance are credited automatically." },
       ],
     },
     {
@@ -215,6 +222,7 @@ const Features = () => {
         { icon: Trophy, title: "Upload results", desc: "Upload a file or paste a link — participants instantly see their time." },
         { icon: Truck, title: "Nova Poshta race kit delivery 🆕", desc: "Enable delivery — participants pick a city and branch/parcel locker at registration. You see the addresses in the participants list and exports." },
         { icon: History, title: "Registration changes history 🆕", desc: "A dedicated tab with full audit: distance changes, slot transfers, cancellation requests — who, when and what changed." },
+        { icon: Activity, title: "Sync results from Strava 🆕", desc: "«Sync Strava» button on the participants list: one click pulls activities from all connected participants and saves their result with a «verified» mark. The table shows the source (Strava) and a link to the activity." },
       ],
     },
     {
