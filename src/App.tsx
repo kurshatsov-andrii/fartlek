@@ -44,6 +44,7 @@ import Testimonials from "./pages/Testimonials.tsx";
 import AdminSurvey from "./pages/AdminSurvey.tsx";
 import AdminSessions from "./pages/AdminSessions.tsx";
 import AdminSeo from "./pages/AdminSeo.tsx";
+import AdminCarousel from "./pages/AdminCarousel.tsx";
 import { AdminSeoEditor } from "./components/AdminSeoEditor";
 import CalendarPage from "./pages/Calendar.tsx";
 import StravaCallback from "./pages/StravaCallback.tsx";
@@ -102,6 +103,7 @@ const App = () => (
               <Route path="/admin/survey" element={<AdminSurvey />} />
               <Route path="/admin/sessions" element={<AdminSessions />} />
               <Route path="/admin/seo" element={<AdminSeo />} />
+              <Route path="/admin/carousel" element={<AdminCarousel />} />
               <Route path="/strava/callback" element={<StravaCallback />} />
               <Route path="*" element={<NotFound />} />
             </Routes>

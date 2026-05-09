@@ -3,6 +3,7 @@ import Autoplay from "embla-carousel-autoplay";
 import { useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useApp } from "@/contexts/AppContext";
+import { supabase } from "@/integrations/supabase/client";
 import participants from "@/assets/features/participants.png";
 import organizers1 from "@/assets/features/organizers-1.png";
 import organizers2 from "@/assets/features/organizers-2.png";
@@ -12,7 +13,9 @@ import calendar from "@/assets/features/calendar.png";
 import payments from "@/assets/features/payments.png";
 import clubs from "@/assets/features/clubs.png";
 
-const slides = [
+type Slide = { src: string; uk: string; en: string };
+
+const defaultSlides: Slide[] = [
   { src: participants, uk: "Для учасників", en: "For participants" },
   { src: organizers1, uk: "Для організаторів", en: "For organizers" },
   { src: organizers2, uk: "Промокоди, фінанси, результати", en: "Promo codes, finances, results" },
@@ -28,6 +31,25 @@ export const FeaturesCarousel = () => {
   const plugin = useRef(Autoplay({ delay: 4500, stopOnInteraction: true }));
   const [api, setApi] = useState<CarouselApi | null>(null);
   const [current, setCurrent] = useState(0);
+  const [slides, setSlides] = useState<Slide[]>(defaultSlides);
+
+  useEffect(() => {
+    (async () => {
+      const { data } = await supabase
+        .from("home_carousel_slides" as any)
+        .select("image_url,title_uk,title_en,is_active,position")
+        .eq("is_active", true)
+        .order("position", { ascending: true });
+      const rows = (data as any[]) ?? [];
+      if (rows.length > 0) {
+        setSlides(rows.map((r) => ({
+          src: r.image_url,
+          uk: r.title_uk || "",
+          en: r.title_en || "",
+        })));
+      }
+    })();
+  }, []);
 
   useEffect(() => {
     if (!api) return;

@@ -665,6 +665,45 @@ export type Database = {
         }
         Relationships: []
       }
+      home_carousel_slides: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          id: string
+          image_url: string
+          is_active: boolean
+          position: number
+          storage_path: string | null
+          title_en: string | null
+          title_uk: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          image_url: string
+          is_active?: boolean
+          position?: number
+          storage_path?: string | null
+          title_en?: string | null
+          title_uk?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          image_url?: string
+          is_active?: boolean
+          position?: number
+          storage_path?: string | null
+          title_en?: string | null
+          title_uk?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       liqpay_orders: {
         Row: {
           amount: number
