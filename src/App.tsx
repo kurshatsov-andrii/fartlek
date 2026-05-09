@@ -44,6 +44,7 @@ import Testimonials from "./pages/Testimonials.tsx";
 import AdminSurvey from "./pages/AdminSurvey.tsx";
 import AdminSessions from "./pages/AdminSessions.tsx";
 import AdminSeo from "./pages/AdminSeo.tsx";
+import AdminCarousel from "./pages/AdminCarousel.tsx";
 import { AdminSeoEditor } from "./components/AdminSeoEditor";
 import CalendarPage from "./pages/Calendar.tsx";
 import StravaCallback from "./pages/StravaCallback.tsx";
