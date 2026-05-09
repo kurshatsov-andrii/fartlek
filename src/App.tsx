@@ -64,6 +64,7 @@ const App = () => (
             <ProfileCompletionGate />
             <AdminOnlinePresence />
             <SessionTracker />
+            <AdminSeoEditor />
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/auth" element={<Auth />} />
