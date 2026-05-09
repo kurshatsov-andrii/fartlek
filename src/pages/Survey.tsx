@@ -16,13 +16,11 @@ import { CheckCircle2, MessageSquareHeart } from "lucide-react";
 
 const MISSING_FEATURES = [
   { v: "race_history", l: "📊 Історія стартів та особисті рекорди" },
-  { v: "race_photos", l: "📸 Фото з забігів (пошук за номером)" },
   { v: "virtual_races", l: "🏆 Віртуальні забіги / челенджі" },
   { v: "results_tracking", l: "⏱️ Трекінг результатів у реальному часі" },
   { v: "ratings", l: "🥇 Рейтинги учасників" },
   { v: "training_plans", l: "📅 Тренувальні плани" },
   { v: "race_series", l: "🏅 Серії змагань / кубки" },
-  { v: "strava", l: "🔗 Інтеграція зі Strava" },
   { v: "team_registration", l: "👥 Командні реєстрації / естафети" },
   { v: "other", l: "✏️ Інше" },
 ];
