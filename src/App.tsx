@@ -101,6 +101,7 @@ const App = () => (
               <Route path="/testimonials" element={<Testimonials />} />
               <Route path="/admin/survey" element={<AdminSurvey />} />
               <Route path="/admin/sessions" element={<AdminSessions />} />
+              <Route path="/admin/seo" element={<AdminSeo />} />
               <Route path="/strava/callback" element={<StravaCallback />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
