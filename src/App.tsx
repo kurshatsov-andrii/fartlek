@@ -43,6 +43,8 @@ import Survey from "./pages/Survey.tsx";
 import Testimonials from "./pages/Testimonials.tsx";
 import AdminSurvey from "./pages/AdminSurvey.tsx";
 import AdminSessions from "./pages/AdminSessions.tsx";
+import AdminSeo from "./pages/AdminSeo.tsx";
+import { AdminSeoEditor } from "./components/AdminSeoEditor";
 import CalendarPage from "./pages/Calendar.tsx";
 import StravaCallback from "./pages/StravaCallback.tsx";
 import { ProfileCompletionGate } from "./components/ProfileCompletionGate";
@@ -62,6 +64,7 @@ const App = () => (
             <ProfileCompletionGate />
             <AdminOnlinePresence />
             <SessionTracker />
+            <AdminSeoEditor />
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/auth" element={<Auth />} />
@@ -98,6 +101,7 @@ const App = () => (
               <Route path="/testimonials" element={<Testimonials />} />
               <Route path="/admin/survey" element={<AdminSurvey />} />
               <Route path="/admin/sessions" element={<AdminSessions />} />
+              <Route path="/admin/seo" element={<AdminSeo />} />
               <Route path="/strava/callback" element={<StravaCallback />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
