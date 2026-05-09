@@ -1003,7 +1003,13 @@ const Participants = () => {
               <iframe src={receiptDialog.url} title="receipt" className="w-full h-full bg-white" />
             ) : null}
           </div>
-          <div className="p-3 border-t border-border flex justify-end">
+          <div className="p-3 border-t border-border flex justify-end gap-2">
+            <Button asChild size="sm">
+              <a href={receiptDialog?.url} target="_blank" rel="noopener noreferrer" download>
+                <Download className="h-4 w-4" />
+                {lang === "uk" ? "Завантажити квитанцію" : "Download receipt"}
+              </a>
+            </Button>
             <Button asChild variant="outline" size="sm">
               <a href={receiptDialog?.url} target="_blank" rel="noopener noreferrer">
                 {lang === "uk" ? "Відкрити в новій вкладці" : "Open in new tab"}
