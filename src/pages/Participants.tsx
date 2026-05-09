@@ -533,7 +533,7 @@ const Participants = () => {
                 </SelectContent>
               </Select>
             </div>
-            {isPaid && (
+            {isPaid && isOrganizer && (
               <div className="min-w-[160px]">
                 <label className="text-xs text-muted-foreground mb-1 block">{lang === "uk" ? "Оплата" : "Payment"}</label>
                 <Select value={fPayment} onValueChange={setFPayment}>
