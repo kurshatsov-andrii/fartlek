@@ -1004,11 +1004,30 @@ const Participants = () => {
             ) : null}
           </div>
           <div className="p-3 border-t border-border flex justify-end gap-2">
-            <Button asChild size="sm">
-              <a href={receiptDialog?.url} target="_blank" rel="noopener noreferrer" download>
-                <Download className="h-4 w-4" />
-                {lang === "uk" ? "Завантажити квитанцію" : "Download receipt"}
-              </a>
+            <Button
+              size="sm"
+              onClick={async () => {
+                if (!receiptDialog?.url) return;
+                try {
+                  const res = await fetch(receiptDialog.url);
+                  const blob = await res.blob();
+                  const urlPath = new URL(receiptDialog.url).pathname;
+                  const fileName = decodeURIComponent(urlPath.split("/").pop() || "receipt");
+                  const blobUrl = URL.createObjectURL(blob);
+                  const a = document.createElement("a");
+                  a.href = blobUrl;
+                  a.download = fileName;
+                  document.body.appendChild(a);
+                  a.click();
+                  document.body.removeChild(a);
+                  setTimeout(() => URL.revokeObjectURL(blobUrl), 1000);
+                } catch (e: any) {
+                  toast.error(lang === "uk" ? "Не вдалося завантажити" : "Download failed");
+                }
+              }}
+            >
+              <Download className="h-4 w-4" />
+              {lang === "uk" ? "Завантажити квитанцію" : "Download receipt"}
             </Button>
             <Button asChild variant="outline" size="sm">
               <a href={receiptDialog?.url} target="_blank" rel="noopener noreferrer">
