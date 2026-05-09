@@ -601,7 +601,7 @@ const Participants = () => {
                               <th className="p-3 font-semibold">{lang === "uk" ? "Категорія" : "Category"}</th>
                               <th className="p-3 font-semibold">{lang === "uk" ? "Учасники (етапи)" : "Members (legs)"}</th>
                               {isOrganizer && <th className="p-3 font-semibold">{lang === "uk" ? "Доданий" : "Added by"}</th>}
-                              {isPaid && <th className="p-3 font-semibold text-center">{lang === "uk" ? "Оплата" : "Payment"}</th>}
+                              {isPaid && isOrganizer && <th className="p-3 font-semibold text-center">{lang === "uk" ? "Оплата" : "Payment"}</th>}
                               {isPaid && isOrganizer && <th className="p-3 font-semibold text-center">{lang === "uk" ? "Квитанція" : "Receipt"}</th>}
                               {isOrganizer && <th className="p-3 font-semibold text-center">{lang === "uk" ? "Дії" : "Actions"}</th>}
                             </tr>
@@ -649,7 +649,7 @@ const Participants = () => {
                                       )}
                                     </td>
                                   )}
-                                  {isPaid && (
+                                  {isPaid && isOrganizer && (
                                     <td className="p-3 text-center">
                                       {r.payment_status === "paid" ? (
                                         <CheckCircle2 className="h-5 w-5 text-green-500 inline" />
@@ -714,7 +714,7 @@ const Participants = () => {
                         <th className="p-3 font-semibold">{t.profile.club}</th>
                         {isOrganizer && <th className="p-3 font-semibold">{lang === "uk" ? "Доставка НП" : "NP delivery"}</th>}
                         {isOrganizer && <th className="p-3 font-semibold">{lang === "uk" ? "Доданий" : "Added by"}</th>}
-                        {isPaid && <th className="p-3 font-semibold text-center">{lang === "uk" ? "Оплата" : "Payment"}</th>}
+                        {isPaid && isOrganizer && <th className="p-3 font-semibold text-center">{lang === "uk" ? "Оплата" : "Payment"}</th>}
                         {isPaid && isOrganizer && <th className="p-3 font-semibold text-center">{lang === "uk" ? "Квитанція" : "Receipt"}</th>}
                         {hasAnyResult && <th className="p-3 font-semibold">{lang === "uk" ? "Результат" : "Result"}</th>}
                         {isOrganizer && <th className="p-3 font-semibold text-center">{lang === "uk" ? "Дії" : "Actions"}</th>}
@@ -779,7 +779,7 @@ const Participants = () => {
                               )}
                             </td>
                           )}
-                          {isPaid && (
+                          {isPaid && isOrganizer && (
                             <td className="p-3 text-center">
                               {r.payment_status === "paid" ? (
                                 <CheckCircle2 className="h-5 w-5 text-green-500 inline" />
