@@ -1150,6 +1150,36 @@ export type Database = {
           },
         ]
       }
+      seo_overrides: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          path: string
+          title: string | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          path: string
+          title?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          path?: string
+          title?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
       strava_connections: {
         Row: {
           access_token: string
