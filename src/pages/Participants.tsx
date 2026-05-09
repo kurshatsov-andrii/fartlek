@@ -58,7 +58,17 @@ const Participants = () => {
       .maybeSingle();
     setEventTitle(ev?.title ?? "");
     setIsPaid(!!ev?.is_paid);
-    setIsOrganizer(ev?.organizer_id === user.id || isAdmin);
+    let isOrg = ev?.organizer_id === user.id || isAdmin;
+    if (!isOrg) {
+      const { data: co } = await supabase
+        .from("event_co_organizers")
+        .select("user_id")
+        .eq("event_id", id)
+        .eq("user_id", user.id)
+        .maybeSingle();
+      if (co) isOrg = true;
+    }
+    setIsOrganizer(isOrg);
     const { data: dists } = await supabase
       .from("distances")
       .select("id, distance_km, name, price, max_participants, is_active, is_virtual")
