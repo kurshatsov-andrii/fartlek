@@ -670,7 +670,7 @@ const Participants = () => {
                                         )}
                                         {r.payment_status === "paid" ? (
                                           <Button size="sm" variant="ghost" onClick={() => revoke(r.registration_id)} disabled={busyId === r.registration_id} title={lang === "uk" ? "Відхилити" : "Revoke"}>
-                                            {busyId === r.registration_id ? <Loader2 className="h-4 w-4 animate-spin" /> : <RotateCcw className="h-4 w-4 text-destructive" />}
+                                            {busyId === r.registration_id ? <Loader2 className="h-4 w-4 animate-spin" /> : <XCircle className="h-4 w-4 text-destructive" />}
                                           </Button>
                                         ) : r.receipt_url ? (
                                           <Button size="sm" variant="ghost" onClick={() => confirm(r.registration_id)} disabled={busyId === r.registration_id} title={lang === "uk" ? "Підтвердити" : "Confirm"}>
@@ -800,7 +800,7 @@ const Participants = () => {
                                 )}
                                 {r.payment_status === "paid" ? (
                                   <Button size="sm" variant="ghost" onClick={() => revoke(r.registration_id)} disabled={busyId === r.registration_id} title={lang === "uk" ? "Відхилити" : "Revoke"}>
-                                    {busyId === r.registration_id ? <Loader2 className="h-4 w-4 animate-spin" /> : <RotateCcw className="h-4 w-4 text-destructive" />}
+                                    {busyId === r.registration_id ? <Loader2 className="h-4 w-4 animate-spin" /> : <XCircle className="h-4 w-4 text-destructive" />}
                                   </Button>
                                 ) : r.receipt_url ? (
                                   <Button size="sm" variant="ghost" onClick={() => confirm(r.registration_id)} disabled={busyId === r.registration_id} title={lang === "uk" ? "Підтвердити" : "Confirm"}>
