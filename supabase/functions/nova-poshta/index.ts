@@ -200,6 +200,13 @@ Deno.serve(async (req) => {
         RecipientAddress: reg.delivery_warehouse_ref,
         ContactRecipient: contactRecipientRef,
         RecipientsPhone: phone,
+        OptionsSeat: Array.from({ length: Number(settings.seats_amount) || 1 }, () => ({
+          volumetricVolume: "1",
+          volumetricWidth: "10",
+          volumetricLength: "10",
+          volumetricHeight: "10",
+          weight: String(settings.weight),
+        })),
       };
 
 
