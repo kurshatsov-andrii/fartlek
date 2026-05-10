@@ -252,6 +252,8 @@ const Ticket = () => {
               fullName={data.athletes?.full_name ?? profileName}
               club={data.athletes?.club ?? profileClub}
               bibNumber={data.bib_number}
+              distance={dist ? `${dist.distance_km} km${dist.name ? ` · ${dist.name}` : ""}` : null}
+              qrUrl={`${window.location.origin}/events/${ev.slug ?? ev.id}`}
             />
             <AddToCalendarButton
               variant="outline"

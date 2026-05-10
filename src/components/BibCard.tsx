@@ -1,6 +1,7 @@
-import { useRef, useState, ReactNode } from "react";
+import { useEffect, useRef, useState, ReactNode } from "react";
 import html2canvas from "html2canvas";
 import { jsPDF } from "jspdf";
+import QRCode from "qrcode";
 import { Download, FileText, Image as ImageIcon, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -17,21 +18,31 @@ type Props = {
   fullName?: string | null;
   club?: string | null;
   bibNumber?: number | null;
+  distance?: string | null;
+  qrUrl?: string | null;
   trigger?: ReactNode;
 };
 
 /**
  * Простий стартовий номер (BIB) — попередній перегляд + завантаження PNG/PDF.
- * Доступний учасникам, організаторам, співорганізаторам та адміну.
  */
-export const BibCard = ({ eventTitle, fullName, club, bibNumber, trigger }: Props) => {
+export const BibCard = ({ eventTitle, fullName, club, bibNumber, distance, qrUrl, trigger }: Props) => {
   const { lang } = useApp();
   const [open, setOpen] = useState(false);
   const [busy, setBusy] = useState<"png" | "pdf" | null>(null);
+  const [qrDataUrl, setQrDataUrl] = useState<string>("");
   const ref = useRef<HTMLDivElement>(null);
 
   const safeBib = bibNumber ?? "—";
   const fileBase = `bib-${bibNumber ?? "noncolor"}-${(fullName ?? "runner").replace(/\s+/g, "_")}`;
+  const targetUrl = qrUrl || (typeof window !== "undefined" ? window.location.href : "https://fartlek.lovable.app");
+
+  useEffect(() => {
+    if (!open) return;
+    QRCode.toDataURL(targetUrl, { margin: 0, width: 240, errorCorrectionLevel: "M" })
+      .then(setQrDataUrl)
+      .catch(() => setQrDataUrl(""));
+  }, [open, targetUrl]);
 
   const render = async () => {
     if (!ref.current) return null;
@@ -62,32 +73,14 @@ export const BibCard = ({ eventTitle, fullName, club, bibNumber, trigger }: Prop
       const canvas = await render();
       if (!canvas) return;
       const img = canvas.toDataURL("image/png");
-      // A4 portrait, fit bib horizontally with margins, centered vertically near top.
       const pdf = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
       const pageW = 210;
-      const pageH = 297;
       const marginX = 10;
       const targetW = pageW - marginX * 2;
       const ratio = canvas.height / canvas.width;
       const targetH = targetW * ratio;
       const y = 20;
-      // Cut marks (corners)
-      pdf.setLineDashPattern([2, 2], 0);
-      pdf.setDrawColor(150);
-      pdf.rect(marginX, y, targetW, targetH);
-      pdf.setLineDashPattern([], 0);
       pdf.addImage(img, "PNG", marginX, y, targetW, targetH);
-      // Footer caption
-      pdf.setFontSize(9);
-      pdf.setTextColor(120);
-      pdf.text(
-        lang === "uk"
-          ? "Розріжте по контуру. Закріпіть на одязі шпильками."
-          : "Cut along the border. Pin to your shirt.",
-        pageW / 2,
-        y + targetH + 8,
-        { align: "center" }
-      );
       pdf.save(`${fileBase}.pdf`);
     } finally {
       setBusy(null);
@@ -111,7 +104,6 @@ export const BibCard = ({ eventTitle, fullName, club, bibNumber, trigger }: Prop
           </DialogTitle>
         </DialogHeader>
 
-        {/* Preview / capture surface */}
         <div className="overflow-auto max-h-[60vh] flex justify-center bg-muted/30 p-3 rounded-md">
           <div
             ref={ref}
@@ -128,7 +120,6 @@ export const BibCard = ({ eventTitle, fullName, club, bibNumber, trigger }: Prop
               border: "2px solid #0a0a0a",
             }}
           >
-            {/* Header band */}
             <div
               style={{
                 background: "#0a0a0a",
@@ -145,7 +136,6 @@ export const BibCard = ({ eventTitle, fullName, club, bibNumber, trigger }: Prop
               {eventTitle}
             </div>
 
-            {/* Body */}
             <div
               style={{
                 flex: 1,
@@ -153,32 +143,44 @@ export const BibCard = ({ eventTitle, fullName, club, bibNumber, trigger }: Prop
                 flexDirection: "column",
                 alignItems: "center",
                 justifyContent: "center",
-                gap: 6,
-                padding: "16px 0",
+                gap: 4,
+                padding: "12px 0",
               }}
             >
               {fullName && (
-                <div style={{ fontSize: 34, fontWeight: 700, textAlign: "center" }}>
+                <div style={{ fontSize: 32, fontWeight: 700, textAlign: "center" }}>
                   {fullName}
                 </div>
               )}
               {club && (
-                <div style={{ fontSize: 22, color: "#444", textAlign: "center" }}>{club}</div>
+                <div style={{ fontSize: 20, color: "#444", textAlign: "center" }}>{club}</div>
+              )}
+              {distance && (
+                <div
+                  style={{
+                    fontSize: 22,
+                    fontWeight: 700,
+                    color: "#0057B7",
+                    textAlign: "center",
+                    marginTop: 4,
+                  }}
+                >
+                  {distance}
+                </div>
               )}
               <div
                 style={{
-                  fontSize: 180,
+                  fontSize: 170,
                   fontWeight: 900,
                   lineHeight: 1,
                   letterSpacing: -6,
-                  marginTop: 8,
+                  marginTop: 4,
                 }}
               >
                 {safeBib}
               </div>
             </div>
 
-            {/* Footer with flag */}
             <div
               style={{
                 display: "flex",
@@ -188,7 +190,16 @@ export const BibCard = ({ eventTitle, fullName, club, bibNumber, trigger }: Prop
                 paddingTop: 12,
               }}
             >
-              <div style={{ fontSize: 14, color: "#666" }}>fartlek.lovable.app</div>
+              {qrDataUrl ? (
+                <img
+                  src={qrDataUrl}
+                  alt="QR"
+                  crossOrigin="anonymous"
+                  style={{ width: 72, height: 72 }}
+                />
+              ) : (
+                <div style={{ width: 72, height: 72 }} />
+              )}
               <div
                 style={{
                   width: 60,
