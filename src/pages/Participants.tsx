@@ -95,7 +95,58 @@ const Participants = () => {
     const rmap: Record<string, any> = {};
     (resData ?? []).forEach((r: any) => { rmap[r.registration_id] = r; });
     setResultsMap(rmap);
+    // Load TTN data and NP settings presence (organizer only)
+    if (isOrg) {
+      const { data: ttnRows } = await supabase
+        .from("registrations")
+        .select("id, np_ttn_number, np_ttn_ref, np_ttn_cost, np_ttn_estimated_delivery_date")
+        .eq("event_id", id)
+        .not("np_ttn_number", "is", null);
+      const tmap: Record<string, any> = {};
+      (ttnRows ?? []).forEach((r: any) => {
+        tmap[r.id] = { ttn: r.np_ttn_number, ref: r.np_ttn_ref, cost: r.np_ttn_cost, estimated: r.np_ttn_estimated_delivery_date };
+      });
+      setTtnMap(tmap);
+      const { data: npSet } = await supabase
+        .from("event_np_sender_settings")
+        .select("event_id")
+        .eq("event_id", id)
+        .maybeSingle();
+      setHasNpSettings(!!npSet);
+    }
     setLoading(false);
+  };
+
+  const createTtn = async (registrationId: string) => {
+    if (!id) return;
+    if (!hasNpSettings) {
+      toast.error(lang === "uk" ? "Спочатку налаштуйте відправника НП" : "Configure NP sender first");
+      return;
+    }
+    setTtnBusy(registrationId);
+    const { data, error } = await supabase.functions.invoke("nova-poshta", {
+      body: { action: "createTtn", event_id: id, registration_id: registrationId },
+    });
+    setTtnBusy(null);
+    if (error) { toast.error(error.message); return; }
+    if ((data as any)?.error) { toast.error((data as any).error); return; }
+    const d = data as any;
+    setTtnMap((prev) => ({ ...prev, [registrationId]: { ttn: d.ttn, ref: d.ref, cost: d.cost, estimated: d.estimated_delivery_date } }));
+    toast.success(lang === "uk" ? `ТТН створено: ${d.ttn}` : `TTN created: ${d.ttn}`);
+  };
+
+  const deleteTtn = async (registrationId: string) => {
+    if (!id) return;
+    if (!window.confirm(lang === "uk" ? "Видалити ТТН?" : "Delete TTN?")) return;
+    setTtnBusy(registrationId);
+    const { data, error } = await supabase.functions.invoke("nova-poshta", {
+      body: { action: "deleteTtn", event_id: id, registration_id: registrationId },
+    });
+    setTtnBusy(null);
+    if (error) { toast.error(error.message); return; }
+    if ((data as any)?.error) { toast.error((data as any).error); return; }
+    setTtnMap((prev) => { const n = { ...prev }; delete n[registrationId]; return n; });
+    toast.success(lang === "uk" ? "ТТН видалено" : "TTN deleted");
   };
 
   useEffect(() => { load(); /* eslint-disable-next-line */ }, [id, user]);
