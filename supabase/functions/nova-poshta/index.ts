@@ -213,9 +213,16 @@ Deno.serve(async (req) => {
         RecipientName: fullName,
       };
 
+      console.log("NP createTtn props:", JSON.stringify(npProps));
       const r = await npCall(apiKey, "InternetDocument", "save", npProps);
+      console.log("NP createTtn response:", JSON.stringify(r));
       if (!r?.success || !r?.data?.[0]?.IntDocNumber) {
-        return json(400, { error: r?.errors?.join("; ") || "NP error", warnings: r?.warnings, info: r?.info });
+        const msg = [
+          ...(r?.errors ?? []),
+          ...(r?.warnings ? Object.values(r.warnings) : []),
+          ...(r?.info ? Object.values(r.info) : []),
+        ].filter(Boolean).join("; ") || "NP error";
+        return json(200, { error: msg, raw: r });
       }
       const created = r.data[0];
       const ttn: string = created.IntDocNumber;
