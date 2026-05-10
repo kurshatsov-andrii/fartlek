@@ -27,6 +27,8 @@ const Ticket = () => {
   const { t, lang } = useApp();
   const { user, loading: authLoading } = useAuth();
   const [data, setData] = useState<any>(null);
+  const [profileName, setProfileName] = useState<string | null>(null);
+  const [profileClub, setProfileClub] = useState<string | null>(null);
   const [qrUrl, setQrUrl] = useState<string>("");
   const [loading, setLoading] = useState(true);
   const [uploadingReceipt, setUploadingReceipt] = useState(false);
