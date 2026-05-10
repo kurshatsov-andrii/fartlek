@@ -62,23 +62,35 @@ export function NovaPoshtaSettingsDialog({ eventId, trigger, onSaved }: { eventI
         .select("*")
         .eq("event_id", eventId)
         .maybeSingle();
-      if (data) setS({ ...DEFAULTS, ...data });
-      else setS(DEFAULTS);
+      if (data) {
+        setS({ ...DEFAULTS, ...data });
+        if ((data as any).sender_city_name) setCitySearch((data as any).sender_city_name);
+      } else setS(DEFAULTS);
       setLoading(false);
+      // Auto-load counterparties so sender_ref/contact fields are visible immediately
+      loadCounterparties(true);
     })();
   }, [open, eventId]);
 
-  const loadCounterparties = async () => {
+  const loadCounterparties = async (silent = false) => {
     setLoadingCps(true);
     const { data, error } = await supabase.functions.invoke("nova-poshta", {
       body: { action: "getCounterparties", event_id: eventId },
     });
     setLoadingCps(false);
-    if (error) { toast.error(error.message); return; }
-    if ((data as any)?.error) { toast.error((data as any).error); return; }
-    setCounterparties((data as any)?.data ?? []);
-    if (((data as any)?.data ?? []).length === 0) {
-      toast.info(lang === "uk" ? "Відправників не знайдено в кабінеті НП" : "No senders found in NP account");
+    if (error) { if (!silent) toast.error(error.message); return; }
+    if ((data as any)?.error) { if (!silent) toast.error((data as any).error); return; }
+    const list = (data as any)?.data ?? [];
+    setCounterparties(list);
+    if (list.length === 0) {
+      if (!silent) toast.info(lang === "uk" ? "Відправників не знайдено в кабінеті НП" : "No senders found in NP account");
+      return;
+    }
+    // Auto-pick if only one or if sender_ref already known — and load contacts
+    const refToLoad = list.find((c: any) => c.Ref === s.sender_ref)?.Ref ?? (list.length === 1 ? list[0].Ref : null);
+    if (refToLoad) {
+      setS((prev) => ({ ...prev, sender_ref: refToLoad }));
+      loadContacts(refToLoad);
     }
   };
 
@@ -88,7 +100,16 @@ export function NovaPoshtaSettingsDialog({ eventId, trigger, onSaved }: { eventI
     });
     if (error) { toast.error(error.message); return; }
     if ((data as any)?.error) { toast.error((data as any).error); return; }
-    setContacts((data as any)?.data ?? []);
+    const list = (data as any)?.data ?? [];
+    setContacts(list);
+    // Auto-pick existing or single contact
+    setS((prev) => {
+      const match = list.find((c: any) => c.Ref === prev.sender_contact_ref);
+      const pick = match?.Ref ?? (list.length === 1 ? list[0].Ref : null);
+      if (!pick) return prev;
+      const phone = prev.sender_phone || (list.find((c: any) => c.Ref === pick)?.Phones ?? "");
+      return { ...prev, sender_contact_ref: pick, sender_phone: phone };
+    });
   };
 
   const searchCities = async (q: string) => {
