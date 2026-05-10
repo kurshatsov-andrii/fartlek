@@ -400,6 +400,7 @@ const Participants = () => {
         ? (lang === "uk" ? "Поштомат" : "Postomat")
         : r.delivery_warehouse_type === "branch"
           ? (lang === "uk" ? "Відділення" : "Branch") : "";
+      base[lang === "uk" ? "ТТН НП" : "NP TTN"] = ttnMap[r.registration_id]?.ttn ?? "";
       return base;
     });
     const ws = XLSX.utils.json_to_sheet(data);
