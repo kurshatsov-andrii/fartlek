@@ -118,7 +118,8 @@ const Features = () => {
       title: "Tickets & race day",
       items: [
         { icon: QrCode, title: "QR ticket", desc: "Electronic ticket with a unique QR code — show it at the start." },
-        { icon: Ticket, title: "Bib number", desc: "Assigned by the organizer and shown on your ticket." },
+        { icon: Ticket, title: "Personalized BIB card 🆕", desc: "Your ticket shows a personal BIB card with your number, name, distance and event logo — display it at the start or keep as a memento." },
+        { icon: MapPin, title: "GPX route track 🆕", desc: "Organizers upload a GPX file of the course — view the route on an interactive map in the event details and download it for your watch or Strava." },
         { icon: CalendarPlus, title: "Add to calendar", desc: "One click to add the event to Google Calendar, Outlook or Apple Calendar." },
         { icon: Trophy, title: "Race results", desc: "After the finish, organizers upload results — see your time and position." },
         { icon: Activity, title: "Auto-verify results via Strava 🆕", desc: "For virtual races: connect Strava in your profile — we automatically pick the matching activity within the date window and distance tolerance, count your time and mark it as «verified». Your ticket gets a direct link to the activity." },
