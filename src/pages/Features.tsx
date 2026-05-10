@@ -67,7 +67,8 @@ const Features = () => {
       title: "Квитки та день старту",
       items: [
         { icon: QrCode, title: "QR-квиток", desc: "Електронний квиток з унікальним QR-кодом — показуєте на стартовому містечку." },
-        { icon: Ticket, title: "Стартовий номер (BIB)", desc: "Номер призначається організатором і відображається у вашому квитку." },
+        { icon: Ticket, title: "Іменний BIB-номер 🆕", desc: "У квитку відображається персональна BIB-картка з вашим номером, ім'ям, дистанцією та логотипом події — показуйте на старті або зберігайте як сувенір." },
+        { icon: MapPin, title: "GPX-трек дистанції 🆕", desc: "Організатор додає GPX-файл маршруту — ви бачите трек на інтерактивній карті у деталях події та можете завантажити його для свого годинника чи Strava." },
         { icon: CalendarPlus, title: "Додати в календар", desc: "Один клік — і подія в Google Calendar, Outlook або Apple Calendar з правильним часом." },
         { icon: Trophy, title: "Результати забігу", desc: "Після фінішу організатор завантажує результати — ви бачите свій час і місце." },
         { icon: Activity, title: "Автозалік результату через Strava 🆕", desc: "Для віртуальних гонок: підключіть Strava у профілі — ми самі знайдемо вашу активність у вікні дат із потрібною дистанцією, зарахуємо час і поставимо позначку «підтверджено». У квитку буде пряме посилання на активність." },
@@ -117,7 +118,8 @@ const Features = () => {
       title: "Tickets & race day",
       items: [
         { icon: QrCode, title: "QR ticket", desc: "Electronic ticket with a unique QR code — show it at the start." },
-        { icon: Ticket, title: "Bib number", desc: "Assigned by the organizer and shown on your ticket." },
+        { icon: Ticket, title: "Personalized BIB card 🆕", desc: "Your ticket shows a personal BIB card with your number, name, distance and event logo — display it at the start or keep as a memento." },
+        { icon: MapPin, title: "GPX route track 🆕", desc: "Organizers upload a GPX file of the course — view the route on an interactive map in the event details and download it for your watch or Strava." },
         { icon: CalendarPlus, title: "Add to calendar", desc: "One click to add the event to Google Calendar, Outlook or Apple Calendar." },
         { icon: Trophy, title: "Race results", desc: "After the finish, organizers upload results — see your time and position." },
         { icon: Activity, title: "Auto-verify results via Strava 🆕", desc: "For virtual races: connect Strava in your profile — we automatically pick the matching activity within the date window and distance tolerance, count your time and mark it as «verified». Your ticket gets a direct link to the activity." },
@@ -173,7 +175,8 @@ const Features = () => {
       items: [
         { icon: Users, title: "Список учасників", desc: "Повний список з контактами, дистанцією, статусом оплати, клубом, віком." },
         { icon: FileSpreadsheet, title: "Експорт у CSV / Excel", desc: "Вивантаження учасників одним кліком для стартової реєстрації офлайн." },
-        { icon: Ticket, title: "Призначення BIB-номерів", desc: "Автоматичне призначення номерів від заданого старту або вручну." },
+        { icon: Ticket, title: "Призначення BIB-номерів 🆕", desc: "Задайте стартовий номер для кожної дистанції — система автоматично пронумерує учасників за порядком реєстрації. Кожен учасник бачить персональну BIB-картку зі своїм номером, ім'ям та логотипом події у квитку." },
+        { icon: MapPin, title: "GPX-треки маршрутів 🆕", desc: "Завантажуйте GPX-файли для кожної дистанції — учасники бачать інтерактивну карту траси у деталях події та можуть скачати файл собі." },
         { icon: Trophy, title: "Завантаження результатів", desc: "Завантажте файл або вкажіть посилання — учасники одразу побачать свій час." },
         { icon: Truck, title: "Доставка стартового пакету Новою Поштою 🆕", desc: "Увімкніть доставку — учасники під час реєстрації обирають місто та відділення/поштомат. Ви бачите адреси у списку учасників та експорті." },
         { icon: Send, title: "Формування ТТН Нової Пошти 🆕", desc: "Підключіть свій API-ключ НП у налаштуваннях події, оберіть відправника, контактну особу й місто-відділення. Створюйте ТТН учасникам прямо зі списку учасників — номер, орієнтовна вартість і дата доставки збережуться у реєстрації, з посиланням на трекінг та можливістю видалити ТТН." },
@@ -220,7 +223,8 @@ const Features = () => {
       items: [
         { icon: Users, title: "Participants list", desc: "Full list with contacts, distance, payment status, club, age." },
         { icon: FileSpreadsheet, title: "CSV / Excel export", desc: "One-click export for offline race-day check-in." },
-        { icon: Ticket, title: "Assign BIB numbers", desc: "Auto-assign from a starting number or set manually." },
+        { icon: Ticket, title: "Assign BIB numbers 🆕", desc: "Set a starting number per distance — the system auto-numbers participants by registration order. Each participant sees a personalized BIB card with their number, name and event logo on the ticket." },
+        { icon: MapPin, title: "GPX route tracks 🆕", desc: "Upload GPX files for each distance — participants see an interactive course map in the event details and can download the file." },
         { icon: Trophy, title: "Upload results", desc: "Upload a file or paste a link — participants instantly see their time." },
         { icon: Truck, title: "Nova Poshta race kit delivery 🆕", desc: "Enable delivery — participants pick a city and branch/parcel locker at registration. You see the addresses in the participants list and exports." },
         { icon: Send, title: "Generate Nova Poshta waybills (TTN) 🆕", desc: "Plug in your NP API key in the event settings, choose the sender, contact person and origin warehouse. Create TTNs straight from the participants list — number, estimated cost and delivery date are saved on the registration with a tracking link and a delete button." },
