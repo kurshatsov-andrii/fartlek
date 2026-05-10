@@ -112,23 +112,20 @@ export const BibCard = ({ eventTitle, fullName, club, bibNumber, trigger }: Prop
         </DialogHeader>
 
         {/* Preview / capture surface */}
-        <div className="overflow-auto">
+        <div className="overflow-auto max-h-[60vh] flex justify-center bg-muted/30 p-3 rounded-md">
           <div
             ref={ref}
             style={{
-              width: 1100,
-              height: 880,
+              width: 660,
+              height: 528,
               background: "#ffffff",
               fontFamily: "Arial, Helvetica, sans-serif",
               color: "#0a0a0a",
-              padding: 40,
+              padding: 24,
               boxSizing: "border-box",
               display: "flex",
               flexDirection: "column",
               border: "2px solid #0a0a0a",
-              transformOrigin: "top left",
-              transform: "scale(0.5)",
-              marginBottom: -440,
             }}
           >
             {/* Header band */}
