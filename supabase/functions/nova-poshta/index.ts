@@ -1,3 +1,5 @@
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.4";
+
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
@@ -5,116 +7,266 @@ const corsHeaders = {
 
 const NP_URL = "https://api.novaposhta.ua/v2.0/json/";
 
+const json = (status: number, data: unknown) =>
+  new Response(JSON.stringify(data), { status, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+
+async function npCall(apiKey: string, modelName: string, calledMethod: string, methodProperties: Record<string, unknown>) {
+  const res = await fetch(NP_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ apiKey, modelName, calledMethod, methodProperties }),
+  });
+  return await res.json();
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
 
   try {
     const apiKey = Deno.env.get("NOVA_POSHTA_API_KEY");
-    if (!apiKey) {
-      return new Response(JSON.stringify({ error: "Nova Poshta API key not configured" }), {
-        status: 500,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
-    }
+    if (!apiKey) return json(500, { error: "Nova Poshta API key not configured" });
 
     const body = await req.json().catch(() => ({}));
     const action = String(body.action ?? "");
-    const query = String(body.query ?? "").trim();
-    const cityRef = String(body.cityRef ?? "").trim();
-    const warehouseType = body.warehouseType as string | undefined; // "branch" | "postomat" | "all"
 
-    let payload: Record<string, unknown> | null = null;
-
+    // Public actions (no auth needed): used during checkout
     if (action === "searchCities") {
-      if (query.length < 2) {
-        return new Response(JSON.stringify({ data: [] }), {
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
-      }
-      payload = {
-        apiKey,
-        modelName: "Address",
-        calledMethod: "searchSettlements",
-        methodProperties: { CityName: query, Limit: "20" },
-      };
-    } else if (action === "searchWarehouses") {
-      if (!cityRef) {
-        return new Response(JSON.stringify({ data: [] }), {
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
-      }
-      const props: Record<string, unknown> = {
-        SettlementRef: cityRef,
-        Language: "UA",
-        Limit: "500",
-      };
-      if (query) props.FindByString = query;
-      // TypeOfWarehouseRef filters: postomat = f9316480-5f2d-425d-bc2c-ac7cd29decf0, branch covers others
-      if (warehouseType === "postomat") {
-        props.TypeOfWarehouseRef = "f9316480-5f2d-425d-bc2c-ac7cd29decf0";
-      }
-      payload = {
-        apiKey,
-        modelName: "AddressGeneral",
-        calledMethod: "getWarehouses",
-        methodProperties: props,
-      };
-    } else {
-      return new Response(JSON.stringify({ error: "Unknown action" }), {
-        status: 400,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
-    }
-
-    const npRes = await fetch(NP_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
-    const json = await npRes.json();
-
-    if (action === "searchCities") {
-      const addresses = json?.data?.[0]?.Addresses ?? [];
+      const query = String(body.query ?? "").trim();
+      if (query.length < 2) return json(200, { data: [] });
+      const r = await npCall(apiKey, "Address", "searchSettlements", { CityName: query, Limit: "20" });
+      const addresses = r?.data?.[0]?.Addresses ?? [];
       const cities = addresses.map((a: any) => ({
-        ref: a.Ref || a.DeliveryCity,
-        name: a.MainDescription || a.Present,
-        area: a.Area,
-        region: a.Region,
-        present: a.Present,
+        ref: a.Ref || a.DeliveryCity, name: a.MainDescription || a.Present,
+        area: a.Area, region: a.Region, present: a.Present,
       })).filter((c: any) => c.ref);
-      return new Response(JSON.stringify({ data: cities }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+      return json(200, { data: cities });
     }
 
     if (action === "searchWarehouses") {
-      const list = json?.data ?? [];
-      let warehouses = list.map((w: any) => ({
-        ref: w.Ref,
-        number: w.Number,
-        description: w.Description,
-        shortAddress: w.ShortAddress,
+      const cityRef = String(body.cityRef ?? "").trim();
+      const query = String(body.query ?? "").trim();
+      const warehouseType = body.warehouseType as string | undefined;
+      if (!cityRef) return json(200, { data: [] });
+      const props: Record<string, unknown> = { SettlementRef: cityRef, Language: "UA", Limit: "500" };
+      if (query) props.FindByString = query;
+      if (warehouseType === "postomat") props.TypeOfWarehouseRef = "f9316480-5f2d-425d-bc2c-ac7cd29decf0";
+      const r = await npCall(apiKey, "AddressGeneral", "getWarehouses", props);
+      let warehouses = (r?.data ?? []).map((w: any) => ({
+        ref: w.Ref, number: w.Number, description: w.Description, shortAddress: w.ShortAddress,
         typeRef: w.TypeOfWarehouse,
-        isPostomat: w.CategoryOfWarehouse === "Postomat" ||
-          w.TypeOfWarehouse === "f9316480-5f2d-425d-bc2c-ac7cd29decf0",
+        isPostomat: w.CategoryOfWarehouse === "Postomat" || w.TypeOfWarehouse === "f9316480-5f2d-425d-bc2c-ac7cd29decf0",
       }));
-      if (warehouseType === "branch") {
-        warehouses = warehouses.filter((w: any) => !w.isPostomat);
-      } else if (warehouseType === "postomat") {
-        warehouses = warehouses.filter((w: any) => w.isPostomat);
-      }
-      return new Response(JSON.stringify({ data: warehouses }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+      if (warehouseType === "branch") warehouses = warehouses.filter((w: any) => !w.isPostomat);
+      else if (warehouseType === "postomat") warehouses = warehouses.filter((w: any) => w.isPostomat);
+      return json(200, { data: warehouses });
     }
 
-    return new Response(JSON.stringify(json), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    // Protected actions: must be event manager
+    const authHeader = req.headers.get("Authorization") ?? "";
+    if (!authHeader) return json(401, { error: "Unauthorized" });
+
+    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+    const supabaseAnonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
+    const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+      global: { headers: { Authorization: authHeader } },
     });
+    const { data: userRes } = await supabase.auth.getUser();
+    const user = userRes?.user;
+    if (!user) return json(401, { error: "Unauthorized" });
+
+    const eventId = String(body.event_id ?? "");
+    if (!eventId) return json(400, { error: "event_id required" });
+
+    const { data: canManage } = await supabase.rpc("can_manage_event", {
+      _event_id: eventId,
+      _user_id: user.id,
+    });
+    if (!canManage) return json(403, { error: "Not authorized for this event" });
+
+    if (action === "getCounterparties") {
+      // Sender counterparties
+      const r = await npCall(apiKey, "Counterparty", "getCounterparties", {
+        CounterpartyProperty: "Sender",
+        Page: "1",
+      });
+      if (!r?.success) return json(400, { error: r?.errors?.join(", ") || "NP error", raw: r });
+      return json(200, { data: r.data ?? [] });
+    }
+
+    if (action === "getCounterpartyContactPersons") {
+      const ref = String(body.counterpartyRef ?? "");
+      if (!ref) return json(400, { error: "counterpartyRef required" });
+      const r = await npCall(apiKey, "Counterparty", "getCounterpartyContactPersons", {
+        Ref: ref, Page: "1",
+      });
+      if (!r?.success) return json(400, { error: r?.errors?.join(", ") || "NP error", raw: r });
+      return json(200, { data: r.data ?? [] });
+    }
+
+    if (action === "getSenderAddresses") {
+      // List sender's own warehouses (city of sender)
+      const cityRef = String(body.cityRef ?? "");
+      if (!cityRef) return json(400, { error: "cityRef required" });
+      const r = await npCall(apiKey, "AddressGeneral", "getWarehouses", {
+        SettlementRef: cityRef, Language: "UA", Limit: "500",
+      });
+      const warehouses = (r?.data ?? []).map((w: any) => ({
+        ref: w.Ref, number: w.Number, description: w.Description, shortAddress: w.ShortAddress,
+      }));
+      return json(200, { data: warehouses });
+    }
+
+    if (action === "createTtn") {
+      const registrationId = String(body.registration_id ?? "");
+      if (!registrationId) return json(400, { error: "registration_id required" });
+
+      const { data: settings } = await supabase
+        .from("event_np_sender_settings")
+        .select("*")
+        .eq("event_id", eventId)
+        .maybeSingle();
+      if (!settings) return json(400, { error: "Sender settings not configured" });
+
+      const { data: reg } = await supabase
+        .from("registrations")
+        .select("id, event_id, np_ttn_number, delivery_enabled, delivery_recipient_name, delivery_phone, delivery_city_ref, delivery_city_name, delivery_warehouse_ref, delivery_warehouse_name, delivery_warehouse_type")
+        .eq("id", registrationId)
+        .maybeSingle();
+      if (!reg) return json(404, { error: "Registration not found" });
+      if (reg.event_id !== eventId) return json(400, { error: "event mismatch" });
+      if (!reg.delivery_enabled) return json(400, { error: "Delivery not requested" });
+      if (reg.np_ttn_number) return json(400, { error: "TTN already exists", ttn: reg.np_ttn_number });
+      if (!reg.delivery_city_ref || !reg.delivery_warehouse_ref) {
+        return json(400, { error: "Recipient delivery address not provided" });
+      }
+
+      // Recipient name parsing
+      const fullName = (reg.delivery_recipient_name ?? "").trim();
+      const parts = fullName.split(/\s+/);
+      const lastName = parts[0] ?? "";
+      const firstName = parts[1] ?? lastName;
+      const middleName = parts.slice(2).join(" ");
+
+      // Phone normalization (380XXXXXXXXX)
+      let phone = (reg.delivery_phone ?? "").replace(/\D/g, "");
+      if (phone.startsWith("0")) phone = "38" + phone;
+      if (!phone.startsWith("380")) phone = "380" + phone.replace(/^380?/, "");
+
+      const serviceType = reg.delivery_warehouse_type === "postomat" ? "WarehousePostomat" : "WarehouseWarehouse";
+
+      const props: Record<string, unknown> = {
+        PayerType: settings.payer_type,
+        PaymentMethod: settings.payment_method,
+        DateTime: new Date().toLocaleDateString("uk-UA"),
+        CargoType: settings.cargo_type,
+        Weight: String(settings.weight),
+        ServiceType: serviceType,
+        SeatsAmount: String(settings.seats_amount),
+        Description: settings.cargo_description,
+        Cost: String(settings.cost),
+        CitySender: settings.sender_city_ref,
+        Sender: settings.sender_ref,
+        SenderAddress: settings.sender_address_ref,
+        ContactSender: settings.sender_contact_ref,
+        SendersPhone: settings.sender_phone,
+        CityRecipient: reg.delivery_city_ref,
+        Recipient: "",
+        RecipientAddress: reg.delivery_warehouse_ref,
+        ContactRecipient: "",
+        RecipientsPhone: phone,
+        // New recipient (private person) fields:
+        RecipientType: "PrivatePerson",
+        RecipientCityName: reg.delivery_city_name ?? "",
+        RecipientArea: "",
+        RecipientAreaRegions: "",
+        RecipientAddressName: reg.delivery_warehouse_name ?? "",
+        RecipientHouse: "",
+        RecipientFlat: "",
+        RecipientName: fullName,
+        RecipientType_PrivatePerson: "PrivatePerson",
+        NewAddress: "1",
+      };
+
+      // Use NewAddress flow which only requires recipient name + phone
+      const npProps = {
+        SenderWarehouseIndex: undefined,
+        RecipientWarehouseIndex: undefined,
+        PayerType: settings.payer_type,
+        PaymentMethod: settings.payment_method,
+        DateTime: new Date().toLocaleDateString("uk-UA"),
+        CargoType: settings.cargo_type,
+        Weight: String(settings.weight),
+        ServiceType: serviceType,
+        SeatsAmount: String(settings.seats_amount),
+        Description: settings.cargo_description,
+        Cost: String(settings.cost),
+        CitySender: settings.sender_city_ref,
+        Sender: settings.sender_ref,
+        SenderAddress: settings.sender_address_ref,
+        ContactSender: settings.sender_contact_ref,
+        SendersPhone: settings.sender_phone,
+        CityRecipient: reg.delivery_city_ref,
+        RecipientAddress: reg.delivery_warehouse_ref,
+        RecipientsPhone: phone,
+        RecipientType: "PrivatePerson",
+        NewAddress: "1",
+        RecipientName: fullName,
+      };
+
+      const r = await npCall(apiKey, "InternetDocument", "save", npProps);
+      if (!r?.success || !r?.data?.[0]?.IntDocNumber) {
+        return json(400, { error: r?.errors?.join("; ") || "NP error", warnings: r?.warnings, info: r?.info });
+      }
+      const created = r.data[0];
+      const ttn: string = created.IntDocNumber;
+      const ref: string = created.Ref;
+      const ttnCost = Number(created.CostOnSite ?? 0);
+      const estDate = created.EstimatedDeliveryDate ? String(created.EstimatedDeliveryDate).split(" ")[0] : null;
+
+      // Save to registration (use service role to avoid policy nuances)
+      const serviceClient = createClient(supabaseUrl, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
+      const { error: updErr } = await serviceClient
+        .from("registrations")
+        .update({
+          np_ttn_number: ttn,
+          np_ttn_ref: ref,
+          np_ttn_cost: ttnCost,
+          np_ttn_estimated_delivery_date: estDate,
+          np_ttn_created_at: new Date().toISOString(),
+          np_ttn_created_by: user.id,
+        })
+        .eq("id", registrationId);
+      if (updErr) return json(500, { error: "Failed to save TTN: " + updErr.message, ttn });
+
+      return json(200, { ttn, ref, cost: ttnCost, estimated_delivery_date: estDate });
+    }
+
+    if (action === "deleteTtn") {
+      const registrationId = String(body.registration_id ?? "");
+      if (!registrationId) return json(400, { error: "registration_id required" });
+
+      const { data: reg } = await supabase
+        .from("registrations")
+        .select("id, event_id, np_ttn_ref")
+        .eq("id", registrationId)
+        .maybeSingle();
+      if (!reg || reg.event_id !== eventId) return json(404, { error: "Not found" });
+      if (!reg.np_ttn_ref) return json(400, { error: "No TTN to delete" });
+
+      const r = await npCall(apiKey, "InternetDocument", "delete", { DocumentRefs: reg.np_ttn_ref });
+      if (!r?.success) return json(400, { error: r?.errors?.join("; ") || "NP delete failed" });
+
+      const serviceClient = createClient(supabaseUrl, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
+      await serviceClient.from("registrations").update({
+        np_ttn_number: null, np_ttn_ref: null, np_ttn_cost: null,
+        np_ttn_estimated_delivery_date: null, np_ttn_created_at: null, np_ttn_created_by: null,
+      }).eq("id", registrationId);
+
+      return json(200, { ok: true });
+    }
+
+    return json(400, { error: "Unknown action" });
   } catch (e) {
-    return new Response(JSON.stringify({ error: String(e) }), {
-      status: 500,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
+    return json(500, { error: String(e) });
   }
 });
