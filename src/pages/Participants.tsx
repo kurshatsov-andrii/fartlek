@@ -491,6 +491,18 @@ const Participants = () => {
                 </Link>
               </Button>
             )}
+            {isOrganizer && deliveryRows.length > 0 && (
+              <NovaPoshtaSettingsDialog
+                eventId={id!}
+                onSaved={load}
+                trigger={
+                  <Button variant="outline" size="sm" className="gap-2">
+                    <Settings className="h-4 w-4" />
+                    {lang === "uk" ? "Нова Пошта" : "Nova Poshta"}
+                  </Button>
+                }
+              />
+            )}
             {isOrganizer && distances.some((d: any) => d.is_virtual) && (
               <Button
                 variant="outline"
