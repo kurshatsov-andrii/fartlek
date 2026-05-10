@@ -133,8 +133,8 @@ export const BibCard = ({ eventTitle, fullName, club, bibNumber, trigger }: Prop
               style={{
                 background: "#0a0a0a",
                 color: "#ffffff",
-                padding: "16px 24px",
-                fontSize: 36,
+                padding: "12px 16px",
+                fontSize: 24,
                 fontWeight: 800,
                 letterSpacing: 1,
                 textAlign: "center",
@@ -153,24 +153,24 @@ export const BibCard = ({ eventTitle, fullName, club, bibNumber, trigger }: Prop
                 flexDirection: "column",
                 alignItems: "center",
                 justifyContent: "center",
-                gap: 12,
-                padding: "24px 0",
+                gap: 6,
+                padding: "16px 0",
               }}
             >
               {fullName && (
-                <div style={{ fontSize: 56, fontWeight: 700, textAlign: "center" }}>
+                <div style={{ fontSize: 34, fontWeight: 700, textAlign: "center" }}>
                   {fullName}
                 </div>
               )}
               {club && (
-                <div style={{ fontSize: 32, color: "#444", textAlign: "center" }}>{club}</div>
+                <div style={{ fontSize: 22, color: "#444", textAlign: "center" }}>{club}</div>
               )}
               <div
                 style={{
-                  fontSize: 280,
+                  fontSize: 180,
                   fontWeight: 900,
                   lineHeight: 1,
-                  letterSpacing: -8,
+                  letterSpacing: -6,
                   marginTop: 8,
                 }}
               >
@@ -185,14 +185,14 @@ export const BibCard = ({ eventTitle, fullName, club, bibNumber, trigger }: Prop
                 alignItems: "center",
                 justifyContent: "space-between",
                 borderTop: "2px solid #0a0a0a",
-                paddingTop: 16,
+                paddingTop: 12,
               }}
             >
-              <div style={{ fontSize: 18, color: "#666" }}>fartlek.lovable.app</div>
+              <div style={{ fontSize: 14, color: "#666" }}>fartlek.lovable.app</div>
               <div
                 style={{
-                  width: 90,
-                  height: 60,
+                  width: 60,
+                  height: 40,
                   display: "flex",
                   flexDirection: "column",
                   border: "1px solid #999",
