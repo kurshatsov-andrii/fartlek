@@ -149,7 +149,9 @@ export const BibCard = ({ eventTitle, fullName, club, bibNumber, distance, qrUrl
                 alignItems: "center",
                 justifyContent: "center",
                 gap: 4,
-                padding: "12px 0",
+                padding: "16px 24px",
+                width: "100%",
+                boxSizing: "border-box",
               }}
             >
               {fullName && (
@@ -193,7 +195,9 @@ export const BibCard = ({ eventTitle, fullName, club, bibNumber, distance, qrUrl
                 alignItems: "center",
                 justifyContent: "space-between",
                 borderTop: "2px solid #0a0a0a",
-                paddingTop: 12,
+                padding: "16px 24px",
+                width: "100%",
+                boxSizing: "border-box",
               }}
             >
               {qrDataUrl ? (
