@@ -55,9 +55,11 @@ const Ticket = () => {
       if (reg) {
         const { data: prof } = await supabase
           .from("profiles")
-          .select("full_name, email")
+          .select("full_name, email, club")
           .eq("id", user.id)
           .maybeSingle();
+        setProfileName(prof?.full_name ?? null);
+        setProfileClub((prof as any)?.club ?? null);
         const ev = (reg as any).events;
         const dist = (reg as any).distances;
         const ath = (reg as any).athletes;
