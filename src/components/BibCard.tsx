@@ -170,11 +170,12 @@ export const BibCard = ({ eventTitle, fullName, club, bibNumber, distance, qrUrl
               )}
               <div
                 style={{
-                  fontSize: 170,
+                  fontSize: 150,
                   fontWeight: 900,
                   lineHeight: 1,
                   letterSpacing: -6,
                   marginTop: 4,
+                  marginBottom: 32,
                 }}
               >
                 {safeBib}
