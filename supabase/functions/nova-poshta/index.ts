@@ -154,9 +154,20 @@ Deno.serve(async (req) => {
 
       const serviceType = reg.delivery_warehouse_type === "postomat" ? "WarehousePostomat" : "WarehouseWarehouse";
 
-      const props: Record<string, unknown> = {
-        PayerType: settings.payer_type,
-        PaymentMethod: settings.payment_method,
+      // NP rule: when payer is Recipient, payment for delivery must be Cash (paid on pickup).
+      // NonCash is only allowed when Sender (or ThirdPerson) pays.
+      const payerType = settings.payer_type;
+      const paymentMethod = payerType === "Recipient" ? "Cash" : settings.payment_method;
+
+      // NewAddress flow for private recipient: pass warehouse NAME, not Ref.
+      // Strip leading numbering like "№36 · " from saved name to get clean address string.
+      const recipientAddressName = (reg.delivery_warehouse_name ?? "")
+        .replace(/^№?\d+\s*[·•\-—]\s*/, "")
+        .trim();
+
+      const npProps: Record<string, unknown> = {
+        PayerType: payerType,
+        PaymentMethod: paymentMethod,
         DateTime: new Date().toLocaleDateString("uk-UA"),
         CargoType: settings.cargo_type,
         Weight: String(settings.weight),
@@ -164,54 +175,25 @@ Deno.serve(async (req) => {
         SeatsAmount: String(settings.seats_amount),
         Description: settings.cargo_description,
         Cost: String(settings.cost),
+        // Sender (legal entity / counterparty)
         CitySender: settings.sender_city_ref,
         Sender: settings.sender_ref,
         SenderAddress: settings.sender_address_ref,
         ContactSender: settings.sender_contact_ref,
         SendersPhone: settings.sender_phone,
-        CityRecipient: reg.delivery_city_ref,
-        Recipient: "",
-        RecipientAddress: reg.delivery_warehouse_ref,
-        ContactRecipient: "",
-        RecipientsPhone: phone,
-        // New recipient (private person) fields:
-        RecipientType: "PrivatePerson",
-        RecipientCityName: reg.delivery_city_name ?? "",
+        // Recipient as new private person
+        NewAddress: "1",
+        RecipientCityName: (reg.delivery_city_name ?? "").replace(/^м\.\s*/i, "").split(",")[0].trim(),
         RecipientArea: "",
         RecipientAreaRegions: "",
-        RecipientAddressName: reg.delivery_warehouse_name ?? "",
+        RecipientAddressName: recipientAddressName || (reg.delivery_warehouse_name ?? ""),
         RecipientHouse: "",
         RecipientFlat: "",
         RecipientName: fullName,
-        RecipientType_PrivatePerson: "PrivatePerson",
-        NewAddress: "1",
+        RecipientType: "PrivatePerson",
+        RecipientsPhone: phone,
       };
 
-      // Use NewAddress flow which only requires recipient name + phone
-      const npProps = {
-        SenderWarehouseIndex: undefined,
-        RecipientWarehouseIndex: undefined,
-        PayerType: settings.payer_type,
-        PaymentMethod: settings.payment_method,
-        DateTime: new Date().toLocaleDateString("uk-UA"),
-        CargoType: settings.cargo_type,
-        Weight: String(settings.weight),
-        ServiceType: serviceType,
-        SeatsAmount: String(settings.seats_amount),
-        Description: settings.cargo_description,
-        Cost: String(settings.cost),
-        CitySender: settings.sender_city_ref,
-        Sender: settings.sender_ref,
-        SenderAddress: settings.sender_address_ref,
-        ContactSender: settings.sender_contact_ref,
-        SendersPhone: settings.sender_phone,
-        CityRecipient: reg.delivery_city_ref,
-        RecipientAddress: reg.delivery_warehouse_ref,
-        RecipientsPhone: phone,
-        RecipientType: "PrivatePerson",
-        NewAddress: "1",
-        RecipientName: fullName,
-      };
 
       console.log("NP createTtn props:", JSON.stringify(npProps));
       const r = await npCall(apiKey, "InternetDocument", "save", npProps);
