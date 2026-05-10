@@ -113,19 +113,18 @@ export const BibCard = ({ eventTitle, fullName, club, bibNumber, distance, qrUrl
               background: "#ffffff",
               fontFamily: "Arial, Helvetica, sans-serif",
               color: "#0a0a0a",
-              padding: 24,
+              padding: 0,
               boxSizing: "border-box",
               display: "flex",
               flexDirection: "column",
-              border: "2px solid #0a0a0a",
             }}
           >
             <div
               style={{
                 background: "#0a0a0a",
                 color: "#ffffff",
-                padding: "14px 16px",
-                fontSize: 26,
+                padding: "16px 24px",
+                fontSize: 28,
                 fontWeight: 800,
                 letterSpacing: 1,
                 textTransform: "uppercase",
@@ -135,7 +134,8 @@ export const BibCard = ({ eventTitle, fullName, club, bibNumber, distance, qrUrl
                 justifyContent: "center",
                 textAlign: "center",
                 width: "100%",
-                minHeight: 56,
+                minHeight: 60,
+                boxSizing: "border-box",
               }}
             >
               {eventTitle}
