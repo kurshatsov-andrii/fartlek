@@ -1113,6 +1113,17 @@ const EventEditor = () => {
             </div>
           </form>
         )}
+
+        {!isNew && id && (
+          <div className="mt-6">
+            <GpxTracksManager
+              eventId={id}
+              distances={distances
+                .filter((d) => d.id)
+                .map((d) => ({ id: d.id!, name: d.name, distance_km: parseFloat(d.distance_km) || 0 }))}
+            />
+          </div>
+        )}
       </main>
       <Footer />
     </div>
