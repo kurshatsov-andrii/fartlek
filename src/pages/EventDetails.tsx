@@ -412,6 +412,10 @@ const EventDetails = () => {
                   className="w-full rounded-xl border border-border object-contain max-h-[600px] bg-muted"
                 />
               )}
+              <GpxTracksList
+                eventId={event.id}
+                distances={distances.map((d) => ({ id: d.id, name: d.name, distance_km: d.distance_km }))}
+              />
             </div>
 
             <aside className="lg:col-span-1">
