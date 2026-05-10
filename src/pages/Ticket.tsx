@@ -20,6 +20,7 @@ import { startAutomatedPaymentCheckout } from "@/lib/paymentCheckout";
 import { PromoCodeInput, PromoPreview } from "@/components/PromoCodeInput";
 import { NovaPoshtaDelivery, emptyDelivery, validateDelivery, type DeliveryData } from "@/components/NovaPoshtaDelivery";
 import { RegistrationSelfService } from "@/components/RegistrationSelfService";
+import { BibCard } from "@/components/BibCard";
 
 const Ticket = () => {
   const { id } = useParams<{ id: string }>();
