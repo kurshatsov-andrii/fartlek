@@ -295,6 +295,20 @@ export function NovaPoshtaSettingsDialog({ eventId, trigger, onSaved }: { eventI
                   <Input type="number" value={s.seats_amount} onChange={(e) => setS({ ...s, seats_amount: Number(e.target.value) })} />
                 </div>
               </div>
+              <div className="grid grid-cols-3 gap-3">
+                <div>
+                  <Label className="text-xs">{lang === "uk" ? "Ширина (см)" : "Width (cm)"}</Label>
+                  <Input type="number" value={s.volume_width} onChange={(e) => setS({ ...s, volume_width: Number(e.target.value) })} />
+                </div>
+                <div>
+                  <Label className="text-xs">{lang === "uk" ? "Довжина (см)" : "Length (cm)"}</Label>
+                  <Input type="number" value={s.volume_length} onChange={(e) => setS({ ...s, volume_length: Number(e.target.value) })} />
+                </div>
+                <div>
+                  <Label className="text-xs">{lang === "uk" ? "Висота (см)" : "Height (cm)"}</Label>
+                  <Input type="number" value={s.volume_height} onChange={(e) => setS({ ...s, volume_height: Number(e.target.value) })} />
+                </div>
+              </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <Label className="text-xs">{lang === "uk" ? "Платник доставки" : "Payer"}</Label>
