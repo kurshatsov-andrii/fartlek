@@ -200,13 +200,18 @@ Deno.serve(async (req) => {
         RecipientAddress: reg.delivery_warehouse_ref,
         ContactRecipient: contactRecipientRef,
         RecipientsPhone: phone,
-        OptionsSeat: Array.from({ length: Number(settings.seats_amount) || 1 }, () => ({
-          volumetricVolume: "1",
-          volumetricWidth: "10",
-          volumetricLength: "10",
-          volumetricHeight: "10",
-          weight: String(settings.weight),
-        })),
+        OptionsSeat: Array.from({ length: Number(settings.seats_amount) || 1 }, () => {
+          const w = Number(settings.volume_width) || 10;
+          const l = Number(settings.volume_length) || 10;
+          const h = Number(settings.volume_height) || 10;
+          return {
+            volumetricVolume: String(((w * l * h) / 4000).toFixed(4)),
+            volumetricWidth: String(w),
+            volumetricLength: String(l),
+            volumetricHeight: String(h),
+            weight: String(settings.weight),
+          };
+        }),
       };
 
 
