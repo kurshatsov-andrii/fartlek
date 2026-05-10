@@ -26,6 +26,9 @@ type Settings = {
   payer_type: string;
   payment_method: string;
   cargo_type: string;
+  volume_width: number;
+  volume_length: number;
+  volume_height: number;
 };
 
 const DEFAULTS: Settings = {
@@ -34,6 +37,7 @@ const DEFAULTS: Settings = {
   sender_address_ref: "", sender_address_name: "",
   cargo_description: "Стартовий пакет", weight: 0.5, cost: 300, seats_amount: 1,
   payer_type: "Recipient", payment_method: "Cash", cargo_type: "Parcel",
+  volume_width: 10, volume_length: 10, volume_height: 10,
 };
 
 export function NovaPoshtaSettingsDialog({ eventId, trigger, onSaved }: { eventId: string; trigger: React.ReactNode; onSaved?: () => void }) {
@@ -289,6 +293,20 @@ export function NovaPoshtaSettingsDialog({ eventId, trigger, onSaved }: { eventI
                 <div>
                   <Label className="text-xs">{lang === "uk" ? "К-ть місць" : "Seats"}</Label>
                   <Input type="number" value={s.seats_amount} onChange={(e) => setS({ ...s, seats_amount: Number(e.target.value) })} />
+                </div>
+              </div>
+              <div className="grid grid-cols-3 gap-3">
+                <div>
+                  <Label className="text-xs">{lang === "uk" ? "Ширина (см)" : "Width (cm)"}</Label>
+                  <Input type="number" value={s.volume_width} onChange={(e) => setS({ ...s, volume_width: Number(e.target.value) })} />
+                </div>
+                <div>
+                  <Label className="text-xs">{lang === "uk" ? "Довжина (см)" : "Length (cm)"}</Label>
+                  <Input type="number" value={s.volume_length} onChange={(e) => setS({ ...s, volume_length: Number(e.target.value) })} />
+                </div>
+                <div>
+                  <Label className="text-xs">{lang === "uk" ? "Висота (см)" : "Height (cm)"}</Label>
+                  <Input type="number" value={s.volume_height} onChange={(e) => setS({ ...s, volume_height: Number(e.target.value) })} />
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-3">
