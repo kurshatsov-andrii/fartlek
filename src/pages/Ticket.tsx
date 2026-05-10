@@ -243,6 +243,12 @@ const Ticket = () => {
             <Button onClick={downloadPdf} className="w-full" disabled={!qrUrl}>
               <Download className="h-4 w-4" /> {t.ticket.download}
             </Button>
+            <BibCard
+              eventTitle={ev.title}
+              fullName={data.athletes?.full_name ?? undefined}
+              club={data.athletes?.club ?? undefined}
+              bibNumber={data.bib_number}
+            />
             <AddToCalendarButton
               variant="outline"
               className="w-full"
