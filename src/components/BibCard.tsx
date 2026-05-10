@@ -121,12 +121,11 @@ export const BibCard = ({ eventTitle, fullName, club, bibNumber, distance, qrUrl
           >
             <div
               style={{
+                position: "relative",
                 background: "#0a0a0a",
                 color: "#ffffff",
-                paddingTop: 22,
-                paddingBottom: 22,
-                paddingLeft: 24,
-                paddingRight: 24,
+                height: 88,
+                padding: "0 24px",
                 fontSize: 28,
                 fontWeight: 800,
                 letterSpacing: 1,
@@ -140,7 +139,15 @@ export const BibCard = ({ eventTitle, fullName, club, bibNumber, distance, qrUrl
                 boxSizing: "border-box",
               }}
             >
-              {eventTitle}
+              <span
+                style={{
+                  display: "block",
+                  lineHeight: 1,
+                  transform: "translateY(-2px)",
+                }}
+              >
+                {eventTitle}
+              </span>
             </div>
 
             <div
