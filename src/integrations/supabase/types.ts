@@ -566,6 +566,9 @@ export type Database = {
           sender_ref: string
           service_type: string
           updated_at: string
+          volume_height: number
+          volume_length: number
+          volume_width: number
           weight: number
         }
         Insert: {
@@ -588,6 +591,9 @@ export type Database = {
           sender_ref: string
           service_type?: string
           updated_at?: string
+          volume_height?: number
+          volume_length?: number
+          volume_width?: number
           weight?: number
         }
         Update: {
@@ -610,6 +616,9 @@ export type Database = {
           sender_ref?: string
           service_type?: string
           updated_at?: string
+          volume_height?: number
+          volume_length?: number
+          volume_width?: number
           weight?: number
         }
         Relationships: []
