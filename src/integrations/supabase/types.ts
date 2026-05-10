@@ -491,6 +491,60 @@ export type Database = {
         }
         Relationships: []
       }
+      event_gpx_tracks: {
+        Row: {
+          created_at: string
+          distance_id: string | null
+          event_id: string
+          file_size: number | null
+          file_url: string
+          id: string
+          name: string
+          storage_path: string
+          updated_at: string
+          uploaded_by: string | null
+        }
+        Insert: {
+          created_at?: string
+          distance_id?: string | null
+          event_id: string
+          file_size?: number | null
+          file_url: string
+          id?: string
+          name: string
+          storage_path: string
+          updated_at?: string
+          uploaded_by?: string | null
+        }
+        Update: {
+          created_at?: string
+          distance_id?: string | null
+          event_id?: string
+          file_size?: number | null
+          file_url?: string
+          id?: string
+          name?: string
+          storage_path?: string
+          updated_at?: string
+          uploaded_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "event_gpx_tracks_distance_id_fkey"
+            columns: ["distance_id"]
+            isOneToOne: false
+            referencedRelation: "distances"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "event_gpx_tracks_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       event_payment_settings: {
         Row: {
           created_at: string

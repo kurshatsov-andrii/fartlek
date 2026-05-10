@@ -18,6 +18,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { GpxTracksManager } from "@/components/GpxTracksManager";
 
 interface DistanceForm { id?: string; distance_km: string; name: string; price: string; bib_start: string; is_relay: boolean; relay_legs_count: string; relay_categories: string[]; relay_legs: string[]; delivery_enabled: boolean; is_virtual: boolean; virtual_start_date: string; virtual_end_date: string; virtual_start_time: string; virtual_end_time: string; distance_tolerance_percent: string; }
 
@@ -1112,6 +1113,17 @@ const EventEditor = () => {
               <Button type="button" variant="outline" onClick={() => navigate("/organizer")}>{t.organizer.cancel}</Button>
             </div>
           </form>
+        )}
+
+        {!isNew && id && (
+          <div className="mt-6">
+            <GpxTracksManager
+              eventId={id}
+              distances={distances
+                .filter((d) => d.id)
+                .map((d) => ({ id: d.id!, name: d.name, distance_km: parseFloat(d.distance_km) || 0 }))}
+            />
+          </div>
         )}
       </main>
       <Footer />
