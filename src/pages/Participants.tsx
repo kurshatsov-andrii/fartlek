@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
-import { ArrowLeft, Loader2, CheckCircle2, XCircle, FileText, RotateCcw, Trash2, X, Bell, ArrowRightLeft, Download, Package, Mail, Trophy } from "lucide-react";
+import { ArrowLeft, Loader2, CheckCircle2, XCircle, FileText, RotateCcw, Trash2, X, Bell, ArrowRightLeft, Download, Package, Mail, Trophy, Hash } from "lucide-react";
+import { BibCard } from "@/components/BibCard";
 import * as XLSX from "xlsx";
 import { toast } from "sonner";
 import { Header } from "@/components/Header";
@@ -843,6 +844,21 @@ const Participants = () => {
                           {isOrganizer && (
                             <td className="p-3">
                               <div className="flex items-center justify-center gap-1">
+                                <BibCard
+                                  eventTitle={eventTitle}
+                                  fullName={r.full_name}
+                                  club={r.club}
+                                  bibNumber={r.bib_number}
+                                  trigger={
+                                    <Button
+                                      size="sm"
+                                      variant="ghost"
+                                      title={lang === "uk" ? "Стартовий номер" : "Start bib"}
+                                    >
+                                      <Hash className="h-4 w-4" />
+                                    </Button>
+                                  }
+                                />
                                 {distances.length > 1 && (
                                   <Button
                                     size="sm"

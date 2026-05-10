@@ -20,12 +20,15 @@ import { startAutomatedPaymentCheckout } from "@/lib/paymentCheckout";
 import { PromoCodeInput, PromoPreview } from "@/components/PromoCodeInput";
 import { NovaPoshtaDelivery, emptyDelivery, validateDelivery, type DeliveryData } from "@/components/NovaPoshtaDelivery";
 import { RegistrationSelfService } from "@/components/RegistrationSelfService";
+import { BibCard } from "@/components/BibCard";
 
 const Ticket = () => {
   const { id } = useParams<{ id: string }>();
   const { t, lang } = useApp();
   const { user, loading: authLoading } = useAuth();
   const [data, setData] = useState<any>(null);
+  const [profileName, setProfileName] = useState<string | null>(null);
+  const [profileClub, setProfileClub] = useState<string | null>(null);
   const [qrUrl, setQrUrl] = useState<string>("");
   const [loading, setLoading] = useState(true);
   const [uploadingReceipt, setUploadingReceipt] = useState(false);
@@ -52,9 +55,11 @@ const Ticket = () => {
       if (reg) {
         const { data: prof } = await supabase
           .from("profiles")
-          .select("full_name, email")
+          .select("full_name, email, club")
           .eq("id", user.id)
           .maybeSingle();
+        setProfileName(prof?.full_name ?? null);
+        setProfileClub((prof as any)?.club ?? null);
         const ev = (reg as any).events;
         const dist = (reg as any).distances;
         const ath = (reg as any).athletes;
@@ -242,6 +247,12 @@ const Ticket = () => {
             <Button onClick={downloadPdf} className="w-full" disabled={!qrUrl}>
               <Download className="h-4 w-4" /> {t.ticket.download}
             </Button>
+            <BibCard
+              eventTitle={ev.title}
+              fullName={data.athletes?.full_name ?? profileName}
+              club={data.athletes?.club ?? profileClub}
+              bibNumber={data.bib_number}
+            />
             <AddToCalendarButton
               variant="outline"
               className="w-full"
