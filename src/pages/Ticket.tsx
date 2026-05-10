@@ -249,8 +249,8 @@ const Ticket = () => {
             </Button>
             <BibCard
               eventTitle={ev.title}
-              fullName={data.athletes?.full_name ?? undefined}
-              club={data.athletes?.club ?? undefined}
+              fullName={data.athletes?.full_name ?? profileName}
+              club={data.athletes?.club ?? profileClub}
               bibNumber={data.bib_number}
             />
             <AddToCalendarButton
