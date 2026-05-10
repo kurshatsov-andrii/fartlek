@@ -545,6 +545,75 @@ export type Database = {
           },
         ]
       }
+      event_np_sender_settings: {
+        Row: {
+          cargo_description: string
+          cargo_type: string
+          cost: number
+          created_at: string
+          created_by: string | null
+          event_id: string
+          id: string
+          payer_type: string
+          payment_method: string
+          seats_amount: number
+          sender_address_name: string | null
+          sender_address_ref: string
+          sender_city_name: string | null
+          sender_city_ref: string
+          sender_contact_ref: string
+          sender_phone: string
+          sender_ref: string
+          service_type: string
+          updated_at: string
+          weight: number
+        }
+        Insert: {
+          cargo_description?: string
+          cargo_type?: string
+          cost?: number
+          created_at?: string
+          created_by?: string | null
+          event_id: string
+          id?: string
+          payer_type?: string
+          payment_method?: string
+          seats_amount?: number
+          sender_address_name?: string | null
+          sender_address_ref: string
+          sender_city_name?: string | null
+          sender_city_ref: string
+          sender_contact_ref: string
+          sender_phone: string
+          sender_ref: string
+          service_type?: string
+          updated_at?: string
+          weight?: number
+        }
+        Update: {
+          cargo_description?: string
+          cargo_type?: string
+          cost?: number
+          created_at?: string
+          created_by?: string | null
+          event_id?: string
+          id?: string
+          payer_type?: string
+          payment_method?: string
+          seats_amount?: number
+          sender_address_name?: string | null
+          sender_address_ref?: string
+          sender_city_name?: string | null
+          sender_city_ref?: string
+          sender_contact_ref?: string
+          sender_phone?: string
+          sender_ref?: string
+          service_type?: string
+          updated_at?: string
+          weight?: number
+        }
+        Relationships: []
+      }
       event_payment_settings: {
         Row: {
           created_at: string
@@ -1153,6 +1222,12 @@ export type Database = {
           distance_id: string
           event_id: string
           id: string
+          np_ttn_cost: number | null
+          np_ttn_created_at: string | null
+          np_ttn_created_by: string | null
+          np_ttn_estimated_delivery_date: string | null
+          np_ttn_number: string | null
+          np_ttn_ref: string | null
           payment_status: Database["public"]["Enums"]["payment_status_type"]
           qr_code_data: string | null
           receipt_confirmed_at: string | null
@@ -1180,6 +1255,12 @@ export type Database = {
           distance_id: string
           event_id: string
           id?: string
+          np_ttn_cost?: number | null
+          np_ttn_created_at?: string | null
+          np_ttn_created_by?: string | null
+          np_ttn_estimated_delivery_date?: string | null
+          np_ttn_number?: string | null
+          np_ttn_ref?: string | null
           payment_status?: Database["public"]["Enums"]["payment_status_type"]
           qr_code_data?: string | null
           receipt_confirmed_at?: string | null
@@ -1207,6 +1288,12 @@ export type Database = {
           distance_id?: string
           event_id?: string
           id?: string
+          np_ttn_cost?: number | null
+          np_ttn_created_at?: string | null
+          np_ttn_created_by?: string | null
+          np_ttn_estimated_delivery_date?: string | null
+          np_ttn_number?: string | null
+          np_ttn_ref?: string | null
           payment_status?: Database["public"]["Enums"]["payment_status_type"]
           qr_code_data?: string | null
           receipt_confirmed_at?: string | null
