@@ -223,7 +223,8 @@ const Features = () => {
       items: [
         { icon: Users, title: "Participants list", desc: "Full list with contacts, distance, payment status, club, age." },
         { icon: FileSpreadsheet, title: "CSV / Excel export", desc: "One-click export for offline race-day check-in." },
-        { icon: Ticket, title: "Assign BIB numbers", desc: "Auto-assign from a starting number or set manually." },
+        { icon: Ticket, title: "Assign BIB numbers 🆕", desc: "Set a starting number per distance — the system auto-numbers participants by registration order. Each participant sees a personalized BIB card with their number, name and event logo on the ticket." },
+        { icon: MapPin, title: "GPX route tracks 🆕", desc: "Upload GPX files for each distance — participants see an interactive course map in the event details and can download the file." },
         { icon: Trophy, title: "Upload results", desc: "Upload a file or paste a link — participants instantly see their time." },
         { icon: Truck, title: "Nova Poshta race kit delivery 🆕", desc: "Enable delivery — participants pick a city and branch/parcel locker at registration. You see the addresses in the participants list and exports." },
         { icon: Send, title: "Generate Nova Poshta waybills (TTN) 🆕", desc: "Plug in your NP API key in the event settings, choose the sender, contact person and origin warehouse. Create TTNs straight from the participants list — number, estimated cost and delivery date are saved on the registration with a tracking link and a delete button." },
