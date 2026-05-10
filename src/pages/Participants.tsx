@@ -823,6 +823,51 @@ const Participants = () => {
                                   <span className="text-muted-foreground">{r.delivery_phone}</span>
                                   <span className="text-muted-foreground">{r.delivery_city_name}</span>
                                   <span className="text-muted-foreground">{r.delivery_warehouse_name}</span>
+                                  {ttnMap[r.registration_id] ? (
+                                    <div className="mt-1 flex items-center gap-1 flex-wrap">
+                                      <a
+                                        href={`https://novaposhta.ua/tracking/?cargo_number=${ttnMap[r.registration_id].ttn}`}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        className="font-mono font-semibold text-foreground hover:underline"
+                                      >
+                                        {ttnMap[r.registration_id].ttn}
+                                      </a>
+                                      <Button
+                                        size="sm"
+                                        variant="ghost"
+                                        className="h-5 w-5 p-0"
+                                        title={lang === "uk" ? "Копіювати" : "Copy"}
+                                        onClick={() => {
+                                          navigator.clipboard.writeText(ttnMap[r.registration_id].ttn);
+                                          toast.success(lang === "uk" ? "Скопійовано" : "Copied");
+                                        }}
+                                      >
+                                        <Copy className="h-3 w-3" />
+                                      </Button>
+                                      <Button
+                                        size="sm"
+                                        variant="ghost"
+                                        className="h-5 w-5 p-0"
+                                        title={lang === "uk" ? "Видалити ТТН" : "Delete TTN"}
+                                        onClick={() => deleteTtn(r.registration_id)}
+                                        disabled={ttnBusy === r.registration_id}
+                                      >
+                                        {ttnBusy === r.registration_id ? <Loader2 className="h-3 w-3 animate-spin" /> : <Trash2 className="h-3 w-3 text-destructive" />}
+                                      </Button>
+                                    </div>
+                                  ) : (
+                                    <Button
+                                      size="sm"
+                                      variant="outline"
+                                      className="mt-1 h-7 text-xs gap-1"
+                                      onClick={() => createTtn(r.registration_id)}
+                                      disabled={ttnBusy === r.registration_id}
+                                    >
+                                      {ttnBusy === r.registration_id ? <Loader2 className="h-3 w-3 animate-spin" /> : <Truck className="h-3 w-3" />}
+                                      {lang === "uk" ? "Створити ТТН" : "Create TTN"}
+                                    </Button>
+                                  )}
                                 </div>
                               ) : (
                                 <span className="text-muted-foreground">—</span>
