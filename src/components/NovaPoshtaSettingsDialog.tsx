@@ -171,7 +171,7 @@ export function NovaPoshtaSettingsDialog({ eventId, trigger, onSaved }: { eventI
             <div className="rounded-lg border border-border p-3 space-y-3">
               <div className="flex items-center justify-between">
                 <h3 className="font-semibold text-sm">{lang === "uk" ? "Відправник" : "Sender"}</h3>
-                <Button size="sm" variant="outline" onClick={loadCounterparties} disabled={loadingCps}>
+                <Button size="sm" variant="outline" onClick={() => loadCounterparties(false)} disabled={loadingCps}>
                   {loadingCps ? <Loader2 className="h-4 w-4 animate-spin" /> : (lang === "uk" ? "Завантажити з НП" : "Load from NP")}
                 </Button>
               </div>
