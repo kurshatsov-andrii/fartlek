@@ -155,15 +155,28 @@ Deno.serve(async (req) => {
       const serviceType = reg.delivery_warehouse_type === "postomat" ? "WarehousePostomat" : "WarehouseWarehouse";
 
       // NP rule: when payer is Recipient, payment for delivery must be Cash (paid on pickup).
-      // NonCash is only allowed when Sender (or ThirdPerson) pays.
       const payerType = settings.payer_type;
       const paymentMethod = payerType === "Recipient" ? "Cash" : settings.payment_method;
 
-      // NewAddress flow for private recipient: pass warehouse NAME, not Ref.
-      // Strip leading numbering like "№36 · " from saved name to get clean address string.
-      const recipientAddressName = (reg.delivery_warehouse_name ?? "")
-        .replace(/^№?\d+\s*[·•\-—]\s*/, "")
-        .trim();
+      // Create private recipient counterparty + contact, then use warehouse Ref directly.
+      const cpRes = await npCall(apiKey, "Counterparty", "save", {
+        FirstName: firstName,
+        MiddleName: middleName,
+        LastName: lastName,
+        Phone: phone,
+        Email: "",
+        CounterpartyType: "PrivatePerson",
+        CounterpartyProperty: "Recipient",
+      });
+      if (!cpRes?.success || !cpRes?.data?.[0]?.Ref) {
+        const msg = [
+          ...(cpRes?.errors ?? []),
+          ...(cpRes?.warnings ? Object.values(cpRes.warnings) : []),
+        ].filter(Boolean).join("; ") || "Failed to create recipient counterparty";
+        return json(200, { error: msg, raw: cpRes });
+      }
+      const recipientRef: string = cpRes.data[0].Ref;
+      const contactRecipientRef: string = cpRes.data[0]?.ContactPerson?.data?.[0]?.Ref ?? "";
 
       const npProps: Record<string, unknown> = {
         PayerType: payerType,
@@ -175,22 +188,17 @@ Deno.serve(async (req) => {
         SeatsAmount: String(settings.seats_amount),
         Description: settings.cargo_description,
         Cost: String(settings.cost),
-        // Sender (legal entity / counterparty)
+        // Sender
         CitySender: settings.sender_city_ref,
         Sender: settings.sender_ref,
         SenderAddress: settings.sender_address_ref,
         ContactSender: settings.sender_contact_ref,
         SendersPhone: settings.sender_phone,
-        // Recipient as new private person
-        NewAddress: "1",
-        RecipientCityName: (reg.delivery_city_name ?? "").replace(/^м\.\s*/i, "").split(",")[0].trim(),
-        RecipientArea: "",
-        RecipientAreaRegions: "",
-        RecipientAddressName: recipientAddressName || (reg.delivery_warehouse_name ?? ""),
-        RecipientHouse: "",
-        RecipientFlat: "",
-        RecipientName: fullName,
-        RecipientType: "PrivatePerson",
+        // Recipient (existing private counterparty + warehouse/postomat ref)
+        CityRecipient: reg.delivery_city_ref,
+        Recipient: recipientRef,
+        RecipientAddress: reg.delivery_warehouse_ref,
+        ContactRecipient: contactRecipientRef,
         RecipientsPhone: phone,
       };
 
