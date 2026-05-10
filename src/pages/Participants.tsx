@@ -41,6 +41,9 @@ const Participants = () => {
   const [receiptDialog, setReceiptDialog] = useState<{ url: string; isImage: boolean; isHeic?: boolean } | null>(null);
   const [resultsMap, setResultsMap] = useState<Record<string, { time_seconds: number; distance_meters: number | null; source: string; strava_activity_id: number | null; verified: boolean }>>({});
   const [syncingAll, setSyncingAll] = useState(false);
+  const [ttnMap, setTtnMap] = useState<Record<string, { ttn: string; ref: string; cost: number | null; estimated: string | null }>>({});
+  const [ttnBusy, setTtnBusy] = useState<string | null>(null);
+  const [hasNpSettings, setHasNpSettings] = useState(false);
 
   // Filters
   const [fGender, setFGender] = useState<string>("all");
