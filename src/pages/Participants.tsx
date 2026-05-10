@@ -117,6 +117,17 @@ const Participants = () => {
     setLoading(false);
   };
 
+  const readErrBody = async (error: any): Promise<string | null> => {
+    try {
+      const resp = error?.context?.response ?? error?.context;
+      if (resp && typeof resp.json === "function") {
+        const body = await resp.json();
+        return body?.error || JSON.stringify(body);
+      }
+    } catch { /* ignore */ }
+    return null;
+  };
+
   const createTtn = async (registrationId: string) => {
     if (!id) return;
     if (!hasNpSettings) {
@@ -128,7 +139,11 @@ const Participants = () => {
       body: { action: "createTtn", event_id: id, registration_id: registrationId },
     });
     setTtnBusy(null);
-    if (error) { toast.error(error.message); return; }
+    if (error) {
+      const detail = await readErrBody(error);
+      toast.error(detail || error.message);
+      return;
+    }
     if ((data as any)?.error) { toast.error((data as any).error); return; }
     const d = data as any;
     setTtnMap((prev) => ({ ...prev, [registrationId]: { ttn: d.ttn, ref: d.ref, cost: d.cost, estimated: d.estimated_delivery_date } }));
@@ -143,7 +158,11 @@ const Participants = () => {
       body: { action: "deleteTtn", event_id: id, registration_id: registrationId },
     });
     setTtnBusy(null);
-    if (error) { toast.error(error.message); return; }
+    if (error) {
+      const detail = await readErrBody(error);
+      toast.error(detail || error.message);
+      return;
+    }
     if ((data as any)?.error) { toast.error((data as any).error); return; }
     setTtnMap((prev) => { const n = { ...prev }; delete n[registrationId]; return n; });
     toast.success(lang === "uk" ? "ТТН видалено" : "TTN deleted");
