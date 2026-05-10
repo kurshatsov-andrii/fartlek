@@ -5,7 +5,7 @@ import {
   Trophy, Bell, UserCircle, Edit3, Smile, Reply, AtSign, Image as ImageIcon,
   CalendarPlus, FileSpreadsheet, CreditCard, Globe, Clock, MapPin, Sparkles,
   Megaphone, Building2, CheckCircle2, ArrowDown, Truck, Repeat, Send, XCircle,
-  History, Lock, Activity
+  History, Lock, Activity, Settings
 } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
@@ -176,6 +176,8 @@ const Features = () => {
         { icon: Ticket, title: "Призначення BIB-номерів", desc: "Автоматичне призначення номерів від заданого старту або вручну." },
         { icon: Trophy, title: "Завантаження результатів", desc: "Завантажте файл або вкажіть посилання — учасники одразу побачать свій час." },
         { icon: Truck, title: "Доставка стартового пакету Новою Поштою 🆕", desc: "Увімкніть доставку — учасники під час реєстрації обирають місто та відділення/поштомат. Ви бачите адреси у списку учасників та експорті." },
+        { icon: Send, title: "Формування ТТН Нової Пошти 🆕", desc: "Підключіть свій API-ключ НП у налаштуваннях події, оберіть відправника, контактну особу й місто-відділення. Створюйте ТТН учасникам прямо зі списку учасників — номер, орієнтовна вартість і дата доставки збережуться у реєстрації, з посиланням на трекінг та можливістю видалити ТТН." },
+        { icon: Settings, title: "Габарити та оплата стартового пакета 🆕", desc: "Задавайте власні параметри посилки: вага, ширина/довжина/висота (см), оголошена вартість, к-ть місць, опис вантажу. Обирайте платника (Відправник / Отримувач / Третя особа) і спосіб оплати — учасник може платити готівкою або карткою при отриманні." },
         { icon: History, title: "Історія змін реєстрацій 🆕", desc: "Окрема вкладка з повним аудитом: зміни дистанцій, передачі слотів, заявки на скасування — хто, коли і що зробив." },
         { icon: Activity, title: "Синхронізація результатів зі Strava 🆕", desc: "Кнопка «Синхронізувати Strava» у списку учасників: одним кліком тягнемо активності всіх підключених учасників і ставимо результат із позначкою «підтверджено». У таблиці видно джерело (Strava) та посилання на активність." },
       ],
@@ -221,6 +223,8 @@ const Features = () => {
         { icon: Ticket, title: "Assign BIB numbers", desc: "Auto-assign from a starting number or set manually." },
         { icon: Trophy, title: "Upload results", desc: "Upload a file or paste a link — participants instantly see their time." },
         { icon: Truck, title: "Nova Poshta race kit delivery 🆕", desc: "Enable delivery — participants pick a city and branch/parcel locker at registration. You see the addresses in the participants list and exports." },
+        { icon: Send, title: "Generate Nova Poshta waybills (TTN) 🆕", desc: "Plug in your NP API key in the event settings, choose the sender, contact person and origin warehouse. Create TTNs straight from the participants list — number, estimated cost and delivery date are saved on the registration with a tracking link and a delete button." },
+        { icon: Settings, title: "Custom parcel dimensions & payment 🆕", desc: "Set your own parcel parameters: weight, width/length/height (cm), declared cost, seats, cargo description. Pick the payer (Sender / Recipient / Third person) and payment method — recipients can pay cash or by card on pickup." },
         { icon: History, title: "Registration changes history 🆕", desc: "A dedicated tab with full audit: distance changes, slot transfers, cancellation requests — who, when and what changed." },
         { icon: Activity, title: "Sync results from Strava 🆕", desc: "«Sync Strava» button on the participants list: one click pulls activities from all connected participants and saves their result with a «verified» mark. The table shows the source (Strava) and a link to the activity." },
       ],
