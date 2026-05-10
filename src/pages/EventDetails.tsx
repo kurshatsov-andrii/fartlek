@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { Calendar, MapPin, Users, Loader2, ArrowLeft, UserCircle2, FileText, CalendarPlus, Calculator } from "lucide-react";
 import { PaceCalculatorDialog } from "@/components/PaceCalculatorDialog";
 import { downloadIcs } from "@/lib/calendar";
+import { GpxTracksList } from "@/components/GpxTracksList";
 import { AddToCalendarButton } from "@/components/AddToCalendarButton";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
