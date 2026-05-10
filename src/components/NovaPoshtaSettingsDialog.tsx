@@ -26,6 +26,9 @@ type Settings = {
   payer_type: string;
   payment_method: string;
   cargo_type: string;
+  volume_width: number;
+  volume_length: number;
+  volume_height: number;
 };
 
 const DEFAULTS: Settings = {
@@ -34,6 +37,7 @@ const DEFAULTS: Settings = {
   sender_address_ref: "", sender_address_name: "",
   cargo_description: "Стартовий пакет", weight: 0.5, cost: 300, seats_amount: 1,
   payer_type: "Recipient", payment_method: "Cash", cargo_type: "Parcel",
+  volume_width: 10, volume_length: 10, volume_height: 10,
 };
 
 export function NovaPoshtaSettingsDialog({ eventId, trigger, onSaved }: { eventId: string; trigger: React.ReactNode; onSaved?: () => void }) {
