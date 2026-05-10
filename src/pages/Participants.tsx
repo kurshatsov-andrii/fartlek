@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
-import { ArrowLeft, Loader2, CheckCircle2, XCircle, FileText, RotateCcw, Trash2, X, Bell, ArrowRightLeft, Download, Package, Mail, Trophy, Hash } from "lucide-react";
+import { ArrowLeft, Loader2, CheckCircle2, XCircle, FileText, RotateCcw, Trash2, X, Bell, ArrowRightLeft, Download, Package, Mail, Trophy, Hash, Truck, Settings, Copy } from "lucide-react";
 import { BibCard } from "@/components/BibCard";
+import { NovaPoshtaSettingsDialog } from "@/components/NovaPoshtaSettingsDialog";
 import * as XLSX from "xlsx";
 import { toast } from "sonner";
 import { Header } from "@/components/Header";
@@ -40,6 +41,9 @@ const Participants = () => {
   const [receiptDialog, setReceiptDialog] = useState<{ url: string; isImage: boolean; isHeic?: boolean } | null>(null);
   const [resultsMap, setResultsMap] = useState<Record<string, { time_seconds: number; distance_meters: number | null; source: string; strava_activity_id: number | null; verified: boolean }>>({});
   const [syncingAll, setSyncingAll] = useState(false);
+  const [ttnMap, setTtnMap] = useState<Record<string, { ttn: string; ref: string; cost: number | null; estimated: string | null }>>({});
+  const [ttnBusy, setTtnBusy] = useState<string | null>(null);
+  const [hasNpSettings, setHasNpSettings] = useState(false);
 
   // Filters
   const [fGender, setFGender] = useState<string>("all");
@@ -91,7 +95,58 @@ const Participants = () => {
     const rmap: Record<string, any> = {};
     (resData ?? []).forEach((r: any) => { rmap[r.registration_id] = r; });
     setResultsMap(rmap);
+    // Load TTN data and NP settings presence (organizer only)
+    if (isOrg) {
+      const { data: ttnRows } = await supabase
+        .from("registrations")
+        .select("id, np_ttn_number, np_ttn_ref, np_ttn_cost, np_ttn_estimated_delivery_date")
+        .eq("event_id", id)
+        .not("np_ttn_number", "is", null);
+      const tmap: Record<string, any> = {};
+      (ttnRows ?? []).forEach((r: any) => {
+        tmap[r.id] = { ttn: r.np_ttn_number, ref: r.np_ttn_ref, cost: r.np_ttn_cost, estimated: r.np_ttn_estimated_delivery_date };
+      });
+      setTtnMap(tmap);
+      const { data: npSet } = await supabase
+        .from("event_np_sender_settings")
+        .select("event_id")
+        .eq("event_id", id)
+        .maybeSingle();
+      setHasNpSettings(!!npSet);
+    }
     setLoading(false);
+  };
+
+  const createTtn = async (registrationId: string) => {
+    if (!id) return;
+    if (!hasNpSettings) {
+      toast.error(lang === "uk" ? "Спочатку налаштуйте відправника НП" : "Configure NP sender first");
+      return;
+    }
+    setTtnBusy(registrationId);
+    const { data, error } = await supabase.functions.invoke("nova-poshta", {
+      body: { action: "createTtn", event_id: id, registration_id: registrationId },
+    });
+    setTtnBusy(null);
+    if (error) { toast.error(error.message); return; }
+    if ((data as any)?.error) { toast.error((data as any).error); return; }
+    const d = data as any;
+    setTtnMap((prev) => ({ ...prev, [registrationId]: { ttn: d.ttn, ref: d.ref, cost: d.cost, estimated: d.estimated_delivery_date } }));
+    toast.success(lang === "uk" ? `ТТН створено: ${d.ttn}` : `TTN created: ${d.ttn}`);
+  };
+
+  const deleteTtn = async (registrationId: string) => {
+    if (!id) return;
+    if (!window.confirm(lang === "uk" ? "Видалити ТТН?" : "Delete TTN?")) return;
+    setTtnBusy(registrationId);
+    const { data, error } = await supabase.functions.invoke("nova-poshta", {
+      body: { action: "deleteTtn", event_id: id, registration_id: registrationId },
+    });
+    setTtnBusy(null);
+    if (error) { toast.error(error.message); return; }
+    if ((data as any)?.error) { toast.error((data as any).error); return; }
+    setTtnMap((prev) => { const n = { ...prev }; delete n[registrationId]; return n; });
+    toast.success(lang === "uk" ? "ТТН видалено" : "TTN deleted");
   };
 
   useEffect(() => { load(); /* eslint-disable-next-line */ }, [id, user]);
@@ -345,6 +400,7 @@ const Participants = () => {
         ? (lang === "uk" ? "Поштомат" : "Postomat")
         : r.delivery_warehouse_type === "branch"
           ? (lang === "uk" ? "Відділення" : "Branch") : "";
+      base[lang === "uk" ? "ТТН НП" : "NP TTN"] = ttnMap[r.registration_id]?.ttn ?? "";
       return base;
     });
     const ws = XLSX.utils.json_to_sheet(data);
@@ -435,6 +491,18 @@ const Participants = () => {
                   {lang === "uk" ? "Написати учасникам" : "Email participants"}
                 </Link>
               </Button>
+            )}
+            {isOrganizer && deliveryRows.length > 0 && (
+              <NovaPoshtaSettingsDialog
+                eventId={id!}
+                onSaved={load}
+                trigger={
+                  <Button variant="outline" size="sm" className="gap-2">
+                    <Settings className="h-4 w-4" />
+                    {lang === "uk" ? "Нова Пошта" : "Nova Poshta"}
+                  </Button>
+                }
+              />
             )}
             {isOrganizer && distances.some((d: any) => d.is_virtual) && (
               <Button
@@ -756,6 +824,51 @@ const Participants = () => {
                                   <span className="text-muted-foreground">{r.delivery_phone}</span>
                                   <span className="text-muted-foreground">{r.delivery_city_name}</span>
                                   <span className="text-muted-foreground">{r.delivery_warehouse_name}</span>
+                                  {ttnMap[r.registration_id] ? (
+                                    <div className="mt-1 flex items-center gap-1 flex-wrap">
+                                      <a
+                                        href={`https://novaposhta.ua/tracking/?cargo_number=${ttnMap[r.registration_id].ttn}`}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        className="font-mono font-semibold text-foreground hover:underline"
+                                      >
+                                        {ttnMap[r.registration_id].ttn}
+                                      </a>
+                                      <Button
+                                        size="sm"
+                                        variant="ghost"
+                                        className="h-5 w-5 p-0"
+                                        title={lang === "uk" ? "Копіювати" : "Copy"}
+                                        onClick={() => {
+                                          navigator.clipboard.writeText(ttnMap[r.registration_id].ttn);
+                                          toast.success(lang === "uk" ? "Скопійовано" : "Copied");
+                                        }}
+                                      >
+                                        <Copy className="h-3 w-3" />
+                                      </Button>
+                                      <Button
+                                        size="sm"
+                                        variant="ghost"
+                                        className="h-5 w-5 p-0"
+                                        title={lang === "uk" ? "Видалити ТТН" : "Delete TTN"}
+                                        onClick={() => deleteTtn(r.registration_id)}
+                                        disabled={ttnBusy === r.registration_id}
+                                      >
+                                        {ttnBusy === r.registration_id ? <Loader2 className="h-3 w-3 animate-spin" /> : <Trash2 className="h-3 w-3 text-destructive" />}
+                                      </Button>
+                                    </div>
+                                  ) : (
+                                    <Button
+                                      size="sm"
+                                      variant="outline"
+                                      className="mt-1 h-7 text-xs gap-1"
+                                      onClick={() => createTtn(r.registration_id)}
+                                      disabled={ttnBusy === r.registration_id}
+                                    >
+                                      {ttnBusy === r.registration_id ? <Loader2 className="h-3 w-3 animate-spin" /> : <Truck className="h-3 w-3" />}
+                                      {lang === "uk" ? "Створити ТТН" : "Create TTN"}
+                                    </Button>
+                                  )}
                                 </div>
                               ) : (
                                 <span className="text-muted-foreground">—</span>
