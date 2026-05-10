@@ -849,6 +849,7 @@ const Participants = () => {
                                   fullName={r.full_name}
                                   club={r.club}
                                   bibNumber={r.bib_number}
+                                  distance={r.distance_km ? `${r.distance_km} ${lang === "uk" ? "км" : "km"}${r.distance_name ? ` · ${r.distance_name}` : ""}` : null}
                                   trigger={
                                     <Button
                                       size="sm"
