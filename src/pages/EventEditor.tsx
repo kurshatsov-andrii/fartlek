@@ -365,6 +365,11 @@ const EventEditor = () => {
       virtual_start_time: d.is_virtual && d.virtual_start_time ? d.virtual_start_time : null,
       virtual_end_time: d.is_virtual && d.virtual_end_time ? d.virtual_end_time : null,
       distance_tolerance_percent: d.is_virtual ? (parseFloat(d.distance_tolerance_percent) || 5) : 5,
+      segments: d.segments && d.segments.length > 0
+        ? d.segments.map((s, idx) => ({ sport: s.sport, distance_km: parseFloat(s.distance_km) || 0, order: idx + 1 }))
+        : null,
+      discipline: d.discipline?.trim() || null,
+      obstacle_count: d.obstacle_count ? parseInt(d.obstacle_count, 10) : null,
     }));
     if (newRows.length > 0) {
       const { error: iErr } = await supabase.from("distances").insert(newRows as any);
