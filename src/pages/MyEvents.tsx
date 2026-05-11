@@ -120,11 +120,10 @@ const MyEvents = () => {
                       </Button>
                     )}
                     {isCompleted && r.events.photos_url && (
-                      <Button
-                        variant="outline"
-                        onClick={() => setDocDialog({ url: r.events.photos_url, title: t.events.openPhotos })}
-                      >
-                        <FileText className="h-4 w-4" /> {t.events.openPhotos}
+                      <Button variant="outline" asChild>
+                        <a href={r.events.photos_url} target="_blank" rel="noopener noreferrer">
+                          <FileText className="h-4 w-4" /> {t.events.openPhotos}
+                        </a>
                       </Button>
                     )}
                     <Button asChild variant="outline">
