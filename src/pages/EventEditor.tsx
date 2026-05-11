@@ -1103,7 +1103,7 @@ const EventEditor = () => {
                         variant={exists ? "secondary" : "outline"}
                         size="sm"
                         disabled={exists}
-                        onClick={() => setDistances([...distances, { distance_km: String(km), name: `${km} ${lang === "uk" ? "км" : "km"}`, price: "0", bib_start: "", is_relay: false, relay_legs_count: "4", relay_categories: ["mix", "men", "women"], relay_legs: ["", "", "", ""], delivery_enabled: false, is_virtual: false, virtual_start_date: "", virtual_end_date: "", virtual_start_time: "", virtual_end_time: "", distance_tolerance_percent: "5" }])}
+                        onClick={() => setDistances([...distances, { ...EMPTY_DISTANCE(String(km)), name: `${km} ${lang === "uk" ? "км" : "km"}` }])}
                       >
                         {km} {lang === "uk" ? "км" : "km"}
                       </Button>
