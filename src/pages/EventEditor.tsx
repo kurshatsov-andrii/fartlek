@@ -20,8 +20,11 @@ import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { GpxTracksManager } from "@/components/GpxTracksManager";
 import { ResultsApiKeyManager } from "@/components/ResultsApiKeyManager";
+import { DistanceSegmentsEditor, type Segment } from "@/components/DistanceSegmentsEditor";
 
-interface DistanceForm { id?: string; distance_km: string; name: string; price: string; bib_start: string; is_relay: boolean; relay_legs_count: string; relay_categories: string[]; relay_legs: string[]; delivery_enabled: boolean; is_virtual: boolean; virtual_start_date: string; virtual_end_date: string; virtual_start_time: string; virtual_end_time: string; distance_tolerance_percent: string; }
+interface DistanceForm { id?: string; distance_km: string; name: string; price: string; bib_start: string; is_relay: boolean; relay_legs_count: string; relay_categories: string[]; relay_legs: string[]; delivery_enabled: boolean; is_virtual: boolean; virtual_start_date: string; virtual_end_date: string; virtual_start_time: string; virtual_end_time: string; distance_tolerance_percent: string; segments: Segment[]; discipline: string; obstacle_count: string; }
+
+const EMPTY_DISTANCE = (km = ""): DistanceForm => ({ distance_km: km, name: "", price: "0", bib_start: "", is_relay: false, relay_legs_count: "4", relay_categories: ["mix", "men", "women"], relay_legs: ["", "", "", ""], delivery_enabled: false, is_virtual: false, virtual_start_date: "", virtual_end_date: "", virtual_start_time: "", virtual_end_time: "", distance_tolerance_percent: "5", segments: [], discipline: "", obstacle_count: "" });
 
 const RELAY_CAT_OPTIONS = ["mix", "men", "women"] as const;
 
