@@ -186,6 +186,7 @@ export type Database = {
           bib_start: number | null
           created_at: string
           delivery_enabled: boolean
+          discipline: string | null
           distance_km: number
           distance_tolerance_percent: number
           event_id: string
@@ -195,10 +196,12 @@ export type Database = {
           is_virtual: boolean
           max_participants: number | null
           name: string | null
+          obstacle_count: number | null
           price: number
           relay_categories: string[]
           relay_legs: Json | null
           relay_legs_count: number | null
+          segments: Json | null
           virtual_end_date: string | null
           virtual_end_time: string | null
           virtual_start_date: string | null
@@ -208,6 +211,7 @@ export type Database = {
           bib_start?: number | null
           created_at?: string
           delivery_enabled?: boolean
+          discipline?: string | null
           distance_km: number
           distance_tolerance_percent?: number
           event_id: string
@@ -217,10 +221,12 @@ export type Database = {
           is_virtual?: boolean
           max_participants?: number | null
           name?: string | null
+          obstacle_count?: number | null
           price?: number
           relay_categories?: string[]
           relay_legs?: Json | null
           relay_legs_count?: number | null
+          segments?: Json | null
           virtual_end_date?: string | null
           virtual_end_time?: string | null
           virtual_start_date?: string | null
@@ -230,6 +236,7 @@ export type Database = {
           bib_start?: number | null
           created_at?: string
           delivery_enabled?: boolean
+          discipline?: string | null
           distance_km?: number
           distance_tolerance_percent?: number
           event_id?: string
@@ -239,10 +246,12 @@ export type Database = {
           is_virtual?: boolean
           max_participants?: number | null
           name?: string | null
+          obstacle_count?: number | null
           price?: number
           relay_categories?: string[]
           relay_legs?: Json | null
           relay_legs_count?: number | null
+          segments?: Json | null
           virtual_end_date?: string | null
           virtual_end_time?: string | null
           virtual_start_date?: string | null
