@@ -23,6 +23,7 @@ export const EventsSection = () => {
   const [events, setEvents] = useState<EventCard[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeCat, setActiveCat] = useState<EventCategory | "all">("all");
+  const [search, setSearch] = useState("");
   const PAGE_SIZE = 9;
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 
@@ -34,12 +35,21 @@ export const EventsSection = () => {
       .then(({ data }) => { setEvents((data as any) ?? []); setLoading(false); });
   }, []);
 
-  const filtered = useMemo(
-    () => activeCat === "all" ? events : events.filter((e) => e.category === activeCat),
-    [events, activeCat]
-  );
+  const filtered = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    return events.filter((e) => {
+      if (activeCat !== "all" && e.category !== activeCat) return false;
+      if (!q) return true;
+      return (
+        e.title.toLowerCase().includes(q) ||
+        (e.location ?? "").toLowerCase().includes(q) ||
+        (e.organizer_name ?? "").toLowerCase().includes(q) ||
+        (e.description ?? "").toLowerCase().includes(q)
+      );
+    });
+  }, [events, activeCat, search]);
 
-  useEffect(() => { setVisibleCount(PAGE_SIZE); }, [activeCat]);
+  useEffect(() => { setVisibleCount(PAGE_SIZE); }, [activeCat, search]);
 
   const visible = filtered.slice(0, visibleCount);
 
