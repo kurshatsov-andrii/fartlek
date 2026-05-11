@@ -50,17 +50,17 @@ Deno.serve(async (req) => {
 
   try {
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+    const anonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
     const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const admin = createClient(supabaseUrl, serviceKey);
 
     const body = await req.json().catch(() => null) as
       | { event_api_key?: string; event_id?: string; results?: ResultRow[] }
       | null;
-    const apiKey = body?.event_api_key ?? req.headers.get("x-api-key") ?? undefined;
-    if (!body || !apiKey || !Array.isArray(body.results)) {
-      return new Response(JSON.stringify({
-        error: "Provide event_api_key (header x-api-key or body) and results[]",
-      }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    if (!body || !Array.isArray(body.results)) {
+      return new Response(JSON.stringify({ error: "results[] is required" }), {
+        status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
     }
     if (body.results.length === 0 || body.results.length > 5000) {
       return new Response(JSON.stringify({ error: "results must be 1..5000 items" }), {
@@ -68,19 +68,46 @@ Deno.serve(async (req) => {
       });
     }
 
-    // Resolve event by API key
-    const { data: ev, error: ee } = await admin
-      .from("events")
-      .select("id, organizer_id, status")
-      .eq("results_api_key", apiKey)
-      .maybeSingle();
-    if (ee) throw ee;
-    if (!ev || (body.event_id && body.event_id !== ev.id)) {
-      return new Response(JSON.stringify({ error: "Invalid API key" }), {
-        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+    // Auth: either event API key OR a logged-in manager (organizer/co-organizer/admin)
+    const apiKey = body.event_api_key ?? req.headers.get("x-api-key") ?? undefined;
+    let eventId: string | null = null;
+
+    if (apiKey) {
+      const { data: ev, error: ee } = await admin
+        .from("events").select("id").eq("results_api_key", apiKey).maybeSingle();
+      if (ee) throw ee;
+      if (!ev || (body.event_id && body.event_id !== ev.id)) {
+        return new Response(JSON.stringify({ error: "Invalid API key" }), {
+          status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+      eventId = ev.id as string;
+    } else {
+      const authHeader = req.headers.get("Authorization");
+      if (!authHeader || !body.event_id) {
+        return new Response(JSON.stringify({ error: "Provide event_api_key or Authorization + event_id" }), {
+          status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+      const userClient = createClient(supabaseUrl, anonKey, {
+        global: { headers: { Authorization: authHeader } },
       });
+      const { data: u, error: ue } = await userClient.auth.getUser();
+      if (ue || !u.user) {
+        return new Response(JSON.stringify({ error: "Unauthorized" }), {
+          status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+      const { data: canManage } = await admin.rpc("can_manage_event", {
+        _event_id: body.event_id, _user_id: u.user.id,
+      });
+      if (!canManage) {
+        return new Response(JSON.stringify({ error: "Forbidden" }), {
+          status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+      eventId = body.event_id;
     }
-    const eventId = ev.id as string;
 
     // Load registrations + distances for this event once
     const { data: regs, error: re } = await admin
