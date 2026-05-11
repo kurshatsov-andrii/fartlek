@@ -5,7 +5,7 @@ import {
   Trophy, Bell, UserCircle, Edit3, Smile, Reply, AtSign, Image as ImageIcon,
   CalendarPlus, FileSpreadsheet, CreditCard, Globe, Clock, MapPin, Sparkles,
   Megaphone, Building2, CheckCircle2, ArrowDown, Truck, Repeat, Send, XCircle,
-  History, Lock, Activity, Settings
+  History, Lock, Activity, Settings, KeyRound, Upload
 } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
@@ -177,7 +177,9 @@ const Features = () => {
         { icon: FileSpreadsheet, title: "Експорт у CSV / Excel", desc: "Вивантаження учасників одним кліком для стартової реєстрації офлайн." },
         { icon: Ticket, title: "Призначення BIB-номерів 🆕", desc: "Задайте стартовий номер для кожної дистанції — система автоматично пронумерує учасників за порядком реєстрації. Кожен учасник бачить персональну BIB-картку зі своїм номером, ім'ям та логотипом події у квитку." },
         { icon: MapPin, title: "GPX-треки маршрутів 🆕", desc: "Завантажуйте GPX-файли для кожної дистанції — учасники бачать інтерактивну карту траси у деталях події та можуть скачати файл собі." },
-        { icon: Trophy, title: "Завантаження результатів", desc: "Завантажте файл або вкажіть посилання — учасники одразу побачать свій час." },
+        { icon: Trophy, title: "Завантаження результатів", desc: "Вкажіть посилання на сторонній протокол або завантажте файл — учасники одразу побачать свій час." },
+        { icon: KeyRound, title: "Імпорт результатів через API 🆕", desc: "Згенеруйте унікальний API-ключ для події — система хронометражу (MyLaps, RaceResult, власний скрипт) надсилає результати автоматично по BIB. Підтримує gun time, chip time, позицію та нотатки." },
+        { icon: Upload, title: "Імпорт результатів з CSV 🆕", desc: "Завантажте CSV-файл з результатами — система сама зіставить стартові номери (BIB) з реєстраціями, розпізнає час у форматі hh:mm:ss та оновить результати учасників." },
         { icon: Truck, title: "Доставка стартового пакету Новою Поштою 🆕", desc: "Увімкніть доставку — учасники під час реєстрації обирають місто та відділення/поштомат. Ви бачите адреси у списку учасників та експорті." },
         { icon: Send, title: "Формування ТТН Нової Пошти 🆕", desc: "Підключіть свій API-ключ НП у налаштуваннях події, оберіть відправника, контактну особу й місто-відділення. Створюйте ТТН учасникам прямо зі списку учасників — номер, орієнтовна вартість і дата доставки збережуться у реєстрації, з посиланням на трекінг та можливістю видалити ТТН." },
         { icon: Settings, title: "Габарити та оплата стартового пакета 🆕", desc: "Задавайте власні параметри посилки: вага, ширина/довжина/висота (см), оголошена вартість, к-ть місць, опис вантажу. Обирайте платника (Відправник / Отримувач / Третя особа) і спосіб оплати — учасник може платити готівкою або карткою при отриманні." },
@@ -225,7 +227,9 @@ const Features = () => {
         { icon: FileSpreadsheet, title: "CSV / Excel export", desc: "One-click export for offline race-day check-in." },
         { icon: Ticket, title: "Assign BIB numbers 🆕", desc: "Set a starting number per distance — the system auto-numbers participants by registration order. Each participant sees a personalized BIB card with their number, name and event logo on the ticket." },
         { icon: MapPin, title: "GPX route tracks 🆕", desc: "Upload GPX files for each distance — participants see an interactive course map in the event details and can download the file." },
-        { icon: Trophy, title: "Upload results", desc: "Upload a file or paste a link — participants instantly see their time." },
+        { icon: Trophy, title: "Upload results", desc: "Paste a link to an external results protocol or upload a file — participants instantly see their time." },
+        { icon: KeyRound, title: "Results import via API 🆕", desc: "Generate a unique API key for your event — chronometer systems (MyLaps, RaceResult, custom scripts) send results automatically by BIB. Supports gun time, chip time, position and notes." },
+        { icon: Upload, title: "Results import from CSV 🆕", desc: "Upload a CSV file with results — the system auto-matches BIB numbers to registrations, parses time in hh:mm:ss format and updates participant results." },
         { icon: Truck, title: "Nova Poshta race kit delivery 🆕", desc: "Enable delivery — participants pick a city and branch/parcel locker at registration. You see the addresses in the participants list and exports." },
         { icon: Send, title: "Generate Nova Poshta waybills (TTN) 🆕", desc: "Plug in your NP API key in the event settings, choose the sender, contact person and origin warehouse. Create TTNs straight from the participants list — number, estimated cost and delivery date are saved on the registration with a tracking link and a delete button." },
         { icon: Settings, title: "Custom parcel dimensions & payment 🆕", desc: "Set your own parcel parameters: weight, width/length/height (cm), declared cost, seats, cargo description. Pick the payer (Sender / Recipient / Third person) and payment method — recipients can pay cash or by card on pickup." },
