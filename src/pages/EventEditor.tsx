@@ -62,7 +62,7 @@ const EventEditor = () => {
   const [uploadingResults, setUploadingResults] = useState(false);
   const [uploadingRegulations, setUploadingRegulations] = useState(false);
   const [uploadingDescImage, setUploadingDescImage] = useState(false);
-  const [distances, setDistances] = useState<DistanceForm[]>([{ distance_km: "10", name: "", price: "0", bib_start: "", is_relay: false, relay_legs_count: "4", relay_categories: ["mix", "men", "women"], relay_legs: ["", "", "", ""], delivery_enabled: false, is_virtual: false, virtual_start_date: "", virtual_end_date: "", virtual_start_time: "", virtual_end_time: "", distance_tolerance_percent: "5" }]);
+  const [distances, setDistances] = useState<DistanceForm[]>([EMPTY_DISTANCE("10")]);
   const [clubOptions, setClubOptions] = useState<{ id: string; name: string; city: string | null }[]>([]);
   const [clubPickerOpen, setClubPickerOpen] = useState(false);
 
