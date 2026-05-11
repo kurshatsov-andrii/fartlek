@@ -213,7 +213,7 @@ const Features = () => {
         { icon: Sparkles, title: "Event builder", desc: "Title, description, date, time, location, cover image, multiple distances with different prices." },
         { icon: Tag, title: "Paid & free races", desc: "Flexible pricing per distance or fully free registration." },
         { icon: Clock, title: "Event status", desc: "Draft → Published → Completed. Control visibility on the site." },
-        { icon: Users, title: "Co-organizers", desc: "Add multiple organizers to one event — each gets full access." },
+        { icon: Users, title: "Co-organizers", desc: "Add co-organizers to an event — they can edit details, manage participants, upload results and files." },
         { icon: CalendarPlus, title: "Add to events calendar", desc: "Publish your upcoming races in the shared Events Calendar — even if registration runs outside the platform. You can only edit and delete your own entries." },
         { icon: Lock, title: "Registration closed 🆕", desc: "When slots are sold out — mark the event as «Registration closed». Participants see a dedicated badge but the event stays on the site until race day." },
         { icon: Clock, title: "Self-service deadline 🆕", desc: "Configure how many days before the event participants can change distance, transfer slots or request cancellation by themselves." },
