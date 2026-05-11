@@ -70,11 +70,12 @@ export const ResultsApiKeyManager = ({ eventId }: Props) => {
           <KeyRound className="h-4 w-4" />
         </div>
         <div className="flex-1">
-          <h3 className="font-display text-base font-bold">API для імпорту результатів</h3>
+          <h3 className="font-display text-base font-bold">Імпорт результатів</h3>
           <p className="text-xs text-muted-foreground mt-0.5">
-            Передайте ключ системі хронометражу — вона буде надсилати результати з прив'язкою по BIB.
+            Завантажуйте CSV або підключіть систему хронометражу через API — результати прив'язуються по BIB.
           </p>
         </div>
+        <ResultsCsvImport eventId={eventId} />
       </div>
 
       {apiKey ? (
