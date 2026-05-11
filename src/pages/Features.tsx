@@ -168,6 +168,7 @@ const Features = () => {
         { icon: Lock, title: "Реєстрація закрита 🆕", desc: "Коли слоти вичерпано — позначте подію як «Реєстрація закрита». Учасники бачать спеціальний бейдж, але подія залишається на сайті до дати старту." },
         { icon: Clock, title: "Дедлайн самообслуговування 🆕", desc: "Налаштуйте за скільки днів до події учасники можуть самостійно змінювати дистанцію, передавати слот або просити скасування." },
         { icon: Activity, title: "Віртуальна гонка зі Strava 🆕", desc: "Позначте дистанцію як віртуальну: задайте вікно дат (з / по) і допуск дистанції у % (через похибку GPS). Активності учасників зі Strava, що потрапляють у вікно й відповідають дистанції, зараховуються автоматично." },
+        { icon: Globe, title: "Мультиспорт дистанції 🆕", desc: "Триатлон, дуатлон, акватлон, OCR, запливи, велогонки та комбіновані формати. Створюйте дистанції з кількома етапами: плавання → вело → біг, з пресетами Sprint / Olympic / 70.3 / Full. Для OCR — вкажіть кількість перешкод." },
       ],
     },
     {
@@ -218,6 +219,7 @@ const Features = () => {
         { icon: Lock, title: "Registration closed 🆕", desc: "When slots are sold out — mark the event as «Registration closed». Participants see a dedicated badge but the event stays on the site until race day." },
         { icon: Clock, title: "Self-service deadline 🆕", desc: "Configure how many days before the event participants can change distance, transfer slots or request cancellation by themselves." },
         { icon: Activity, title: "Virtual race via Strava 🆕", desc: "Mark a distance as virtual: set a date window (from / to) and a distance tolerance in % (to account for GPS drift). Participants' Strava activities that fall in the window and match the distance are credited automatically." },
+        { icon: Globe, title: "Multisport distances 🆕", desc: "Triathlon, duathlon, aquathlon, OCR, swim, bike and combined formats. Create distances with multiple segments: swim → bike → run, with Sprint / Olympic / 70.3 / Full presets. For OCR — specify the number of obstacles." },
       ],
     },
     {
