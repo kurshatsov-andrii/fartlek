@@ -665,10 +665,14 @@ export type Database = {
       event_results: {
         Row: {
           activity_start_date: string | null
+          chip_time_seconds: number | null
           created_at: string
           distance_id: string
           distance_meters: number | null
           event_id: string
+          finish_position: number | null
+          finished_at: string | null
+          gun_time_seconds: number | null
           id: string
           moving_time_seconds: number | null
           notes: string | null
@@ -682,10 +686,14 @@ export type Database = {
         }
         Insert: {
           activity_start_date?: string | null
+          chip_time_seconds?: number | null
           created_at?: string
           distance_id: string
           distance_meters?: number | null
           event_id: string
+          finish_position?: number | null
+          finished_at?: string | null
+          gun_time_seconds?: number | null
           id?: string
           moving_time_seconds?: number | null
           notes?: string | null
@@ -699,10 +707,14 @@ export type Database = {
         }
         Update: {
           activity_start_date?: string | null
+          chip_time_seconds?: number | null
           created_at?: string
           distance_id?: string
           distance_meters?: number | null
           event_id?: string
+          finish_position?: number | null
+          finished_at?: string | null
+          gun_time_seconds?: number | null
           id?: string
           moving_time_seconds?: number | null
           notes?: string | null
@@ -736,6 +748,7 @@ export type Database = {
           photos_url: string | null
           registration_closed: boolean
           regulations_pdf_url: string | null
+          results_api_key: string | null
           results_pdf_url: string | null
           results_url: string | null
           slug: string | null
@@ -762,6 +775,7 @@ export type Database = {
           photos_url?: string | null
           registration_closed?: boolean
           regulations_pdf_url?: string | null
+          results_api_key?: string | null
           results_pdf_url?: string | null
           results_url?: string | null
           slug?: string | null
@@ -788,6 +802,7 @@ export type Database = {
           photos_url?: string | null
           registration_closed?: boolean
           regulations_pdf_url?: string | null
+          results_api_key?: string | null
           results_pdf_url?: string | null
           results_url?: string | null
           slug?: string | null
@@ -1714,6 +1729,10 @@ export type Database = {
         Args: { payload: Json; queue_name: string }
         Returns: number
       }
+      generate_event_results_api_key: {
+        Args: { _event_id: string }
+        Returns: string
+      }
       get_chat_authors: {
         Args: { _user_ids: string[] }
         Returns: {
@@ -1760,6 +1779,10 @@ export type Database = {
       get_event_participants_count: {
         Args: { _event_id: string }
         Returns: number
+      }
+      get_event_results_api_key: {
+        Args: { _event_id: string }
+        Returns: string
       }
       get_managed_events_unread_chat: {
         Args: never
