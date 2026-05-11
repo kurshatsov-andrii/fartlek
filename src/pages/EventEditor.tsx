@@ -134,6 +134,11 @@ const EventEditor = () => {
         virtual_start_time: ((d as any).virtual_start_time ?? "").toString().slice(0, 5),
         virtual_end_time: ((d as any).virtual_end_time ?? "").toString().slice(0, 5),
         distance_tolerance_percent: (d as any).distance_tolerance_percent != null ? String((d as any).distance_tolerance_percent) : "5",
+        segments: Array.isArray((d as any).segments)
+          ? ((d as any).segments as any[]).map((s) => ({ sport: s.sport, distance_km: String(s.distance_km ?? "") }))
+          : [],
+        discipline: (d as any).discipline ?? "",
+        obstacle_count: (d as any).obstacle_count != null ? String((d as any).obstacle_count) : "",
       })));
       setLoadedFor(id ?? null);
       setLoading(false);
