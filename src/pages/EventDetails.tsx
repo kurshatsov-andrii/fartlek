@@ -427,37 +427,32 @@ const EventDetails = () => {
                     {t.events.resultsTitle}
                   </h3>
                   {event.results_pdf_url || event.results_url || event.photos_url ? (
-                    <>
-                      <p className="text-sm text-muted-foreground">{t.events.resultsHint}</p>
-                      <div className="flex flex-col gap-2">
-                        {event.results_pdf_url && (
-                          <Button
-                            className="w-full"
-                            onClick={() => setDocDialog({ url: event.results_pdf_url!, title: t.events.resultsTitle })}
-                          >
-                            <FileText className="h-4 w-4" /> {t.events.downloadResults}
-                          </Button>
-                        )}
-                        {event.results_url && (
-                          <Button
-                            variant={event.results_pdf_url ? "outline" : "default"}
-                            className="w-full"
-                            onClick={() => setDocDialog({ url: event.results_url!, title: t.events.resultsTitle })}
-                          >
-                            <FileText className="h-4 w-4" /> {t.events.openResults}
-                          </Button>
-                        )}
-                        {event.photos_url && (
-                          <Button
-                            variant="outline"
-                            className="w-full"
-                            onClick={() => setDocDialog({ url: event.photos_url!, title: t.events.openPhotos })}
-                          >
+                    <div className="flex flex-col gap-2">
+                      {event.results_pdf_url && (
+                        <Button
+                          className="w-full"
+                          onClick={() => setDocDialog({ url: event.results_pdf_url!, title: t.events.resultsTitle })}
+                        >
+                          <FileText className="h-4 w-4" /> {t.events.results}
+                        </Button>
+                      )}
+                      {event.results_url && (
+                        <Button
+                          variant={event.results_pdf_url ? "outline" : "default"}
+                          className="w-full"
+                          onClick={() => setDocDialog({ url: event.results_url!, title: t.events.resultsTitle })}
+                        >
+                          <FileText className="h-4 w-4" /> {t.events.results}
+                        </Button>
+                      )}
+                      {event.photos_url && (
+                        <Button variant="outline" className="w-full" asChild>
+                          <a href={event.photos_url} target="_blank" rel="noopener noreferrer">
                             <FileText className="h-4 w-4" /> {t.events.openPhotos}
-                          </Button>
-                        )}
-                      </div>
-                    </>
+                          </a>
+                        </Button>
+                      )}
+                    </div>
                   ) : (
                     <p className="text-sm text-muted-foreground">{t.events.resultsNone}</p>
                   )}
