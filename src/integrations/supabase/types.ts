@@ -1829,6 +1829,7 @@ export type Database = {
         Args: { _event_id: string; _user_id: string }
         Returns: boolean
       }
+      mark_past_events_completed: { Args: never; Returns: undefined }
       move_registration_to_distance: {
         Args: { _new_distance_id: string; _registration_id: string }
         Returns: {
