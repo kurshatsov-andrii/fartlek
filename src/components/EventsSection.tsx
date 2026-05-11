@@ -85,6 +85,28 @@ export const EventsSection = () => {
           </div>
         </div>
 
+        <div className="mb-6 max-w-md relative">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+          <Input
+            type="search"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder={lang === "uk" ? "Пошук подій за назвою, місцем, організатором…" : "Search events by name, location, organizer…"}
+            className="pl-9 pr-9"
+            aria-label={lang === "uk" ? "Пошук подій" : "Search events"}
+          />
+          {search && (
+            <button
+              type="button"
+              onClick={() => setSearch("")}
+              className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-muted-foreground hover:text-foreground"
+              aria-label={lang === "uk" ? "Очистити" : "Clear"}
+            >
+              <X className="h-4 w-4" />
+            </button>
+          )}
+        </div>
+
         <div className="mb-10 flex flex-wrap gap-2">
           {(["all", ...EVENT_CATEGORIES] as const).map((cat) => {
             const label = cat === "all" ? t.categories.all : t.categories[cat];
