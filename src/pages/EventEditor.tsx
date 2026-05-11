@@ -932,6 +932,22 @@ const EventEditor = () => {
                     </Button>
                   </div>
 
+                  <DistanceSegmentsEditor
+                    lang={lang as "uk" | "en"}
+                    segments={d.segments}
+                    discipline={d.discipline}
+                    obstacleCount={d.obstacle_count}
+                    onChange={(next) => {
+                      const c = [...distances];
+                      c[i] = { ...c[i], segments: next.segments, discipline: next.discipline, obstacle_count: next.obstacleCount };
+                      if (next.segments.length > 0) {
+                        const sum = next.segments.reduce((acc, s) => acc + (parseFloat(s.distance_km) || 0), 0);
+                        if (sum > 0) c[i].distance_km = String(Math.round(sum * 100) / 100);
+                      }
+                      setDistances(c);
+                    }}
+                  />
+
                   <div className="pt-2 border-t border-border space-y-3">
                     <div className="flex items-center gap-3">
                       <Switch
