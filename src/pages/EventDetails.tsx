@@ -537,18 +537,40 @@ const EventDetails = () => {
                       className={`w-full text-left rounded-md border-2 px-4 py-3 transition-base ${selectedDistance === d.id ? "border-primary bg-primary/10" : "border-border hover:border-primary/40"}`}
                     >
                       <div className="flex items-center justify-between">
-                        <div>
-                          <div className="font-bold flex items-center gap-2">
+                        <div className="min-w-0">
+                          <div className="font-bold flex items-center gap-2 flex-wrap">
                             {d.distance_km} km
+                            {d.discipline && (
+                              <span className="text-[10px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded bg-primary/10 text-primary">
+                                {d.discipline}
+                              </span>
+                            )}
                             {d.is_relay && (
                               <span className="text-[10px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded bg-accent text-accent-foreground">
                                 {t.organizer.isRelay} · {d.relay_legs_count ?? "?"}×
                               </span>
                             )}
                           </div>
-                          {d.name && <div className="text-xs text-muted-foreground">{d.name}</div>}
+                          {Array.isArray(d.segments) && d.segments.length > 0 && (
+                            <div className="mt-1 flex flex-wrap gap-1.5">
+                              {[...d.segments].sort((a, b) => (a.order ?? 0) - (b.order ?? 0)).map((s, idx) => {
+                                const emoji = s.sport === "swim" ? "🏊" : s.sport === "bike" ? "🚴" : s.sport === "run" ? "🏃" : s.sport === "obstacle_run" ? "🪢" : s.sport === "kayak" ? "🛶" : s.sport === "ski" ? "🎿" : "•";
+                                return (
+                                  <span key={idx} className="inline-flex items-center gap-1 text-[11px] font-medium px-1.5 py-0.5 rounded bg-muted text-foreground/80">
+                                    {emoji} {s.distance_km} km
+                                  </span>
+                                );
+                              })}
+                              {typeof d.obstacle_count === "number" && d.obstacle_count > 0 && (
+                                <span className="inline-flex items-center text-[11px] font-medium px-1.5 py-0.5 rounded bg-muted text-foreground/80">
+                                  · {d.obstacle_count} {lang === "uk" ? "перешкод" : "obstacles"}
+                                </span>
+                              )}
+                            </div>
+                          )}
+                          {d.name && <div className="text-xs text-muted-foreground mt-0.5">{d.name}</div>}
                         </div>
-                        <div className="text-sm font-semibold">{event.is_paid && d.price > 0 ? `${d.price} ₴` : t.events.free}</div>
+                        <div className="text-sm font-semibold whitespace-nowrap pl-2">{event.is_paid && d.price > 0 ? `${d.price} ₴` : t.events.free}</div>
                       </div>
                     </button>
                   ))}
