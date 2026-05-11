@@ -136,13 +136,10 @@ export const CompletedEventsSection = () => {
                     )
                   )}
                   {ev.photos_url && (
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      className="w-full"
-                      onClick={() => setDocDialog({ url: ev.photos_url!, title: t.events.openPhotos })}
-                    >
-                      <FileText className="h-4 w-4" /> {t.events.openPhotos}
+                    <Button size="sm" variant="outline" className="w-full" asChild>
+                      <a href={ev.photos_url!} target="_blank" rel="noopener noreferrer">
+                        <FileText className="h-4 w-4" /> {t.events.openPhotos}
+                      </a>
                     </Button>
                   )}
                 </div>
