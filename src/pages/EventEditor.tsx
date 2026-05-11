@@ -289,6 +289,11 @@ const EventEditor = () => {
     // sync distances: update existing by id, insert new, hide removed
     // For relay distances, auto-derive total distance_km from sum of leg KM if not provided
     const computeKm = (d: DistanceForm): number => {
+      // segments win when present
+      if (d.segments && d.segments.length > 0) {
+        const sum = d.segments.reduce((acc, s) => acc + (parseFloat(s.distance_km) || 0), 0);
+        if (sum > 0) return Math.round(sum * 100) / 100;
+      }
       const direct = parseFloat(d.distance_km);
       if (!isNaN(direct) && direct > 0) return direct;
       if (d.is_relay) {
