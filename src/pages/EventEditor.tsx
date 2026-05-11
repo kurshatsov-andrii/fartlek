@@ -20,8 +20,11 @@ import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { GpxTracksManager } from "@/components/GpxTracksManager";
 import { ResultsApiKeyManager } from "@/components/ResultsApiKeyManager";
+import { DistanceSegmentsEditor, type Segment } from "@/components/DistanceSegmentsEditor";
 
-interface DistanceForm { id?: string; distance_km: string; name: string; price: string; bib_start: string; is_relay: boolean; relay_legs_count: string; relay_categories: string[]; relay_legs: string[]; delivery_enabled: boolean; is_virtual: boolean; virtual_start_date: string; virtual_end_date: string; virtual_start_time: string; virtual_end_time: string; distance_tolerance_percent: string; }
+interface DistanceForm { id?: string; distance_km: string; name: string; price: string; bib_start: string; is_relay: boolean; relay_legs_count: string; relay_categories: string[]; relay_legs: string[]; delivery_enabled: boolean; is_virtual: boolean; virtual_start_date: string; virtual_end_date: string; virtual_start_time: string; virtual_end_time: string; distance_tolerance_percent: string; segments: Segment[]; discipline: string; obstacle_count: string; }
+
+const EMPTY_DISTANCE = (km = ""): DistanceForm => ({ distance_km: km, name: "", price: "0", bib_start: "", is_relay: false, relay_legs_count: "4", relay_categories: ["mix", "men", "women"], relay_legs: ["", "", "", ""], delivery_enabled: false, is_virtual: false, virtual_start_date: "", virtual_end_date: "", virtual_start_time: "", virtual_end_time: "", distance_tolerance_percent: "5", segments: [], discipline: "", obstacle_count: "" });
 
 const RELAY_CAT_OPTIONS = ["mix", "men", "women"] as const;
 
@@ -59,7 +62,7 @@ const EventEditor = () => {
   const [uploadingResults, setUploadingResults] = useState(false);
   const [uploadingRegulations, setUploadingRegulations] = useState(false);
   const [uploadingDescImage, setUploadingDescImage] = useState(false);
-  const [distances, setDistances] = useState<DistanceForm[]>([{ distance_km: "10", name: "", price: "0", bib_start: "", is_relay: false, relay_legs_count: "4", relay_categories: ["mix", "men", "women"], relay_legs: ["", "", "", ""], delivery_enabled: false, is_virtual: false, virtual_start_date: "", virtual_end_date: "", virtual_start_time: "", virtual_end_time: "", distance_tolerance_percent: "5" }]);
+  const [distances, setDistances] = useState<DistanceForm[]>([EMPTY_DISTANCE("10")]);
   const [clubOptions, setClubOptions] = useState<{ id: string; name: string; city: string | null }[]>([]);
   const [clubPickerOpen, setClubPickerOpen] = useState(false);
 
@@ -131,6 +134,11 @@ const EventEditor = () => {
         virtual_start_time: ((d as any).virtual_start_time ?? "").toString().slice(0, 5),
         virtual_end_time: ((d as any).virtual_end_time ?? "").toString().slice(0, 5),
         distance_tolerance_percent: (d as any).distance_tolerance_percent != null ? String((d as any).distance_tolerance_percent) : "5",
+        segments: Array.isArray((d as any).segments)
+          ? ((d as any).segments as any[]).map((s) => ({ sport: s.sport, distance_km: String(s.distance_km ?? "") }))
+          : [],
+        discipline: (d as any).discipline ?? "",
+        obstacle_count: (d as any).obstacle_count != null ? String((d as any).obstacle_count) : "",
       })));
       setLoadedFor(id ?? null);
       setLoading(false);
@@ -281,6 +289,11 @@ const EventEditor = () => {
     // sync distances: update existing by id, insert new, hide removed
     // For relay distances, auto-derive total distance_km from sum of leg KM if not provided
     const computeKm = (d: DistanceForm): number => {
+      // segments win when present
+      if (d.segments && d.segments.length > 0) {
+        const sum = d.segments.reduce((acc, s) => acc + (parseFloat(s.distance_km) || 0), 0);
+        if (sum > 0) return Math.round(sum * 100) / 100;
+      }
       const direct = parseFloat(d.distance_km);
       if (!isNaN(direct) && direct > 0) return direct;
       if (d.is_relay) {
@@ -324,6 +337,11 @@ const EventEditor = () => {
         virtual_start_time: d.is_virtual && d.virtual_start_time ? d.virtual_start_time : null,
         virtual_end_time: d.is_virtual && d.virtual_end_time ? d.virtual_end_time : null,
         distance_tolerance_percent: d.is_virtual ? (parseFloat(d.distance_tolerance_percent) || 5) : 5,
+        segments: d.segments && d.segments.length > 0
+          ? d.segments.map((s, idx) => ({ sport: s.sport, distance_km: parseFloat(s.distance_km) || 0, order: idx + 1 }))
+          : null,
+        discipline: d.discipline?.trim() || null,
+        obstacle_count: d.obstacle_count ? parseInt(d.obstacle_count, 10) : null,
       } as any).eq("id", d.id!);
       if (uErr) { toast.error(uErr.message); setBusy(false); return; }
     }
@@ -347,6 +365,11 @@ const EventEditor = () => {
       virtual_start_time: d.is_virtual && d.virtual_start_time ? d.virtual_start_time : null,
       virtual_end_time: d.is_virtual && d.virtual_end_time ? d.virtual_end_time : null,
       distance_tolerance_percent: d.is_virtual ? (parseFloat(d.distance_tolerance_percent) || 5) : 5,
+      segments: d.segments && d.segments.length > 0
+        ? d.segments.map((s, idx) => ({ sport: s.sport, distance_km: parseFloat(s.distance_km) || 0, order: idx + 1 }))
+        : null,
+      discipline: d.discipline?.trim() || null,
+      obstacle_count: d.obstacle_count ? parseInt(d.obstacle_count, 10) : null,
     }));
     if (newRows.length > 0) {
       const { error: iErr } = await supabase.from("distances").insert(newRows as any);
@@ -909,6 +932,22 @@ const EventEditor = () => {
                     </Button>
                   </div>
 
+                  <DistanceSegmentsEditor
+                    lang={lang as "uk" | "en"}
+                    segments={d.segments}
+                    discipline={d.discipline}
+                    obstacleCount={d.obstacle_count}
+                    onChange={(next) => {
+                      const c = [...distances];
+                      c[i] = { ...c[i], segments: next.segments, discipline: next.discipline, obstacle_count: next.obstacleCount };
+                      if (next.segments.length > 0) {
+                        const sum = next.segments.reduce((acc, s) => acc + (parseFloat(s.distance_km) || 0), 0);
+                        if (sum > 0) c[i].distance_km = String(Math.round(sum * 100) / 100);
+                      }
+                      setDistances(c);
+                    }}
+                  />
+
                   <div className="pt-2 border-t border-border space-y-3">
                     <div className="flex items-center gap-3">
                       <Switch
@@ -1095,7 +1134,7 @@ const EventEditor = () => {
                         variant={exists ? "secondary" : "outline"}
                         size="sm"
                         disabled={exists}
-                        onClick={() => setDistances([...distances, { distance_km: String(km), name: `${km} ${lang === "uk" ? "км" : "km"}`, price: "0", bib_start: "", is_relay: false, relay_legs_count: "4", relay_categories: ["mix", "men", "women"], relay_legs: ["", "", "", ""], delivery_enabled: false, is_virtual: false, virtual_start_date: "", virtual_end_date: "", virtual_start_time: "", virtual_end_time: "", distance_tolerance_percent: "5" }])}
+                        onClick={() => setDistances([...distances, { ...EMPTY_DISTANCE(String(km)), name: `${km} ${lang === "uk" ? "км" : "km"}` }])}
                       >
                         {km} {lang === "uk" ? "км" : "km"}
                       </Button>
@@ -1104,7 +1143,7 @@ const EventEditor = () => {
                 </div>
               </div>
               <Button type="button" variant="outline" size="sm"
-                onClick={() => setDistances([...distances, { distance_km: "", name: "", price: "0", bib_start: "", is_relay: false, relay_legs_count: "4", relay_categories: ["mix", "men", "women"], relay_legs: ["", "", "", ""], delivery_enabled: false, is_virtual: false, virtual_start_date: "", virtual_end_date: "", virtual_start_time: "", virtual_end_time: "", distance_tolerance_percent: "5" }])}>
+                onClick={() => setDistances([...distances, EMPTY_DISTANCE()])}>
                 <Plus className="h-4 w-4" /> {t.organizer.addDistance} ({lang === "uk" ? "нестандартна" : "custom"})
               </Button>
             </div>
