@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { Calendar, MapPin, ArrowUpRight, Loader2 } from "lucide-react";
+import { Calendar, MapPin, ArrowUpRight, Loader2, Search, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { useApp } from "@/contexts/AppContext";
 import { supabase } from "@/integrations/supabase/client";
 import { EVENT_CATEGORIES, type EventCategory } from "@/lib/i18n";
@@ -22,6 +23,7 @@ export const EventsSection = () => {
   const [events, setEvents] = useState<EventCard[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeCat, setActiveCat] = useState<EventCategory | "all">("all");
+  const [search, setSearch] = useState("");
   const PAGE_SIZE = 9;
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 
@@ -33,12 +35,21 @@ export const EventsSection = () => {
       .then(({ data }) => { setEvents((data as any) ?? []); setLoading(false); });
   }, []);
 
-  const filtered = useMemo(
-    () => activeCat === "all" ? events : events.filter((e) => e.category === activeCat),
-    [events, activeCat]
-  );
+  const filtered = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    return events.filter((e) => {
+      if (activeCat !== "all" && e.category !== activeCat) return false;
+      if (!q) return true;
+      return (
+        e.title.toLowerCase().includes(q) ||
+        (e.location ?? "").toLowerCase().includes(q) ||
+        (e.organizer_name ?? "").toLowerCase().includes(q) ||
+        (e.description ?? "").toLowerCase().includes(q)
+      );
+    });
+  }, [events, activeCat, search]);
 
-  useEffect(() => { setVisibleCount(PAGE_SIZE); }, [activeCat]);
+  useEffect(() => { setVisibleCount(PAGE_SIZE); }, [activeCat, search]);
 
   const visible = filtered.slice(0, visibleCount);
 
@@ -72,6 +83,28 @@ export const EventsSection = () => {
             </h2>
             <p className="mt-4 text-lg text-muted-foreground">{t.events.sub}</p>
           </div>
+        </div>
+
+        <div className="mb-6 max-w-md relative">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+          <Input
+            type="search"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder={lang === "uk" ? "Пошук подій за назвою, місцем, організатором…" : "Search events by name, location, organizer…"}
+            className="pl-9 pr-9"
+            aria-label={lang === "uk" ? "Пошук подій" : "Search events"}
+          />
+          {search && (
+            <button
+              type="button"
+              onClick={() => setSearch("")}
+              className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-muted-foreground hover:text-foreground"
+              aria-label={lang === "uk" ? "Очистити" : "Clear"}
+            >
+              <X className="h-4 w-4" />
+            </button>
+          )}
         </div>
 
         <div className="mb-10 flex flex-wrap gap-2">
