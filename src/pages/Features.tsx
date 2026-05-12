@@ -61,6 +61,8 @@ const Features = () => {
         { icon: CheckCircle2, title: "Реєстрація себе або дитини", desc: "Один акаунт — кілька профілів спортсменів. Реєструйте себе, дітей чи родичів." },
         { icon: CreditCard, title: "Оплата онлайн", desc: "Безпечна оплата через WayForPay картками Visa/Mastercard, Apple Pay, Google Pay." },
         { icon: Calendar, title: "Календар майбутніх подій", desc: "Окрема сторінка з усіма майбутніми стартами України — і платформними, і доданими адміном чи організаторами. Фільтри за категорією, місяцем, пошук та сортування." },
+        { icon: Building2, title: "Каталог клубів", desc: "Усі бігові клуби України на одній сторінці — пошук за містом, видом активності, перегляд профілю клубу зі списком подій та контактами." },
+        { icon: Megaphone, title: "Каталог організаторів 🆕", desc: "Окрема сторінка з усіма організаторами подій — логотип, місто, опис, соцмережі та активні події. Зручно знайти перевіреного організатора або зв'язатися напряму." },
       ],
     },
     {
@@ -101,6 +103,7 @@ const Features = () => {
         { icon: ImageIcon, title: "Фото профілю", desc: "Завантажте аватар — він з'являтиметься у чатах та списках учасників." },
         { icon: Building2, title: "Прив'язка до клубу", desc: "Оберіть свій біговий клуб — він відображатиметься в результатах та списках." },
         { icon: Activity, title: "Підключення Strava 🆕", desc: "Прив'яжіть акаунт Strava у профілі одним кліком (OAuth). Це потрібно для автоматичного зарахування результатів віртуальних гонок. Можна відключити будь-коли." },
+        { icon: Sparkles, title: "Стати організатором 🆕", desc: "Зареєструвалися через Google або Apple як учасник, а тепер хочете створювати події? Один клік у профілі — і ви отримуєте роль організатора, доступ до створення подій, клубів і публічного профілю." },
       ],
     },
   ] : [
@@ -112,6 +115,8 @@ const Features = () => {
         { icon: CheckCircle2, title: "Register yourself or a child", desc: "One account — multiple athlete profiles. Register yourself, children or family." },
         { icon: CreditCard, title: "Online payments", desc: "Secure WayForPay payments via Visa/Mastercard, Apple Pay, Google Pay." },
         { icon: Calendar, title: "Upcoming events calendar", desc: "Dedicated page with every upcoming race in Ukraine — both from the platform and added by admins or organizers. Filters by category, month, search and sorting." },
+        { icon: Building2, title: "Clubs catalog", desc: "All running clubs in Ukraine on a single page — search by city and activity, view club profile with events and contacts." },
+        { icon: Megaphone, title: "Organizers catalog 🆕", desc: "A dedicated page with all event organizers — logo, city, description, social links and active events. Easily find a trusted organizer or contact them directly." },
       ],
     },
     {
@@ -152,6 +157,7 @@ const Features = () => {
         { icon: ImageIcon, title: "Profile photo", desc: "Upload an avatar — it shows up in chats and participant lists." },
         { icon: Building2, title: "Club membership", desc: "Pick your running club — it appears in results and lists." },
         { icon: Activity, title: "Connect Strava 🆕", desc: "Link your Strava account from the profile in one click (OAuth). Required to auto-credit virtual race results. Disconnect anytime." },
+        { icon: Sparkles, title: "Become an organizer 🆕", desc: "Signed up via Google or Apple as a participant but want to create events? One click in your profile grants you the organizer role and unlocks event, club and public-profile creation." },
       ],
     },
   ];
@@ -195,6 +201,7 @@ const Features = () => {
         { icon: Mail, title: "Email-розсилки", desc: "Маркетингові кампанії учасникам події з готових шаблонів." },
         { icon: CreditCard, title: "Прийом оплат WayForPay та LiqPay (автопідтвердження)", desc: "Підключіть свій акаунт WayForPay або LiqPay — гроші йдуть напряму вам, а статус оплати ✅ ставиться автоматично. Деталі — у блоці «Оплата» нижче." },
         { icon: Megaphone, title: "Профіль клубу/організатора", desc: "Окрема сторінка з усіма вашими подіями та інформацією про клуб." },
+        { icon: Building2, title: "Публічний профіль організатора 🆕", desc: "Створіть окрему сторінку організатора: логотип, місто, опис, види активності, соцмережі та контакти. Профіль з'являється у каталозі організаторів і отримує SEO-оптимізацію (заголовки, опис, JSON-LD)." },
       ],
     },
     {
@@ -246,6 +253,7 @@ const Features = () => {
         { icon: Mail, title: "Email campaigns", desc: "Send marketing emails to participants from ready-made templates." },
         { icon: CreditCard, title: "WayForPay & LiqPay payments (auto-confirm)", desc: "Connect your WayForPay or LiqPay account — money goes directly to you, payment status ✅ is set automatically. See the «Payments» block below." },
         { icon: Megaphone, title: "Club / organizer page", desc: "A dedicated page with all your events and club information." },
+        { icon: Building2, title: "Public organizer profile 🆕", desc: "Create a dedicated organizer page: logo, city, description, activity types, social links and contacts. The profile appears in the organizers catalog and gets full SEO optimization (titles, descriptions, JSON-LD)." },
       ],
     },
     {
