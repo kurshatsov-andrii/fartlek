@@ -44,6 +44,7 @@ export const Header = () => {
           <a href="/#events" onClick={handleEventsClick} className="text-sm font-medium text-muted-foreground hover:text-foreground transition-base cursor-pointer">{t.nav.events}</a>
           <Link to="/calendar" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-base">Календар</Link>
           <Link to="/clubs" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-base">Клуби</Link>
+          <Link to="/organizers" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-base">Організатори</Link>
           <Link to="/features" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-base">Можливості</Link>
           {user && (
             <>
@@ -74,6 +75,7 @@ export const Header = () => {
                   <>
                     <DropdownMenuItem asChild><Link to="/organizer"><LayoutDashboard className="h-4 w-4" />{t.nav.dashboard}</Link></DropdownMenuItem>
                     <DropdownMenuItem asChild><Link to="/clubs/edit"><Users className="h-4 w-4" />Профіль клубу</Link></DropdownMenuItem>
+                    <DropdownMenuItem asChild><Link to="/organizers/edit"><Users className="h-4 w-4" />Профіль організатора</Link></DropdownMenuItem>
                   </>
                 )}
                 {isAdmin && (
@@ -98,6 +100,9 @@ export const Header = () => {
               </Link>
               <Link to="/clubs" className="md:hidden text-xs font-medium text-muted-foreground hover:text-foreground transition-base px-1">
                 Клуби
+              </Link>
+              <Link to="/organizers" className="md:hidden text-xs font-medium text-muted-foreground hover:text-foreground transition-base px-1">
+                Організатори
               </Link>
               <Link to="/features" className="md:hidden text-xs font-medium text-muted-foreground hover:text-foreground transition-base px-1">
                 Опції

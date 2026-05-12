@@ -947,6 +947,81 @@ export type Database = {
         }
         Relationships: []
       }
+      organizers: {
+        Row: {
+          activity_types: Database["public"]["Enums"]["club_activity_type"][]
+          city: string | null
+          contact_email: string | null
+          contact_phone: string | null
+          created_at: string
+          description: string | null
+          facebook_url: string | null
+          founded_year: number | null
+          id: string
+          instagram_url: string | null
+          logo_url: string | null
+          members_count: number | null
+          name: string
+          owner_id: string
+          slug: string | null
+          strava_url: string | null
+          telegram_url: string | null
+          training_location: string | null
+          training_schedule: string | null
+          updated_at: string
+          website_url: string | null
+          youtube_url: string | null
+        }
+        Insert: {
+          activity_types?: Database["public"]["Enums"]["club_activity_type"][]
+          city?: string | null
+          contact_email?: string | null
+          contact_phone?: string | null
+          created_at?: string
+          description?: string | null
+          facebook_url?: string | null
+          founded_year?: number | null
+          id?: string
+          instagram_url?: string | null
+          logo_url?: string | null
+          members_count?: number | null
+          name: string
+          owner_id: string
+          slug?: string | null
+          strava_url?: string | null
+          telegram_url?: string | null
+          training_location?: string | null
+          training_schedule?: string | null
+          updated_at?: string
+          website_url?: string | null
+          youtube_url?: string | null
+        }
+        Update: {
+          activity_types?: Database["public"]["Enums"]["club_activity_type"][]
+          city?: string | null
+          contact_email?: string | null
+          contact_phone?: string | null
+          created_at?: string
+          description?: string | null
+          facebook_url?: string | null
+          founded_year?: number | null
+          id?: string
+          instagram_url?: string | null
+          logo_url?: string | null
+          members_count?: number | null
+          name?: string
+          owner_id?: string
+          slug?: string | null
+          strava_url?: string | null
+          telegram_url?: string | null
+          training_location?: string | null
+          training_schedule?: string | null
+          updated_at?: string
+          website_url?: string | null
+          youtube_url?: string | null
+        }
+        Relationships: []
+      }
       payments: {
         Row: {
           amount: number
