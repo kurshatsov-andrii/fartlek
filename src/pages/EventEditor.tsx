@@ -1216,6 +1216,7 @@ const EventEditor = () => {
                 <Plus className="h-4 w-4" /> {t.organizer.addDistance} ({lang === "uk" ? "нестандартна" : "custom"})
               </Button>
             </div>
+            )}
 
             <div className="flex gap-3 pt-4 border-t border-border">
               <Button type="submit" disabled={busy} className="flex-1">
