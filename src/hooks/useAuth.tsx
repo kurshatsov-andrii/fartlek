@@ -54,6 +54,26 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return () => subscription.unsubscribe();
   }, []);
 
+  // Realtime: refresh roles when admin grants/revokes them while user is online
+  useEffect(() => {
+    if (!user) return;
+    const channel = supabase
+      .channel(`user-roles-${user.id}`)
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "user_roles", filter: `user_id=eq.${user.id}` },
+        () => { fetchRoles(user.id); }
+      )
+      .subscribe();
+    // Also refetch when tab regains focus (covers missed events)
+    const onFocus = () => fetchRoles(user.id);
+    window.addEventListener("focus", onFocus);
+    return () => {
+      supabase.removeChannel(channel);
+      window.removeEventListener("focus", onFocus);
+    };
+  }, [user?.id]);
+
   const signOut = async () => {
     await supabase.auth.signOut();
   };
