@@ -309,7 +309,13 @@ const EventEditor = () => {
       }
       return 0;
     };
-    const valid = distances.filter((d) => computeKm(d) > 0);
+    // For "jumps" category we don't require a real distance — auto-create a placeholder
+    const isJumpsCategory = form.category === "jumps";
+    let workingDistances = distances;
+    if (isJumpsCategory && distances.every((d) => computeKm(d) <= 0)) {
+      workingDistances = [{ ...EMPTY_DISTANCE("0.1"), name: lang === "uk" ? "Участь" : "Entry", price: distances[0]?.price ?? "0", id: distances[0]?.id }];
+    }
+    const valid = workingDistances.filter((d) => computeKm(d) > 0);
     const keepIds = valid.filter((d) => d.id).map((d) => d.id!);
 
     // fetch existing active distances to know what to hide
