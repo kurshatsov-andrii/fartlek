@@ -253,6 +253,7 @@ const Features = () => {
         { icon: Mail, title: "Email campaigns", desc: "Send marketing emails to participants from ready-made templates." },
         { icon: CreditCard, title: "WayForPay & LiqPay payments (auto-confirm)", desc: "Connect your WayForPay or LiqPay account — money goes directly to you, payment status ✅ is set automatically. See the «Payments» block below." },
         { icon: Megaphone, title: "Club / organizer page", desc: "A dedicated page with all your events and club information." },
+        { icon: Building2, title: "Public organizer profile 🆕", desc: "Create a dedicated organizer page: logo, city, description, activity types, social links and contacts. The profile appears in the organizers catalog and gets full SEO optimization (titles, descriptions, JSON-LD)." },
       ],
     },
     {
