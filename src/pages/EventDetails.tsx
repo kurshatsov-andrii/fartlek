@@ -92,6 +92,12 @@ const EventDetails = () => {
     }
   }, [isRelay, relayLegs, selectedDistance]);
   useEffect(() => { setPromo(null); }, [selectedDistance]);
+  // Auto-select the only available distance (e.g. for "jumps" category or single-distance events)
+  useEffect(() => {
+    if (!selectedDistance && distances.length === 1) {
+      setSelectedDistance(distances[0].id);
+    }
+  }, [distances, selectedDistance]);
   useEffect(() => {
     const dist = distances.find((d) => d.id === selectedDistance);
     if (!dist?.delivery_enabled) setDelivery(emptyDelivery());
@@ -511,7 +517,9 @@ const EventDetails = () => {
                   <VirtualResultPanel eventId={event.id} userId={user.id} />
                 )}
 
-                <h3 className="font-display text-lg font-bold">{t.events.selectDistance}</h3>
+                {event.category !== "jumps" && (
+                  <h3 className="font-display text-lg font-bold">{t.events.selectDistance}</h3>
+                )}
 
                 {!isRelay && user && athletes.length > 0 && (
                   <div className="space-y-2">
@@ -532,7 +540,7 @@ const EventDetails = () => {
                   </div>
                 )}
 
-                <div className="space-y-2">
+                <div className={`space-y-2 ${event.category === "jumps" ? "hidden" : ""}`}>
                   {distances.map((d) => (
                     <button
                       key={d.id}

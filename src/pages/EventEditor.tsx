@@ -309,7 +309,13 @@ const EventEditor = () => {
       }
       return 0;
     };
-    const valid = distances.filter((d) => computeKm(d) > 0);
+    // For "jumps" category we don't require a real distance — auto-create a placeholder
+    const isJumpsCategory = form.category === "jumps";
+    let workingDistances = distances;
+    if (isJumpsCategory && distances.every((d) => computeKm(d) <= 0)) {
+      workingDistances = [{ ...EMPTY_DISTANCE("0.1"), name: lang === "uk" ? "Участь" : "Entry", price: distances[0]?.price ?? "0", id: distances[0]?.id }];
+    }
+    const valid = workingDistances.filter((d) => computeKm(d) > 0);
     const keepIds = valid.filter((d) => d.id).map((d) => d.id!);
 
     // fetch existing active distances to know what to hide
@@ -925,6 +931,30 @@ const EventEditor = () => {
               <p className="text-xs text-muted-foreground">{t.format.hint}</p>
             </div>
 
+            {form.category === "jumps" ? (
+              <div className="rounded-lg border border-dashed border-border p-4 text-sm text-muted-foreground">
+                {lang === "uk"
+                  ? "Для категорії «Стрибки» дистанції не потрібні — учасники зможуть зареєструватись напряму."
+                  : "Distances are not required for the «Jumps» category — participants can register directly."}
+                <div className="mt-3 grid gap-2 sm:grid-cols-2">
+                  <div className="space-y-1">
+                    <Label className="text-xs">{lang === "uk" ? "Вартість участі (₴)" : "Entry price (UAH)"}</Label>
+                    <Input
+                      type="number"
+                      min="0"
+                      step="1"
+                      value={distances[0]?.price ?? "0"}
+                      onChange={(e) => {
+                        const c = [...distances];
+                        if (!c[0]) c[0] = EMPTY_DISTANCE("0.1");
+                        c[0].price = e.target.value;
+                        setDistances(c);
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
+            ) : (
             <div className="space-y-3">
               <Label>{t.organizer.distances} *</Label>
               <div className="hidden sm:grid grid-cols-12 gap-2 px-1 text-xs text-muted-foreground">
@@ -1186,6 +1216,7 @@ const EventEditor = () => {
                 <Plus className="h-4 w-4" /> {t.organizer.addDistance} ({lang === "uk" ? "нестандартна" : "custom"})
               </Button>
             </div>
+            )}
 
             <div className="flex gap-3 pt-4 border-t border-border">
               <Button type="submit" disabled={busy} className="flex-1">

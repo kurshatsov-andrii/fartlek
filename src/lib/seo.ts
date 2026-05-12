@@ -60,6 +60,7 @@ const CAT_TITLES: Record<Lang, Record<EventCategory, string>> = {
     duathlon: "Дуатлон в Україні — реєстрація | Fartlek Events",
     cycling: "Велогонки в Україні — реєстрація онлайн | Fartlek Events",
     triathlon: "Триатлон в Україні — реєстрація онлайн | Fartlek Events",
+    jumps: "Стрибки в Україні — реєстрація онлайн | Fartlek Events",
   },
   en: {
     run: "Road runs in Ukraine — online registration | Fartlek Events",
@@ -74,6 +75,7 @@ const CAT_TITLES: Record<Lang, Record<EventCategory, string>> = {
     duathlon: "Duathlon races in Ukraine — registration | Fartlek Events",
     cycling: "Cycling races in Ukraine — online registration | Fartlek Events",
     triathlon: "Triathlon races in Ukraine — online registration | Fartlek Events",
+    jumps: "Jump events in Ukraine — online registration | Fartlek Events",
   },
 };
 
@@ -91,6 +93,7 @@ const CAT_DESCS: Record<Lang, Record<EventCategory, string>> = {
     duathlon: "Дуатлон в Україні: біг + вело + біг. Календар стартів, онлайн-реєстрація, миттєві результати.",
     cycling: "Велогонки в Україні — шосе, гравій, МТБ. Онлайн-реєстрація, QR-квитки, миттєві результати.",
     triathlon: "Триатлон в Україні: плавання + вело + біг. Спринт, олімпійка, повна дистанція. Онлайн-реєстрація.",
+    jumps: "Стрибки в Україні: змагання зі стрибків у висоту, довжину та інші дисципліни. Онлайн-реєстрація, QR-квитки.",
   },
   en: {
     run: "Catalog of road runs in Ukraine. 5K, 10K, 15K. Online registration, QR start packs, instant results.",
@@ -105,6 +108,7 @@ const CAT_DESCS: Record<Lang, Record<EventCategory, string>> = {
     duathlon: "Duathlon races in Ukraine: run + bike + run. Race calendar, online registration, instant results.",
     cycling: "Cycling races in Ukraine — road, gravel, MTB. Online registration, QR tickets, instant results.",
     triathlon: "Triathlon races in Ukraine: swim + bike + run. Sprint, Olympic, full distance. Online registration.",
+    jumps: "Jump events in Ukraine: high jump, long jump and other jumping disciplines. Online registration, QR tickets.",
   },
 };
 
