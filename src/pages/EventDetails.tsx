@@ -64,6 +64,7 @@ const EventDetails = () => {
   const [promo, setPromo] = useState<PromoPreview | null>(null);
   const [hasPromoCodes, setHasPromoCodes] = useState(false);
   const [clubSlug, setClubSlug] = useState<string | null>(null);
+  const [organizerSlug, setOrganizerSlug] = useState<string | null>(null);
   const [regulationsOpen, setRegulationsOpen] = useState(false);
   const [docDialog, setDocDialog] = useState<{ url: string; title: string } | null>(null);
   const [teamName, setTeamName] = useState("");
