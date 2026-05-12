@@ -370,8 +370,12 @@ const EventDetails = () => {
                 <div className="flex items-center gap-2"><Users className="h-4 w-4 text-primary" />{participantsCount} {t.events.participants.toLowerCase()}</div>
                 <div className="flex items-center gap-2" title={t.events.organizer}>
                   <UserCircle2 className="h-4 w-4 text-primary" />
-                  {clubSlug ? (
-                    <Link to={`/clubs/${clubSlug}`} className="font-medium hover:text-primary underline-offset-4 hover:underline">
+                  {organizerSlug ? (
+                    <Link to={`/organizers/${organizerSlug}`} className="font-medium underline underline-offset-4 hover:text-primary">
+                      {event.organizer_name}
+                    </Link>
+                  ) : clubSlug ? (
+                    <Link to={`/clubs/${clubSlug}`} className="font-medium underline underline-offset-4 hover:text-primary">
                       {event.organizer_name}
                     </Link>
                   ) : (
