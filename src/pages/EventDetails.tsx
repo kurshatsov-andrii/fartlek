@@ -64,6 +64,7 @@ const EventDetails = () => {
   const [promo, setPromo] = useState<PromoPreview | null>(null);
   const [hasPromoCodes, setHasPromoCodes] = useState(false);
   const [clubSlug, setClubSlug] = useState<string | null>(null);
+  const [organizerSlug, setOrganizerSlug] = useState<string | null>(null);
   const [regulationsOpen, setRegulationsOpen] = useState(false);
   const [docDialog, setDocDialog] = useState<{ url: string; title: string } | null>(null);
   const [teamName, setTeamName] = useState("");
@@ -139,13 +140,12 @@ const EventDetails = () => {
         .eq("is_active", true);
       setHasPromoCodes((promoCnt ?? 0) > 0);
       if (ev.organizer_name) {
-        const { data: club } = await supabase
-          .from("clubs")
-          .select("slug")
-          .ilike("name", ev.organizer_name.trim())
-          .not("slug", "is", null)
-          .maybeSingle();
+        const [{ data: club }, { data: org }] = await Promise.all([
+          supabase.from("clubs").select("slug").ilike("name", ev.organizer_name.trim()).not("slug", "is", null).maybeSingle(),
+          supabase.from("organizers" as any).select("slug").ilike("name", ev.organizer_name.trim()).not("slug", "is", null).maybeSingle(),
+        ]);
         setClubSlug(club?.slug ?? null);
+        setOrganizerSlug((org as any)?.slug ?? null);
       }
       if (user) {
         const { data: reg } = await supabase.from("registrations").select("id, payment_status").eq("event_id", ev.id).eq("user_id", user.id).maybeSingle();
@@ -370,8 +370,12 @@ const EventDetails = () => {
                 <div className="flex items-center gap-2"><Users className="h-4 w-4 text-primary" />{participantsCount} {t.events.participants.toLowerCase()}</div>
                 <div className="flex items-center gap-2" title={t.events.organizer}>
                   <UserCircle2 className="h-4 w-4 text-primary" />
-                  {clubSlug ? (
-                    <Link to={`/clubs/${clubSlug}`} className="font-medium hover:text-primary underline-offset-4 hover:underline">
+                  {organizerSlug ? (
+                    <Link to={`/organizers/${organizerSlug}`} className="font-medium underline underline-offset-4 hover:text-primary">
+                      {event.organizer_name}
+                    </Link>
+                  ) : clubSlug ? (
+                    <Link to={`/clubs/${clubSlug}`} className="font-medium underline underline-offset-4 hover:text-primary">
                       {event.organizer_name}
                     </Link>
                   ) : (
