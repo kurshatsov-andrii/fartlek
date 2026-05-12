@@ -184,13 +184,44 @@ const ClubEditor = () => {
       toast.error(T.invalidLogo); return;
     }
     setUploading(true);
-    const ext = file.name.split(".").pop();
-    const path = `${user.id}/logo-${Date.now()}.${ext}`;
-    const { error } = await supabase.storage.from("club-logos").upload(path, file, { upsert: true });
-    if (error) { toast.error(error.message); setUploading(false); return; }
-    const { data } = supabase.storage.from("club-logos").getPublicUrl(path);
-    setLogoUrl(data.publicUrl);
-    setUploading(false);
+    try {
+      // Derive a safe extension from MIME first, fallback to filename
+      const mimeExt = file.type.split("/")[1]?.split("+")[0]?.toLowerCase();
+      const nameExt = file.name.includes(".")
+        ? file.name.split(".").pop()?.toLowerCase().replace(/[^a-z0-9]/g, "")
+        : "";
+      const ext = (nameExt && nameExt.length <= 5 ? nameExt : mimeExt) || "png";
+
+      // Folder MUST be the authenticated user's id (matches RLS policy)
+      const { data: { user: authUser } } = await supabase.auth.getUser();
+      if (!authUser) {
+        toast.error(lang === "uk" ? "Сесія завершилась, увійдіть знову" : "Session expired, please sign in again");
+        setUploading(false);
+        return;
+      }
+      const path = `${authUser.id}/logo-${Date.now()}.${ext}`;
+
+      const { error } = await supabase.storage
+        .from("club-logos")
+        .upload(path, file, {
+          upsert: true,
+          contentType: file.type || `image/${ext}`,
+          cacheControl: "3600",
+        });
+      if (error) {
+        console.error("club-logo upload error:", error);
+        toast.error(error.message || (lang === "uk" ? "Не вдалося завантажити логотип" : "Failed to upload logo"));
+        setUploading(false);
+        return;
+      }
+      const { data } = supabase.storage.from("club-logos").getPublicUrl(path);
+      setLogoUrl(data.publicUrl);
+    } catch (e: any) {
+      console.error("club-logo upload exception:", e);
+      toast.error(e?.message || (lang === "uk" ? "Не вдалося завантажити логотип" : "Failed to upload logo"));
+    } finally {
+      setUploading(false);
+    }
   };
 
   const toggleActivity = (a: ClubActivityType) => {
