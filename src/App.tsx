@@ -38,6 +38,9 @@ import Unsubscribe from "./pages/Unsubscribe.tsx";
 import ClubsCatalog from "./pages/ClubsCatalog.tsx";
 import ClubDetails from "./pages/ClubDetails.tsx";
 import ClubEditor from "./pages/ClubEditor.tsx";
+import OrganizersCatalog from "./pages/OrganizersCatalog.tsx";
+import OrganizerProfileEditor from "./pages/OrganizerProfileEditor.tsx";
+import OrganizerProfileDetails from "./pages/OrganizerProfileDetails.tsx";
 import Features from "./pages/Features.tsx";
 import Survey from "./pages/Survey.tsx";
 import Testimonials from "./pages/Testimonials.tsx";
@@ -97,6 +100,9 @@ const App = () => (
               <Route path="/clubs" element={<ClubsCatalog />} />
               <Route path="/clubs/edit" element={<ClubEditor />} />
               <Route path="/clubs/:slug" element={<ClubDetails />} />
+              <Route path="/organizers" element={<OrganizersCatalog />} />
+              <Route path="/organizers/edit" element={<OrganizerProfileEditor />} />
+              <Route path="/organizers/:slug" element={<OrganizerProfileDetails />} />
               <Route path="/features" element={<Features />} />
               <Route path="/survey" element={<Survey />} />
               <Route path="/testimonials" element={<Testimonials />} />

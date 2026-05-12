@@ -44,6 +44,7 @@ export const Header = () => {
           <a href="/#events" onClick={handleEventsClick} className="text-sm font-medium text-muted-foreground hover:text-foreground transition-base cursor-pointer">{t.nav.events}</a>
           <Link to="/calendar" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-base">Календар</Link>
           <Link to="/clubs" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-base">Клуби</Link>
+          <Link to="/organizers" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-base">Організатори</Link>
           <Link to="/features" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-base">Можливості</Link>
           {user && (
             <>
@@ -98,6 +99,9 @@ export const Header = () => {
               </Link>
               <Link to="/clubs" className="md:hidden text-xs font-medium text-muted-foreground hover:text-foreground transition-base px-1">
                 Клуби
+              </Link>
+              <Link to="/organizers" className="md:hidden text-xs font-medium text-muted-foreground hover:text-foreground transition-base px-1">
+                Організатори
               </Link>
               <Link to="/features" className="md:hidden text-xs font-medium text-muted-foreground hover:text-foreground transition-base px-1">
                 Опції
