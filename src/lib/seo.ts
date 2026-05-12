@@ -108,6 +108,7 @@ const CAT_DESCS: Record<Lang, Record<EventCategory, string>> = {
     duathlon: "Duathlon races in Ukraine: run + bike + run. Race calendar, online registration, instant results.",
     cycling: "Cycling races in Ukraine — road, gravel, MTB. Online registration, QR tickets, instant results.",
     triathlon: "Triathlon races in Ukraine: swim + bike + run. Sprint, Olympic, full distance. Online registration.",
+    jumps: "Jump events in Ukraine: high jump, long jump and other jumping disciplines. Online registration, QR tickets.",
   },
 };
 
