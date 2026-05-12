@@ -65,11 +65,17 @@ const EventEditor = () => {
   const [distances, setDistances] = useState<DistanceForm[]>([EMPTY_DISTANCE("10")]);
   const [clubOptions, setClubOptions] = useState<{ id: string; name: string; city: string | null }[]>([]);
   const [clubPickerOpen, setClubPickerOpen] = useState(false);
+  const [organizerOptions, setOrganizerOptions] = useState<{ id: string; name: string; city: string | null }[]>([]);
+  const [organizerPickerOpen, setOrganizerPickerOpen] = useState(false);
 
   useEffect(() => {
     (async () => {
-      const { data } = await supabase.from("clubs" as any).select("id,name,city").order("name");
-      setClubOptions((data ?? []) as any);
+      const [{ data: clubs }, { data: orgs }] = await Promise.all([
+        supabase.from("clubs" as any).select("id,name,city").order("name"),
+        supabase.from("organizers" as any).select("id,name,city").order("name"),
+      ]);
+      setClubOptions((clubs ?? []) as any);
+      setOrganizerOptions((orgs ?? []) as any);
     })();
   }, []);
 
