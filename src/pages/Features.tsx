@@ -157,6 +157,7 @@ const Features = () => {
         { icon: ImageIcon, title: "Profile photo", desc: "Upload an avatar — it shows up in chats and participant lists." },
         { icon: Building2, title: "Club membership", desc: "Pick your running club — it appears in results and lists." },
         { icon: Activity, title: "Connect Strava 🆕", desc: "Link your Strava account from the profile in one click (OAuth). Required to auto-credit virtual race results. Disconnect anytime." },
+        { icon: Sparkles, title: "Become an organizer 🆕", desc: "Signed up via Google or Apple as a participant but want to create events? One click in your profile grants you the organizer role and unlocks event, club and public-profile creation." },
       ],
     },
   ];
