@@ -75,6 +75,7 @@ export const Header = () => {
                   <>
                     <DropdownMenuItem asChild><Link to="/organizer"><LayoutDashboard className="h-4 w-4" />{t.nav.dashboard}</Link></DropdownMenuItem>
                     <DropdownMenuItem asChild><Link to="/clubs/edit"><Users className="h-4 w-4" />Профіль клубу</Link></DropdownMenuItem>
+                    <DropdownMenuItem asChild><Link to="/organizers/edit"><Users className="h-4 w-4" />Профіль організатора</Link></DropdownMenuItem>
                   </>
                 )}
                 {isAdmin && (
