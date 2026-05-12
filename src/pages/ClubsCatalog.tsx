@@ -26,11 +26,11 @@ const ClubsCatalog = () => {
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 
   const T = lang === "uk" ? {
-    title: "Клуби", subtitle: "Бігові клуби України", search: "Пошук за назвою",
+    title: "Клуби", subtitle: "Спортивні клуби України", search: "Пошук за назвою",
     allCities: "Усі міста", allActivities: "Усі види", empty: "Клуби не знайдено",
     members: "учасників", noLogo: "🏃", loadMore: "Завантажити ще",
   } : {
-    title: "Clubs", subtitle: "Running clubs of Ukraine", search: "Search by name",
+    title: "Clubs", subtitle: "Sports clubs of Ukraine", search: "Search by name",
     allCities: "All cities", allActivities: "All types", empty: "No clubs found",
     members: "members", noLogo: "🏃", loadMore: "Load more",
   };
@@ -63,10 +63,10 @@ const ClubsCatalog = () => {
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <SEO
-        title={lang === "uk" ? "Бігові клуби України — Fartlek Events" : "Running clubs of Ukraine — Fartlek Events"}
+        title={lang === "uk" ? "Спортивні клуби України — Fartlek Events" : "Sports clubs of Ukraine — Fartlek Events"}
         description={lang === "uk"
-          ? "Найкращі бігові клуби у місті Київ, Харків, Дніпро, Одеса, Львів, Кривий Ріг, Вінниця, Тернопіль та інші."
-          : "Best running clubs in Kyiv, Kharkiv, Dnipro, Odesa, Lviv, Kryvyi Rih, Vinnytsia, Ternopil and other cities of Ukraine."}
+          ? "Спортивні клуби України: біг, трейл, плавання, велоспорт, триатлон, OCR — Київ, Харків, Дніпро, Одеса, Львів та інші міста."
+          : "Sports clubs of Ukraine: running, trail, swimming, cycling, triathlon, OCR — Kyiv, Kharkiv, Dnipro, Odesa, Lviv and other cities."}
         canonical="/clubs"
       />
       <Header />
