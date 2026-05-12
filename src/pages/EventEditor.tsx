@@ -65,11 +65,17 @@ const EventEditor = () => {
   const [distances, setDistances] = useState<DistanceForm[]>([EMPTY_DISTANCE("10")]);
   const [clubOptions, setClubOptions] = useState<{ id: string; name: string; city: string | null }[]>([]);
   const [clubPickerOpen, setClubPickerOpen] = useState(false);
+  const [organizerOptions, setOrganizerOptions] = useState<{ id: string; name: string; city: string | null }[]>([]);
+  const [organizerPickerOpen, setOrganizerPickerOpen] = useState(false);
 
   useEffect(() => {
     (async () => {
-      const { data } = await supabase.from("clubs" as any).select("id,name,city").order("name");
-      setClubOptions((data ?? []) as any);
+      const [{ data: clubs }, { data: orgs }] = await Promise.all([
+        supabase.from("clubs" as any).select("id,name,city").order("name"),
+        supabase.from("organizers" as any).select("id,name,city").order("name"),
+      ]);
+      setClubOptions((clubs ?? []) as any);
+      setOrganizerOptions((orgs ?? []) as any);
     })();
   }, []);
 
@@ -411,6 +417,38 @@ const EventEditor = () => {
                   value={form.organizer_name}
                   onChange={(e) => setForm({ ...form, organizer_name: e.target.value })}
                 />
+                <Popover open={organizerPickerOpen} onOpenChange={setOrganizerPickerOpen}>
+                  <PopoverTrigger asChild>
+                    <Button type="button" variant="outline" className="shrink-0">
+                      <ChevronsUpDown className="h-4 w-4" />
+                      {lang === "uk" ? "З організаторів" : "From organizers"}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-[320px] p-0" align="end">
+                    <Command>
+                      <CommandInput placeholder={lang === "uk" ? "Пошук організатора..." : "Search organizer..."} />
+                      <CommandList>
+                        <CommandEmpty>{lang === "uk" ? "Не знайдено" : "Not found"}</CommandEmpty>
+                        <CommandGroup>
+                          {organizerOptions.map((o) => (
+                            <CommandItem
+                              key={o.id}
+                              value={`${o.name} ${o.city ?? ""}`}
+                              onSelect={() => {
+                                setForm((f) => ({ ...f, organizer_name: o.name }));
+                                setOrganizerPickerOpen(false);
+                              }}
+                            >
+                              <Check className={cn("h-4 w-4", form.organizer_name === o.name ? "opacity-100" : "opacity-0")} />
+                              <span className="truncate">{o.name}</span>
+                              {o.city && <span className="ml-auto text-xs text-muted-foreground">{o.city}</span>}
+                            </CommandItem>
+                          ))}
+                        </CommandGroup>
+                      </CommandList>
+                    </Command>
+                  </PopoverContent>
+                </Popover>
                 <Popover open={clubPickerOpen} onOpenChange={setClubPickerOpen}>
                   <PopoverTrigger asChild>
                     <Button type="button" variant="outline" className="shrink-0">
@@ -446,8 +484,8 @@ const EventEditor = () => {
               </div>
               <p className="text-xs text-muted-foreground">
                 {lang === "uk"
-                  ? "Можна ввести вручну або вибрати клуб з каталогу."
-                  : "Type a name or pick a club from the catalog."}
+                  ? "Можна ввести вручну або вибрати організатора чи клуб з каталогу."
+                  : "Type a name or pick an organizer or club from the catalog."}
               </p>
             </div>
             <div className="grid sm:grid-cols-2 gap-4">
