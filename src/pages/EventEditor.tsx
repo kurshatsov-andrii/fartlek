@@ -417,6 +417,38 @@ const EventEditor = () => {
                   value={form.organizer_name}
                   onChange={(e) => setForm({ ...form, organizer_name: e.target.value })}
                 />
+                <Popover open={organizerPickerOpen} onOpenChange={setOrganizerPickerOpen}>
+                  <PopoverTrigger asChild>
+                    <Button type="button" variant="outline" className="shrink-0">
+                      <ChevronsUpDown className="h-4 w-4" />
+                      {lang === "uk" ? "З організаторів" : "From organizers"}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-[320px] p-0" align="end">
+                    <Command>
+                      <CommandInput placeholder={lang === "uk" ? "Пошук організатора..." : "Search organizer..."} />
+                      <CommandList>
+                        <CommandEmpty>{lang === "uk" ? "Не знайдено" : "Not found"}</CommandEmpty>
+                        <CommandGroup>
+                          {organizerOptions.map((o) => (
+                            <CommandItem
+                              key={o.id}
+                              value={`${o.name} ${o.city ?? ""}`}
+                              onSelect={() => {
+                                setForm((f) => ({ ...f, organizer_name: o.name }));
+                                setOrganizerPickerOpen(false);
+                              }}
+                            >
+                              <Check className={cn("h-4 w-4", form.organizer_name === o.name ? "opacity-100" : "opacity-0")} />
+                              <span className="truncate">{o.name}</span>
+                              {o.city && <span className="ml-auto text-xs text-muted-foreground">{o.city}</span>}
+                            </CommandItem>
+                          ))}
+                        </CommandGroup>
+                      </CommandList>
+                    </Command>
+                  </PopoverContent>
+                </Popover>
                 <Popover open={clubPickerOpen} onOpenChange={setClubPickerOpen}>
                   <PopoverTrigger asChild>
                     <Button type="button" variant="outline" className="shrink-0">
@@ -452,8 +484,8 @@ const EventEditor = () => {
               </div>
               <p className="text-xs text-muted-foreground">
                 {lang === "uk"
-                  ? "Можна ввести вручну або вибрати клуб з каталогу."
-                  : "Type a name or pick a club from the catalog."}
+                  ? "Можна ввести вручну або вибрати організатора чи клуб з каталогу."
+                  : "Type a name or pick an organizer or club from the catalog."}
               </p>
             </div>
             <div className="grid sm:grid-cols-2 gap-4">
