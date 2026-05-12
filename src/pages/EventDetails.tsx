@@ -540,7 +540,7 @@ const EventDetails = () => {
                   </div>
                 )}
 
-                <div className="space-y-2">
+                <div className={`space-y-2 ${event.category === "jumps" ? "hidden" : ""}`}>
                   {distances.map((d) => (
                     <button
                       key={d.id}
