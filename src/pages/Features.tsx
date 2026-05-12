@@ -115,6 +115,8 @@ const Features = () => {
         { icon: CheckCircle2, title: "Register yourself or a child", desc: "One account — multiple athlete profiles. Register yourself, children or family." },
         { icon: CreditCard, title: "Online payments", desc: "Secure WayForPay payments via Visa/Mastercard, Apple Pay, Google Pay." },
         { icon: Calendar, title: "Upcoming events calendar", desc: "Dedicated page with every upcoming race in Ukraine — both from the platform and added by admins or organizers. Filters by category, month, search and sorting." },
+        { icon: Building2, title: "Clubs catalog", desc: "All running clubs in Ukraine on a single page — search by city and activity, view club profile with events and contacts." },
+        { icon: Megaphone, title: "Organizers catalog 🆕", desc: "A dedicated page with all event organizers — logo, city, description, social links and active events. Easily find a trusted organizer or contact them directly." },
       ],
     },
     {
