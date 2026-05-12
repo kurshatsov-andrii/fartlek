@@ -17,7 +17,19 @@ import { Navigate, useNavigate, useSearchParams } from "react-router-dom";
 
 const Profile = () => {
   const { t } = useApp();
-  const { user, loading: authLoading } = useAuth();
+  const { user, loading: authLoading, isOrganizer } = useAuth();
+  const [becomingOrganizer, setBecomingOrganizer] = useState(false);
+
+  const becomeOrganizer = async () => {
+    setBecomingOrganizer(true);
+    const { error } = await supabase.rpc("become_organizer");
+    setBecomingOrganizer(false);
+    if (error) {
+      toast.error("Не вдалося оновити роль: " + error.message);
+      return;
+    }
+    toast.success("Тепер ви Організатор! Створюйте події та клуби.");
+  };
   const navigate = useNavigate();
   const [params] = useSearchParams();
   const redirectTo = params.get("redirect");
