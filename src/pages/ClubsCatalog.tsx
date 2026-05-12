@@ -26,11 +26,11 @@ const ClubsCatalog = () => {
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 
   const T = lang === "uk" ? {
-    title: "Клуби", subtitle: "Бігові клуби України", search: "Пошук за назвою",
+    title: "Клуби", subtitle: "Спортивні клуби України", search: "Пошук за назвою",
     allCities: "Усі міста", allActivities: "Усі види", empty: "Клуби не знайдено",
     members: "учасників", noLogo: "🏃", loadMore: "Завантажити ще",
   } : {
-    title: "Clubs", subtitle: "Running clubs of Ukraine", search: "Search by name",
+    title: "Clubs", subtitle: "Sports clubs of Ukraine", search: "Search by name",
     allCities: "All cities", allActivities: "All types", empty: "No clubs found",
     members: "members", noLogo: "🏃", loadMore: "Load more",
   };
