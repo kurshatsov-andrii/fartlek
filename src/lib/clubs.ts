@@ -2,6 +2,11 @@ export const CLUB_ACTIVITY_TYPES = [
   "road_run",
   "trail",
   "ocr",
+  "triathlon",
+  "duathlon",
+  "aquathlon",
+  "cycling",
+  "swimming",
 ] as const;
 
 export type ClubActivityType = (typeof CLUB_ACTIVITY_TYPES)[number];
@@ -11,11 +16,21 @@ export const CLUB_ACTIVITY_LABELS: Record<"uk" | "en", Record<ClubActivityType, 
     road_run: "Біг по асфальту",
     trail: "Трейл",
     ocr: "OCR",
+    triathlon: "Триатлон",
+    duathlon: "Дуатлон",
+    aquathlon: "Акватлон",
+    cycling: "Велоспорт",
+    swimming: "Плавання",
   },
   en: {
     road_run: "Road running",
     trail: "Trail",
     ocr: "OCR",
+    triathlon: "Triathlon",
+    duathlon: "Duathlon",
+    aquathlon: "Aquathlon",
+    cycling: "Cycling",
+    swimming: "Swimming",
   },
 };
 
