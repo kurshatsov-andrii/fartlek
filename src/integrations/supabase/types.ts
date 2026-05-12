@@ -1726,6 +1726,7 @@ export type Database = {
         }[]
       }
       are_changes_allowed: { Args: { _event_id: string }; Returns: boolean }
+      become_organizer: { Args: never; Returns: undefined }
       can_manage_event: {
         Args: { _event_id: string; _user_id: string }
         Returns: boolean

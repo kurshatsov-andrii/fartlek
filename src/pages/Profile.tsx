@@ -17,7 +17,19 @@ import { Navigate, useNavigate, useSearchParams } from "react-router-dom";
 
 const Profile = () => {
   const { t } = useApp();
-  const { user, loading: authLoading } = useAuth();
+  const { user, loading: authLoading, isOrganizer } = useAuth();
+  const [becomingOrganizer, setBecomingOrganizer] = useState(false);
+
+  const becomeOrganizer = async () => {
+    setBecomingOrganizer(true);
+    const { error } = await supabase.rpc("become_organizer");
+    setBecomingOrganizer(false);
+    if (error) {
+      toast.error("Не вдалося оновити роль: " + error.message);
+      return;
+    }
+    toast.success("Тепер ви Організатор! Створюйте події та клуби.");
+  };
   const navigate = useNavigate();
   const [params] = useSearchParams();
   const redirectTo = params.get("redirect");
@@ -372,6 +384,19 @@ const Profile = () => {
             </section>
 
             <StravaConnect userId={user.id} />
+
+            {!isOrganizer && (
+              <section className="mt-10 bg-card p-6 rounded-2xl shadow-card border border-border">
+                <h2 className="font-display text-2xl font-bold">Стати організатором</h2>
+                <p className="text-sm text-muted-foreground mt-2">
+                  Хочете створювати власні події, керувати клубом та учасниками? Перейдіть у режим організатора одним кліком — це безкоштовно.
+                </p>
+                <Button onClick={becomeOrganizer} disabled={becomingOrganizer} className="mt-4">
+                  {becomingOrganizer && <Loader2 className="h-4 w-4 animate-spin" />}
+                  Стати організатором
+                </Button>
+              </section>
+            )}
 
             <AthleteFormDialog
               open={dialogOpen}

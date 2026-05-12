@@ -1,0 +1,1 @@
+REVOKE EXECUTE ON FUNCTION public.become_organizer() FROM PUBLIC, anon;
