@@ -60,6 +60,7 @@ const CAT_TITLES: Record<Lang, Record<EventCategory, string>> = {
     duathlon: "Дуатлон в Україні — реєстрація | Fartlek Events",
     cycling: "Велогонки в Україні — реєстрація онлайн | Fartlek Events",
     triathlon: "Триатлон в Україні — реєстрація онлайн | Fartlek Events",
+    jumps: "Стрибки в Україні — реєстрація онлайн | Fartlek Events",
   },
   en: {
     run: "Road runs in Ukraine — online registration | Fartlek Events",
