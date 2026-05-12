@@ -92,6 +92,12 @@ const EventDetails = () => {
     }
   }, [isRelay, relayLegs, selectedDistance]);
   useEffect(() => { setPromo(null); }, [selectedDistance]);
+  // Auto-select the only available distance (e.g. for "jumps" category or single-distance events)
+  useEffect(() => {
+    if (!selectedDistance && distances.length === 1) {
+      setSelectedDistance(distances[0].id);
+    }
+  }, [distances, selectedDistance]);
   useEffect(() => {
     const dist = distances.find((d) => d.id === selectedDistance);
     if (!dist?.delivery_enabled) setDelivery(emptyDelivery());
