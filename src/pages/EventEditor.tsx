@@ -984,15 +984,16 @@ const EventEditor = () => {
                               <div key={idx} className="flex items-center gap-2">
                                 <span className="text-xs text-muted-foreground w-10">#{idx + 1}</span>
                                 <Input
-                                  type="number"
-                                  step="0.1"
-                                  min="0"
+                                  type="text"
+                                  inputMode="decimal"
+                                  pattern="[0-9]*[.,]?[0-9]*"
                                   placeholder={t.organizer.kmPlaceholder}
                                   value={d.relay_legs[idx] ?? ""}
                                   onChange={(e) => {
+                                    const raw = e.target.value.replace(",", ".").replace(/[^0-9.]/g, "");
                                     const c = [...distances];
                                     const arr = [...c[i].relay_legs];
-                                    arr[idx] = e.target.value;
+                                    arr[idx] = raw;
                                     c[i].relay_legs = arr;
                                     setDistances(c);
                                   }}
