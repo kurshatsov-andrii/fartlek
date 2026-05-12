@@ -385,6 +385,19 @@ const Profile = () => {
 
             <StravaConnect userId={user.id} />
 
+            {!isOrganizer && (
+              <section className="mt-10 bg-card p-6 rounded-2xl shadow-card border border-border">
+                <h2 className="font-display text-2xl font-bold">Стати організатором</h2>
+                <p className="text-sm text-muted-foreground mt-2">
+                  Хочете створювати власні події, керувати клубом та учасниками? Перейдіть у режим організатора одним кліком — це безкоштовно.
+                </p>
+                <Button onClick={becomeOrganizer} disabled={becomingOrganizer} className="mt-4">
+                  {becomingOrganizer && <Loader2 className="h-4 w-4 animate-spin" />}
+                  Стати організатором
+                </Button>
+              </section>
+            )}
+
             <AthleteFormDialog
               open={dialogOpen}
               onOpenChange={setDialogOpen}
