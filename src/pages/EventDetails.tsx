@@ -517,7 +517,9 @@ const EventDetails = () => {
                   <VirtualResultPanel eventId={event.id} userId={user.id} />
                 )}
 
-                <h3 className="font-display text-lg font-bold">{t.events.selectDistance}</h3>
+                {event.category !== "jumps" && (
+                  <h3 className="font-display text-lg font-bold">{t.events.selectDistance}</h3>
+                )}
 
                 {!isRelay && user && athletes.length > 0 && (
                   <div className="space-y-2">
