@@ -61,6 +61,8 @@ export const Hero = () => {
           className="h-full w-full object-cover opacity-40"
           width={1920}
           height={1280}
+          fetchPriority="high"
+          decoding="async"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-secondary/60 via-secondary/40 to-secondary" />
         <div className="absolute inset-0 bg-gradient-to-r from-secondary/90 via-transparent to-transparent" />
