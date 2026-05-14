@@ -72,8 +72,14 @@
 
   <!-- Events -->
   <url>
+    <loc>https://fartlek.lovable.app/events/estafeta-dzherelo-2026-harkiv-2026</loc>
+    <lastmod>2026-05-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://fartlek.lovable.app/events/kharkiv-run-harkiv-2026</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-05-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
