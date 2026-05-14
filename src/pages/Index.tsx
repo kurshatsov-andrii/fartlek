@@ -21,9 +21,30 @@ const Index = () => {
         title: "Fartlek Events — race registration in Ukraine",
         description: "Runs, half marathons, marathons, ultras, trails, OCR and online races across Ukraine. Online registration, QR tickets, instant results.",
       };
+  const jsonLd = [
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      name: "Fartlek Events",
+      url: "https://fartlek.lovable.app/",
+      logo: "https://fartlek.lovable.app/favicon.ico",
+      sameAs: ["https://fartlek.com.ua"],
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      name: "Fartlek Events",
+      url: "https://fartlek.lovable.app/",
+      potentialAction: {
+        "@type": "SearchAction",
+        target: "https://fartlek.lovable.app/calendar?q={search_term_string}",
+        "query-input": "required name=search_term_string",
+      },
+    },
+  ];
   return (
     <div className="min-h-screen flex flex-col bg-background">
-      <SEO title={seo.title} description={seo.description} canonical="/" />
+      <SEO title={seo.title} description={seo.description} canonical="/" jsonLd={jsonLd} />
       <Header />
       <main className="flex-1">
         <Hero />
