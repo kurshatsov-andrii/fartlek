@@ -53,6 +53,7 @@ const EventDetails = () => {
   const [calcOpen, setCalcOpen] = useState(false);
   const [distances, setDistances] = useState<DistanceRow[]>([]);
   const [participantsCount, setParticipantsCount] = useState(0);
+  const [distanceCounts, setDistanceCounts] = useState<Record<string, number>>({});
   const [selectedDistance, setSelectedDistance] = useState<string>("");
   const [registration, setRegistration] = useState<{ id: string; payment_status: string } | null>(null);
   const [loading, setLoading] = useState(true);
