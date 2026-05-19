@@ -696,13 +696,29 @@ const EventDetails = () => {
                   <NovaPoshtaDelivery value={delivery} onChange={setDelivery} />
                 )}
 
-                <Button
-                  onClick={register}
-                  className="w-full"
-                  disabled={busy || !selectedDistance || (!isRelay && !!user && !selectedAthlete) || (!isRelay && isAlreadyRegistered)}
-                >
-                  {busy && <Loader2 className="h-4 w-4 animate-spin" />} {t.events.confirmRegister}
-                </Button>
+                {(() => {
+                  const cap = selectedDist?.max_participants ?? null;
+                  const cnt = selectedDist ? (distanceCounts[selectedDist.id] ?? 0) : 0;
+                  const isFull = cap != null && cnt >= cap;
+                  return (
+                    <>
+                      {isFull && (
+                        <div className="rounded-md border border-destructive/40 bg-destructive/10 text-sm p-3 text-destructive">
+                          {lang === "uk"
+                            ? `Реєстрацію на цю дистанцію закрито: досягнуто ліміту ${cap} учасників.`
+                            : `Registration for this distance is closed: limit of ${cap} participants reached.`}
+                        </div>
+                      )}
+                      <Button
+                        onClick={register}
+                        className="w-full"
+                        disabled={busy || !selectedDistance || (!isRelay && !!user && !selectedAthlete) || (!isRelay && isAlreadyRegistered) || isFull}
+                      >
+                        {busy && <Loader2 className="h-4 w-4 animate-spin" />} {t.events.confirmRegister}
+                      </Button>
+                    </>
+                  );
+                })()}
                 <Button asChild variant="outline" className="w-full">
                   <Link to={`/events/${event.id}/participants`}>
                     <Users className="h-4 w-4" /> {t.events.participants}
