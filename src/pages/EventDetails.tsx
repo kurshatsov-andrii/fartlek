@@ -40,7 +40,7 @@ interface EventRow {
   registration_closed?: boolean;
 }
 interface SegmentRow { sport: string; distance_km: number; order?: number }
-interface DistanceRow { id: string; distance_km: number; name: string | null; price: number; is_active?: boolean; is_relay?: boolean; relay_legs_count?: number | null; relay_categories?: string[] | null; relay_legs?: number[] | null; delivery_enabled?: boolean; segments?: SegmentRow[] | null; discipline?: string | null; obstacle_count?: number | null; }
+interface DistanceRow { id: string; distance_km: number; name: string | null; price: number; is_active?: boolean; is_relay?: boolean; relay_legs_count?: number | null; relay_categories?: string[] | null; relay_legs?: number[] | null; delivery_enabled?: boolean; segments?: SegmentRow[] | null; discipline?: string | null; obstacle_count?: number | null; max_participants?: number | null; }
 
 interface RelayMember { full_name: string; gender: string; }
 
