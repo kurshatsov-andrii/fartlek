@@ -139,6 +139,14 @@ const EventDetails = () => {
       ]);
       setDistances((ds ?? []) as any);
       setParticipantsCount((cnt as number) ?? 0);
+      // Per-distance counts (for capacity display / blocking)
+      const { data: regRows } = await supabase
+        .from("registrations")
+        .select("distance_id")
+        .eq("event_id", ev.id);
+      const counts: Record<string, number> = {};
+      (regRows ?? []).forEach((r: any) => { counts[r.distance_id] = (counts[r.distance_id] ?? 0) + 1; });
+      setDistanceCounts(counts);
       if (ds && ds.length > 0) setSelectedDistance(ds[0].id);
       const { count: promoCnt } = await supabase
         .from("promo_codes")
