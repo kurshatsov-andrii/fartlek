@@ -997,6 +997,19 @@ const EventEditor = () => {
                       <Input type="number" step="1" placeholder="1001" value={d.bib_start}
                         onChange={(e) => { const c = [...distances]; c[i].bib_start = e.target.value; setDistances(c); }} />
                     </div>
+                    <div className="sm:col-span-12 space-y-1">
+                      <Label className="text-xs text-muted-foreground">
+                        {lang === "uk" ? "Ліміт учасників (опційно)" : "Max participants (optional)"}
+                      </Label>
+                      <Input
+                        type="number"
+                        min={1}
+                        step="1"
+                        placeholder={lang === "uk" ? "Напр. 50 — після заповнення реєстрація закриється" : "e.g. 50 — registration closes when reached"}
+                        value={d.max_participants}
+                        onChange={(e) => { const c = [...distances]; c[i].max_participants = e.target.value; setDistances(c); }}
+                      />
+                    </div>
                     <Button type="button" variant="ghost" size="icon" className="hidden sm:inline-flex sm:col-span-1"
                       onClick={() => setDistances(distances.filter((_, k) => k !== i))}>
                       <X className="h-4 w-4" />
