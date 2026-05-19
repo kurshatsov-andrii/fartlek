@@ -367,6 +367,7 @@ const EventEditor = () => {
       name: d.name || null,
       price: parseFloat(d.price) || 0,
       bib_start: d.bib_start ? parseInt(d.bib_start, 10) : null,
+      max_participants: d.max_participants ? parseInt(d.max_participants, 10) : null,
       is_active: true,
       is_relay: d.is_relay,
       relay_legs_count: d.is_relay && d.relay_legs_count ? parseInt(d.relay_legs_count, 10) : null,
