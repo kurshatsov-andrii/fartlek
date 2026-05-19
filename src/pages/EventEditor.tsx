@@ -22,9 +22,9 @@ import { GpxTracksManager } from "@/components/GpxTracksManager";
 import { ResultsApiKeyManager } from "@/components/ResultsApiKeyManager";
 import { DistanceSegmentsEditor, type Segment } from "@/components/DistanceSegmentsEditor";
 
-interface DistanceForm { id?: string; distance_km: string; name: string; price: string; bib_start: string; is_relay: boolean; relay_legs_count: string; relay_categories: string[]; relay_legs: string[]; delivery_enabled: boolean; is_virtual: boolean; virtual_start_date: string; virtual_end_date: string; virtual_start_time: string; virtual_end_time: string; distance_tolerance_percent: string; segments: Segment[]; discipline: string; obstacle_count: string; }
+interface DistanceForm { id?: string; distance_km: string; name: string; price: string; bib_start: string; max_participants: string; is_relay: boolean; relay_legs_count: string; relay_categories: string[]; relay_legs: string[]; delivery_enabled: boolean; is_virtual: boolean; virtual_start_date: string; virtual_end_date: string; virtual_start_time: string; virtual_end_time: string; distance_tolerance_percent: string; segments: Segment[]; discipline: string; obstacle_count: string; }
 
-const EMPTY_DISTANCE = (km = ""): DistanceForm => ({ distance_km: km, name: "", price: "0", bib_start: "", is_relay: false, relay_legs_count: "4", relay_categories: ["mix", "men", "women"], relay_legs: ["", "", "", ""], delivery_enabled: false, is_virtual: false, virtual_start_date: "", virtual_end_date: "", virtual_start_time: "", virtual_end_time: "", distance_tolerance_percent: "5", segments: [], discipline: "", obstacle_count: "" });
+const EMPTY_DISTANCE = (km = ""): DistanceForm => ({ distance_km: km, name: "", price: "0", bib_start: "", max_participants: "", is_relay: false, relay_legs_count: "4", relay_categories: ["mix", "men", "women"], relay_legs: ["", "", "", ""], delivery_enabled: false, is_virtual: false, virtual_start_date: "", virtual_end_date: "", virtual_start_time: "", virtual_end_time: "", distance_tolerance_percent: "5", segments: [], discipline: "", obstacle_count: "" });
 
 const RELAY_CAT_OPTIONS = ["mix", "men", "women"] as const;
 
@@ -127,6 +127,7 @@ const EventEditor = () => {
         name: d.name ?? "",
         price: String(d.price),
         bib_start: d.bib_start != null ? String(d.bib_start) : "",
+        max_participants: d.max_participants != null ? String(d.max_participants) : "",
         is_relay: !!d.is_relay,
         relay_legs_count: d.relay_legs_count != null ? String(d.relay_legs_count) : "4",
         relay_categories: (d.relay_categories ?? ["mix", "men", "women"]) as string[],
@@ -338,6 +339,7 @@ const EventEditor = () => {
         name: d.name || null,
         price: parseFloat(d.price) || 0,
         bib_start: d.bib_start ? parseInt(d.bib_start, 10) : null,
+        max_participants: d.max_participants ? parseInt(d.max_participants, 10) : null,
         is_relay: d.is_relay,
         relay_legs_count: d.is_relay && d.relay_legs_count ? parseInt(d.relay_legs_count, 10) : null,
         relay_categories: d.is_relay && d.relay_categories.length > 0 ? d.relay_categories : ["mix", "men", "women"],
@@ -365,6 +367,7 @@ const EventEditor = () => {
       name: d.name || null,
       price: parseFloat(d.price) || 0,
       bib_start: d.bib_start ? parseInt(d.bib_start, 10) : null,
+      max_participants: d.max_participants ? parseInt(d.max_participants, 10) : null,
       is_active: true,
       is_relay: d.is_relay,
       relay_legs_count: d.is_relay && d.relay_legs_count ? parseInt(d.relay_legs_count, 10) : null,
@@ -993,6 +996,19 @@ const EventEditor = () => {
                       <Label className="sm:hidden text-xs text-muted-foreground">{t.organizer.bibStart}</Label>
                       <Input type="number" step="1" placeholder="1001" value={d.bib_start}
                         onChange={(e) => { const c = [...distances]; c[i].bib_start = e.target.value; setDistances(c); }} />
+                    </div>
+                    <div className="sm:col-span-12 space-y-1">
+                      <Label className="text-xs text-muted-foreground">
+                        {lang === "uk" ? "Ліміт учасників (опційно)" : "Max participants (optional)"}
+                      </Label>
+                      <Input
+                        type="number"
+                        min={1}
+                        step="1"
+                        placeholder={lang === "uk" ? "Напр. 50 — після заповнення реєстрація закриється" : "e.g. 50 — registration closes when reached"}
+                        value={d.max_participants}
+                        onChange={(e) => { const c = [...distances]; c[i].max_participants = e.target.value; setDistances(c); }}
+                      />
                     </div>
                     <Button type="button" variant="ghost" size="icon" className="hidden sm:inline-flex sm:col-span-1"
                       onClick={() => setDistances(distances.filter((_, k) => k !== i))}>

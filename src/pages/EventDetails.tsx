@@ -40,7 +40,7 @@ interface EventRow {
   registration_closed?: boolean;
 }
 interface SegmentRow { sport: string; distance_km: number; order?: number }
-interface DistanceRow { id: string; distance_km: number; name: string | null; price: number; is_active?: boolean; is_relay?: boolean; relay_legs_count?: number | null; relay_categories?: string[] | null; relay_legs?: number[] | null; delivery_enabled?: boolean; segments?: SegmentRow[] | null; discipline?: string | null; obstacle_count?: number | null; }
+interface DistanceRow { id: string; distance_km: number; name: string | null; price: number; is_active?: boolean; is_relay?: boolean; relay_legs_count?: number | null; relay_categories?: string[] | null; relay_legs?: number[] | null; delivery_enabled?: boolean; segments?: SegmentRow[] | null; discipline?: string | null; obstacle_count?: number | null; max_participants?: number | null; }
 
 interface RelayMember { full_name: string; gender: string; }
 
@@ -53,6 +53,7 @@ const EventDetails = () => {
   const [calcOpen, setCalcOpen] = useState(false);
   const [distances, setDistances] = useState<DistanceRow[]>([]);
   const [participantsCount, setParticipantsCount] = useState(0);
+  const [distanceCounts, setDistanceCounts] = useState<Record<string, number>>({});
   const [selectedDistance, setSelectedDistance] = useState<string>("");
   const [registration, setRegistration] = useState<{ id: string; payment_status: string } | null>(null);
   const [loading, setLoading] = useState(true);
@@ -138,6 +139,14 @@ const EventDetails = () => {
       ]);
       setDistances((ds ?? []) as any);
       setParticipantsCount((cnt as number) ?? 0);
+      // Per-distance counts (for capacity display / blocking)
+      const { data: regRows } = await supabase
+        .from("registrations")
+        .select("distance_id")
+        .eq("event_id", ev.id);
+      const counts: Record<string, number> = {};
+      (regRows ?? []).forEach((r: any) => { counts[r.distance_id] = (counts[r.distance_id] ?? 0) + 1; });
+      setDistanceCounts(counts);
       if (ds && ds.length > 0) setSelectedDistance(ds[0].id);
       const { count: promoCnt } = await supabase
         .from("promo_codes")
@@ -541,12 +550,17 @@ const EventDetails = () => {
                 )}
 
                 <div className={`space-y-2 ${event.category === "jumps" ? "hidden" : ""}`}>
-                  {distances.map((d) => (
+                  {distances.map((d) => {
+                    const cap = d.max_participants ?? null;
+                    const cnt = distanceCounts[d.id] ?? 0;
+                    const isFull = cap != null && cnt >= cap;
+                    return (
                     <button
                       key={d.id}
                       type="button"
-                      onClick={() => setSelectedDistance(d.id)}
-                      className={`w-full text-left rounded-md border-2 px-4 py-3 transition-base ${selectedDistance === d.id ? "border-primary bg-primary/10" : "border-border hover:border-primary/40"}`}
+                      onClick={() => { if (!isFull) setSelectedDistance(d.id); }}
+                      disabled={isFull}
+                      className={`w-full text-left rounded-md border-2 px-4 py-3 transition-base ${selectedDistance === d.id ? "border-primary bg-primary/10" : "border-border hover:border-primary/40"} ${isFull ? "opacity-60 cursor-not-allowed" : ""}`}
                     >
                       <div className="flex items-center justify-between">
                         <div className="min-w-0">
@@ -560,6 +574,16 @@ const EventDetails = () => {
                             {d.is_relay && (
                               <span className="text-[10px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded bg-accent text-accent-foreground">
                                 {t.organizer.isRelay} · {d.relay_legs_count ?? "?"}×
+                              </span>
+                            )}
+                            {isFull && (
+                              <span className="text-[10px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded bg-destructive text-destructive-foreground">
+                                {lang === "uk" ? "Заповнено" : "Full"}
+                              </span>
+                            )}
+                            {cap != null && !isFull && (
+                              <span className="text-[10px] font-medium px-1.5 py-0.5 rounded bg-muted text-muted-foreground">
+                                {cnt}/{cap}
                               </span>
                             )}
                           </div>
@@ -585,7 +609,8 @@ const EventDetails = () => {
                         <div className="text-sm font-semibold whitespace-nowrap pl-2">{event.is_paid && d.price > 0 ? `${d.price} ₴` : t.events.free}</div>
                       </div>
                     </button>
-                  ))}
+                    );
+                  })}
                   {distances.length === 0 && <p className="text-sm text-muted-foreground">—</p>}
                 </div>
 
@@ -687,13 +712,29 @@ const EventDetails = () => {
                   <NovaPoshtaDelivery value={delivery} onChange={setDelivery} />
                 )}
 
-                <Button
-                  onClick={register}
-                  className="w-full"
-                  disabled={busy || !selectedDistance || (!isRelay && !!user && !selectedAthlete) || (!isRelay && isAlreadyRegistered)}
-                >
-                  {busy && <Loader2 className="h-4 w-4 animate-spin" />} {t.events.confirmRegister}
-                </Button>
+                {(() => {
+                  const cap = selectedDist?.max_participants ?? null;
+                  const cnt = selectedDist ? (distanceCounts[selectedDist.id] ?? 0) : 0;
+                  const isFull = cap != null && cnt >= cap;
+                  return (
+                    <>
+                      {isFull && (
+                        <div className="rounded-md border border-destructive/40 bg-destructive/10 text-sm p-3 text-destructive">
+                          {lang === "uk"
+                            ? `Реєстрацію на цю дистанцію закрито: досягнуто ліміту ${cap} учасників.`
+                            : `Registration for this distance is closed: limit of ${cap} participants reached.`}
+                        </div>
+                      )}
+                      <Button
+                        onClick={register}
+                        className="w-full"
+                        disabled={busy || !selectedDistance || (!isRelay && !!user && !selectedAthlete) || (!isRelay && isAlreadyRegistered) || isFull}
+                      >
+                        {busy && <Loader2 className="h-4 w-4 animate-spin" />} {t.events.confirmRegister}
+                      </Button>
+                    </>
+                  );
+                })()}
                 <Button asChild variant="outline" className="w-full">
                   <Link to={`/events/${event.id}/participants`}>
                     <Users className="h-4 w-4" /> {t.events.participants}
