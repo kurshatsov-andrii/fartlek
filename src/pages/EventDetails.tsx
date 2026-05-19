@@ -550,12 +550,17 @@ const EventDetails = () => {
                 )}
 
                 <div className={`space-y-2 ${event.category === "jumps" ? "hidden" : ""}`}>
-                  {distances.map((d) => (
+                  {distances.map((d) => {
+                    const cap = d.max_participants ?? null;
+                    const cnt = distanceCounts[d.id] ?? 0;
+                    const isFull = cap != null && cnt >= cap;
+                    return (
                     <button
                       key={d.id}
                       type="button"
-                      onClick={() => setSelectedDistance(d.id)}
-                      className={`w-full text-left rounded-md border-2 px-4 py-3 transition-base ${selectedDistance === d.id ? "border-primary bg-primary/10" : "border-border hover:border-primary/40"}`}
+                      onClick={() => { if (!isFull) setSelectedDistance(d.id); }}
+                      disabled={isFull}
+                      className={`w-full text-left rounded-md border-2 px-4 py-3 transition-base ${selectedDistance === d.id ? "border-primary bg-primary/10" : "border-border hover:border-primary/40"} ${isFull ? "opacity-60 cursor-not-allowed" : ""}`}
                     >
                       <div className="flex items-center justify-between">
                         <div className="min-w-0">
@@ -569,6 +574,16 @@ const EventDetails = () => {
                             {d.is_relay && (
                               <span className="text-[10px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded bg-accent text-accent-foreground">
                                 {t.organizer.isRelay} · {d.relay_legs_count ?? "?"}×
+                              </span>
+                            )}
+                            {isFull && (
+                              <span className="text-[10px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded bg-destructive text-destructive-foreground">
+                                {lang === "uk" ? "Заповнено" : "Full"}
+                              </span>
+                            )}
+                            {cap != null && !isFull && (
+                              <span className="text-[10px] font-medium px-1.5 py-0.5 rounded bg-muted text-muted-foreground">
+                                {cnt}/{cap}
                               </span>
                             )}
                           </div>
@@ -594,7 +609,8 @@ const EventDetails = () => {
                         <div className="text-sm font-semibold whitespace-nowrap pl-2">{event.is_paid && d.price > 0 ? `${d.price} ₴` : t.events.free}</div>
                       </div>
                     </button>
-                  ))}
+                    );
+                  })}
                   {distances.length === 0 && <p className="text-sm text-muted-foreground">—</p>}
                 </div>
 
