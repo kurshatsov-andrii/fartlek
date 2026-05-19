@@ -127,6 +127,7 @@ const EventEditor = () => {
         name: d.name ?? "",
         price: String(d.price),
         bib_start: d.bib_start != null ? String(d.bib_start) : "",
+        max_participants: d.max_participants != null ? String(d.max_participants) : "",
         is_relay: !!d.is_relay,
         relay_legs_count: d.relay_legs_count != null ? String(d.relay_legs_count) : "4",
         relay_categories: (d.relay_categories ?? ["mix", "men", "women"]) as string[],
