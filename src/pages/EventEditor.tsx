@@ -339,6 +339,7 @@ const EventEditor = () => {
         name: d.name || null,
         price: parseFloat(d.price) || 0,
         bib_start: d.bib_start ? parseInt(d.bib_start, 10) : null,
+        max_participants: d.max_participants ? parseInt(d.max_participants, 10) : null,
         is_relay: d.is_relay,
         relay_legs_count: d.is_relay && d.relay_legs_count ? parseInt(d.relay_legs_count, 10) : null,
         relay_categories: d.is_relay && d.relay_categories.length > 0 ? d.relay_categories : ["mix", "men", "women"],
