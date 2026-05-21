@@ -1,5 +1,5 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { LogOut, User, LayoutDashboard, Ticket, Shield, Mail, Users, Sparkles, Star } from "lucide-react";
+import { LogOut, User, LayoutDashboard, Ticket, Shield, Mail, Users, Sparkles, Star, Menu, Calendar as CalendarIcon } from "lucide-react";
 import logoFartlek from "@/assets/logo-fartlek.jpg";
 import { Button } from "@/components/ui/button";
 import { useApp } from "@/contexts/AppContext";
@@ -92,27 +92,26 @@ export const Header = () => {
             </DropdownMenu>
           ) : (
             <>
-              <a href="/#events" onClick={handleEventsClick} className="md:hidden text-xs font-medium text-muted-foreground hover:text-foreground transition-base px-1 cursor-pointer">
-                {t.nav.events}
-              </a>
-              <Link to="/calendar" className="md:hidden text-xs font-medium text-muted-foreground hover:text-foreground transition-base px-1">
-                Календар
-              </Link>
-              <Link to="/clubs" className="md:hidden text-xs font-medium text-muted-foreground hover:text-foreground transition-base px-1">
-                Клуби
-              </Link>
-              <Link to="/organizers" className="md:hidden text-xs font-medium text-muted-foreground hover:text-foreground transition-base px-1">
-                Організатори
-              </Link>
-              <Link to="/features" className="md:hidden text-xs font-medium text-muted-foreground hover:text-foreground transition-base px-1">
-                Опції
-              </Link>
-              <Link to="/contacts" className="md:hidden text-xs font-medium text-muted-foreground hover:text-foreground transition-base px-1">
-                {t.nav.contacts}
-              </Link>
-              <Button asChild size="sm" className="ml-2 hidden sm:inline-flex">
+              <Button asChild size="sm" className="hidden sm:inline-flex">
                 <Link to="/auth">{t.nav.login}</Link>
               </Button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild className="md:hidden">
+                  <Button variant="ghost" size="icon" className="h-9 w-9">
+                    <Menu className="h-5 w-5" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-52">
+                  <DropdownMenuItem asChild><a href="/#events" onClick={handleEventsClick}><Ticket className="h-4 w-4" />{t.nav.events}</a></DropdownMenuItem>
+                  <DropdownMenuItem asChild><Link to="/calendar"><CalendarIcon className="h-4 w-4" />Календар</Link></DropdownMenuItem>
+                  <DropdownMenuItem asChild><Link to="/clubs"><Users className="h-4 w-4" />Клуби</Link></DropdownMenuItem>
+                  <DropdownMenuItem asChild><Link to="/organizers"><Users className="h-4 w-4" />Організатори</Link></DropdownMenuItem>
+                  <DropdownMenuItem asChild><Link to="/features"><Sparkles className="h-4 w-4" />Можливості</Link></DropdownMenuItem>
+                  <DropdownMenuItem asChild><Link to="/contacts"><Mail className="h-4 w-4" />{t.nav.contacts}</Link></DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild><Link to="/auth"><User className="h-4 w-4" />{t.nav.login}</Link></DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </>
           )}
         </div>
