@@ -130,7 +130,7 @@ export const translations: Record<Lang, Dict> = {
       subtitle: "Fartlek Events — платформа реєстрації на забіги, трейли та змагання по всій Україні. QR-стартові пакети, миттєві результати, зручні протоколи.",
       ctaParticipant: "Вхід для учасників",
       ctaOrganizer: "Вхід для організаторів",
-      stats: { events: "Подій", runners: "Бігунів", cities: "Міст", clubs: "Клубів", organizers: "Організаторів", registrations: "Реєстрацій" },
+      stats: { events: "Подій", runners: "СПОРТСМЕНІВ", cities: "Міст", clubs: "Клубів", organizers: "Організаторів", registrations: "Реєстрацій" },
     },
     events: {
       heading: "Найближчі події", sub: "Обери свій старт. Реєструйся за хвилину.",
