@@ -139,21 +139,14 @@ const EventDetails = () => {
       ]);
       setDistances((ds ?? []) as any);
       setParticipantsCount((cnt as number) ?? 0);
-      // Per-distance counts (for capacity display / blocking)
-      const { data: regRows } = await supabase
-        .from("registrations")
-        .select("distance_id")
-        .eq("event_id", ev.id);
+      // Per-distance counts (for capacity display / blocking) — aggregated, no personal data
+      const { data: regRows } = await supabase.rpc("get_event_distance_counts", { _event_id: ev.id });
       const counts: Record<string, number> = {};
-      (regRows ?? []).forEach((r: any) => { counts[r.distance_id] = (counts[r.distance_id] ?? 0) + 1; });
+      (regRows ?? []).forEach((r: any) => { counts[r.distance_id] = Number(r.cnt) || 0; });
       setDistanceCounts(counts);
       if (ds && ds.length > 0) setSelectedDistance(ds[0].id);
-      const { count: promoCnt } = await supabase
-        .from("promo_codes")
-        .select("id", { count: "exact", head: true })
-        .eq("event_id", ev.id)
-        .eq("is_active", true);
-      setHasPromoCodes((promoCnt ?? 0) > 0);
+      const { data: hasPromo } = await supabase.rpc("event_has_active_promo_codes", { _event_id: ev.id });
+      setHasPromoCodes(!!hasPromo);
       if (ev.organizer_name) {
         const [{ data: club }, { data: org }] = await Promise.all([
           supabase.from("clubs").select("slug").ilike("name", ev.organizer_name.trim()).not("slug", "is", null).maybeSingle(),
