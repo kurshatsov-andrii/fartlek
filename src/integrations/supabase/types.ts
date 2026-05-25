@@ -1814,6 +1814,10 @@ export type Database = {
         Args: { payload: Json; queue_name: string }
         Returns: number
       }
+      event_has_active_promo_codes: {
+        Args: { _event_id: string }
+        Returns: boolean
+      }
       generate_event_results_api_key: {
         Args: { _event_id: string }
         Returns: string
@@ -1825,6 +1829,13 @@ export type Database = {
           email: string
           full_name: string
           id: string
+        }[]
+      }
+      get_event_distance_counts: {
+        Args: { _event_id: string }
+        Returns: {
+          cnt: number
+          distance_id: string
         }[]
       }
       get_event_participants: {
