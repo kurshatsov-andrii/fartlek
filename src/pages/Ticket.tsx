@@ -93,12 +93,8 @@ const Ticket = () => {
           promo_code_id: red.promo_code_id,
           code: (red as any).promo_codes?.code,
         });
-        const { count: promoCnt } = await supabase
-          .from("promo_codes")
-          .select("id", { count: "exact", head: true })
-          .eq("event_id", (reg as any).event_id)
-          .eq("is_active", true);
-        setHasPromoCodes((promoCnt ?? 0) > 0);
+        const { data: hasPromo } = await supabase.rpc("event_has_active_promo_codes", { _event_id: (reg as any).event_id });
+        setHasPromoCodes(!!hasPromo);
       }
       setLoading(false);
     })();
