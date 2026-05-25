@@ -248,7 +248,7 @@ export const translations: Record<Lang, Dict> = {
       fillAllMembers: "Заповни дані всіх учасників команди",
       legsCountMismatch: "Кількість учасників має дорівнювати кількості етапів",
     },
-    footer: { tagline: "Створено для бігунів і організаторів.", rights: "Усі права захищено." },
+    footer: { tagline: "Створено для спортсменів і організаторів.", rights: "Усі права захищено." },
     common: { backHome: "На головну", loading: "Завантаження...", required: "Обов'язкове поле", error: "Сталася помилка" },
     categories: {
       label: "Категорія", all: "Всі",
