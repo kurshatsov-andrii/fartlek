@@ -27,6 +27,15 @@ Deno.serve(async (req) => {
       throw new Error('Missing required env vars');
     }
 
+    // Auth: only allow Supabase webhook / service-role callers
+    const authHeader = req.headers.get('Authorization');
+    if (!authHeader || authHeader !== `Bearer ${SERVICE_KEY}`) {
+      return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+        status: 401,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
     const body = await req.json();
     const userId: string | undefined = body?.user_id;
     if (!userId) {
