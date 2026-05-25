@@ -737,6 +737,27 @@ export type Database = {
         }
         Relationships: []
       }
+      event_results_api_keys: {
+        Row: {
+          api_key: string
+          created_at: string
+          event_id: string
+          updated_at: string
+        }
+        Insert: {
+          api_key: string
+          created_at?: string
+          event_id: string
+          updated_at?: string
+        }
+        Update: {
+          api_key?: string
+          created_at?: string
+          event_id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       events: {
         Row: {
           category: Database["public"]["Enums"]["event_category"]
@@ -757,7 +778,6 @@ export type Database = {
           photos_url: string | null
           registration_closed: boolean
           regulations_pdf_url: string | null
-          results_api_key: string | null
           results_pdf_url: string | null
           results_url: string | null
           slug: string | null
@@ -784,7 +804,6 @@ export type Database = {
           photos_url?: string | null
           registration_closed?: boolean
           regulations_pdf_url?: string | null
-          results_api_key?: string | null
           results_pdf_url?: string | null
           results_url?: string | null
           slug?: string | null
@@ -811,7 +830,6 @@ export type Database = {
           photos_url?: string | null
           registration_closed?: boolean
           regulations_pdf_url?: string | null
-          results_api_key?: string | null
           results_pdf_url?: string | null
           results_url?: string | null
           slug?: string | null

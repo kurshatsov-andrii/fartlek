@@ -74,14 +74,14 @@ Deno.serve(async (req) => {
 
     if (apiKey) {
       const { data: ev, error: ee } = await admin
-        .from("events").select("id").eq("results_api_key", apiKey).maybeSingle();
+        .from("event_results_api_keys").select("event_id").eq("api_key", apiKey).maybeSingle();
       if (ee) throw ee;
-      if (!ev || (body.event_id && body.event_id !== ev.id)) {
+      if (!ev || (body.event_id && body.event_id !== ev.event_id)) {
         return new Response(JSON.stringify({ error: "Invalid API key" }), {
           status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
-      eventId = ev.id as string;
+      eventId = ev.event_id as string;
     } else {
       const authHeader = req.headers.get("Authorization");
       if (!authHeader || !body.event_id) {
