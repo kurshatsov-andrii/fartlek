@@ -136,6 +136,18 @@ const MyEvents = () => {
                     <Button asChild variant="outline">
                       <Link to={`/ticket/${r.id}`}><QrCode className="h-4 w-4" /> {t.events.viewTicket}</Link>
                     </Button>
+                    <ConsentDialog
+                      registrationId={r.id}
+                      eventId={r.event_id}
+                      eventTitle={r.events.title}
+                      eventDate={r.events.event_date}
+                      eventLocation={r.events.location}
+                      participantName={r.athletes?.full_name || profile?.full_name || user.email || ""}
+                      participantBirthDate={r.athletes?.birth_date || profile?.birth_date}
+                      participantCity={r.athletes?.city || profile?.city}
+                      participantEmail={profile?.email || user.email}
+                      participantPhone={profile?.phone}
+                    />
                   </div>
                 </div>
               );
