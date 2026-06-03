@@ -102,7 +102,7 @@ export const BibCard = ({ eventTitle, fullName, club, bibNumber, distance, qrUrl
           </Button>
         )}
       </DialogTrigger>
-      <DialogContent className="max-w-2xl">
+      <DialogContent className="max-w-4xl">
         <DialogHeader>
           <DialogTitle>
             {lang === "uk" ? "Стартовий номер" : "Start bib"}
