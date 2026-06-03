@@ -1,0 +1,1 @@
+UPDATE public.registrations SET payment_status='paid' WHERE id='c38b50c4-da45-44e3-9076-0fc70dd06f37';
