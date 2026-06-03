@@ -17,6 +17,7 @@ const MyEvents = () => {
   const { t, lang } = useApp();
   const { user, loading: authLoading } = useAuth();
   const [regs, setRegs] = useState<any[]>([]);
+  const [profile, setProfile] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
   const [docDialog, setDocDialog] = useState<{ url: string; title: string } | null>(null);
   const [transferOpen, setTransferOpen] = useState(false);
@@ -26,10 +27,12 @@ const MyEvents = () => {
   const reload = () => {
     if (!user) return;
     supabase.from("registrations")
-      .select("*, events(*), distances(*), athletes(full_name, is_self)")
+      .select("*, events(*), distances(*), athletes(full_name, is_self, birth_date, city)")
       .eq("user_id", user.id)
       .order("created_at", { ascending: false })
       .then(({ data }) => { setRegs(data ?? []); setLoading(false); });
+    supabase.from("profiles").select("*").eq("id", user.id).maybeSingle()
+      .then(({ data }) => setProfile(data));
   };
 
   const acceptTransfer = async () => {
