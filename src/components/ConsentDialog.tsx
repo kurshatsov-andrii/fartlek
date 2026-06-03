@@ -80,14 +80,16 @@ export const ConsentDialog = ({
   const docRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!open || !user) return;
-    setLoading(true);
+    if (!user) return;
+    let cancelled = false;
+    if (open) setLoading(true);
     supabase
       .from("participant_consents")
       .select("*")
       .eq("registration_id", registrationId)
       .maybeSingle()
       .then(({ data }) => {
+        if (cancelled) return;
         setConsent(data as ConsentRow | null);
         if (data) {
           setEmName(data.emergency_contact_name ?? "");
@@ -95,7 +97,11 @@ export const ConsentDialog = ({
         }
         setLoading(false);
       });
+    return () => {
+      cancelled = true;
+    };
   }, [open, registrationId, user]);
+
 
   const sign = async () => {
     if (!user || !agreed) return;
