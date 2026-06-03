@@ -110,6 +110,64 @@ export const BibCard = ({ eventTitle, fullName, club, bibNumber, distance, qrUrl
         </DialogHeader>
 
         <div className="overflow-auto max-h-[60vh] flex justify-center bg-muted/30 p-3 rounded-md">
+          {(() => {
+            const tpl = CUSTOM_BIB_TEMPLATES.find((t) => t.match.test(eventTitle));
+            if (tpl) {
+              return (
+                <div
+                  ref={ref}
+                  style={{
+                    width: tpl.width,
+                    height: tpl.height,
+                    position: "relative",
+                    backgroundImage: `url(${tpl.bg})`,
+                    backgroundSize: "100% 100%",
+                    backgroundRepeat: "no-repeat",
+                    fontFamily: "Arial, Helvetica, sans-serif",
+                    color: "#ffffff",
+                    boxSizing: "border-box",
+                  }}
+                >
+                  <div
+                    style={{
+                      position: "absolute",
+                      left: 0,
+                      right: 0,
+                      top: "38%",
+                      textAlign: "center",
+                      fontSize: 230,
+                      fontWeight: 900,
+                      lineHeight: 1,
+                      letterSpacing: -8,
+                      color: "#ffffff",
+                      transform: "translateY(-50%)",
+                    }}
+                  >
+                    {safeBib}
+                  </div>
+                  {fullName && (
+                    <div
+                      style={{
+                        position: "absolute",
+                        left: "22%",
+                        right: "22%",
+                        bottom: "9%",
+                        textAlign: "center",
+                        fontSize: 32,
+                        fontWeight: 700,
+                        color: "#ffffff",
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                      }}
+                    >
+                      {fullName}
+                    </div>
+                  )}
+                </div>
+              );
+            }
+            return (
           <div
             ref={ref}
             style={{
@@ -238,6 +296,8 @@ export const BibCard = ({ eventTitle, fullName, club, bibNumber, distance, qrUrl
               </div>
             </div>
           </div>
+            );
+          })()}
         </div>
 
         <div className="flex flex-col sm:flex-row gap-2 pt-2">
