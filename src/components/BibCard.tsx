@@ -153,14 +153,16 @@ export const BibCard = ({ eventTitle, fullName, club, bibNumber, distance, qrUrl
                         position: "absolute",
                         left: "22%",
                         right: "22%",
-                        bottom: "9%",
+                        bottom: "16%",
                         textAlign: "center",
-                        fontSize: 32,
+                        fontSize: 30,
+                        lineHeight: 1.2,
                         fontWeight: 700,
                         color: "#ffffff",
                         whiteSpace: "nowrap",
                         overflow: "hidden",
                         textOverflow: "ellipsis",
+                        padding: "4px 0",
                       }}
                     >
                       {fullName}
