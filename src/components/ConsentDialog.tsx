@@ -270,7 +270,36 @@ export const ConsentDialog = ({
             )}
 
             {/* Document preview (also used for PDF render) */}
-            <div className="border rounded-md overflow-hidden bg-white">
+            <div className="border rounded-md bg-white overflow-hidden">
+              <div
+                style={{
+                  width: "100%",
+                  overflow: "hidden",
+                }}
+              >
+                <div
+                  style={{
+                    width: 794,
+                    transform: "scale(var(--doc-scale, 1))",
+                    transformOrigin: "top left",
+                    height: "auto",
+                  }}
+                  ref={(el) => {
+                    if (!el) return;
+                    const parent = el.parentElement;
+                    if (!parent) return;
+                    const apply = () => {
+                      const pw = parent.clientWidth;
+                      const s = Math.min(1, pw / 794);
+                      el.style.setProperty("--doc-scale", String(s));
+                      el.style.height = `${el.firstElementChild ? (el.firstElementChild as HTMLElement).offsetHeight * s : 0}px`;
+                    };
+                    apply();
+                    const ro = new ResizeObserver(apply);
+                    ro.observe(parent);
+                    if (el.firstElementChild) ro.observe(el.firstElementChild);
+                  }}
+                >
               <div
                 ref={docRef}
                 style={{
@@ -281,7 +310,6 @@ export const ConsentDialog = ({
                   fontFamily: "Arial, Helvetica, sans-serif",
                   fontSize: 12,
                   lineHeight: 1.5,
-                  margin: "0 auto",
                   boxSizing: "border-box",
                 }}
               >
