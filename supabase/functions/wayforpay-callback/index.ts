@@ -32,40 +32,47 @@ Deno.serve(async (req) => {
     const {
       merchantAccount, orderReference, amount, currency,
       authCode, cardPan, transactionStatus, reasonCode, merchantSignature,
+      email,
     } = payload;
 
     if (!orderReference) {
       return new Response("missing orderReference", { status: 400, headers: corsHeaders });
     }
 
-    // Знаходимо order та через нього — реєстрацію та подію
+    // 1) Спробуй знайти order, створений нашою інтеграцією (через wayforpay-create)
     const { data: order } = await supabase
       .from("wayforpay_orders")
       .select("*, registrations(event_id)")
       .eq("order_reference", orderReference)
       .maybeSingle();
 
-    if (!order) {
-      console.error("Order not found:", orderReference);
-      return new Response("order not found", { status: 404, headers: corsHeaders });
+    let SECRET: string | null = null;
+    let registrationId: string | null = null;
+    let isFallbackButton = false;
+
+    if (order) {
+      // @ts-ignore embedded
+      const eventId = order.registrations?.event_id;
+      if (!eventId) return new Response("event not found", { status: 404, headers: corsHeaders });
+
+      const { data: settings } = await supabase
+        .from("event_payment_settings")
+        .select("wayforpay_secret_key")
+        .eq("event_id", eventId)
+        .maybeSingle();
+
+      SECRET = settings?.wayforpay_secret_key ?? null;
+      registrationId = order.registration_id;
+    } else {
+      // 2) Fallback — статична «Кнопка WayForPay»: orderReference нам незнайомий.
+      // Перевіряємо підпис глобальним мерчант-секретом проекту і шукаємо
+      // pending-реєстрацію за email платника + сумою.
+      isFallbackButton = true;
+      SECRET = Deno.env.get("WAYFORPAY_SECRET_KEY") ?? null;
     }
 
-    // @ts-ignore embedded
-    const eventId = order.registrations?.event_id;
-    if (!eventId) {
-      return new Response("event not found", { status: 404, headers: corsHeaders });
-    }
-
-    // Беремо секрет цього організатора
-    const { data: settings } = await supabase
-      .from("event_payment_settings")
-      .select("wayforpay_secret_key")
-      .eq("event_id", eventId)
-      .maybeSingle();
-
-    const SECRET = settings?.wayforpay_secret_key;
     if (!SECRET) {
-      console.error("No secret configured for event", eventId);
+      console.error("No secret available to verify signature");
       return new Response("merchant not configured", { status: 400, headers: corsHeaders });
     }
 
@@ -75,20 +82,64 @@ Deno.serve(async (req) => {
     ]);
 
     if (expected !== merchantSignature) {
-      console.error("Signature mismatch", { expected, got: merchantSignature });
+      console.error("Signature mismatch", { expected, got: merchantSignature, isFallbackButton });
       return new Response("invalid signature", { status: 400, headers: corsHeaders });
     }
 
-    const newStatus = transactionStatus === "Approved" ? "paid" : "declined";
-    await supabase.from("wayforpay_orders").update({
-      status: newStatus,
-      raw_callback: payload,
-    }).eq("id", order.id);
+    const approved = transactionStatus === "Approved";
 
-    if (transactionStatus === "Approved") {
+    if (isFallbackButton && approved && email) {
+      // Знайти користувача по email і pending-реєстрацію з ціною = сумі платежу
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("id")
+        .ilike("email", String(email).trim())
+        .maybeSingle();
+
+      if (profile) {
+        const { data: candidates } = await supabase
+          .from("registrations")
+          .select("id, event_id, distance_id, created_at, distances(price)")
+          .eq("user_id", profile.id)
+          .eq("payment_status", "pending")
+          .order("created_at", { ascending: false })
+          .limit(20);
+
+        const amt = Number(amount);
+        const match = (candidates ?? []).find((r: any) => {
+          const price = Number(r.distances?.price ?? -1);
+          return Math.abs(price - amt) < 0.01;
+        }) ?? (candidates ?? [])[0]; // якщо точного збігу нема — найновіша pending
+
+        if (match) {
+          registrationId = match.id;
+          // Створюємо запис в wayforpay_orders для трасування і запобігання дублів
+          await supabase.from("wayforpay_orders").insert({
+            order_reference: orderReference,
+            registration_id: match.id,
+            user_id: profile.id,
+            amount: amt,
+            currency,
+            status: "paid",
+            raw_callback: payload,
+          });
+        } else {
+          console.error("Fallback: no pending registration for", email, amount);
+        }
+      } else {
+        console.error("Fallback: profile not found for email", email);
+      }
+    } else if (order) {
+      await supabase.from("wayforpay_orders").update({
+        status: approved ? "paid" : "declined",
+        raw_callback: payload,
+      }).eq("id", order.id);
+    }
+
+    if (approved && registrationId) {
       await supabase.from("registrations").update({
         payment_status: "paid",
-      }).eq("id", order.registration_id);
+      }).eq("id", registrationId);
     }
 
     const time = Math.floor(Date.now() / 1000);
