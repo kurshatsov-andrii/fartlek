@@ -67,7 +67,7 @@ const ClubDetails = () => {
       // Contacts visible only to authenticated users (RLS / column grants)
       const { data: contacts } = await supabase.from("clubs" as any)
         .select("contact_email,contact_phone").eq("id", (data as any).id).maybeSingle();
-      setClub({ ...(data as any), ...(contacts ?? {}) } as any);
+      setClub({ ...(data as any), ...((contacts as any) ?? {}) } as any);
       setLoading(false);
     })();
   }, [slug]);
