@@ -172,7 +172,7 @@ Deno.serve(async (req) => {
     }
 
     const time = Math.floor(Date.now() / 1000);
-    const responseSig = sign(SECRET, [orderReference, "accept", time]);
+    const responseSig = sign(SECRET ?? "", [orderReference, "accept", time]);
 
     return new Response(JSON.stringify({
       orderReference,
