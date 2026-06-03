@@ -37,7 +37,7 @@ const ClubsCatalog = () => {
 
   useEffect(() => {
     (async () => {
-      const { data } = await supabase.from("clubs" as any).select("*").order("name");
+      const { data } = await supabase.from("clubs" as any).select("id,owner_id,name,slug,logo_url,city,description,activity_types,website_url,facebook_url,instagram_url,telegram_url,strava_url,youtube_url,founded_year,members_count,training_location,training_schedule,created_at,updated_at").order("name");
       setClubs((data ?? []) as any);
       setLoading(false);
     })();
