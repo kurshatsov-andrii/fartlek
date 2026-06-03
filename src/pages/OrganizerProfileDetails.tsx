@@ -51,16 +51,12 @@ const OrganizerProfileDetails = () => {
   useEffect(() => {
     if (!slug) return;
     (async () => {
-      const safeCols = "id,owner_id,name,slug,logo_url,city,description,activity_types,website_url,facebook_url,instagram_url,telegram_url,strava_url,youtube_url,founded_year,members_count,training_location,training_schedule,created_at,updated_at";
-      let { data } = await supabase.from("organizers" as any).select(safeCols).eq("slug", slug).maybeSingle();
+      let { data } = await supabase.from("organizers" as any).select("*").eq("slug", slug).maybeSingle();
       if (!data) {
-        const r = await supabase.from("organizers" as any).select(safeCols).eq("id", slug).maybeSingle();
+        const r = await supabase.from("organizers" as any).select("*").eq("id", slug).maybeSingle();
         data = r.data;
       }
-      if (!data) { setNotFound(true); setLoading(false); return; }
-      const { data: contacts } = await supabase.from("organizers" as any)
-        .select("contact_email,contact_phone").eq("id", (data as any).id).maybeSingle();
-      setOrg({ ...(data as any), ...((contacts as any) ?? {}) } as any);
+      if (!data) setNotFound(true); else setOrg(data as any);
       setLoading(false);
     })();
   }, [slug]);
