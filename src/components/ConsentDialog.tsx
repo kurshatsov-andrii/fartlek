@@ -225,6 +225,7 @@ export const ConsentDialog = ({
       }
       pdf.save(`consent-${participantName.replace(/\s+/g, "_")}.pdf`);
     } finally {
+      document.body.removeChild(holder);
       setDownloading(false);
     }
   };
