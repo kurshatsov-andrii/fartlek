@@ -15,7 +15,7 @@ import { useApp } from "@/contexts/AppContext";
 import kharkivHalfMarathonBg from "@/assets/kharkiv-half-marathon-bib-blank.png";
 
 const CUSTOM_BIB_TEMPLATES: { match: RegExp; bg: string; width: number; height: number }[] = [
-  { match: /kharkiv\s*half\s*marathon/i, bg: kharkivHalfMarathonBg, width: 792, height: 528 },
+  { match: /kharkiv\s*half\s*marathon/i, bg: kharkivHalfMarathonBg, width: 948, height: 636 },
 ];
 
 type Props = {
