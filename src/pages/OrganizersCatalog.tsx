@@ -38,7 +38,7 @@ const OrganizersCatalog = () => {
 
   useEffect(() => {
     (async () => {
-      const { data } = await supabase.from("organizers" as any).select("*").order("name");
+      const { data } = await supabase.from("organizers" as any).select("id,owner_id,name,slug,logo_url,city,description,activity_types,website_url,facebook_url,instagram_url,telegram_url,strava_url,youtube_url,founded_year,members_count,training_location,training_schedule,created_at,updated_at").order("name");
       setOrganizers((data ?? []) as any);
       setLoading(false);
     })();
