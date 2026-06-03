@@ -157,11 +157,25 @@ export const ConsentDialog = ({
   const downloadPdf = async () => {
     if (!docRef.current) return;
     setDownloading(true);
+    // Render off-screen at full size to avoid CSS transform/scale artifacts
+    // (the on-screen preview is scaled down, which makes html2canvas overlap glyphs).
+    const clone = docRef.current.cloneNode(true) as HTMLElement;
+    const holder = document.createElement("div");
+    holder.style.position = "fixed";
+    holder.style.left = "-10000px";
+    holder.style.top = "0";
+    holder.style.width = "794px";
+    holder.style.background = "#ffffff";
+    clone.style.transform = "none";
+    clone.style.width = "794px";
+    holder.appendChild(clone);
+    document.body.appendChild(holder);
     try {
-      const canvas = await html2canvas(docRef.current, {
+      const canvas = await html2canvas(clone, {
         scale: 2,
         backgroundColor: "#ffffff",
         useCORS: true,
+        windowWidth: 794,
       });
       const pdf = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
       const pageW = 210;
