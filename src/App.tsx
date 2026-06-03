@@ -90,7 +90,9 @@ const App = () => (
               <Route path="/organizer/events/:id/campaign" element={<OrganizerEventCampaign />} />
               <Route path="/organizer/events/:id" element={<EventEditor />} />
               <Route path="/payment/success" element={<PaymentSuccess />} />
+              <Route path="/payment-success" element={<PaymentSuccess />} />
               <Route path="/payment/fail" element={<PaymentFail />} />
+              <Route path="/payment-fail" element={<PaymentFail />} />
               <Route path="/admin" element={<Admin />} />
               <Route path="/admin/campaigns" element={<AdminCampaigns />} />
               <Route path="/admin/unsubscribes" element={<AdminUnsubscribes />} />
