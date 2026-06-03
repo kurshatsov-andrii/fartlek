@@ -15,7 +15,7 @@ import { useApp } from "@/contexts/AppContext";
 import kharkivHalfMarathonBg from "@/assets/kharkiv-half-marathon-bib-blank.png";
 
 const CUSTOM_BIB_TEMPLATES: { match: RegExp; bg: string; width: number; height: number }[] = [
-  { match: /kharkiv\s*half\s*marathon/i, bg: kharkivHalfMarathonBg, width: 792, height: 528 },
+  { match: /kharkiv\s*half\s*marathon/i, bg: kharkivHalfMarathonBg, width: 948, height: 636 },
 ];
 
 type Props = {
@@ -102,7 +102,7 @@ export const BibCard = ({ eventTitle, fullName, club, bibNumber, distance, qrUrl
           </Button>
         )}
       </DialogTrigger>
-      <DialogContent className="max-w-2xl">
+      <DialogContent className="max-w-4xl">
         <DialogHeader>
           <DialogTitle>
             {lang === "uk" ? "Стартовий номер" : "Start bib"}
@@ -121,8 +121,10 @@ export const BibCard = ({ eventTitle, fullName, club, bibNumber, distance, qrUrl
                     height: tpl.height,
                     position: "relative",
                     backgroundImage: `url(${tpl.bg})`,
-                    backgroundSize: "100% 100%",
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
                     backgroundRepeat: "no-repeat",
+                    flexShrink: 0,
                     fontFamily: "Arial, Helvetica, sans-serif",
                     color: "#ffffff",
                     boxSizing: "border-box",
