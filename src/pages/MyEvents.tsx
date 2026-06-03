@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { DocumentDialog } from "@/components/DocumentDialog";
+import { ConsentDialog } from "@/components/ConsentDialog";
 import { useApp } from "@/contexts/AppContext";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
@@ -16,6 +17,7 @@ const MyEvents = () => {
   const { t, lang } = useApp();
   const { user, loading: authLoading } = useAuth();
   const [regs, setRegs] = useState<any[]>([]);
+  const [profile, setProfile] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
   const [docDialog, setDocDialog] = useState<{ url: string; title: string } | null>(null);
   const [transferOpen, setTransferOpen] = useState(false);
@@ -25,10 +27,12 @@ const MyEvents = () => {
   const reload = () => {
     if (!user) return;
     supabase.from("registrations")
-      .select("*, events(*), distances(*), athletes(full_name, is_self)")
+      .select("*, events(*), distances(*), athletes(full_name, is_self, birth_date, city)")
       .eq("user_id", user.id)
       .order("created_at", { ascending: false })
       .then(({ data }) => { setRegs(data ?? []); setLoading(false); });
+    supabase.from("profiles").select("*").eq("id", user.id).maybeSingle()
+      .then(({ data }) => setProfile(data));
   };
 
   const acceptTransfer = async () => {
@@ -132,6 +136,18 @@ const MyEvents = () => {
                     <Button asChild variant="outline">
                       <Link to={`/ticket/${r.id}`}><QrCode className="h-4 w-4" /> {t.events.viewTicket}</Link>
                     </Button>
+                    <ConsentDialog
+                      registrationId={r.id}
+                      eventId={r.event_id}
+                      eventTitle={r.events.title}
+                      eventDate={r.events.event_date}
+                      eventLocation={r.events.location}
+                      participantName={r.athletes?.full_name || profile?.full_name || user.email || ""}
+                      participantBirthDate={r.athletes?.birth_date || profile?.birth_date}
+                      participantCity={r.athletes?.city || profile?.city}
+                      participantEmail={profile?.email || user.email}
+                      participantPhone={profile?.phone}
+                    />
                   </div>
                 </div>
               );

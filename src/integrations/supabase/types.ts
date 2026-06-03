@@ -1040,6 +1040,75 @@ export type Database = {
         }
         Relationships: []
       }
+      participant_consents: {
+        Row: {
+          birth_date: string | null
+          city: string | null
+          consent_version: string
+          created_at: string
+          email: string | null
+          emergency_contact_name: string | null
+          emergency_contact_phone: string | null
+          event_date: string
+          event_id: string
+          event_location: string | null
+          event_title: string
+          full_name: string
+          id: string
+          phone: string | null
+          registration_id: string
+          signed_at: string
+          signed_ip: string | null
+          signed_user_agent: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          birth_date?: string | null
+          city?: string | null
+          consent_version?: string
+          created_at?: string
+          email?: string | null
+          emergency_contact_name?: string | null
+          emergency_contact_phone?: string | null
+          event_date: string
+          event_id: string
+          event_location?: string | null
+          event_title: string
+          full_name: string
+          id?: string
+          phone?: string | null
+          registration_id: string
+          signed_at?: string
+          signed_ip?: string | null
+          signed_user_agent?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          birth_date?: string | null
+          city?: string | null
+          consent_version?: string
+          created_at?: string
+          email?: string | null
+          emergency_contact_name?: string | null
+          emergency_contact_phone?: string | null
+          event_date?: string
+          event_id?: string
+          event_location?: string | null
+          event_title?: string
+          full_name?: string
+          id?: string
+          phone?: string | null
+          registration_id?: string
+          signed_at?: string
+          signed_ip?: string | null
+          signed_user_agent?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       payments: {
         Row: {
           amount: number
