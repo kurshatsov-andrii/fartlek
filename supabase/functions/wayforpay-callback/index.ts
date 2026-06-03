@@ -10,6 +10,21 @@ function sign(secret: string, fields: (string | number)[]) {
   return createHmac("md5", secret).update(fields.join(";")).digest("hex");
 }
 
+function uniq(values: string[]) {
+  return [...new Set(values.filter((value) => value !== ""))];
+}
+
+function amountSignatureVariants(amount: unknown) {
+  const raw = String(amount ?? "").trim();
+  const numeric = Number(amount);
+
+  return uniq([
+    raw,
+    Number.isFinite(numeric) ? String(numeric) : "",
+    Number.isFinite(numeric) ? numeric.toFixed(2) : "",
+  ]);
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
 
@@ -76,13 +91,18 @@ Deno.serve(async (req) => {
       return new Response("merchant not configured", { status: 400, headers: corsHeaders });
     }
 
-    const expected = sign(SECRET, [
-      merchantAccount, orderReference, amount, currency,
-      authCode ?? "", cardPan ?? "", transactionStatus, reasonCode,
-    ]);
+    const signatureCandidates = amountSignatureVariants(amount).map((amountValue) => sign(SECRET, [
+      merchantAccount, orderReference, amountValue, currency,
+      authCode ?? "", cardPan ?? "", transactionStatus, reasonCode ?? "",
+    ]));
 
-    if (expected !== merchantSignature) {
-      console.error("Signature mismatch", { expected, got: merchantSignature, isFallbackButton });
+    if (!signatureCandidates.includes(merchantSignature)) {
+      console.error("Signature mismatch", {
+        expected: signatureCandidates[0],
+        variants: signatureCandidates.length,
+        got: merchantSignature,
+        isFallbackButton,
+      });
       return new Response("invalid signature", { status: 400, headers: corsHeaders });
     }
 
