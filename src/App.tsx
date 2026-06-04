@@ -53,6 +53,7 @@ import CalendarPage from "./pages/Calendar.tsx";
 import StravaCallback from "./pages/StravaCallback.tsx";
 import Privacy from "./pages/Privacy.tsx";
 import PublicOffer from "./pages/PublicOffer.tsx";
+import UserAgreement from "./pages/UserAgreement.tsx";
 import { ProfileCompletionGate } from "./components/ProfileCompletionGate";
 import { AdminOnlinePresence } from "./components/AdminOnlinePresence";
 import { SessionTracker } from "./components/SessionTracker";
@@ -116,6 +117,7 @@ const App = () => (
               <Route path="/admin/carousel" element={<AdminCarousel />} />
               <Route path="/privacy" element={<Privacy />} />
               <Route path="/public-offer" element={<PublicOffer />} />
+              <Route path="/user-agreement" element={<UserAgreement />} />
               <Route path="/strava/callback" element={<StravaCallback />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
