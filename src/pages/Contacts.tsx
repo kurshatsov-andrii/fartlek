@@ -33,11 +33,11 @@ const Contacts = () => {
               <div className="font-semibold">info@fartlek.com.ua</div>
             </div>
           </a>
-          <a href="tel:+380664688151" className="flex items-center gap-4 rounded-2xl border border-border bg-card p-5 transition-base hover:border-primary">
+          <a href="tel:+380972520551" className="flex items-center gap-4 rounded-2xl border border-border bg-card p-5 transition-base hover:border-primary">
             <Phone className="h-5 w-5 text-primary" />
             <div>
               <div className="text-xs uppercase tracking-wider text-muted-foreground">{lang === "uk" ? "Телефон" : "Phone"}</div>
-              <div className="font-semibold">+380 66 468 81 51</div>
+              <div className="font-semibold">+38 097 252 05 51</div>
             </div>
           </a>
           <a href="https://t.me/Andres_K" target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 rounded-2xl border border-border bg-card p-5 transition-base hover:border-primary">
@@ -51,7 +51,7 @@ const Contacts = () => {
             <MapPin className="h-5 w-5 text-primary" />
             <div>
               <div className="text-xs uppercase tracking-wider text-muted-foreground">{lang === "uk" ? "Адреса" : "Address"}</div>
-              <div className="font-semibold">{lang === "uk" ? "Україна, Харків — місто-герой" : "Ukraine, Kharkiv — Hero City"}</div>
+              <div className="font-semibold">{lang === "uk" ? "Харків, вул. Власенка 24" : "Kharkiv, Vlasenka St. 24"}</div>
             </div>
           </div>
         </div>
