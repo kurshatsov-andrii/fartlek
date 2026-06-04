@@ -137,7 +137,7 @@ export const translations: Record<Lang, Dict> = {
       details: "Деталі", register: "Реєстрація", free: "Безкоштовно", paid: "Платна участь",
       distances: "Дистанції", organizer: "Організатор", empty: "Поки що немає подій",
       participants: "Учасники", date: "Дата", time: "Час", description: "Опис", location: "Місце",
-      selectDistance: "Обери дистанцію", confirmRegister: "Підтвердити реєстрацію",
+      selectDistance: "Обери дистанцію", confirmRegister: "Підтвердити реєстрацію", payRegistration: "Оплатити реєстрацію",
       alreadyRegistered: "Ти вже зареєстрований", viewTicket: "Переглянути квиток",
       backToEvents: "До списку подій",
       registrationClosedTitle: "Реєстрація закрита",
