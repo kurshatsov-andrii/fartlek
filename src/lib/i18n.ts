@@ -12,7 +12,7 @@ export interface Dict {
     free: string; paid: string; distances: string; organizer: string;
     empty: string; participants: string; date: string; time: string;
     description: string; location: string; selectDistance: string;
-    confirmRegister: string; alreadyRegistered: string; viewTicket: string;
+    confirmRegister: string; payRegistration: string; alreadyRegistered: string; viewTicket: string;
     backToEvents: string;
     registrationClosedTitle: string; registrationClosedHint: string;
     completedHeading: string; completedSub: string; completedEmpty: string;
@@ -137,7 +137,7 @@ export const translations: Record<Lang, Dict> = {
       details: "Деталі", register: "Реєстрація", free: "Безкоштовно", paid: "Платна участь",
       distances: "Дистанції", organizer: "Організатор", empty: "Поки що немає подій",
       participants: "Учасники", date: "Дата", time: "Час", description: "Опис", location: "Місце",
-      selectDistance: "Обери дистанцію", confirmRegister: "Підтвердити реєстрацію",
+      selectDistance: "Обери дистанцію", confirmRegister: "Підтвердити реєстрацію", payRegistration: "Оплатити реєстрацію",
       alreadyRegistered: "Ти вже зареєстрований", viewTicket: "Переглянути квиток",
       backToEvents: "До списку подій",
       registrationClosedTitle: "Реєстрація закрита",
@@ -332,7 +332,7 @@ export const translations: Record<Lang, Dict> = {
       details: "Details", register: "Register", free: "Free", paid: "Paid entry",
       distances: "Distances", organizer: "Organizer", empty: "No events yet",
       participants: "Participants", date: "Date", time: "Time", description: "Description", location: "Location",
-      selectDistance: "Select a distance", confirmRegister: "Confirm registration",
+      selectDistance: "Select a distance", confirmRegister: "Confirm registration", payRegistration: "Pay registration",
       alreadyRegistered: "You're already registered", viewTicket: "View ticket",
       backToEvents: "Back to events",
       registrationClosedTitle: "Registration closed",
