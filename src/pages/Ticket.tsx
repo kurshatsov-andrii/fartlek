@@ -43,62 +43,94 @@ const Ticket = () => {
   const cardRef = useRef<HTMLDivElement>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
-    if (!id || !user) return;
-    (async () => {
-      const { data: reg } = await supabase
-        .from("registrations")
-        .select(`*, events(*), distances(*), athletes(full_name, birth_date, gender, city, club)`)
-        .eq("user_id", user.id)
-        .eq("id", id)
+  const loadRegistration = async (opts: { silent?: boolean } = {}) => {
+    if (!id || !user) return null;
+    if (!opts.silent) setLoading(true);
+    const { data: reg } = await supabase
+      .from("registrations")
+      .select(`*, events(*), distances(*), athletes(full_name, birth_date, gender, city, club)`)
+      .eq("user_id", user.id)
+      .eq("id", id)
+      .maybeSingle();
+    if (reg) {
+      const { data: prof } = await supabase
+        .from("profiles")
+        .select("full_name, email, club")
+        .eq("id", user.id)
         .maybeSingle();
-      if (reg) {
-        const { data: prof } = await supabase
-          .from("profiles")
-          .select("full_name, email, club")
-          .eq("id", user.id)
-          .maybeSingle();
-        setProfileName(prof?.full_name ?? null);
-        setProfileClub((prof as any)?.club ?? null);
-        const ev = (reg as any).events;
-        const dist = (reg as any).distances;
-        const ath = (reg as any).athletes;
-        const displayName = ath?.full_name ?? prof?.full_name;
-        const payload = JSON.stringify({
-          rid: reg.id,
-          bib: reg.bib_number,
-          event: ev?.title,
-          date: ev?.event_date,
-          time: ev?.event_time,
-          location: ev?.location,
-          distance_km: dist?.distance_km,
-          distance_name: dist?.name,
-          status: reg.payment_status,
-          name: displayName,
-          email: prof?.email,
-        });
-        const url = await QRCode.toDataURL(payload, { width: 600, margin: 1, color: { dark: "#0a0a0a", light: "#ffffff" } });
-        setQrUrl(url);
-      }
-      setData(reg);
-      // Load existing redemption (if user already applied a promo)
-      if (reg) {
-        const { data: red } = await supabase
-          .from("promo_code_redemptions")
-          .select("discount_amount, promo_code_id, promo_codes(code)")
-          .eq("registration_id", reg.id)
-          .maybeSingle();
-        if (red) setRedemption({
-          discount_amount: Number(red.discount_amount),
-          promo_code_id: red.promo_code_id,
-          code: (red as any).promo_codes?.code,
-        });
-        const { data: hasPromo } = await supabase.rpc("event_has_active_promo_codes", { _event_id: (reg as any).event_id });
-        setHasPromoCodes(!!hasPromo);
-      }
-      setLoading(false);
-    })();
+      setProfileName(prof?.full_name ?? null);
+      setProfileClub((prof as any)?.club ?? null);
+      const ev = (reg as any).events;
+      const dist = (reg as any).distances;
+      const ath = (reg as any).athletes;
+      const displayName = ath?.full_name ?? prof?.full_name;
+      const payload = JSON.stringify({
+        rid: reg.id,
+        bib: reg.bib_number,
+        event: ev?.title,
+        date: ev?.event_date,
+        time: ev?.event_time,
+        location: ev?.location,
+        distance_km: dist?.distance_km,
+        distance_name: dist?.name,
+        status: reg.payment_status,
+        name: displayName,
+        email: prof?.email,
+      });
+      const url = await QRCode.toDataURL(payload, { width: 600, margin: 1, color: { dark: "#0a0a0a", light: "#ffffff" } });
+      setQrUrl(url);
+
+      const { data: red } = await supabase
+        .from("promo_code_redemptions")
+        .select("discount_amount, promo_code_id, promo_codes(code)")
+        .eq("registration_id", reg.id)
+        .maybeSingle();
+      if (red) setRedemption({
+        discount_amount: Number(red.discount_amount),
+        promo_code_id: red.promo_code_id,
+        code: (red as any).promo_codes?.code,
+      });
+      const { data: hasPromo } = await supabase.rpc("event_has_active_promo_codes", { _event_id: (reg as any).event_id });
+      setHasPromoCodes(!!hasPromo);
+    }
+    setData(reg);
+    if (!opts.silent) setLoading(false);
+    return reg;
+  };
+
+  useEffect(() => {
+    loadRegistration();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, user]);
+
+  // Refresh when tab regains focus — picks up payment status after returning from WFP/LiqPay
+  useEffect(() => {
+    const onFocus = () => { loadRegistration({ silent: true }); };
+    const onVisible = () => { if (document.visibilityState === "visible") loadRegistration({ silent: true }); };
+    window.addEventListener("focus", onFocus);
+    document.addEventListener("visibilitychange", onVisible);
+    return () => {
+      window.removeEventListener("focus", onFocus);
+      document.removeEventListener("visibilitychange", onVisible);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id, user]);
+
+  // Poll while payment is pending — handles slight delay between callback and DB update
+  useEffect(() => {
+    if (!data || data.payment_status !== "pending") return;
+    let attempts = 0;
+    const max = 15;
+    const t = setInterval(async () => {
+      attempts++;
+      const reg = await loadRegistration({ silent: true });
+      if (!reg || reg.payment_status !== "pending" || attempts >= max) {
+        clearInterval(t);
+      }
+    }, 4000);
+    return () => clearInterval(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data?.id, data?.payment_status]);
 
   // Generate a signed URL whenever we have a stored receipt
   useEffect(() => {
