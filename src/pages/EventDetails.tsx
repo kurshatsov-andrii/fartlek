@@ -723,7 +723,7 @@ const EventDetails = () => {
                         className="w-full"
                         disabled={busy || !selectedDistance || (!isRelay && !!user && !selectedAthlete) || (!isRelay && isAlreadyRegistered) || isFull}
                       >
-                        {busy && <Loader2 className="h-4 w-4 animate-spin" />} {t.events.confirmRegister}
+                        {busy && <Loader2 className="h-4 w-4 animate-spin" />} {!!user && !!event.payment_url && event.is_paid && (selectedDist?.price ?? 0) > 0 ? t.events.payRegistration : t.events.confirmRegister}
                       </Button>
                     </>
                   );
