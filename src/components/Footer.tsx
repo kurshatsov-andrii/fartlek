@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { Activity } from "lucide-react";
 import { useApp } from "@/contexts/AppContext";
 
@@ -20,8 +21,12 @@ export const Footer = () => {
           <a href="tel:+380972520551" className="block hover:text-primary transition-colors">+38 097 252 05 51</a>
           <a href="mailto:info@fartlek.com.ua" className="block hover:text-primary transition-colors">info@fartlek.com.ua</a>
         </div>
-        <div className="text-xs text-secondary-foreground/50">
-          © {new Date().getFullYear()} Fartlek. {t.footer.rights}
+        <div className="text-xs text-secondary-foreground/50 flex flex-col gap-1 text-center md:text-right">
+          <div>© {new Date().getFullYear()} Fartlek. {t.footer.rights}</div>
+          <div className="flex gap-3 justify-center md:justify-end">
+            <Link to="/privacy" className="hover:text-primary transition-colors">Політика конфіденційності</Link>
+            <Link to="/public-offer" className="hover:text-primary transition-colors">Публічна оферта</Link>
+          </div>
         </div>
       </div>
     </footer>

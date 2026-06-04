@@ -51,6 +51,8 @@ import AdminCarousel from "./pages/AdminCarousel.tsx";
 import { AdminSeoEditor } from "./components/AdminSeoEditor";
 import CalendarPage from "./pages/Calendar.tsx";
 import StravaCallback from "./pages/StravaCallback.tsx";
+import Privacy from "./pages/Privacy.tsx";
+import PublicOffer from "./pages/PublicOffer.tsx";
 import { ProfileCompletionGate } from "./components/ProfileCompletionGate";
 import { AdminOnlinePresence } from "./components/AdminOnlinePresence";
 import { SessionTracker } from "./components/SessionTracker";
@@ -112,6 +114,8 @@ const App = () => (
               <Route path="/admin/sessions" element={<AdminSessions />} />
               <Route path="/admin/seo" element={<AdminSeo />} />
               <Route path="/admin/carousel" element={<AdminCarousel />} />
+              <Route path="/privacy" element={<Privacy />} />
+              <Route path="/public-offer" element={<PublicOffer />} />
               <Route path="/strava/callback" element={<StravaCallback />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
