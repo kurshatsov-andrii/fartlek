@@ -23,9 +23,10 @@ export const Footer = () => {
         </div>
         <div className="text-xs text-secondary-foreground/50 flex flex-col gap-1 text-center md:text-right">
           <div>© {new Date().getFullYear()} Fartlek. {t.footer.rights}</div>
-          <div className="flex gap-3 justify-center md:justify-end">
+          <div className="flex flex-wrap gap-3 justify-center md:justify-end">
             <Link to="/privacy" className="hover:text-primary transition-colors">Політика конфіденційності</Link>
             <Link to="/public-offer" className="hover:text-primary transition-colors">Публічна оферта</Link>
+            <Link to="/user-agreement" className="hover:text-primary transition-colors">Угода користувача</Link>
           </div>
         </div>
       </div>
