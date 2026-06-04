@@ -66,7 +66,8 @@ export const EventsSection = () => {
     return Math.min(...prices);
   };
 
-  const activeDistances = (ev: EventCard) => ev.distances.filter((d) => d.is_active !== false);
+  const activeDistances = (ev: EventCard) =>
+    ev.distances.filter((d) => d.is_active !== false).slice().sort((a, b) => b.distance_km - a.distance_km);
 
   return (
     <section id="events" className="relative py-24 sm:py-32">
