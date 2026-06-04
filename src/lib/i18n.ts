@@ -12,7 +12,7 @@ export interface Dict {
     free: string; paid: string; distances: string; organizer: string;
     empty: string; participants: string; date: string; time: string;
     description: string; location: string; selectDistance: string;
-    confirmRegister: string; alreadyRegistered: string; viewTicket: string;
+    confirmRegister: string; payRegistration: string; alreadyRegistered: string; viewTicket: string;
     backToEvents: string;
     registrationClosedTitle: string; registrationClosedHint: string;
     completedHeading: string; completedSub: string; completedEmpty: string;
