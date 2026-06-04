@@ -9,8 +9,8 @@ const Contacts = () => {
   const { lang } = useApp();
 
   const seo = lang === "uk"
-    ? { title: "Контакти — Fartlek Events", description: "Зв'яжіться з командою Fartlek Events: email, телефон, Telegram. Україна, Харків." }
-    : { title: "Contacts — Fartlek Events", description: "Get in touch with Fartlek Events: email, phone, Telegram. Ukraine, Kharkiv." };
+    ? { title: "Контакти — Fartlek Events", description: "Зв'яжіться з командою Fartlek Events" }
+    : { title: "Contacts — Fartlek Events", description: "Get in touch with Fartlek Events" };
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
