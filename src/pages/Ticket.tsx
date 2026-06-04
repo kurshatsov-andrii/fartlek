@@ -345,10 +345,9 @@ const Ticket = () => {
             })()}
 
             {(() => {
-              const isWfp = ev.payment_url && /wayforpay/i.test(ev.payment_url);
-              const isLiqPay = ev.payment_url && /liqpay/i.test(ev.payment_url);
-              // WayForPay або LiqPay — через API (автопідтвердження). Інакше — звичайне посилання.
-              if (ev.payment_url && !isWfp && !isLiqPay) {
+              // Якщо організатор задав посилання на оплату (WFP/LiqPay-кнопка або інше) —
+              // відкриваємо його напряму, бо merchant-реквізити для API можуть бути не налаштовані.
+              if (ev.payment_url) {
                 return (
                   <Button asChild className="w-full sm:w-auto" onClick={async () => {
                     if (promo && !redemption) {
@@ -382,13 +381,7 @@ const Ticket = () => {
                         setRedemption({ discount_amount: promo.discount_amount, promo_code_id: promo.promo_id, code: promo.code });
                         setPromo(null);
                       }
-                      if (!ev.payment_url) {
-                        await startAutomatedPaymentCheckout(data.id);
-                      } else if (isLiqPay) {
-                        await startLiqPayCheckout(data.id);
-                      } else {
-                        await startWayForPayCheckout(data.id);
-                      }
+                      await startAutomatedPaymentCheckout(data.id);
                     }
                     catch (e: any) { toast.error(e.message ?? t.common.error); setPayingBusy(false); }
                   }}
@@ -398,6 +391,7 @@ const Ticket = () => {
                 </Button>
               );
             })()}
+
           </div>
         )}
 
