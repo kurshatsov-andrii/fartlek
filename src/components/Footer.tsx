@@ -15,6 +15,11 @@ export const Footer = () => {
             <div className="text-xs text-secondary-foreground/60">{t.footer.tagline}</div>
           </div>
         </div>
+        <div className="text-center text-sm text-secondary-foreground/70 space-y-1">
+          <div className="font-semibold">ФОП КУРШАЦОВ А. І.</div>
+          <div>+38 097 252 05 51</div>
+          <div>info@fartlek.com.ua</div>
+        </div>
         <div className="text-xs text-secondary-foreground/50">
           © {new Date().getFullYear()} Fartlek. {t.footer.rights}
         </div>
