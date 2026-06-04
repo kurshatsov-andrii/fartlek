@@ -38,6 +38,14 @@ const PaymentSuccess = () => {
             : "Статус оновлено. Перевір у розділі «Мої події»."}
         </p>
         {confirming && <Loader2 className="h-5 w-5 animate-spin mx-auto text-muted-foreground" />}
+        <div className="mx-auto max-w-md rounded-2xl border border-primary/30 bg-primary/10 p-4 text-left">
+          <p className="font-semibold text-foreground">
+            ⚠️ Обов'язково підпишіть «Згоду на участь»
+          </p>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Без підписаної згоди ви не зможете взяти участь у заході. Перейдіть у розділ «Мої події» та натисніть кнопку «Згода на участь» біля вашої реєстрації.
+          </p>
+        </div>
         {order && <p className="text-xs text-muted-foreground">Замовлення: {order}</p>}
         <div className="flex gap-3 justify-center">
           <Button asChild><Link to="/my-events">Мої події</Link></Button>
