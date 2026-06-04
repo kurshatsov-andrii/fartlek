@@ -332,7 +332,7 @@ export const translations: Record<Lang, Dict> = {
       details: "Details", register: "Register", free: "Free", paid: "Paid entry",
       distances: "Distances", organizer: "Organizer", empty: "No events yet",
       participants: "Participants", date: "Date", time: "Time", description: "Description", location: "Location",
-      selectDistance: "Select a distance", confirmRegister: "Confirm registration",
+      selectDistance: "Select a distance", confirmRegister: "Confirm registration", payRegistration: "Pay registration",
       alreadyRegistered: "You're already registered", viewTicket: "View ticket",
       backToEvents: "Back to events",
       registrationClosedTitle: "Registration closed",
