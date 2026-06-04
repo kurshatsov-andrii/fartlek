@@ -51,6 +51,8 @@ import AdminCarousel from "./pages/AdminCarousel.tsx";
 import { AdminSeoEditor } from "./components/AdminSeoEditor";
 import CalendarPage from "./pages/Calendar.tsx";
 import StravaCallback from "./pages/StravaCallback.tsx";
+import Privacy from "./pages/Privacy.tsx";
+import PublicOffer from "./pages/PublicOffer.tsx";
 import { ProfileCompletionGate } from "./components/ProfileCompletionGate";
 import { AdminOnlinePresence } from "./components/AdminOnlinePresence";
 import { SessionTracker } from "./components/SessionTracker";
