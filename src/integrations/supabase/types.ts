@@ -1893,6 +1893,10 @@ export type Database = {
         Args: { _event_id: string; _user_id: string }
         Returns: boolean
       }
+      can_manage_event_storage_insert_object: {
+        Args: { _object_name: string; _owner_id: string }
+        Returns: boolean
+      }
       can_manage_event_storage_object: {
         Args: { _object_name: string; _user_id: string }
         Returns: boolean
