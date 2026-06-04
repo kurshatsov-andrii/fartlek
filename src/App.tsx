@@ -114,6 +114,8 @@ const App = () => (
               <Route path="/admin/sessions" element={<AdminSessions />} />
               <Route path="/admin/seo" element={<AdminSeo />} />
               <Route path="/admin/carousel" element={<AdminCarousel />} />
+              <Route path="/privacy" element={<Privacy />} />
+              <Route path="/public-offer" element={<PublicOffer />} />
               <Route path="/strava/callback" element={<StravaCallback />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
