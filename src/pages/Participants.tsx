@@ -435,6 +435,70 @@ const Participants = () => {
     XLSX.writeFile(wb, `${safeTitle}${suffix}.xlsx`);
   };
 
+  const exportChronometry = () => {
+    const source = filteredRows;
+    if (source.length === 0) {
+      toast.info(lang === "uk" ? "Немає даних для експорту" : "No data to export");
+      return;
+    }
+    const fmtDob = (d: any): string => {
+      if (!d) return "";
+      const s = String(d);
+      const m = s.match(/^(\d{4})-(\d{2})-(\d{2})/);
+      if (m) return `${m[3]}.${m[2]}.${m[1]}`;
+      const dt = new Date(s);
+      if (!isNaN(dt.getTime())) {
+        const dd = String(dt.getDate()).padStart(2, "0");
+        const mm = String(dt.getMonth() + 1).padStart(2, "0");
+        return `${dd}.${mm}.${dt.getFullYear()}`;
+      }
+      return "";
+    };
+    const splitName = (full: string): { last: string; first: string } => {
+      const parts = String(full ?? "").trim().split(/\s+/).filter(Boolean);
+      if (parts.length === 0) return { last: "", first: "" };
+      if (parts.length === 1) return { last: parts[0], first: "" };
+      return { last: parts[0], first: parts.slice(1).join(" ") };
+    };
+    const normalizePhone = (p: any): string => {
+      const digits = String(p ?? "").replace(/\D/g, "");
+      if (!digits) return "";
+      return digits.length > 9 ? digits.slice(-9) : digits;
+    };
+    const data = source.map((r: any, idx: number) => {
+      const { last, first } = splitName(r.full_name);
+      const race = r.distance_km != null ? `${Number(r.distance_km)}k` : "";
+      const gender = r.gender === "male" || r.gender === "boy" ? "male"
+        : r.gender === "female" || r.gender === "girl" ? "female"
+        : (r.gender ?? "");
+      return {
+        ExternalID: idx + 1,
+        Race: race,
+        Bib: "",
+        Tag: "",
+        Cnum: r.bib_number ?? "",
+        LastName: last,
+        FirstName: first,
+        Dob: fmtDob(r.birth_date),
+        Gender: gender,
+        Country: "UA",
+        "SMS country code 1": "UA",
+        "SMS language": "UA",
+        City: r.city ?? "",
+        SMSnumber1: normalizePhone(r.phone ?? r.delivery_phone),
+      };
+    });
+    const headers = ["ExternalID","Race","Bib","Tag","Cnum","LastName","FirstName","Dob","Gender","Country","SMS country code 1","SMS language","City","SMSnumber1"];
+    const ws = XLSX.utils.json_to_sheet(data, { header: headers });
+    (ws as any)["!cols"] = headers.map((k) => ({
+      wch: Math.min(28, Math.max(k.length + 2, ...data.map((d: any) => String(d[k] ?? "").length + 2))),
+    }));
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Participants");
+    const safeTitle = (eventTitle || "event").replace(/[\\/:*?"<>|]/g, "_").slice(0, 60);
+    XLSX.writeFile(wb, `${safeTitle}_chronometry.xlsx`);
+  };
+
   if (authLoading) return null;
   if (!user) return <Navigate to={`/auth?redirect=/events/${id}/participants`} replace />;
 
