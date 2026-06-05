@@ -1939,6 +1939,7 @@ export type Database = {
           added_by_email: string
           added_by_name: string
           bib_number: number
+          birth_date: string
           birth_year: number
           city: string
           club: string
