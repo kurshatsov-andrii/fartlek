@@ -539,6 +539,18 @@ const Participants = () => {
                 {lang === "uk" ? "Excel" : "Excel"}
               </Button>
             )}
+            {isOrganizer && rows.length > 0 && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={exportChronometry}
+                className="gap-2"
+                title={lang === "uk" ? "Експорт для системи хронометражу" : "Export for timing system"}
+              >
+                <Download className="h-4 w-4" />
+                {lang === "uk" ? "Хронометраж" : "Chronometry"}
+              </Button>
+            )}
             {isOrganizer && deliveryRows.length > 0 && (
               <Button
                 variant="outline"
