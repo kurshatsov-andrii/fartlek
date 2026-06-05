@@ -47,7 +47,7 @@ Deno.serve(async (req) => {
     const {
       merchantAccount, orderReference, amount, currency,
       authCode, cardPan, transactionStatus, reasonCode, merchantSignature,
-      email,
+      email, phone,
     } = payload;
 
     if (!orderReference) {
