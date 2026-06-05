@@ -296,8 +296,9 @@ const Profile = () => {
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="fn">{t.auth.fullName} <span className="text-destructive">*</span></Label>
-                <Input id="fn" required value={form.full_name} onChange={(e) => setForm({ ...form, full_name: e.target.value })} />
+                <Label htmlFor="fn">Повне ім'я та прізвище <span className="text-destructive">*</span></Label>
+                <Input id="fn" required placeholder="Напр., Андрій Куршацов" value={form.full_name} onChange={(e) => setForm({ ...form, full_name: e.target.value })} />
+                <p className="text-xs text-muted-foreground">Обов'язково вкажіть ім'я та прізвище</p>
               </div>
               <div className="grid sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
