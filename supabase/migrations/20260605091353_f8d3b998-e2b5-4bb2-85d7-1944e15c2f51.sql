@@ -1,0 +1,3 @@
+UPDATE public.registrations SET payment_status='paid' WHERE id='b1a0ca71-a3b2-40a9-8932-c65891f6a91f';
+INSERT INTO public.wayforpay_orders (order_reference, registration_id, user_id, amount, currency, status, raw_callback)
+VALUES ('WFP-MANUAL-CHEREDENKO-' || extract(epoch from now())::bigint, 'b1a0ca71-a3b2-40a9-8932-c65891f6a91f', '6e9ba708-f10d-41fa-8689-eb7eabb9a41a', 500, 'UAH', 'paid', '{"note":"Manual reconcile: WFP callback used different email; matched by phone +380675200111"}'::jsonb);

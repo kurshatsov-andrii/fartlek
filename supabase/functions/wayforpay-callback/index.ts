@@ -47,7 +47,7 @@ Deno.serve(async (req) => {
     const {
       merchantAccount, orderReference, amount, currency,
       authCode, cardPan, transactionStatus, reasonCode, merchantSignature,
-      email,
+      email, phone,
     } = payload;
 
     if (!orderReference) {
@@ -117,13 +117,35 @@ Deno.serve(async (req) => {
 
     const approved = transactionStatus === "Approved";
 
-    if (isFallbackButton && approved && email) {
-      // Знайти користувача по email і pending-реєстрацію з ціною = сумі платежу
-      const { data: profile } = await supabase
-        .from("profiles")
-        .select("id")
-        .ilike("email", String(email).trim())
-        .maybeSingle();
+    if (isFallbackButton && approved && (email || phone)) {
+      // 1) Пробуємо знайти користувача за email
+      let profile: { id: string } | null = null;
+      if (email) {
+        const { data } = await supabase
+          .from("profiles")
+          .select("id")
+          .ilike("email", String(email).trim())
+          .maybeSingle();
+        if (data) profile = data;
+      }
+
+      // 2) Якщо email не співпав — шукаємо за нормалізованим номером телефону
+      //    (плательник міг сплатити через Apple Pay/інший акаунт з іншим email,
+      //    але WFP надсилає phone із форми)
+      if (!profile && phone) {
+        const normalizedPhone = String(phone).replace(/\D/g, "");
+        if (normalizedPhone.length >= 9) {
+          const tail = normalizedPhone.slice(-9); // останні 9 цифр номера
+          const { data: phoneMatches } = await supabase
+            .from("profiles")
+            .select("id, phone");
+          const found = (phoneMatches ?? []).find((p: any) => {
+            const norm = String(p.phone ?? "").replace(/\D/g, "");
+            return norm.length >= 9 && norm.endsWith(tail);
+          });
+          if (found) profile = { id: found.id };
+        }
+      }
 
       if (profile) {
         const { data: candidates } = await supabase
@@ -153,10 +175,10 @@ Deno.serve(async (req) => {
             raw_callback: payload,
           });
         } else {
-          console.error("Fallback: no pending registration for", email, amount);
+          console.error("Fallback: no pending registration for", { email, phone, amount });
         }
       } else {
-        console.error("Fallback: profile not found for email", email);
+        console.error("Fallback: profile not found for", { email, phone });
       }
     } else if (order) {
       await supabase.from("wayforpay_orders").update({
