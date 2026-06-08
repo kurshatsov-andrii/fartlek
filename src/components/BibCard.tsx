@@ -147,24 +147,27 @@ export const BibCard = ({ eventTitle, fullName, club, bibNumber, distance, qrUrl
                   >
                     {safeBib}
                   </div>
-                  {distance && (
-                    <div
-                      style={{
-                        position: "absolute",
-                        left: 0,
-                        right: 0,
-                        top: "70%",
-                        textAlign: "center",
-                        fontSize: 36,
-                        fontWeight: 800,
-                        letterSpacing: 3,
-                        color: "#FFD700",
-                        textTransform: "uppercase",
-                      }}
-                    >
-                      {distance}
-                    </div>
-                  )}
+                  {(() => {
+                    const m = (distance ?? "").match(/(\d+(?:[.,]\d+)?)/);
+                    const km = m ? `${m[1].replace(",", ".")} км` : null;
+                    return km ? (
+                      <div
+                        style={{
+                          position: "absolute",
+                          left: 0,
+                          right: 0,
+                          top: "62%",
+                          textAlign: "center",
+                          fontSize: 40,
+                          fontWeight: 800,
+                          letterSpacing: 2,
+                          color: "#FFD700",
+                        }}
+                      >
+                        {km}
+                      </div>
+                    ) : null;
+                  })()}
                   {fullName && (
                     <div
                       style={{
