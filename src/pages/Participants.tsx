@@ -1028,6 +1028,15 @@ const Participants = () => {
                               </div>
                             </td>
                           )}
+                          {isOrganizer && (
+                            <td className="p-3 text-center">
+                              {consentsMap[r.registration_id] ? (
+                                <CheckCircle2 className="h-5 w-5 text-green-500 inline" />
+                              ) : (
+                                <span className="text-xs text-muted-foreground">—</span>
+                              )}
+                            </td>
+                          )}
                           {hasAnyResult && (
                             <td className="p-3">
                               {resultsMap[r.registration_id] ? (
