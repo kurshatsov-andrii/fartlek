@@ -44,6 +44,7 @@ const Participants = () => {
   const [ttnMap, setTtnMap] = useState<Record<string, { ttn: string; ref: string; cost: number | null; estimated: string | null }>>({});
   const [ttnBusy, setTtnBusy] = useState<string | null>(null);
   const [hasNpSettings, setHasNpSettings] = useState(false);
+  const [consentsMap, setConsentsMap] = useState<Record<string, boolean>>({});
 
   // Filters
   const [fGender, setFGender] = useState<string>("all");
