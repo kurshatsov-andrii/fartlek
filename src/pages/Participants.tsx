@@ -44,6 +44,7 @@ const Participants = () => {
   const [ttnMap, setTtnMap] = useState<Record<string, { ttn: string; ref: string; cost: number | null; estimated: string | null }>>({});
   const [ttnBusy, setTtnBusy] = useState<string | null>(null);
   const [hasNpSettings, setHasNpSettings] = useState(false);
+  const [consentsMap, setConsentsMap] = useState<Record<string, boolean>>({});
 
   // Filters
   const [fGender, setFGender] = useState<string>("all");
@@ -113,6 +114,13 @@ const Participants = () => {
         .eq("event_id", id)
         .maybeSingle();
       setHasNpSettings(!!npSet);
+      const { data: consents } = await supabase
+        .from("participant_consents")
+        .select("registration_id")
+        .eq("event_id", id);
+      const cmap: Record<string, boolean> = {};
+      (consents ?? []).forEach((c: any) => { cmap[c.registration_id] = true; });
+      setConsentsMap(cmap);
     }
     setLoading(false);
   };
@@ -767,6 +775,7 @@ const Participants = () => {
                               {isOrganizer && <th className="p-3 font-semibold">{lang === "uk" ? "Доданий" : "Added by"}</th>}
                               {isPaid && isOrganizer && <th className="p-3 font-semibold text-center">{lang === "uk" ? "Оплата" : "Payment"}</th>}
                               {isPaid && isOrganizer && <th className="p-3 font-semibold text-center">{lang === "uk" ? "Квитанція" : "Receipt"}</th>}
+                              {isOrganizer && <th className="p-3 font-semibold text-center">{lang === "uk" ? "Згода" : "Consent"}</th>}
                               {isOrganizer && <th className="p-3 font-semibold text-center">{lang === "uk" ? "Дії" : "Actions"}</th>}
                             </tr>
                           </thead>
@@ -845,6 +854,15 @@ const Participants = () => {
                                     </td>
                                   )}
                                   {isOrganizer && (
+                                    <td className="p-3 text-center">
+                                      {consentsMap[r.registration_id] ? (
+                                        <CheckCircle2 className="h-5 w-5 text-green-500 inline" />
+                                      ) : (
+                                        <span className="text-xs text-muted-foreground">—</span>
+                                      )}
+                                    </td>
+                                  )}
+                                  {isOrganizer && (
                                     <td className="p-3">
                                       <div className="flex items-center justify-center gap-1">
                                         <Button
@@ -880,6 +898,7 @@ const Participants = () => {
                         {isOrganizer && <th className="p-3 font-semibold">{lang === "uk" ? "Доданий" : "Added by"}</th>}
                         {isPaid && isOrganizer && <th className="p-3 font-semibold text-center">{lang === "uk" ? "Оплата" : "Payment"}</th>}
                         {isPaid && isOrganizer && <th className="p-3 font-semibold text-center">{lang === "uk" ? "Квитанція" : "Receipt"}</th>}
+                        {isOrganizer && <th className="p-3 font-semibold text-center">{lang === "uk" ? "Згода" : "Consent"}</th>}
                         {hasAnyResult && <th className="p-3 font-semibold">{lang === "uk" ? "Результат" : "Result"}</th>}
                         {isOrganizer && <th className="p-3 font-semibold text-center">{lang === "uk" ? "Дії" : "Actions"}</th>}
                       </tr>
@@ -1017,6 +1036,15 @@ const Participants = () => {
                                   </Button>
                                 ) : null}
                               </div>
+                            </td>
+                          )}
+                          {isOrganizer && (
+                            <td className="p-3 text-center">
+                              {consentsMap[r.registration_id] ? (
+                                <CheckCircle2 className="h-5 w-5 text-green-500 inline" />
+                              ) : (
+                                <span className="text-xs text-muted-foreground">—</span>
+                              )}
                             </td>
                           )}
                           {hasAnyResult && (
