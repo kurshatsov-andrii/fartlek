@@ -114,6 +114,13 @@ const Participants = () => {
         .eq("event_id", id)
         .maybeSingle();
       setHasNpSettings(!!npSet);
+      const { data: consents } = await supabase
+        .from("participant_consents")
+        .select("registration_id")
+        .eq("event_id", id);
+      const cmap: Record<string, boolean> = {};
+      (consents ?? []).forEach((c: any) => { cmap[c.registration_id] = true; });
+      setConsentsMap(cmap);
     }
     setLoading(false);
   };
