@@ -865,6 +865,18 @@ const Participants = () => {
                                   {isOrganizer && (
                                     <td className="p-3">
                                       <div className="flex items-center justify-center gap-1">
+                                        <BibCard
+                                          eventTitle={eventTitle}
+                                          fullName={r.team_name}
+                                          club={r.team_category}
+                                          bibNumber={r.bib_number}
+                                          distance={r.distance_km ? `${r.distance_km} ${lang === "uk" ? "км" : "km"}${r.distance_name ? ` · ${r.distance_name}` : ""}` : null}
+                                          trigger={
+                                            <Button size="sm" variant="ghost" title={lang === "uk" ? "Стартовий номер" : "Start bib"}>
+                                              <Hash className="h-4 w-4" />
+                                            </Button>
+                                          }
+                                        />
                                         <Button
                                           size="sm"
                                           variant="ghost"
