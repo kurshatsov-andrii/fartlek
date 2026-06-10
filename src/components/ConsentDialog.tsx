@@ -248,19 +248,25 @@ export const ConsentDialog = ({
     id: "",
   } as ConsentRow);
 
+  const shortName = (participantName || "").trim().split(/\s+/).slice(0, 2).join(" ");
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline">
+        <Button variant="outline" className="max-w-full">
           <FileText className="h-4 w-4" />
-          {lang === "uk" ? "Згода на участь" : "Consent"}
-          {signed && <CheckCircle2 className="h-3.5 w-3.5 text-green-600" />}
+          <span className="truncate">
+            {lang === "uk" ? "Згода" : "Consent"}
+            {shortName ? `: ${shortName}` : ""}
+          </span>
+          {signed && <CheckCircle2 className="h-3.5 w-3.5 text-green-600 shrink-0" />}
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>
-            {lang === "uk" ? "Згода на участь у спортивному заході" : "Event participation consent"}
+            {lang === "uk" ? "Згода на участь" : "Participation consent"}
+            {participantName ? ` — ${participantName}` : ""}
           </DialogTitle>
         </DialogHeader>
 
