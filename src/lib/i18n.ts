@@ -123,7 +123,7 @@ export type EventCategory = typeof EVENT_CATEGORIES[number];
 
 export const translations: Record<Lang, Dict> = {
   uk: {
-    nav: { events: "Події", organizer: "Організаторам", login: "Увійти", signup: "Реєстрація", dashboard: "Панель", profile: "Профіль", logout: "Вийти", myEvents: "Мої події", contacts: "Контакти" },
+    nav: { events: "Події", organizer: "Організаторам", login: "Увійти", signup: "Реєстрація", dashboard: "Додати подію", profile: "Профіль", logout: "Вийти", myEvents: "Мої події", contacts: "Контакти" },
     hero: {
       kicker: "Спортивні події нового покоління",
       title: "Біжи. Реєструйся. Перемагай.",
