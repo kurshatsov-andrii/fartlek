@@ -254,7 +254,7 @@ export const translations: Record<Lang, Dict> = {
       label: "Категорія", all: "Всі",
       run: "Забіги", half_marathon: "Напівмарафони", marathon: "Марафони",
       ultra: "Ультра", trail: "Трейл", ocr: "OCR", online: "Онлайн",
-      swim: "Запливи", aquathlon: "Акватлон", duathlon: "Дуатлон", cycling: "Велогонки", triathlon: "Триатлон", jumps: "Стрибки",
+      swim: "Запливи", aquathlon: "Акватлон", duathlon: "Дуатлон", cycling: "Велогонки", triathlon: "Триатлон", jumps: "Стрибки", cross: "Крос",
     },
     format: {
       label: "Формат проведення",
