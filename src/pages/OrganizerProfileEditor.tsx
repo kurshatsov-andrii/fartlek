@@ -233,11 +233,20 @@ const OrganizerProfileEditor = () => {
       training_location: form.training_location.trim() || null,
       training_schedule: form.training_schedule.trim() || null,
     };
+    if (!organizer) {
+      // Safety net: ensure the current user has the organizer role before insert
+      const { error: roleErr } = await supabase.rpc("become_organizer" as any);
+      if (roleErr) console.warn("become_organizer error:", roleErr);
+    }
     const { error } = organizer
       ? await supabase.from("organizers" as any).update(payload).eq("id", organizer.id)
       : await supabase.from("organizers" as any).insert(payload);
     setBusy(false);
-    if (error) { toast.error(error.message); return; }
+    if (error) {
+      console.error("organizer save error:", error);
+      toast.error(`${error.message}${error.details ? ` — ${error.details}` : ""}`);
+      return;
+    }
     toast.success(T.saved);
     navigate(editId ? "/admin" : "/organizers");
   };
