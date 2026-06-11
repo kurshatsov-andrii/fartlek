@@ -77,6 +77,7 @@ const CAT_TITLES: Record<Lang, Record<EventCategory, string>> = {
     cycling: "Cycling races in Ukraine — online registration | Fartlek Events",
     triathlon: "Triathlon races in Ukraine — online registration | Fartlek Events",
     jumps: "Jump events in Ukraine — online registration | Fartlek Events",
+    cross: "Cross country races in Ukraine — registration | Fartlek Events",
   },
 };
 
