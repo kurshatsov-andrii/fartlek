@@ -2121,6 +2121,7 @@ export type Database = {
         | "cycling"
         | "swimming"
         | "other"
+        | "cross"
       event_category:
         | "run"
         | "half_marathon"
@@ -2278,6 +2279,7 @@ export const Constants = {
         "cycling",
         "swimming",
         "other",
+        "cross",
       ],
       event_category: [
         "run",

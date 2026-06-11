@@ -1,0 +1,1 @@
+ALTER TYPE public.club_activity_type ADD VALUE IF NOT EXISTS 'cross';
