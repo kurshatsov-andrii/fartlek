@@ -73,6 +73,26 @@ const empty = {
   training_location: "", training_schedule: "",
 };
 
+const getImageExtension = (file: File) => {
+  const mimeExt = file.type.split("/")[1]?.split("+")[0]?.toLowerCase();
+  const nameExt = file.name.includes(".")
+    ? file.name.split(".").pop()?.toLowerCase().replace(/[^a-z0-9]/g, "")
+    : "";
+  return (nameExt && nameExt.length <= 5 ? nameExt : mimeExt) || "jpg";
+};
+
+const isImageFile = (file: File) => {
+  const ext = getImageExtension(file);
+  return file.type.startsWith("image/") || ["jpg", "jpeg", "png", "webp", "gif", "svg", "heic", "heif"].includes(ext);
+};
+
+const getImageContentType = (ext: string, fileType: string) => {
+  if (fileType) return fileType;
+  if (ext === "svg") return "image/svg+xml";
+  if (ext === "jpg") return "image/jpeg";
+  return `image/${ext}`;
+};
+
 const ClubEditor = () => {
   const { lang } = useApp();
   const { user, isOrganizer, isAdmin, loading: authLoading } = useAuth();
@@ -180,19 +200,12 @@ const ClubEditor = () => {
 
   const uploadLogo = async (file: File) => {
     if (!user) return;
-    if (!file.type.startsWith("image/") || file.size > 5 * 1024 * 1024) {
+    if (!isImageFile(file) || file.size > 5 * 1024 * 1024) {
       toast.error(T.invalidLogo); return;
     }
     setUploading(true);
     try {
-      // Derive a safe extension from MIME first, fallback to filename
-      const mimeExt = file.type.split("/")[1]?.split("+")[0]?.toLowerCase();
-      const nameExt = file.name.includes(".")
-        ? file.name.split(".").pop()?.toLowerCase().replace(/[^a-z0-9]/g, "")
-        : "";
-      const ext = (nameExt && nameExt.length <= 5 ? nameExt : mimeExt) || "png";
-
-      // Folder MUST be the authenticated user's id (matches RLS policy)
+      const ext = getImageExtension(file);
       const { data: { user: authUser } } = await supabase.auth.getUser();
       if (!authUser) {
         toast.error(lang === "uk" ? "Сесія завершилась, увійдіть знову" : "Session expired, please sign in again");
@@ -204,8 +217,8 @@ const ClubEditor = () => {
       const { error } = await supabase.storage
         .from("club-logos")
         .upload(path, file, {
-          upsert: true,
-          contentType: file.type || `image/${ext}`,
+          upsert: false,
+          contentType: getImageContentType(ext, file.type),
           cacheControl: "3600",
         });
       if (error) {
