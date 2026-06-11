@@ -61,6 +61,7 @@ const CAT_TITLES: Record<Lang, Record<EventCategory, string>> = {
     cycling: "Велогонки в Україні — реєстрація онлайн | Fartlek Events",
     triathlon: "Триатлон в Україні — реєстрація онлайн | Fartlek Events",
     jumps: "Стрибки в Україні — реєстрація онлайн | Fartlek Events",
+    cross: "Крос в Україні — реєстрація онлайн | Fartlek Events",
   },
   en: {
     run: "Road runs in Ukraine — online registration | Fartlek Events",
@@ -76,6 +77,7 @@ const CAT_TITLES: Record<Lang, Record<EventCategory, string>> = {
     cycling: "Cycling races in Ukraine — online registration | Fartlek Events",
     triathlon: "Triathlon races in Ukraine — online registration | Fartlek Events",
     jumps: "Jump events in Ukraine — online registration | Fartlek Events",
+    cross: "Cross country races in Ukraine — registration | Fartlek Events",
   },
 };
 
@@ -94,6 +96,7 @@ const CAT_DESCS: Record<Lang, Record<EventCategory, string>> = {
     cycling: "Велогонки в Україні — шосе, гравій, МТБ. Онлайн-реєстрація, QR-квитки, миттєві результати.",
     triathlon: "Триатлон в Україні: плавання + вело + біг. Спринт, олімпійка, повна дистанція. Онлайн-реєстрація.",
     jumps: "Стрибки в Україні: змагання зі стрибків у висоту, довжину та інші дисципліни. Онлайн-реєстрація, QR-квитки.",
+    cross: "Кросові забіги в Україні — стадіон, парк, пересічена місцевість. Онлайн-реєстрація, QR-квитки, миттєві результати.",
   },
   en: {
     run: "Catalog of road runs in Ukraine. 5K, 10K, 15K. Online registration, QR start packs, instant results.",
@@ -109,6 +112,7 @@ const CAT_DESCS: Record<Lang, Record<EventCategory, string>> = {
     cycling: "Cycling races in Ukraine — road, gravel, MTB. Online registration, QR tickets, instant results.",
     triathlon: "Triathlon races in Ukraine: swim + bike + run. Sprint, Olympic, full distance. Online registration.",
     jumps: "Jump events in Ukraine: high jump, long jump and other jumping disciplines. Online registration, QR tickets.",
+    cross: "Cross country races in Ukraine — stadium, park, off-road. Online registration, QR tickets, instant results.",
   },
 };
 
