@@ -67,6 +67,19 @@ const empty = {
   training_location: "", training_schedule: "",
 };
 
+const getImageExtension = (file: File) => {
+  const mimeExt = file.type.split("/")[1]?.split("+")[0]?.toLowerCase();
+  const nameExt = file.name.includes(".")
+    ? file.name.split(".").pop()?.toLowerCase().replace(/[^a-z0-9]/g, "")
+    : "";
+  return (nameExt && nameExt.length <= 5 ? nameExt : mimeExt) || "jpg";
+};
+
+const isImageFile = (file: File) => {
+  const ext = getImageExtension(file);
+  return file.type.startsWith("image/") || ["jpg", "jpeg", "png", "webp", "gif", "svg", "heic", "heif"].includes(ext);
+};
+
 const OrganizerProfileEditor = () => {
   const { lang } = useApp();
   const { user, isOrganizer, isAdmin, loading: authLoading } = useAuth();
@@ -147,25 +160,22 @@ const OrganizerProfileEditor = () => {
 
   const uploadLogo = async (file: File) => {
     if (!user) return;
-    if (!file.type.startsWith("image/") || file.size > 5 * 1024 * 1024) {
+    if (!isImageFile(file) || file.size > 5 * 1024 * 1024) {
       toast.error(T.invalidLogo); return;
     }
     setUploading(true);
     try {
-      const mimeExt = file.type.split("/")[1]?.split("+")[0]?.toLowerCase();
-      const nameExt = file.name.includes(".")
-        ? file.name.split(".").pop()?.toLowerCase().replace(/[^a-z0-9]/g, "")
-        : "";
-      const ext = (nameExt && nameExt.length <= 5 ? nameExt : mimeExt) || "png";
+      const ext = getImageExtension(file);
       const { data: { user: authUser } } = await supabase.auth.getUser();
       if (!authUser) {
         toast.error(lang === "uk" ? "Сесія завершилась, увійдіть знову" : "Session expired");
         setUploading(false); return;
       }
       const path = `${authUser.id}/logo-${Date.now()}.${ext}`;
+      const contentType = file.type || (ext === "svg" ? "image/svg+xml" : ext === "jpg" ? "image/jpeg" : `image/${ext}`);
       const { error } = await supabase.storage
         .from("organizer-logos")
-        .upload(path, file, { upsert: true, contentType: file.type || `image/${ext}`, cacheControl: "3600" });
+        .upload(path, file, { upsert: false, contentType, cacheControl: "3600" });
       if (error) {
         console.error("organizer-logo upload error:", error);
         toast.error(error.message);
