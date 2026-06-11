@@ -319,7 +319,7 @@ export const translations: Record<Lang, Dict> = {
     },
   },
   en: {
-    nav: { events: "Events", organizer: "For organizers", login: "Sign in", signup: "Sign up", dashboard: "Dashboard", profile: "Profile", logout: "Sign out", myEvents: "My events", contacts: "Contacts" },
+    nav: { events: "Events", organizer: "For organizers", login: "Sign in", signup: "Sign up", dashboard: "Add event", profile: "Profile", logout: "Sign out", myEvents: "My events", contacts: "Contacts" },
     hero: {
       kicker: "Next-generation sports events",
       title: "Run. Register. Conquer.",
