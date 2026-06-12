@@ -38,6 +38,40 @@ const Auth = () => {
     if (!loading && user) navigate(redirectTo, { replace: true });
   }, [user, loading, navigate, redirectTo]);
 
+  // Handle auth callback errors from email confirmation links (hash params)
+  useEffect(() => {
+    const hash = window.location.hash.replace(/^#/, "");
+    if (!hash) return;
+    const params = new URLSearchParams(hash);
+    const errDesc = params.get("error_description");
+    const errCode = params.get("error_code");
+    if (errDesc || errCode) {
+      const message = errCode === "otp_expired" || /expired/i.test(errDesc ?? "")
+        ? "Термін дії посилання сплив. Введіть email і натисніть «Надіслати лист повторно»."
+        : translateAuthError(decodeURIComponent(errDesc ?? errCode ?? ""));
+      toast.error(message, { duration: 10000 });
+      window.history.replaceState(null, "", window.location.pathname + window.location.search);
+    } else if (params.get("type") === "signup") {
+      toast.success("Email підтверджено! Тепер увійдіть.", { duration: 8000 });
+    }
+  }, []);
+
+  const handleResendConfirmation = async () => {
+    if (!email) {
+      toast.error("Введіть email");
+      return;
+    }
+    setBusy(true);
+    const { error } = await supabase.auth.resend({
+      type: "signup",
+      email,
+      options: { emailRedirectTo: `${window.location.origin}/auth` },
+    });
+    setBusy(false);
+    if (error) toast.error(translateAuthError(error));
+    else toast.success("Лист надіслано. Перевірте пошту (та папку Спам).", { duration: 10000 });
+  };
+
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     setBusy(true);
@@ -69,7 +103,7 @@ const Auth = () => {
       email,
       password,
       options: {
-        emailRedirectTo: `${window.location.origin}/`,
+        emailRedirectTo: `${window.location.origin}/auth`,
         data: { full_name: fullName, role, marketing_consent: marketingConsent },
       },
     });
@@ -223,6 +257,9 @@ const Auth = () => {
                     {t.auth.noAccount} <span className="text-primary font-medium">{t.auth.signUp}</span>
                   </button>
                 </div>
+                <button type="button" onClick={handleResendConfirmation} disabled={busy} className="text-xs text-muted-foreground hover:text-primary w-full text-center underline-offset-2 hover:underline">
+                  Не отримали лист підтвердження? Надіслати повторно
+                </button>
               </form>
             </>
           )}
