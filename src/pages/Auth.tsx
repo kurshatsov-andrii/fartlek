@@ -257,6 +257,9 @@ const Auth = () => {
                     {t.auth.noAccount} <span className="text-primary font-medium">{t.auth.signUp}</span>
                   </button>
                 </div>
+                <button type="button" onClick={handleResendConfirmation} disabled={busy} className="text-xs text-muted-foreground hover:text-primary w-full text-center underline-offset-2 hover:underline">
+                  Не отримали лист підтвердження? Надіслати повторно
+                </button>
               </form>
             </>
           )}
