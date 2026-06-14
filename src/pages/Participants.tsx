@@ -443,6 +443,42 @@ const Participants = () => {
     XLSX.writeFile(wb, `${safeTitle}${suffix}.xlsx`);
   };
 
+  const exportStartList = () => {
+    if (rows.length === 0) {
+      toast.info(lang === "uk" ? "Немає даних для експорту" : "No data to export");
+      return;
+    }
+    const sorted = [...rows].sort((a, b) => {
+      const ka = Number(a.distance_km ?? 0) - Number(b.distance_km ?? 0);
+      if (ka !== 0) return ka;
+      return Number(a.bib_number ?? 0) - Number(b.bib_number ?? 0);
+    });
+    const headers = [
+      lang === "uk" ? "Номер" : "Bib",
+      lang === "uk" ? "Ім'я та прізвище" : "Full name",
+      lang === "uk" ? "Дистанція" : "Distance",
+    ];
+    const data = sorted.map((r: any) => ({
+      [headers[0]]: r.bib_number ?? "",
+      [headers[1]]: r.full_name ?? "",
+      [headers[2]]: r.distance_km != null
+        ? `${Number(r.distance_km)} ${lang === "uk" ? "км" : "km"}`
+        : "",
+    }));
+    const ws = XLSX.utils.json_to_sheet(data, { header: headers });
+    (ws as any)["!cols"] = headers.map((k) => ({
+      wch: Math.min(40, Math.max(k.length + 2, ...data.map((d: any) => String(d[k] ?? "").length + 2))),
+    }));
+    // Enable Excel autofilter on all columns so distance is filterable
+    const range = XLSX.utils.decode_range((ws as any)["!ref"] as string);
+    (ws as any)["!autofilter"] = { ref: XLSX.utils.encode_range(range) };
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, lang === "uk" ? "Стартовий протокол" : "Start list");
+    const safeTitle = (eventTitle || "event").replace(/[\\/:*?"<>|]/g, "_").slice(0, 60);
+    const suffix = lang === "uk" ? "_стартовий-протокол" : "_start-list";
+    XLSX.writeFile(wb, `${safeTitle}${suffix}.xlsx`);
+  };
+
   const exportChronometry = () => {
     const source = filteredRows;
     if (source.length === 0) {
@@ -557,6 +593,18 @@ const Participants = () => {
               >
                 <Download className="h-4 w-4" />
                 {lang === "uk" ? "Хронометраж" : "Chronometry"}
+              </Button>
+            )}
+            {isOrganizer && rows.length > 0 && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={exportStartList}
+                className="gap-2"
+                title={lang === "uk" ? "Номер, ім'я, дистанція (з фільтром)" : "Bib, name, distance (with filter)"}
+              >
+                <Download className="h-4 w-4" />
+                {lang === "uk" ? "Стартовий протокол" : "Start list"}
               </Button>
             )}
             {isOrganizer && deliveryRows.length > 0 && (
