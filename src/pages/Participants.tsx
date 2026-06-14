@@ -595,6 +595,18 @@ const Participants = () => {
                 {lang === "uk" ? "Хронометраж" : "Chronometry"}
               </Button>
             )}
+            {isOrganizer && rows.length > 0 && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={exportStartList}
+                className="gap-2"
+                title={lang === "uk" ? "Номер, ім'я, дистанція (з фільтром)" : "Bib, name, distance (with filter)"}
+              >
+                <Download className="h-4 w-4" />
+                {lang === "uk" ? "Стартовий протокол" : "Start list"}
+              </Button>
+            )}
             {isOrganizer && deliveryRows.length > 0 && (
               <Button
                 variant="outline"
