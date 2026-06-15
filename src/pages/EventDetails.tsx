@@ -392,7 +392,7 @@ const EventDetails = () => {
                 </div>
               </div>
               {event.description && (
-                <div className="prose prose-sm max-w-none text-foreground whitespace-pre-wrap break-words">
+                <div className="prose prose-sm max-w-none text-foreground whitespace-pre-wrap break-words [overflow-wrap:anywhere] [&_a]:break-all">
                   {linkifyText(event.description)}
                 </div>
               )}
