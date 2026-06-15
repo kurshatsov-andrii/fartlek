@@ -56,9 +56,10 @@ export const GpxTracksList = ({ eventId, distances = [] }: { eventId: string; di
                   </div>
                 )}
               </div>
-              <Button asChild size="sm" variant="outline">
-                <a href={t.file_url} download target="_blank" rel="noopener noreferrer">
-                  <Download className="h-4 w-4" /> {dl}
+              <Button asChild size="sm" variant="outline" className="shrink-0">
+                <a href={t.file_url} download target="_blank" rel="noopener noreferrer" aria-label={dl}>
+                  <Download className="h-4 w-4" />
+                  <span className="hidden sm:inline ml-1">{dl}</span>
                 </a>
               </Button>
             </div>
