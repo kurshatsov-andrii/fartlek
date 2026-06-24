@@ -103,7 +103,24 @@ const Auth = () => {
       return;
     }
 
+    if (!captchaToken) {
+      toast.error("Будь ласка, пройдіть перевірку «Я не робот»");
+      return;
+    }
+
     setBusy(true);
+
+    // Verify Turnstile token server-side before creating the account
+    const { data: verifyData, error: verifyError } = await supabase.functions.invoke("verify-turnstile", {
+      body: { token: captchaToken },
+    });
+    if (verifyError || !verifyData?.success) {
+      setBusy(false);
+      setCaptchaToken(null);
+      toast.error("Перевірка «Я не робот» не пройдена. Спробуйте ще раз.");
+      return;
+    }
+
     const { error } = await supabase.auth.signUp({
       email,
       password,
