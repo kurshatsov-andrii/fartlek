@@ -11,6 +11,9 @@ import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
 import { translateAuthError } from "@/lib/authErrors";
 import { toast } from "sonner";
+import { TurnstileWidget } from "@/components/TurnstileWidget";
+
+const TURNSTILE_SITE_KEY = "0x4AAAAAADqTpZFbZ--nataL";
 
 type Mode = "signin" | "signup" | "forgot";
 
