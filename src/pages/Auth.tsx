@@ -339,7 +339,8 @@ const Auth = () => {
                     onChange={(e) => setWebsite(e.target.value)}
                   />
                 </div>
-                <Button type="submit" className="w-full" disabled={busy}>
+                <TurnstileWidget siteKey={TURNSTILE_SITE_KEY} onToken={setCaptchaToken} />
+                <Button type="submit" className="w-full" disabled={busy || !captchaToken}>
                   {busy && <Loader2 className="h-4 w-4 animate-spin" />} {t.auth.signUp}
                 </Button>
                 <button type="button" onClick={() => setMode("signin")} className="text-sm text-muted-foreground hover:text-foreground w-full text-center">
