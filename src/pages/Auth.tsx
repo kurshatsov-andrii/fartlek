@@ -36,6 +36,8 @@ const Auth = () => {
   const [website, setWebsite] = useState("");
   // Track when the form was rendered — bots usually submit instantly
   const [formLoadedAt] = useState(() => Date.now());
+  // Cloudflare Turnstile token (human verification)
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
 
   useEffect(() => {
     if (!loading && user) navigate(redirectTo, { replace: true });
