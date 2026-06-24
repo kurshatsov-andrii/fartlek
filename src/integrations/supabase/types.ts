@@ -181,6 +181,21 @@ export type Database = {
         }
         Relationships: []
       }
+      disposable_email_domains: {
+        Row: {
+          created_at: string
+          domain: string
+        }
+        Insert: {
+          created_at?: string
+          domain: string
+        }
+        Update: {
+          created_at?: string
+          domain?: string
+        }
+        Relationships: []
+      }
       distances: {
         Row: {
           bib_start: number | null
