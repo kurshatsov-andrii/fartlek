@@ -11,6 +11,9 @@ import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
 import { translateAuthError } from "@/lib/authErrors";
 import { toast } from "sonner";
+import { TurnstileWidget } from "@/components/TurnstileWidget";
+
+const TURNSTILE_SITE_KEY = "0x4AAAAAADqTpZFbZ--nataL";
 
 type Mode = "signin" | "signup" | "forgot";
 
@@ -33,6 +36,8 @@ const Auth = () => {
   const [website, setWebsite] = useState("");
   // Track when the form was rendered — bots usually submit instantly
   const [formLoadedAt] = useState(() => Date.now());
+  // Cloudflare Turnstile token (human verification)
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
 
   useEffect(() => {
     if (!loading && user) navigate(redirectTo, { replace: true });
@@ -98,7 +103,24 @@ const Auth = () => {
       return;
     }
 
+    if (!captchaToken) {
+      toast.error("Будь ласка, пройдіть перевірку «Я не робот»");
+      return;
+    }
+
     setBusy(true);
+
+    // Verify Turnstile token server-side before creating the account
+    const { data: verifyData, error: verifyError } = await supabase.functions.invoke("verify-turnstile", {
+      body: { token: captchaToken },
+    });
+    if (verifyError || !verifyData?.success) {
+      setBusy(false);
+      setCaptchaToken(null);
+      toast.error("Перевірка «Я не робот» не пройдена. Спробуйте ще раз.");
+      return;
+    }
+
     const { error } = await supabase.auth.signUp({
       email,
       password,
@@ -317,7 +339,8 @@ const Auth = () => {
                     onChange={(e) => setWebsite(e.target.value)}
                   />
                 </div>
-                <Button type="submit" className="w-full" disabled={busy}>
+                <TurnstileWidget siteKey={TURNSTILE_SITE_KEY} onToken={setCaptchaToken} />
+                <Button type="submit" className="w-full" disabled={busy || !captchaToken}>
                   {busy && <Loader2 className="h-4 w-4 animate-spin" />} {t.auth.signUp}
                 </Button>
                 <button type="button" onClick={() => setMode("signin")} className="text-sm text-muted-foreground hover:text-foreground w-full text-center">
