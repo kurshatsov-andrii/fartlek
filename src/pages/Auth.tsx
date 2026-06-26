@@ -110,31 +110,36 @@ const Auth = () => {
 
     setBusy(true);
 
-    // Verify Turnstile token server-side before creating the account
-    const { data: verifyData, error: verifyError } = await supabase.functions.invoke("verify-turnstile", {
-      body: { token: captchaToken },
-    });
-    if (verifyError || !verifyData?.success) {
-      setBusy(false);
-      setCaptchaToken(null);
-      toast.error("Перевірка «Я не робот» не пройдена. Спробуйте ще раз.");
-      return;
-    }
-
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        emailRedirectTo: `${window.location.origin}/auth`,
-        data: { full_name: fullName, role, marketing_consent: marketingConsent },
+    // Route through secure-signup edge function: it verifies Turnstile,
+    // blocks disposable domains, and creates the user with a server-trusted
+    // captcha_verified flag. Direct supabase.auth.signUp from bots is rejected
+    // by the DB trigger (CAPTCHA_REQUIRED).
+    const { data, error } = await supabase.functions.invoke("secure-signup", {
+      body: {
+        email,
+        password,
+        full_name: fullName,
+        role,
+        marketing_consent: marketingConsent,
+        captcha_token: captchaToken,
+        redirect_to: `${window.location.origin}/auth`,
       },
     });
     setBusy(false);
-    if (error) toast.error(translateAuthError(error));
-    else {
-      toast.success(t.auth.successSignUp, { duration: 10000 });
-      setMode("signin");
+    setCaptchaToken(null);
+
+    if (error || !data?.success) {
+      const code = (data as any)?.error ?? "";
+      if (code === "CAPTCHA_FAILED") toast.error("Перевірка «Я не робот» не пройдена. Спробуйте ще раз.");
+      else if (code === "DISPOSABLE_EMAIL_NOT_ALLOWED") toast.error("Цей поштовий домен заборонений. Використайте справжню адресу.");
+      else if (code === "USER_ALREADY_EXISTS") toast.error("Користувач з таким email вже існує.");
+      else if (code === "WEAK_PASSWORD") toast.error("Пароль має містити щонайменше 6 символів.");
+      else toast.error(translateAuthError(error ?? code ?? "Помилка реєстрації"));
+      return;
     }
+
+    toast.success(t.auth.successSignUp, { duration: 10000 });
+    setMode("signin");
   };
 
   const handleForgot = async (e: React.FormEvent) => {
