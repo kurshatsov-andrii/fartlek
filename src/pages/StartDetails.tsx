@@ -89,7 +89,7 @@ const StartDetails = () => {
         )}
 
         <div className="prose prose-sm max-w-none whitespace-pre-wrap break-words mb-8 text-foreground">
-          {linkify(row.description || "")}
+          {linkifyText(row.description || "")}
         </div>
 
         {row.register_url && (
