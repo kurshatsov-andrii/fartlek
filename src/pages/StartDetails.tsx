@@ -6,7 +6,7 @@ import { Footer } from "@/components/Footer";
 import { SEO } from "@/components/SEO";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
-import { linkify } from "@/lib/linkify";
+import { linkifyText } from "@/lib/linkify";
 
 interface StartRow {
   id: string;
