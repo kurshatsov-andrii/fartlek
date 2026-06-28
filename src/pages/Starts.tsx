@@ -131,8 +131,8 @@ const Starts = () => {
           <Link to={`/starts/${r.slug}`} className="hover:underline">{r.title || "Без назви"}</Link>
         </h2>
         <div className="flex flex-wrap gap-1">
-          {(r.sport_types || []).slice(0, 3).map((s) => (
-            <span key={s} className="text-[10px] px-1.5 py-0.5 rounded bg-muted">{SPORT_LABELS[s as SportType] ?? s}</span>
+          {Array.from(new Set((r.sport_types || []).filter((s): s is SportType => s in SPORT_LABELS))).slice(0, 3).map((s) => (
+            <span key={s} className="text-[10px] px-1.5 py-0.5 rounded bg-muted">{SPORT_LABELS[s]}</span>
           ))}
           {(r.distances_km || []).slice(0, 4).map((d) => (
             <span key={String(d)} className="text-[10px] px-1.5 py-0.5 rounded bg-primary/10 text-primary">{d} км</span>
