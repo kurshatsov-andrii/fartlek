@@ -1,7 +1,7 @@
 // Inbound webhook for Telegram channel posts from @fartlekua.
 // Bot must be admin of the channel. Telegram sends channel_post / edited_channel_post updates.
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.4";
-import { parseStartContent } from "../_shared/parse-start.ts";
+import { parseStartContent, generateStartSeo } from "../_shared/parse-start.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
