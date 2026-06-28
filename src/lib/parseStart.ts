@@ -13,6 +13,8 @@ export type SportType =
   | "swim"
   | "cycling"
   | "triathlon"
+  | "aquathlon"
+  | "duathlon"
   | "cross"
   | "online";
 
@@ -26,14 +28,17 @@ export const SPORT_LABELS: Record<SportType, string> = {
   swim: "Плавання",
   cycling: "Велостарти",
   triathlon: "Триатлон",
+  aquathlon: "Акватлон",
+  duathlon: "Дуатлон",
   cross: "Крос",
   online: "Онлайн",
 };
 
 export const SPORT_TYPES: SportType[] = [
   "run", "half_marathon", "marathon", "ultra", "trail", "ocr", "cross",
-  "swim", "cycling", "triathlon", "online",
+  "swim", "cycling", "triathlon", "aquathlon", "duathlon", "online",
 ];
+
 
 // City → region (oblast). Add more over time.
 const CITY_REGION: Record<string, string> = {
@@ -102,7 +107,10 @@ function detectSports(text: string): SportType[] {
   if (/(ocr|перешкод|spartan|spart|hyrox|тяжкий\s?біг|дика\s?гонка|з\s?перешкодами|обстаклс|штурм)/i.test(t)) out.add("ocr");
   if (/(swim|плаванн|заплив|swimrun|open\s?water)/i.test(t)) out.add("swim");
   if (/(cycling|bicycle|велозаїзд|велогонка|велостарт|велоперегон|вело\s|gran\s?fondo|granfondo|вело-?марафон)/i.test(t)) out.add("cycling");
-  if (/(triathlon|триатлон|ironman|iron\s?man|70\.3|aquathlon|акватлон|duathlon|дуатлон)/i.test(t)) out.add("triathlon");
+  if (/(aquathlon|акватлон)/i.test(t)) out.add("aquathlon");
+  if (/(duathlon|дуатлон)/i.test(t)) out.add("duathlon");
+  if (/(triathlon|триатлон|ironman|iron\s?man|70\.3)/i.test(t)) out.add("triathlon");
+
   if (/(кросс|\sкрос\s|cross-?country|кросовий)/i.test(t)) out.add("cross");
   if (/(online|онлайн|virtual)/i.test(t)) out.add("online");
   // Generic running fallback

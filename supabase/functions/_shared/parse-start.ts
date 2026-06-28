@@ -3,7 +3,8 @@
 
 export type SportType =
   | "run" | "half_marathon" | "marathon" | "ultra" | "trail" | "ocr"
-  | "swim" | "cycling" | "triathlon" | "cross" | "online";
+  | "swim" | "cycling" | "triathlon" | "aquathlon" | "duathlon" | "cross" | "online";
+
 
 const CITY_REGION: Record<string, string> = {
   "київ":"Київська","kyiv":"Київська","kiev":"Київська","львів":"Львівська","lviv":"Львівська",
@@ -33,7 +34,9 @@ export function parseStartContent(text: string) {
   if (/(ocr|перешкод|spartan|spart|hyrox|дика\s?гонка|з\s?перешкодами|обстаклс|штурм)/i.test(t)) out.add("ocr");
   if (/(swim|плаванн|заплив|swimrun|open\s?water)/i.test(t)) out.add("swim");
   if (/(cycling|bicycle|велозаїзд|велогонка|велостарт|велоперегон|вело\s|gran\s?fondo|granfondo|вело-?марафон)/i.test(t)) out.add("cycling");
-  if (/(triathlon|триатлон|ironman|iron\s?man|70\.3|aquathlon|акватлон|duathlon|дуатлон)/i.test(t)) out.add("triathlon");
+  if (/(aquathlon|акватлон)/i.test(t)) out.add("aquathlon");
+  if (/(duathlon|дуатлон)/i.test(t)) out.add("duathlon");
+  if (/(triathlon|триатлон|ironman|iron\s?man|70\.3)/i.test(t)) out.add("triathlon");
   if (/(кросс|\sкрос\s|cross-?country|кросовий)/i.test(t)) out.add("cross");
   if (/(online|онлайн|virtual)/i.test(t)) out.add("online");
   if (out.size === 0 || /(\brun\b|забіг|пробіг|біговий|fun\s?run|charity\s?run)/i.test(t)) out.add("run");
