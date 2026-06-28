@@ -113,6 +113,22 @@ const AdminStarts = () => {
 
   const save = async () => {
     if (!editing) return;
+    // Auto-fill SEO if empty so the fields are never blank
+    let seoTitle = editing.seo_title?.trim() || "";
+    let seoDesc = editing.seo_description?.trim() || "";
+    if (!seoTitle || !seoDesc) {
+      const gen = generateStartSeo({
+        title: editing.title,
+        description: editing.description,
+        event_date: editing.event_date,
+        city: editing.city,
+        distances_km: editing.distances_km,
+        sport_types: editing.sport_types,
+        organizer_name: editing.organizer_name,
+      });
+      if (!seoTitle) seoTitle = gen.seo_title;
+      if (!seoDesc) seoDesc = gen.seo_description;
+    }
     setSaving(true);
     const payload: any = {
       title: editing.title.trim(),
@@ -120,8 +136,8 @@ const AdminStarts = () => {
       image_url: editing.image_url?.trim() || null,
       register_url: editing.register_url?.trim() || null,
       event_date: editing.event_date || null,
-      seo_title: editing.seo_title?.trim() || null,
-      seo_description: editing.seo_description?.trim() || null,
+      seo_title: seoTitle,
+      seo_description: seoDesc,
       status: editing.status,
       city: editing.city?.trim() || null,
       region: editing.region?.trim() || null,
@@ -130,6 +146,7 @@ const AdminStarts = () => {
       distances_km: editing.distances_km || [],
       is_paid: editing.is_paid,
     };
+
     if (editing.slug) payload.slug = editing.slug.trim();
     const { error } = editing.id
       ? await supabase.from("telegram_starts").update(payload).eq("id", editing.id)
