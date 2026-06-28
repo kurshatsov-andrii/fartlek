@@ -84,6 +84,9 @@ const App = () => (
               <Route path="/calendar" element={<CalendarPage />} />
               <Route path="/category" element={<CategoriesIndex />} />
               <Route path="/category/:category" element={<CategoryPage />} />
+              <Route path="/starts" element={<Starts />} />
+              <Route path="/starts/:slug" element={<StartDetails />} />
+              <Route path="/admin/starts" element={<AdminStarts />} />
               <Route path="/events/:id" element={<EventDetails />} />
               <Route path="/event/:id" element={<EventSingularRedirect />} />
               <Route path="/events/:id/participants" element={<Participants />} />
