@@ -1722,17 +1722,23 @@ export type Database = {
       }
       telegram_starts: {
         Row: {
+          city: string | null
           created_at: string
           description: string
+          distances_km: number[]
           event_date: string | null
           id: string
           image_url: string | null
+          is_paid: boolean | null
+          organizer_name: string | null
           published_at: string | null
           raw_payload: Json | null
+          region: string | null
           register_url: string | null
           seo_description: string | null
           seo_title: string | null
           slug: string | null
+          sport_types: string[]
           status: Database["public"]["Enums"]["telegram_start_status"]
           telegram_chat_id: number | null
           telegram_media_group_id: string | null
@@ -1741,17 +1747,23 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          city?: string | null
           created_at?: string
           description?: string
+          distances_km?: number[]
           event_date?: string | null
           id?: string
           image_url?: string | null
+          is_paid?: boolean | null
+          organizer_name?: string | null
           published_at?: string | null
           raw_payload?: Json | null
+          region?: string | null
           register_url?: string | null
           seo_description?: string | null
           seo_title?: string | null
           slug?: string | null
+          sport_types?: string[]
           status?: Database["public"]["Enums"]["telegram_start_status"]
           telegram_chat_id?: number | null
           telegram_media_group_id?: string | null
@@ -1760,17 +1772,23 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          city?: string | null
           created_at?: string
           description?: string
+          distances_km?: number[]
           event_date?: string | null
           id?: string
           image_url?: string | null
+          is_paid?: boolean | null
+          organizer_name?: string | null
           published_at?: string | null
           raw_payload?: Json | null
+          region?: string | null
           register_url?: string | null
           seo_description?: string | null
           seo_title?: string | null
           slug?: string | null
+          sport_types?: string[]
           status?: Database["public"]["Enums"]["telegram_start_status"]
           telegram_chat_id?: number | null
           telegram_media_group_id?: string | null
