@@ -1735,8 +1735,8 @@ export type Database = {
           raw_payload: Json | null
           region: string | null
           register_url: string | null
-          seo_description: string | null
-          seo_title: string | null
+          seo_description: string
+          seo_title: string
           slug: string | null
           sport_types: string[]
           status: Database["public"]["Enums"]["telegram_start_status"]
@@ -1760,8 +1760,8 @@ export type Database = {
           raw_payload?: Json | null
           region?: string | null
           register_url?: string | null
-          seo_description?: string | null
-          seo_title?: string | null
+          seo_description?: string
+          seo_title?: string
           slug?: string | null
           sport_types?: string[]
           status?: Database["public"]["Enums"]["telegram_start_status"]
@@ -1785,8 +1785,8 @@ export type Database = {
           raw_payload?: Json | null
           region?: string | null
           register_url?: string | null
-          seo_description?: string | null
-          seo_title?: string | null
+          seo_description?: string
+          seo_title?: string
           slug?: string | null
           sport_types?: string[]
           status?: Database["public"]["Enums"]["telegram_start_status"]
