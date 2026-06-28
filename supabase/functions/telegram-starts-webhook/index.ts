@@ -177,6 +177,13 @@ Deno.serve(async (req) => {
       .eq("telegram_message_id", messageId)
       .maybeSingle();
     if (existing) {
+      const seo = generateStartSeo({
+        title: parsed.title || "",
+        event_date: parsed.eventDate,
+        city: extra.city,
+        distances_km: extra.distances_km,
+        organizer_name: extra.organizer_name,
+      });
       const patch: any = {
         title: parsed.title || "",
         description: text,
@@ -189,6 +196,8 @@ Deno.serve(async (req) => {
         region: extra.region,
         organizer_name: extra.organizer_name,
         is_paid: extra.is_paid,
+        seo_title: seo.seo_title,
+        seo_description: seo.seo_description,
       };
       if (imageUrl) patch.image_url = imageUrl;
       await supabase.from("telegram_starts").update(patch).eq("id", existing.id);
