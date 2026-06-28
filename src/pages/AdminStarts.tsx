@@ -12,7 +12,7 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { parseStartContent, SPORT_TYPES, SPORT_LABELS, type SportType } from "@/lib/parseStart";
+import { parseStartContent, generateStartSeo, SPORT_TYPES, SPORT_LABELS, type SportType } from "@/lib/parseStart";
 
 type Status = "draft" | "published" | "hidden";
 
