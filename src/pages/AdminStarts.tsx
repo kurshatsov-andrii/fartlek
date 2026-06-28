@@ -85,7 +85,7 @@ const AdminStarts = () => {
       id: "", title: "", description: "", image_url: "", register_url: "",
       event_date: "", slug: "", seo_title: "", seo_description: "",
       status: "draft", telegram_message_id: null, created_at: new Date().toISOString(),
-      city: "", region: "", organizer_name: "", sport_types: [], distances_km: [], is_paid: null,
+      city: "", region: "", organizer_name: "", sport_types: [], distances_km: [], is_paid: true,
     });
   };
 
