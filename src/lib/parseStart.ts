@@ -146,11 +146,12 @@ function detectCity(text: string): { city: string | null; region: string | null 
   return { city: null, region: null };
 }
 
-function detectPaid(text: string): boolean | null {
-  if (/безкоштовн|безкоштовно|free\s?entry|free\s?race|вільний\s?вхід/i.test(text)) return false;
-  if (/(\d[\d\s]*)\s?(грн|₴|uah)|вартість|внесок|стартовий\s?пакет|реєстраційний\s?внесок/i.test(text)) return true;
-  return null;
+function detectPaid(_text: string): boolean | null {
+  // За замовчуванням всі старти платні; організатор може вручну позначити безкоштовний.
+  if (/безкоштовн|free\s?entry|free\s?race|вільний\s?вхід/i.test(_text)) return false;
+  return true;
 }
+
 
 function detectOrganizer(text: string): string | null {
   const m = text.match(/організатор[и]?\s*[:\-—]\s*([^\n]{2,80})/i);
