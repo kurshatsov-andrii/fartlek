@@ -343,18 +343,37 @@ const AdminStarts = () => {
                 <Input value={editing.slug ?? ""} onChange={(e) => setEditing({ ...editing, slug: e.target.value })} placeholder="auto" />
               </div>
               <div className="border-t pt-4">
-                <h4 className="font-medium mb-2 text-sm">SEO (необов'язково)</h4>
+                <div className="flex items-center justify-between mb-2">
+                  <h4 className="font-medium text-sm">SEO <span className="text-destructive">*</span></h4>
+                  <Button type="button" size="sm" variant="outline" onClick={() => {
+                    const gen = generateStartSeo({
+                      title: editing.title,
+                      description: editing.description,
+                      event_date: editing.event_date,
+                      city: editing.city,
+                      distances_km: editing.distances_km,
+                      sport_types: editing.sport_types,
+                      organizer_name: editing.organizer_name,
+                    });
+                    setEditing({ ...editing, seo_title: gen.seo_title, seo_description: gen.seo_description });
+                    toast.success("SEO згенеровано");
+                  }}>
+                    <Sparkles className="w-4 h-4 mr-1" /> Згенерувати
+                  </Button>
+                </div>
+                <p className="text-xs text-muted-foreground mb-2">Поля обов'язкові. Якщо залишити пустими — заповняться автоматично при збереженні.</p>
                 <div className="space-y-3">
                   <div>
                     <Label>SEO Title (до 60 символів)</Label>
-                    <Input value={editing.seo_title ?? ""} maxLength={60} onChange={(e) => setEditing({ ...editing, seo_title: e.target.value })} />
+                    <Input required value={editing.seo_title ?? ""} maxLength={60} onChange={(e) => setEditing({ ...editing, seo_title: e.target.value })} />
                   </div>
                   <div>
                     <Label>SEO Description (до 160 символів)</Label>
-                    <Textarea rows={2} value={editing.seo_description ?? ""} maxLength={160} onChange={(e) => setEditing({ ...editing, seo_description: e.target.value })} />
+                    <Textarea required rows={2} value={editing.seo_description ?? ""} maxLength={160} onChange={(e) => setEditing({ ...editing, seo_description: e.target.value })} />
                   </div>
                 </div>
               </div>
+
               <div>
                 <Label>Статус</Label>
                 <div className="flex gap-2 mt-1">
