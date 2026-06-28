@@ -112,7 +112,7 @@ function detectSports(text: string): SportType[] {
 
 function detectDistances(text: string): number[] {
   const set = new Set<number>();
-  const re = /(\d{1,3}(?:[.,]\d{1,2})?)\s?(?:км|km)\b/gi;
+  const re = /(\d{1,3}(?:[.,]\d{1,2})?)\s?(?:км|km)(?![а-яА-Яa-zA-Z])/gi;
   let m: RegExpExecArray | null;
   while ((m = re.exec(text)) !== null) {
     const n = parseFloat(m[1].replace(",", "."));
