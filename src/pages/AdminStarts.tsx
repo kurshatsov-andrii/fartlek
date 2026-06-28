@@ -36,6 +36,27 @@ const AdminStarts = () => {
   const [filter, setFilter] = useState<"all" | Status>("all");
   const [editing, setEditing] = useState<Row | null>(null);
   const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
+
+  const uploadImage = async (file: File) => {
+    if (!editing) return;
+    setUploading(true);
+    try {
+      const ext = (file.name.split(".").pop() || "jpg").toLowerCase();
+      const base = (editing.title || "start").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 40) || "start";
+      const path = `telegram-starts/${base}-${Date.now()}.${ext}`;
+      const contentType = file.type || (ext === "png" ? "image/png" : "image/jpeg");
+      const { error } = await supabase.storage.from("event-images").upload(path, file, { contentType, upsert: true });
+      if (error) throw error;
+      const { data } = supabase.storage.from("event-images").getPublicUrl(path);
+      setEditing({ ...editing, image_url: data.publicUrl });
+      toast.success("Зображення завантажено");
+    } catch (e: any) {
+      toast.error(e.message || "Помилка завантаження");
+    } finally {
+      setUploading(false);
+    }
+  };
 
   const fetchAll = async () => {
     const { data } = await supabase
@@ -184,8 +205,11 @@ const AdminStarts = () => {
                 <Textarea rows={6} value={editing.description} onChange={(e) => setEditing({ ...editing, description: e.target.value })} />
               </div>
               <div>
-                <Label>Зображення (URL)</Label>
-                <Input value={editing.image_url ?? ""} onChange={(e) => setEditing({ ...editing, image_url: e.target.value })} placeholder="https://..." />
+                <Label>Зображення</Label>
+                <div className="flex items-center gap-2 mt-1">
+                  <Input type="file" accept="image/*" disabled={uploading} onChange={(e) => { const f = e.target.files?.[0]; if (f) uploadImage(f); }} />
+                </div>
+                <Input className="mt-2" value={editing.image_url ?? ""} onChange={(e) => setEditing({ ...editing, image_url: e.target.value })} placeholder="або вставте URL https://..." />
                 {editing.image_url && <img src={editing.image_url} alt="" className="mt-2 max-h-40 rounded" />}
               </div>
               <div>
