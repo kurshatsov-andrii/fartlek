@@ -41,6 +41,45 @@ const Starts = () => {
     return `${day}.${m}.${y}`;
   };
 
+  const todayStr = new Date().toISOString().slice(0, 10);
+  const upcoming = rows.filter((r) => !r.event_date || r.event_date >= todayStr);
+  const completed = rows
+    .filter((r) => r.event_date && r.event_date < todayStr)
+    .sort((a, b) => (b.event_date || "").localeCompare(a.event_date || ""));
+
+  const renderCard = (r: StartRow) => (
+    <Card key={r.id} className="overflow-hidden flex flex-col">
+      {r.image_url && (
+        <Link to={`/starts/${r.slug}`} className="block aspect-video bg-muted overflow-hidden">
+          <img src={r.image_url} alt={r.title} loading="lazy" className="w-full h-full object-cover hover:scale-105 transition-transform" />
+        </Link>
+      )}
+      <div className="p-4 flex flex-col gap-3 flex-1">
+        {r.event_date && (
+          <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+            <CalendarIcon className="h-3.5 w-3.5" />{fmtDate(r.event_date)}
+          </div>
+        )}
+        <h2 className="font-semibold text-lg leading-snug">
+          <Link to={`/starts/${r.slug}`} className="hover:underline">{r.title || "Без назви"}</Link>
+        </h2>
+        <p className="text-sm text-muted-foreground line-clamp-3 flex-1">{r.description}</p>
+        <div className="flex gap-2 pt-1">
+          <Button asChild size="sm" variant="secondary" className="flex-1">
+            <Link to={`/starts/${r.slug}`}>Детальніше</Link>
+          </Button>
+          {r.register_url && (
+            <Button asChild size="sm" className="flex-1">
+              <a href={r.register_url} target="_blank" rel="noreferrer">
+                Зареєструватися <ExternalLink className="h-3.5 w-3.5 ml-1" />
+              </a>
+            </Button>
+          )}
+        </div>
+      </div>
+    </Card>
+  );
+
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <SEO
@@ -60,41 +99,23 @@ const Starts = () => {
         ) : rows.length === 0 ? (
           <div className="text-center text-muted-foreground py-20">Поки що немає опублікованих стартів.</div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {rows.map((r) => (
-              <Card key={r.id} className="overflow-hidden flex flex-col">
-                {r.image_url && (
-                  <Link to={`/starts/${r.slug}`} className="block aspect-video bg-muted overflow-hidden">
-                    <img src={r.image_url} alt={r.title} loading="lazy" className="w-full h-full object-cover hover:scale-105 transition-transform" />
-                  </Link>
-                )}
-                <div className="p-4 flex flex-col gap-3 flex-1">
-                  {r.event_date && (
-                    <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                      <CalendarIcon className="h-3.5 w-3.5" />{fmtDate(r.event_date)}
-                    </div>
-                  )}
-                  <h2 className="font-semibold text-lg leading-snug">
-                    <Link to={`/starts/${r.slug}`} className="hover:underline">{r.title || "Без назви"}</Link>
-                  </h2>
-                  <p className="text-sm text-muted-foreground line-clamp-3 flex-1">{r.description}</p>
-                  <div className="flex gap-2 pt-1">
-                    <Button asChild size="sm" variant="secondary" className="flex-1">
-                      <Link to={`/starts/${r.slug}`}>Детальніше</Link>
-                    </Button>
-                    {r.register_url && (
-                      <Button asChild size="sm" className="flex-1">
-                        <a href={r.register_url} target="_blank" rel="noreferrer">
-                          Зареєструватися <ExternalLink className="h-3.5 w-3.5 ml-1" />
-                        </a>
-                      </Button>
-                    )}
-                  </div>
+          <>
+            {upcoming.length > 0 && (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {upcoming.map(renderCard)}
+              </div>
+            )}
+            {completed.length > 0 && (
+              <section className="mt-12">
+                <h2 className="font-display text-2xl font-bold mb-6">Завершені</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 opacity-75">
+                  {completed.map(renderCard)}
                 </div>
-              </Card>
-            ))}
-          </div>
+              </section>
+            )}
+          </>
         )}
+
       </main>
       <Footer />
     </div>
