@@ -100,7 +100,9 @@ const Starts = () => {
   }, [rows, q, month, city, region, organizer, sport, distance, paid, distanceBucket]);
 
   const todayStr = new Date().toISOString().slice(0, 10);
-  const upcomingAll = filtered.filter((r) => !r.event_date || r.event_date >= todayStr);
+  const upcomingAll = filtered
+    .filter((r) => !r.event_date || r.event_date >= todayStr)
+    .sort((a, b) => (a.event_date || "").localeCompare(b.event_date || ""));
   const completedAll = filtered
     .filter((r) => r.event_date && r.event_date < todayStr)
     .sort((a, b) => (b.event_date || "").localeCompare(a.event_date || ""));
