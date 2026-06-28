@@ -36,6 +36,27 @@ const AdminStarts = () => {
   const [filter, setFilter] = useState<"all" | Status>("all");
   const [editing, setEditing] = useState<Row | null>(null);
   const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
+
+  const uploadImage = async (file: File) => {
+    if (!editing) return;
+    setUploading(true);
+    try {
+      const ext = (file.name.split(".").pop() || "jpg").toLowerCase();
+      const base = (editing.title || "start").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 40) || "start";
+      const path = `telegram-starts/${base}-${Date.now()}.${ext}`;
+      const contentType = file.type || (ext === "png" ? "image/png" : "image/jpeg");
+      const { error } = await supabase.storage.from("event-images").upload(path, file, { contentType, upsert: true });
+      if (error) throw error;
+      const { data } = supabase.storage.from("event-images").getPublicUrl(path);
+      setEditing({ ...editing, image_url: data.publicUrl });
+      toast.success("Зображення завантажено");
+    } catch (e: any) {
+      toast.error(e.message || "Помилка завантаження");
+    } finally {
+      setUploading(false);
+    }
+  };
 
   const fetchAll = async () => {
     const { data } = await supabase
