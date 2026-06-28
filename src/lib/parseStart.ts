@@ -13,6 +13,8 @@ export type SportType =
   | "swim"
   | "cycling"
   | "triathlon"
+  | "aquathlon"
+  | "duathlon"
   | "cross"
   | "online";
 
@@ -26,14 +28,17 @@ export const SPORT_LABELS: Record<SportType, string> = {
   swim: "Плавання",
   cycling: "Велостарти",
   triathlon: "Триатлон",
+  aquathlon: "Акватлон",
+  duathlon: "Дуатлон",
   cross: "Крос",
   online: "Онлайн",
 };
 
 export const SPORT_TYPES: SportType[] = [
   "run", "half_marathon", "marathon", "ultra", "trail", "ocr", "cross",
-  "swim", "cycling", "triathlon", "online",
+  "swim", "cycling", "triathlon", "aquathlon", "duathlon", "online",
 ];
+
 
 // City → region (oblast). Add more over time.
 const CITY_REGION: Record<string, string> = {
