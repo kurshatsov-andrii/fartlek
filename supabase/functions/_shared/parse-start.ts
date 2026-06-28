@@ -63,9 +63,10 @@ export function parseStartContent(text: string) {
     }
   }
 
-  let is_paid: boolean | null = null;
-  if (/безкоштовн|безкоштовно|free\s?entry|free\s?race|вільний\s?вхід/i.test(text)) is_paid = false;
-  else if (/(\d[\d\s]*)\s?(грн|₴|uah)|вартість|внесок|стартовий\s?пакет|реєстраційний\s?внесок/i.test(text)) is_paid = true;
+  // За замовчуванням всі старти платні; явно позначаємо безкоштовний лише за ключовими словами.
+  let is_paid: boolean | null = true;
+  if (/безкоштовн|free\s?entry|free\s?race|вільний\s?вхід/i.test(text)) is_paid = false;
+
 
   let organizer_name: string | null = null;
   const om = text.match(/організатор[и]?\s*[:\-—]\s*([^\n]{2,80})/i);
