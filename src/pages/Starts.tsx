@@ -18,9 +18,13 @@ interface StartRow {
   event_date: string | null;
 }
 
+const PAGE_SIZE = 9;
+
 const Starts = () => {
   const [rows, setRows] = useState<StartRow[]>([]);
   const [loading, setLoading] = useState(true);
+  const [upcomingLimit, setUpcomingLimit] = useState(PAGE_SIZE);
+  const [completedLimit, setCompletedLimit] = useState(PAGE_SIZE);
 
   useEffect(() => {
     (async () => {
@@ -42,10 +46,12 @@ const Starts = () => {
   };
 
   const todayStr = new Date().toISOString().slice(0, 10);
-  const upcoming = rows.filter((r) => !r.event_date || r.event_date >= todayStr);
-  const completed = rows
+  const upcomingAll = rows.filter((r) => !r.event_date || r.event_date >= todayStr);
+  const completedAll = rows
     .filter((r) => r.event_date && r.event_date < todayStr)
     .sort((a, b) => (b.event_date || "").localeCompare(a.event_date || ""));
+  const upcoming = upcomingAll.slice(0, upcomingLimit);
+  const completed = completedAll.slice(0, completedLimit);
 
   const renderCard = (r: StartRow) => (
     <Card key={r.id} className="overflow-hidden flex flex-col">
@@ -101,9 +107,18 @@ const Starts = () => {
         ) : (
           <>
             {upcoming.length > 0 && (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {upcoming.map(renderCard)}
-              </div>
+              <>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {upcoming.map(renderCard)}
+                </div>
+                {upcomingLimit < upcomingAll.length && (
+                  <div className="flex justify-center mt-8">
+                    <Button variant="outline" onClick={() => setUpcomingLimit((n) => n + PAGE_SIZE)}>
+                      Завантажити ще старти
+                    </Button>
+                  </div>
+                )}
+              </>
             )}
             {completed.length > 0 && (
               <section className="mt-12">
@@ -111,6 +126,13 @@ const Starts = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 opacity-75">
                   {completed.map(renderCard)}
                 </div>
+                {completedLimit < completedAll.length && (
+                  <div className="flex justify-center mt-8">
+                    <Button variant="outline" onClick={() => setCompletedLimit((n) => n + PAGE_SIZE)}>
+                      Завантажити ще старти
+                    </Button>
+                  </div>
+                )}
               </section>
             )}
           </>
