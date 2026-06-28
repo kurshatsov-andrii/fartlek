@@ -107,9 +107,18 @@ const Starts = () => {
         ) : (
           <>
             {upcoming.length > 0 && (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {upcoming.map(renderCard)}
-              </div>
+              <>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {upcoming.map(renderCard)}
+                </div>
+                {upcomingLimit < upcomingAll.length && (
+                  <div className="flex justify-center mt-8">
+                    <Button variant="outline" onClick={() => setUpcomingLimit((n) => n + PAGE_SIZE)}>
+                      Завантажити ще старти
+                    </Button>
+                  </div>
+                )}
+              </>
             )}
             {completed.length > 0 && (
               <section className="mt-12">
@@ -117,6 +126,13 @@ const Starts = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 opacity-75">
                   {completed.map(renderCard)}
                 </div>
+                {completedLimit < completedAll.length && (
+                  <div className="flex justify-center mt-8">
+                    <Button variant="outline" onClick={() => setCompletedLimit((n) => n + PAGE_SIZE)}>
+                      Завантажити ще старти
+                    </Button>
+                  </div>
+                )}
               </section>
             )}
           </>
