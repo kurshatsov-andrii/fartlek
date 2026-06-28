@@ -23,3 +23,7 @@ project_id = "mjkjygzxwysbhgjtvobm"
     verify_jwt = false
   [functions.wayforpay-callback]
     verify_jwt = false
+  [functions.telegram-starts-webhook]
+    verify_jwt = false
+  [functions.sync-telegram-starts]
+    verify_jwt = false

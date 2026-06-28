@@ -249,6 +249,9 @@ const Admin = () => {
             <Button asChild variant="outline" size="sm">
               <Link to="/admin/carousel">🖼️ Карусель</Link>
             </Button>
+            <Button asChild variant="outline" size="sm">
+              <Link to="/admin/starts">🏁 Старти (Telegram)</Link>
+            </Button>
           </div>
         </div>
         <Tabs defaultValue="events" className="space-y-6">

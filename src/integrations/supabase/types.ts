@@ -1720,6 +1720,66 @@ export type Database = {
         }
         Relationships: []
       }
+      telegram_starts: {
+        Row: {
+          created_at: string
+          description: string
+          event_date: string | null
+          id: string
+          image_url: string | null
+          published_at: string | null
+          raw_payload: Json | null
+          register_url: string | null
+          seo_description: string | null
+          seo_title: string | null
+          slug: string | null
+          status: Database["public"]["Enums"]["telegram_start_status"]
+          telegram_chat_id: number | null
+          telegram_media_group_id: string | null
+          telegram_message_id: number | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string
+          event_date?: string | null
+          id?: string
+          image_url?: string | null
+          published_at?: string | null
+          raw_payload?: Json | null
+          register_url?: string | null
+          seo_description?: string | null
+          seo_title?: string | null
+          slug?: string | null
+          status?: Database["public"]["Enums"]["telegram_start_status"]
+          telegram_chat_id?: number | null
+          telegram_media_group_id?: string | null
+          telegram_message_id?: number | null
+          title?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          event_date?: string | null
+          id?: string
+          image_url?: string | null
+          published_at?: string | null
+          raw_payload?: Json | null
+          register_url?: string | null
+          seo_description?: string | null
+          seo_title?: string | null
+          slug?: string | null
+          status?: Database["public"]["Enums"]["telegram_start_status"]
+          telegram_chat_id?: number | null
+          telegram_media_group_id?: string | null
+          telegram_message_id?: number | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       testimonial_reactions: {
         Row: {
           created_at: string
@@ -2158,6 +2218,7 @@ export type Database = {
       payment_provider_type: "liqpay" | "stripe" | "free"
       payment_status_type: "pending" | "paid" | "failed" | "refunded" | "free"
       promo_discount_type: "percent" | "fixed"
+      telegram_start_status: "draft" | "published" | "hidden"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -2318,6 +2379,7 @@ export const Constants = {
       payment_provider_type: ["liqpay", "stripe", "free"],
       payment_status_type: ["pending", "paid", "failed", "refunded", "free"],
       promo_discount_type: ["percent", "fixed"],
+      telegram_start_status: ["draft", "published", "hidden"],
     },
   },
 } as const

@@ -54,6 +54,9 @@ import StravaCallback from "./pages/StravaCallback.tsx";
 import Privacy from "./pages/Privacy.tsx";
 import PublicOffer from "./pages/PublicOffer.tsx";
 import UserAgreement from "./pages/UserAgreement.tsx";
+import Starts from "./pages/Starts.tsx";
+import StartDetails from "./pages/StartDetails.tsx";
+import AdminStarts from "./pages/AdminStarts.tsx";
 import { ProfileCompletionGate } from "./components/ProfileCompletionGate";
 import { AdminOnlinePresence } from "./components/AdminOnlinePresence";
 import { SessionTracker } from "./components/SessionTracker";
@@ -81,6 +84,9 @@ const App = () => (
               <Route path="/calendar" element={<CalendarPage />} />
               <Route path="/category" element={<CategoriesIndex />} />
               <Route path="/category/:category" element={<CategoryPage />} />
+              <Route path="/starts" element={<Starts />} />
+              <Route path="/starts/:slug" element={<StartDetails />} />
+              <Route path="/admin/starts" element={<AdminStarts />} />
               <Route path="/events/:id" element={<EventDetails />} />
               <Route path="/event/:id" element={<EventSingularRedirect />} />
               <Route path="/events/:id/participants" element={<Participants />} />
