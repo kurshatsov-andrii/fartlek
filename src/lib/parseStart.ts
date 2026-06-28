@@ -175,6 +175,72 @@ export function parseStartContent(text: string): ParsedStart {
   };
 }
 
+const UA_MONTHS_GEN = ["січня","лютого","березня","квітня","травня","червня","липня","серпня","вересня","жовтня","листопада","грудня"];
+
+function cleanTitle(t: string): string {
+  // strip emoji & extra whitespace
+  return (t || "")
+    .replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{1F000}-\u{1F02F}\u{1F0A0}-\u{1F0FF}\u{1F100}-\u{1F64F}\u{1F680}-\u{1F6FF}\u{1F910}-\u{1F9FF}]/gu, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function truncate(s: string, max: number): string {
+  if (s.length <= max) return s;
+  const cut = s.slice(0, max - 1);
+  const sp = cut.lastIndexOf(" ");
+  return (sp > max * 0.6 ? cut.slice(0, sp) : cut).trim() + "…";
+}
+
+/** Generate SEO title (≤60) and description (≤160) from start data. */
+export function generateStartSeo(input: {
+  title: string;
+  description?: string | null;
+  event_date?: string | null; // YYYY-MM-DD
+  city?: string | null;
+  distances_km?: number[] | null;
+  sport_types?: string[] | null;
+  organizer_name?: string | null;
+}): { seo_title: string; seo_description: string } {
+  const title = cleanTitle(input.title) || "Старт";
+  let datePart = "";
+  let dotDate = "";
+  let year = "";
+  if (input.event_date) {
+    const d = new Date(input.event_date + "T00:00:00");
+    if (!isNaN(d.getTime())) {
+      const day = d.getDate();
+      const m = d.getMonth();
+      year = String(d.getFullYear());
+      datePart = `${day} ${UA_MONTHS_GEN[m]}`;
+      dotDate = `${String(day).padStart(2,"0")}.${String(m+1).padStart(2,"0")}.${year}`;
+    }
+  }
+  const city = input.city?.trim() || "";
+
+  const titleParts = [title];
+  if (year) titleParts[0] = `${title} ${year}`;
+  const locDate = [city, datePart].filter(Boolean).join(", ");
+  const seo_title = truncate(
+    [titleParts[0], locDate].filter(Boolean).join(" — ") + (locDate ? " | Реєстрація" : ""),
+    60
+  );
+
+  const dists = (input.distances_km || []).filter((n) => n > 0).slice(0, 6);
+  const distStr = dists.length ? `дистанції ${dists.join(", ")} км` : "";
+  const where = city ? `у ${city}` : "";
+  const org = input.organizer_name ? `Організатор ${input.organizer_name}.` : "";
+  const parts = [
+    `${title}${dotDate ? " " + dotDate : ""}${where ? " " + where : ""}.`,
+    distStr ? capitalize(distStr) + "." : "",
+    org,
+    "Реєстрація на старт онлайн.",
+  ].filter(Boolean);
+  const seo_description = truncate(parts.join(" ").replace(/\s+/g, " ").trim(), 160);
+
+  return { seo_title, seo_description };
+}
+
 export const MONTH_NAMES_UK = [
   "Січень","Лютий","Березень","Квітень","Травень","Червень",
   "Липень","Серпень","Вересень","Жовтень","Листопад","Грудень",
