@@ -42,6 +42,7 @@ export const Header = () => {
 
         <nav className="hidden lg:flex items-center gap-8">
           <a href="/#events" onClick={handleEventsClick} className="text-sm font-medium text-muted-foreground hover:text-foreground transition-base cursor-pointer">{t.nav.events}</a>
+          <Link to="/starts" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-base">Старти</Link>
           <Link to="/calendar" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-base">Календар</Link>
           <Link to="/clubs" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-base">Клуби</Link>
           <Link to="/organizers" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-base">Організатори</Link>
