@@ -77,3 +77,42 @@ export function parseStartContent(text: string) {
     city, region, organizer_name, is_paid,
   };
 }
+
+const UA_MONTHS_GEN = ["січня","лютого","березня","квітня","травня","червня","липня","серпня","вересня","жовтня","листопада","грудня"];
+function cleanTitle(t: string): string {
+  return (t || "").replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{1F000}-\u{1F64F}\u{1F680}-\u{1F6FF}\u{1F910}-\u{1F9FF}]/gu, "").replace(/\s+/g, " ").trim();
+}
+function truncate(s: string, max: number): string {
+  if (s.length <= max) return s;
+  const cut = s.slice(0, max - 1); const sp = cut.lastIndexOf(" ");
+  return (sp > max * 0.6 ? cut.slice(0, sp) : cut).trim() + "…";
+}
+export function generateStartSeo(input: {
+  title: string; event_date?: string | null; city?: string | null;
+  distances_km?: number[] | null; organizer_name?: string | null;
+}): { seo_title: string; seo_description: string } {
+  const title = cleanTitle(input.title) || "Старт";
+  let datePart = "", dotDate = "", year = "";
+  if (input.event_date) {
+    const d = new Date(input.event_date + "T00:00:00");
+    if (!isNaN(d.getTime())) {
+      const day = d.getDate(), m = d.getMonth();
+      year = String(d.getFullYear());
+      datePart = `${day} ${UA_MONTHS_GEN[m]}`;
+      dotDate = `${String(day).padStart(2,"0")}.${String(m+1).padStart(2,"0")}.${year}`;
+    }
+  }
+  const city = input.city?.trim() || "";
+  const t1 = year ? `${title} ${year}` : title;
+  const locDate = [city, datePart].filter(Boolean).join(", ");
+  const seo_title = truncate([t1, locDate].filter(Boolean).join(" — ") + (locDate ? " | Реєстрація" : ""), 60);
+  const dists = (input.distances_km || []).filter((n) => n > 0).slice(0, 6);
+  const distStr = dists.length ? `Дистанції ${dists.join(", ")} км.` : "";
+  const where = city ? `у ${city}` : "";
+  const org = input.organizer_name ? `Організатор ${input.organizer_name}.` : "";
+  const seo_description = truncate(
+    [`${title}${dotDate ? " " + dotDate : ""}${where ? " " + where : ""}.`, distStr, org, "Реєстрація на старт онлайн."].filter(Boolean).join(" ").replace(/\s+/g, " ").trim(),
+    160
+  );
+  return { seo_title, seo_description };
+}
