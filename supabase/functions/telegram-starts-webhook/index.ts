@@ -208,6 +208,13 @@ Deno.serve(async (req) => {
   }
 
   // Insert as draft. Admin will publish (or cron will if it has date+url+title and date >= 2026-07-01).
+  const seoNew = generateStartSeo({
+    title: parsed.title || "",
+    event_date: parsed.eventDate,
+    city: extra.city,
+    distances_km: extra.distances_km,
+    organizer_name: extra.organizer_name,
+  });
   const { data: inserted, error } = await supabase
     .from("telegram_starts")
     .insert({
@@ -227,6 +234,8 @@ Deno.serve(async (req) => {
       region: extra.region,
       organizer_name: extra.organizer_name,
       is_paid: extra.is_paid,
+      seo_title: seoNew.seo_title,
+      seo_description: seoNew.seo_description,
     })
     .select("id")
     .single();
