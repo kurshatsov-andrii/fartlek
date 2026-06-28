@@ -3,7 +3,8 @@
 
 export type SportType =
   | "run" | "half_marathon" | "marathon" | "ultra" | "trail" | "ocr"
-  | "swim" | "cycling" | "triathlon" | "cross" | "online";
+  | "swim" | "cycling" | "triathlon" | "aquathlon" | "duathlon" | "cross" | "online";
+
 
 const CITY_REGION: Record<string, string> = {
   "київ":"Київська","kyiv":"Київська","kiev":"Київська","львів":"Львівська","lviv":"Львівська",
