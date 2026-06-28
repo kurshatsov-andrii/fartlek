@@ -18,9 +18,13 @@ interface StartRow {
   event_date: string | null;
 }
 
+const PAGE_SIZE = 9;
+
 const Starts = () => {
   const [rows, setRows] = useState<StartRow[]>([]);
   const [loading, setLoading] = useState(true);
+  const [upcomingLimit, setUpcomingLimit] = useState(PAGE_SIZE);
+  const [completedLimit, setCompletedLimit] = useState(PAGE_SIZE);
 
   useEffect(() => {
     (async () => {
@@ -42,10 +46,12 @@ const Starts = () => {
   };
 
   const todayStr = new Date().toISOString().slice(0, 10);
-  const upcoming = rows.filter((r) => !r.event_date || r.event_date >= todayStr);
-  const completed = rows
+  const upcomingAll = rows.filter((r) => !r.event_date || r.event_date >= todayStr);
+  const completedAll = rows
     .filter((r) => r.event_date && r.event_date < todayStr)
     .sort((a, b) => (b.event_date || "").localeCompare(a.event_date || ""));
+  const upcoming = upcomingAll.slice(0, upcomingLimit);
+  const completed = completedAll.slice(0, completedLimit);
 
   const renderCard = (r: StartRow) => (
     <Card key={r.id} className="overflow-hidden flex flex-col">
