@@ -105,6 +105,7 @@ export const Header = () => {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-52">
                   <DropdownMenuItem asChild><a href="/#events" onClick={handleEventsClick}><Ticket className="h-4 w-4" />{t.nav.events}</a></DropdownMenuItem>
+                  <DropdownMenuItem asChild><Link to="/starts"><Ticket className="h-4 w-4" />Старти</Link></DropdownMenuItem>
                   <DropdownMenuItem asChild><Link to="/calendar"><CalendarIcon className="h-4 w-4" />Календар</Link></DropdownMenuItem>
                   <DropdownMenuItem asChild><Link to="/clubs"><Users className="h-4 w-4" />Клуби</Link></DropdownMenuItem>
                   <DropdownMenuItem asChild><Link to="/organizers"><Users className="h-4 w-4" />Організатори</Link></DropdownMenuItem>
