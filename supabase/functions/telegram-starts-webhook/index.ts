@@ -157,6 +157,7 @@ Deno.serve(async (req) => {
   }
 
   const parsed = parsePost(text, entities);
+  const extra = parseStartContent(text);
 
   // Pick largest photo
   let imageUrl: string | null = null;
@@ -182,6 +183,12 @@ Deno.serve(async (req) => {
         register_url: parsed.registerUrl,
         event_date: parsed.eventDate,
         raw_payload: post,
+        sport_types: extra.sport_types,
+        distances_km: extra.distances_km,
+        city: extra.city,
+        region: extra.region,
+        organizer_name: extra.organizer_name,
+        is_paid: extra.is_paid,
       };
       if (imageUrl) patch.image_url = imageUrl;
       await supabase.from("telegram_starts").update(patch).eq("id", existing.id);
@@ -205,6 +212,12 @@ Deno.serve(async (req) => {
       event_date: parsed.eventDate,
       raw_payload: post,
       status: "draft",
+      sport_types: extra.sport_types,
+      distances_km: extra.distances_km,
+      city: extra.city,
+      region: extra.region,
+      organizer_name: extra.organizer_name,
+      is_paid: extra.is_paid,
     })
     .select("id")
     .single();
