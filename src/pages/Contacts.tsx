@@ -4,6 +4,7 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { SEO } from "@/components/SEO";
 import { useApp } from "@/contexts/AppContext";
+import andriiAsset from "@/assets/andrii.jpg.asset.json";
 
 const Contacts = () => {
   const { lang } = useApp();
@@ -25,35 +26,54 @@ const Contacts = () => {
         </h1>
         <p className="mt-3 text-muted-foreground max-w-2xl">{seo.description}</p>
 
-        <div className="mt-10 grid gap-4 max-w-2xl">
-          <a href="mailto:info@fartlek.com.ua" className="flex items-center gap-4 rounded-2xl border border-border bg-card p-5 transition-base hover:border-primary">
-            <Mail className="h-5 w-5 text-primary" />
-            <div>
-              <div className="text-xs uppercase tracking-wider text-muted-foreground">Email</div>
-              <div className="font-semibold">info@fartlek.com.ua</div>
-            </div>
-          </a>
-          <a href="tel:+380972520551" className="flex items-center gap-4 rounded-2xl border border-border bg-card p-5 transition-base hover:border-primary">
-            <Phone className="h-5 w-5 text-primary" />
-            <div>
-              <div className="text-xs uppercase tracking-wider text-muted-foreground">{lang === "uk" ? "Телефон" : "Phone"}</div>
-              <div className="font-semibold">+38 097 252 05 51</div>
-            </div>
-          </a>
-          <a href="https://t.me/Andres_K" target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 rounded-2xl border border-border bg-card p-5 transition-base hover:border-primary">
-            <Send className="h-5 w-5 text-primary" />
-            <div>
-              <div className="text-xs uppercase tracking-wider text-muted-foreground">Telegram</div>
-              <div className="font-semibold">@Andres_K</div>
-            </div>
-          </a>
-          <div className="flex items-center gap-4 rounded-2xl border border-border bg-card p-5">
-            <MapPin className="h-5 w-5 text-primary" />
-            <div>
-              <div className="text-xs uppercase tracking-wider text-muted-foreground">{lang === "uk" ? "Адреса" : "Address"}</div>
-              <div className="font-semibold">{lang === "uk" ? "Харків, вул. Власенка 24" : "Kharkiv, Vlasenka St. 24"}</div>
+        <div className="mt-10 grid gap-8 md:grid-cols-[1fr_auto] md:items-start">
+          <div className="grid gap-4 max-w-2xl">
+            <a href="mailto:info@fartlek.com.ua" className="flex items-center gap-4 rounded-2xl border border-border bg-card p-5 transition-base hover:border-primary">
+              <Mail className="h-5 w-5 text-primary" />
+              <div>
+                <div className="text-xs uppercase tracking-wider text-muted-foreground">Email</div>
+                <div className="font-semibold">info@fartlek.com.ua</div>
+              </div>
+            </a>
+            <a href="tel:+380972520551" className="flex items-center gap-4 rounded-2xl border border-border bg-card p-5 transition-base hover:border-primary">
+              <Phone className="h-5 w-5 text-primary" />
+              <div>
+                <div className="text-xs uppercase tracking-wider text-muted-foreground">{lang === "uk" ? "Телефон" : "Phone"}</div>
+                <div className="font-semibold">+38 097 252 05 51</div>
+              </div>
+            </a>
+            <a href="https://t.me/Andres_K" target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 rounded-2xl border border-border bg-card p-5 transition-base hover:border-primary">
+              <Send className="h-5 w-5 text-primary" />
+              <div>
+                <div className="text-xs uppercase tracking-wider text-muted-foreground">Telegram</div>
+                <div className="font-semibold">@Andres_K</div>
+              </div>
+            </a>
+            <div className="flex items-center gap-4 rounded-2xl border border-border bg-card p-5">
+              <MapPin className="h-5 w-5 text-primary" />
+              <div>
+                <div className="text-xs uppercase tracking-wider text-muted-foreground">{lang === "uk" ? "Адреса" : "Address"}</div>
+                <div className="font-semibold">{lang === "uk" ? "Харків, вул. Власенка 24" : "Kharkiv, Vlasenka St. 24"}</div>
+              </div>
             </div>
           </div>
+
+          <figure className="md:w-72 lg:w-80 flex flex-col items-center md:items-start">
+            <img
+              src={andriiAsset.url}
+              alt={lang === "uk" ? "Куршацов Андрій — засновник Фартлек" : "Andrii Kurshatsov — Fartlek founder"}
+              className="w-full rounded-2xl border border-border object-cover shadow-card"
+              loading="lazy"
+            />
+            <figcaption className="mt-4 text-center md:text-left">
+              <div className="text-xs uppercase tracking-wider text-muted-foreground">
+                {lang === "uk" ? "Засновник Фартлек" : "Fartlek founder"}
+              </div>
+              <div className="font-display text-lg font-semibold mt-1">
+                {lang === "uk" ? "Куршацов Андрій" : "Andrii Kurshatsov"}
+              </div>
+            </figcaption>
+          </figure>
         </div>
       </main>
       <Footer />
