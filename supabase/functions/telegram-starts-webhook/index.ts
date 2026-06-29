@@ -183,17 +183,25 @@ Deno.serve(async (req) => {
     });
   }
 
-  const parsed = parsePost(text, entities);
+  const parsed = parsePost(text, entities, post);
+  const cleanedDescription = cleanDescription(text);
   const extra = parseStartContent(text);
 
-  // Pick largest photo
+  // Pick largest photo; fallback to link preview URL (telegraph image)
   let imageUrl: string | null = null;
   const photoArr = post.photo as any[] | undefined;
+  const slugBase = (parsed.title || "post").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 40) || "post";
   if (photoArr && photoArr.length > 0) {
     const largest = photoArr[photoArr.length - 1];
-    const slugBase = (parsed.title || "post").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 40) || "post";
     imageUrl = await downloadAndStorePhoto(supabase, largest.file_id, slugBase);
   }
+  if (!imageUrl) {
+    const previewUrl: string | undefined = post.link_preview_options?.url;
+    if (previewUrl && /^https?:\/\//i.test(previewUrl) && /(telegra(ph|m)\.(controller\.bot|ph)|\.(jpe?g|png|webp)(\?|$))/i.test(previewUrl)) {
+      imageUrl = previewUrl;
+    }
+  }
+
 
   // For edited posts, update existing row
   if (update.edited_channel_post && chatId && messageId) {
