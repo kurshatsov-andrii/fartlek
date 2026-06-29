@@ -47,8 +47,9 @@ function parsePost(text: string, entities: any[] | undefined) {
     const m = text.match(/https?:\/\/[^\s)]+/);
     if (m) registerUrl = m[0];
   }
-  // Ignore the channel's own t.me links as register URL
+  // Ignore the channel's own t.me links and Telegraph file/image links as register URL
   if (registerUrl && /t\.me\/fartlekua/i.test(registerUrl)) registerUrl = null;
+  if (registerUrl && /telegra(ph|m)\.(controller\.bot|ph)\/file/i.test(registerUrl)) registerUrl = null;
 
   // Find date: dd.mm.yyyy | dd/mm/yyyy | dd.mm (assume next occurrence in current year)
   let eventDate: string | null = null;
