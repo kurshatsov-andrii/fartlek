@@ -52,14 +52,22 @@ export function parseStartContent(text: string) {
   const lower = text.toLowerCase();
   let city: string | null = null;
   let region: string | null = null;
-  const mDot = lower.match(/м\.\s*([а-яіїєґa-z'-]+(?:\s[а-яіїєґa-z'-]+)?)/i);
-  if (mDot) {
-    const c = mDot[1].trim();
+  // "Місто: Київ" label has priority.
+  const labeled = text.match(/місто\s*[:\-—]\s*([А-ЯІЇЄҐA-Za-zа-яіїєґ'’\-]+(?:\s[А-ЯІЇЄҐA-Za-zа-яіїєґ'’\-]+)?)/i);
+  if (labeled) {
+    const c = labeled[1].trim().toLowerCase();
     city = cap(c); region = CITY_REGION[c] ?? null;
   } else {
-    for (const key of CITY_KEYS) {
-      const r = new RegExp(`(^|[^а-яa-z])${escRe(key)}([^а-яa-z]|$)`, "i");
-      if (r.test(lower)) { city = cap(key); region = CITY_REGION[key]; break; }
+    // "м. Київ" — skip single-letter initials like "М.М."
+    const mDot = lower.match(/(?:^|[^а-яa-zіїєґ])м\.\s*([а-яіїєґa-z'’\-]{2,}(?:\s[а-яіїєґa-z'’\-]+)?)/i);
+    if (mDot) {
+      const c = mDot[1].trim();
+      city = cap(c); region = CITY_REGION[c] ?? null;
+    } else {
+      for (const key of CITY_KEYS) {
+        const r = new RegExp(`(^|[^а-яa-z])${escRe(key)}([^а-яa-z]|$)`, "i");
+        if (r.test(lower)) { city = cap(key); region = CITY_REGION[key]; break; }
+      }
     }
   }
 
