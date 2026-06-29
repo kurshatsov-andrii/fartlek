@@ -242,6 +242,29 @@ Deno.serve(async (req) => {
     }
   }
 
+  // Dedupe by title — if a start with the same (normalized) title already exists,
+  // do not create a duplicate. Re-link telegram message ids to the existing row.
+  const normalizedTitle = (parsed.title || "").trim();
+  if (normalizedTitle) {
+    const { data: sameTitle } = await supabase
+      .from("telegram_starts")
+      .select("id, telegram_message_id, telegram_chat_id")
+      .ilike("title", normalizedTitle)
+      .limit(1)
+      .maybeSingle();
+    if (sameTitle) {
+      // If this Telegram post hasn't been linked yet, attach it so future edits update the same row.
+      if (!sameTitle.telegram_message_id && messageId) {
+        await supabase.from("telegram_starts")
+          .update({ telegram_chat_id: chatId, telegram_message_id: messageId })
+          .eq("id", sameTitle.id);
+      }
+      return new Response(JSON.stringify({ ok: true, duplicate_title: true, id: sameTitle.id }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+  }
+
   // Insert as draft. Admin will publish (or cron will if it has date+url+title and date >= 2026-07-01).
   const seoNew = generateStartSeo({
     title: parsed.title || "",
