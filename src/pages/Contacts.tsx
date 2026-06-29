@@ -26,8 +26,8 @@ const Contacts = () => {
         </h1>
         <p className="mt-3 text-muted-foreground max-w-2xl">{seo.description}</p>
 
-        <div className="mt-10 grid gap-8 md:grid-cols-[1fr_auto] md:items-start">
-          <div className="grid gap-4 max-w-2xl">
+        <div className="mt-10 grid gap-8 lg:grid-cols-2 lg:items-center">
+          <div className="grid gap-4">
             <a href="mailto:info@fartlek.com.ua" className="flex items-center gap-4 rounded-2xl border border-border bg-card p-5 transition-base hover:border-primary">
               <Mail className="h-5 w-5 text-primary" />
               <div>
@@ -58,14 +58,14 @@ const Contacts = () => {
             </div>
           </div>
 
-          <figure className="md:w-72 lg:w-80 flex flex-col items-center md:items-start">
+          <figure className="flex flex-col items-center lg:items-start">
             <img
               src={andriiAsset.url}
               alt={lang === "uk" ? "Куршацов Андрій — засновник Фартлек" : "Andrii Kurshatsov — Fartlek founder"}
-              className="w-full rounded-2xl border border-border object-cover shadow-card"
+              className="w-full max-w-md rounded-2xl border border-border object-cover shadow-card"
               loading="lazy"
             />
-            <figcaption className="mt-4 text-center md:text-left">
+            <figcaption className="mt-4 text-center lg:text-left">
               <div className="text-xs uppercase tracking-wider text-muted-foreground">
                 {lang === "uk" ? "Засновник Фартлек" : "Fartlek founder"}
               </div>
