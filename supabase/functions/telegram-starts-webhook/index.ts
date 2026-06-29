@@ -28,13 +28,37 @@ function safeEqual(a: string | null, b: string): boolean {
   return diff === 0;
 }
 
-// Parse a Ukrainian/Russian post: first line = title, find date, first URL = register
-function parsePost(text: string, entities: any[] | undefined) {
+// Strip channel footer (promo links) and hashtags from description.
+function cleanDescription(text: string): string {
+  if (!text) return "";
+  let s = text;
+  // Remove footer block starting from "Надіслати івент" onwards
+  s = s.replace(/\n+\s*(?:#[^\s#]+\s*)*\n*\s*Надіслати\s+івент[\s\S]*$/i, "");
+  // Remove standalone hashtag-only lines
+  s = s.replace(/^[ \t]*(?:#[\p{L}\p{N}_]+\s*)+$/gmu, "");
+  // Remove leftover trailing pipes/links lines mentioning Fartlek/SiS/Музика
+  s = s.replace(/\n[^\n]*(Fartlek\s*Events|Сайт\s+Фартлек|SiS\s+зі\s+знижкою|Музика\s+для\s+бігу|Вартість\s+послуг)[^\n]*/gi, "");
+  // Collapse extra blank lines & trim
+  s = s.replace(/\n{3,}/g, "\n\n").trim();
+  return s;
+}
+
+function parsePost(text: string, entities: any[] | undefined, post?: any) {
   const firstLine = (text.split(/\r?\n/).find((l) => l.trim().length > 0) || "").trim().slice(0, 200);
 
-  // First URL via entities (handles text_link) or regex
   let registerUrl: string | null = null;
-  if (entities) {
+  // 1. Prefer inline keyboard button (Зареєструватися / Register)
+  const buttons = post?.reply_markup?.inline_keyboard;
+  if (Array.isArray(buttons)) {
+    for (const row of buttons) {
+      for (const btn of (row || [])) {
+        if (btn?.url) { registerUrl = btn.url; break; }
+      }
+      if (registerUrl) break;
+    }
+  }
+  // 2. Otherwise: first URL via entities (handles text_link) or regex
+  if (!registerUrl && entities) {
     for (const e of entities) {
       if (e.type === "text_link" && e.url) { registerUrl = e.url; break; }
       if (e.type === "url") {
@@ -47,11 +71,12 @@ function parsePost(text: string, entities: any[] | undefined) {
     const m = text.match(/https?:\/\/[^\s)]+/);
     if (m) registerUrl = m[0];
   }
-  // Ignore the channel's own t.me links and Telegraph file/image links as register URL
-  if (registerUrl && /t\.me\/fartlekua/i.test(registerUrl)) registerUrl = null;
-  if (registerUrl && /telegra(ph|m)\.(controller\.bot|ph)\/file/i.test(registerUrl)) registerUrl = null;
+  // Ignore the channel's own t.me links, Telegraph file/image links and Fartlek promo links as register URL
+  if (registerUrl && /(t\.me\/(fartlekua|Andres_K|fartlek_services|aigurtfartlek))|telegra(ph|m)\.(controller\.bot|ph)\/file|sis\.in\.ua|fartlek\.(com\.ua|lovable\.app)/i.test(registerUrl)) {
+    registerUrl = null;
+  }
 
-  // Find date: dd.mm.yyyy | dd/mm/yyyy | dd.mm (assume next occurrence in current year)
+  // Find date: dd.mm.yyyy | dd/mm/yyyy | dd mmmm yyyy
   let eventDate: string | null = null;
   const months: Record<string, number> = {
     "січня":1,"лютого":2,"березня":3,"квітня":4,"травня":5,"червня":6,
@@ -82,6 +107,7 @@ function parsePost(text: string, entities: any[] | undefined) {
 
   return { title: firstLine, registerUrl, eventDate };
 }
+
 
 async function downloadAndStorePhoto(supabase: any, fileId: string, slugBase: string): Promise<string | null> {
   if (!LOVABLE_API_KEY || !TELEGRAM_API_KEY) return null;
@@ -157,17 +183,25 @@ Deno.serve(async (req) => {
     });
   }
 
-  const parsed = parsePost(text, entities);
+  const parsed = parsePost(text, entities, post);
+  const cleanedDescription = cleanDescription(text);
   const extra = parseStartContent(text);
 
-  // Pick largest photo
+  // Pick largest photo; fallback to link preview URL (telegraph image)
   let imageUrl: string | null = null;
   const photoArr = post.photo as any[] | undefined;
+  const slugBase = (parsed.title || "post").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 40) || "post";
   if (photoArr && photoArr.length > 0) {
     const largest = photoArr[photoArr.length - 1];
-    const slugBase = (parsed.title || "post").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 40) || "post";
     imageUrl = await downloadAndStorePhoto(supabase, largest.file_id, slugBase);
   }
+  if (!imageUrl) {
+    const previewUrl: string | undefined = post.link_preview_options?.url;
+    if (previewUrl && /^https?:\/\//i.test(previewUrl) && /(telegra(ph|m)\.(controller\.bot|ph)|\.(jpe?g|png|webp)(\?|$))/i.test(previewUrl)) {
+      imageUrl = previewUrl;
+    }
+  }
+
 
   // For edited posts, update existing row
   if (update.edited_channel_post && chatId && messageId) {
@@ -187,7 +221,7 @@ Deno.serve(async (req) => {
       });
       const patch: any = {
         title: parsed.title || "",
-        description: text,
+        description: cleanedDescription,
         register_url: parsed.registerUrl,
         event_date: parsed.eventDate,
         raw_payload: post,
@@ -223,7 +257,7 @@ Deno.serve(async (req) => {
       telegram_message_id: messageId,
       telegram_media_group_id: mediaGroupId,
       title: parsed.title || "",
-      description: text,
+      description: cleanedDescription,
       image_url: imageUrl,
       register_url: parsed.registerUrl,
       event_date: parsed.eventDate,
