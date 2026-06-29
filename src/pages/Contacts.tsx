@@ -4,6 +4,7 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { SEO } from "@/components/SEO";
 import { useApp } from "@/contexts/AppContext";
+import andriiAsset from "@/assets/andrii.jpg.asset.json";
 
 const Contacts = () => {
   const { lang } = useApp();
