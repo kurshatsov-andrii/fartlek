@@ -221,7 +221,7 @@ Deno.serve(async (req) => {
       });
       const patch: any = {
         title: parsed.title || "",
-        description: text,
+        description: cleanedDescription,
         register_url: parsed.registerUrl,
         event_date: parsed.eventDate,
         raw_payload: post,
@@ -257,7 +257,7 @@ Deno.serve(async (req) => {
       telegram_message_id: messageId,
       telegram_media_group_id: mediaGroupId,
       title: parsed.title || "",
-      description: text,
+      description: cleanedDescription,
       image_url: imageUrl,
       register_url: parsed.registerUrl,
       event_date: parsed.eventDate,
