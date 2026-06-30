@@ -43,8 +43,24 @@ function cleanDescription(text: string): string {
   return s;
 }
 
+// Normalize a title for duplicate comparison: strip zero-width chars, emojis,
+// punctuation/whitespace, and lowercase. Two titles with different invisible
+// characters or trailing emojis must compare equal.
+function normalizeTitleForCompare(s: string): string {
+  if (!s) return "";
+  return s
+    .replace(/[\u200B-\u200F\u202A-\u202E\u2060\uFEFF]/g, "") // zero-width / bidi
+    .replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{1F000}-\u{1F64F}\u{1F680}-\u{1F6FF}\u{1F910}-\u{1F9FF}]/gu, "")
+    .replace(/\s+/g, "")
+    .toLowerCase()
+    .trim();
+}
+
 function parsePost(text: string, entities: any[] | undefined, post?: any) {
-  const firstLine = (text.split(/\r?\n/).find((l) => l.trim().length > 0) || "").trim().slice(0, 200);
+  // Strip leading zero-width / bidi chars before picking first line
+  const cleaned = text.replace(/[\u200B-\u200F\u202A-\u202E\u2060\uFEFF]/g, "");
+  const firstLine = (cleaned.split(/\r?\n/).find((l) => l.trim().length > 0) || "").trim().slice(0, 200);
+
 
   let registerUrl: string | null = null;
   // 1. Prefer inline keyboard button (Зареєструватися / Register)
@@ -242,16 +258,20 @@ Deno.serve(async (req) => {
     }
   }
 
-  // Dedupe by title — if a start with the same (normalized) title already exists,
-  // do not create a duplicate. Re-link telegram message ids to the existing row.
-  const normalizedTitle = (parsed.title || "").trim();
-  if (normalizedTitle) {
-    const { data: sameTitle } = await supabase
+  // Dedupe by normalized title — strip invisible chars/emojis/whitespace before
+  // comparing so reposts with different decorations don't create duplicates.
+  const normKey = normalizeTitleForCompare(parsed.title || "");
+  let sameTitle: { id: string; telegram_message_id: number | null; telegram_chat_id: number | null } | null = null;
+  if (normKey) {
+    const { data: candidates } = await supabase
       .from("telegram_starts")
-      .select("id, telegram_message_id, telegram_chat_id")
-      .ilike("title", normalizedTitle)
-      .limit(1)
-      .maybeSingle();
+      .select("id, title, telegram_message_id, telegram_chat_id")
+      .limit(2000);
+    const match = (candidates || []).find((r: any) => normalizeTitleForCompare(r.title || "") === normKey);
+    if (match) sameTitle = match as any;
+  }
+  if (normKey) {
+
     if (sameTitle) {
       // If this Telegram post hasn't been linked yet, attach it so future edits update the same row.
       if (!sameTitle.telegram_message_id && messageId) {
