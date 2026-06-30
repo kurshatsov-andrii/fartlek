@@ -258,16 +258,20 @@ Deno.serve(async (req) => {
     }
   }
 
-  // Dedupe by title — if a start with the same (normalized) title already exists,
-  // do not create a duplicate. Re-link telegram message ids to the existing row.
-  const normalizedTitle = (parsed.title || "").trim();
-  if (normalizedTitle) {
-    const { data: sameTitle } = await supabase
+  // Dedupe by normalized title — strip invisible chars/emojis/whitespace before
+  // comparing so reposts with different decorations don't create duplicates.
+  const normKey = normalizeTitleForCompare(parsed.title || "");
+  let sameTitle: { id: string; telegram_message_id: number | null; telegram_chat_id: number | null } | null = null;
+  if (normKey) {
+    const { data: candidates } = await supabase
       .from("telegram_starts")
-      .select("id, telegram_message_id, telegram_chat_id")
-      .ilike("title", normalizedTitle)
-      .limit(1)
-      .maybeSingle();
+      .select("id, title, telegram_message_id, telegram_chat_id")
+      .limit(2000);
+    const match = (candidates || []).find((r: any) => normalizeTitleForCompare(r.title || "") === normKey);
+    if (match) sameTitle = match as any;
+  }
+  if (normKey) {
+
     if (sameTitle) {
       // If this Telegram post hasn't been linked yet, attach it so future edits update the same row.
       if (!sameTitle.telegram_message_id && messageId) {
