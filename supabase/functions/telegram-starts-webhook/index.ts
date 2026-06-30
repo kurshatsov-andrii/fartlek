@@ -43,8 +43,24 @@ function cleanDescription(text: string): string {
   return s;
 }
 
+// Normalize a title for duplicate comparison: strip zero-width chars, emojis,
+// punctuation/whitespace, and lowercase. Two titles with different invisible
+// characters or trailing emojis must compare equal.
+function normalizeTitleForCompare(s: string): string {
+  if (!s) return "";
+  return s
+    .replace(/[\u200B-\u200F\u202A-\u202E\u2060\uFEFF]/g, "") // zero-width / bidi
+    .replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{1F000}-\u{1F64F}\u{1F680}-\u{1F6FF}\u{1F910}-\u{1F9FF}]/gu, "")
+    .replace(/\s+/g, "")
+    .toLowerCase()
+    .trim();
+}
+
 function parsePost(text: string, entities: any[] | undefined, post?: any) {
-  const firstLine = (text.split(/\r?\n/).find((l) => l.trim().length > 0) || "").trim().slice(0, 200);
+  // Strip leading zero-width / bidi chars before picking first line
+  const cleaned = text.replace(/[\u200B-\u200F\u202A-\u202E\u2060\uFEFF]/g, "");
+  const firstLine = (cleaned.split(/\r?\n/).find((l) => l.trim().length > 0) || "").trim().slice(0, 200);
+
 
   let registerUrl: string | null = null;
   // 1. Prefer inline keyboard button (Зареєструватися / Register)
