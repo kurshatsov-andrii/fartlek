@@ -219,7 +219,7 @@ export function RegistrationSelfService({ registration, onChanged }: Props) {
           <Button variant="outline" size="sm" onClick={() => setOpenDist(true)} disabled={!!pendingCancel}>
             <Repeat className="h-4 w-4" /> {T.change}
           </Button>
-          <Button variant="outline" size="sm" onClick={() => setOpenTransfer(true)} disabled={!!pendingCancel}>
+          <Button variant="outline" size="sm" onClick={() => setOpenTransfer(true)}>
             <Send className="h-4 w-4" /> {T.transfer}
           </Button>
           {!pendingCancel && (
