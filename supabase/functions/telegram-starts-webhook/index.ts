@@ -200,6 +200,8 @@ Deno.serve(async (req) => {
   }
 
   const parsed = parsePost(text, entities, post);
+  // Ensure stored title has no leading zero-width chars
+  parsed.title = (parsed.title || "").replace(/[\u200B-\u200F\u202A-\u202E\u2060\uFEFF]/g, "").trim();
   const cleanedDescription = cleanDescription(text);
   const extra = parseStartContent(text);
 
