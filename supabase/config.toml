@@ -21,6 +21,8 @@ project_id = "mjkjygzxwysbhgjtvobm"
     verify_jwt = false
   [functions.telegram-notify-signup]
     verify_jwt = false
+  [functions.telegram-notify-cancellation]
+    verify_jwt = false
   [functions.wayforpay-callback]
     verify_jwt = false
   [functions.telegram-starts-webhook]
