@@ -85,7 +85,7 @@ function formatDate(value: unknown): string | undefined {
 
 async function buildDynamicEntries(): Promise<SitemapEntry[]> {
   const [events, starts, clubs, organizers] = await Promise.all([
-    fetchRows("events", "select=id,updated_at&status=eq.published"),
+    fetchRows("events", "select=id,slug,updated_at&status=eq.published&slug=not.is.null"),
     fetchRows(
       "telegram_starts",
       "select=slug,updated_at&status=eq.published&slug=not.is.null",
@@ -97,8 +97,9 @@ async function buildDynamicEntries(): Promise<SitemapEntry[]> {
   const entries: SitemapEntry[] = [];
 
   for (const e of events) {
+    if (!e.slug) continue;
     entries.push({
-      path: `/events/${e.id}`,
+      path: `/events/${e.slug}`,
       lastmod: formatDate(e.updated_at) ?? today,
       changefreq: "weekly",
       priority: "0.8",
