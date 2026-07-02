@@ -99,7 +99,7 @@ async function buildDynamicEntries(): Promise<SitemapEntry[]> {
   for (const e of events) {
     if (!e.slug) continue;
     entries.push({
-      path: `/events/${e.id}`,
+      path: `/events/${e.slug}`,
       lastmod: formatDate(e.updated_at) ?? today,
       changefreq: "weekly",
       priority: "0.8",
