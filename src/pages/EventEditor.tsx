@@ -103,6 +103,7 @@ const EventEditor = () => {
           status: ev.status,
           registration_closed: !!(ev as any).registration_closed,
           changes_deadline_days: (ev as any).changes_deadline_days ?? 1,
+          max_total_participants: (ev as any).max_total_participants != null ? String((ev as any).max_total_participants) : "",
           category: ((ev as any).category ?? "run") as EventCategory,
           format: ((ev as any).format ?? "offline") as "offline" | "online" | "hybrid",
           results_pdf_url: (ev as any).results_pdf_url ?? "",
