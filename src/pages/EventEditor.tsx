@@ -251,6 +251,7 @@ const EventEditor = () => {
       results_url: form.results_url || null,
       photos_url: form.photos_url || null,
       description_image_url: form.description_image_url || null,
+      max_total_participants: form.max_total_participants ? parseInt(form.max_total_participants, 10) : null,
     } as any;
     let eventId = id!;
     if (isNew) {
