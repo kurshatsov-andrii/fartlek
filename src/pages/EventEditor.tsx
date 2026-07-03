@@ -912,6 +912,25 @@ const EventEditor = () => {
             </div>
 
             <div className="space-y-2">
+              <Label htmlFor="max_total_participants">
+                {lang === "uk" ? "Загальний ліміт учасників (усі дистанції)" : "Total participant limit (all distances)"}
+              </Label>
+              <Input
+                id="max_total_participants"
+                type="number"
+                min={0}
+                placeholder={lang === "uk" ? "Без обмежень" : "No limit"}
+                value={form.max_total_participants}
+                onChange={(e) => setForm({ ...form, max_total_participants: e.target.value })}
+              />
+              <p className="text-xs text-muted-foreground">
+                {lang === "uk"
+                  ? "Наприклад, 50 — коли загальна кількість реєстрацій на подію досягне 50, нові реєстрації будуть заблоковані. Залиш порожнім, щоб не обмежувати."
+                  : "e.g. 50 — new registrations are blocked once total across all distances reaches this number. Leave empty for no limit."}
+              </p>
+            </div>
+
+            <div className="space-y-2">
               <Label>{t.categories.label} *</Label>
               <Select value={form.category} onValueChange={(v) => setForm({ ...form, category: v as EventCategory })}>
                 <SelectTrigger><SelectValue /></SelectTrigger>
