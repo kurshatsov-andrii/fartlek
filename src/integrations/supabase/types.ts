@@ -787,6 +787,7 @@ export type Database = {
           image_url: string | null
           is_paid: boolean
           location: string | null
+          max_total_participants: number | null
           organizer_id: string
           organizer_name: string
           payment_url: string | null
@@ -813,6 +814,7 @@ export type Database = {
           image_url?: string | null
           is_paid?: boolean
           location?: string | null
+          max_total_participants?: number | null
           organizer_id: string
           organizer_name: string
           payment_url?: string | null
@@ -839,6 +841,7 @@ export type Database = {
           image_url?: string | null
           is_paid?: boolean
           location?: string | null
+          max_total_participants?: number | null
           organizer_id?: string
           organizer_name?: string
           payment_url?: string | null
