@@ -41,7 +41,7 @@ const EventEditor = () => {
   const [form, setForm] = useState({
     title: "", description: "", organizer_name: "",
     event_date: "", event_time: "", location: "",
-    image_url: "", is_paid: false, payment_url: "", status: "draft", registration_closed: false, changes_deadline_days: 1,
+    image_url: "", is_paid: false, payment_url: "", status: "draft", registration_closed: false, changes_deadline_days: 1, max_total_participants: "" as string,
     category: "run" as EventCategory,
     format: "offline" as "offline" | "online" | "hybrid",
     results_pdf_url: "",
@@ -103,6 +103,7 @@ const EventEditor = () => {
           status: ev.status,
           registration_closed: !!(ev as any).registration_closed,
           changes_deadline_days: (ev as any).changes_deadline_days ?? 1,
+          max_total_participants: (ev as any).max_total_participants != null ? String((ev as any).max_total_participants) : "",
           category: ((ev as any).category ?? "run") as EventCategory,
           format: ((ev as any).format ?? "offline") as "offline" | "online" | "hybrid",
           results_pdf_url: (ev as any).results_pdf_url ?? "",
@@ -250,6 +251,7 @@ const EventEditor = () => {
       results_url: form.results_url || null,
       photos_url: form.photos_url || null,
       description_image_url: form.description_image_url || null,
+      max_total_participants: form.max_total_participants ? parseInt(form.max_total_participants, 10) : null,
     } as any;
     let eventId = id!;
     if (isNew) {
@@ -906,6 +908,25 @@ const EventEditor = () => {
                 {lang === "uk"
                   ? "Учасник зможе сам змінювати дистанцію, передавати реєстрацію або просити відміну до цього дедлайну."
                   : "Participants can change distance, transfer or request cancellation only before this deadline."}
+              </p>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="max_total_participants">
+                {lang === "uk" ? "Загальний ліміт учасників (усі дистанції)" : "Total participant limit (all distances)"}
+              </Label>
+              <Input
+                id="max_total_participants"
+                type="number"
+                min={0}
+                placeholder={lang === "uk" ? "Без обмежень" : "No limit"}
+                value={form.max_total_participants}
+                onChange={(e) => setForm({ ...form, max_total_participants: e.target.value })}
+              />
+              <p className="text-xs text-muted-foreground">
+                {lang === "uk"
+                  ? "Наприклад, 50 — коли загальна кількість реєстрацій на подію досягне 50, нові реєстрації будуть заблоковані. Залиш порожнім, щоб не обмежувати."
+                  : "e.g. 50 — new registrations are blocked once total across all distances reaches this number. Leave empty for no limit."}
               </p>
             </div>
 
