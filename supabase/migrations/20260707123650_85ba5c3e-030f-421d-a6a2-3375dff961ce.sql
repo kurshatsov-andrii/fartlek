@@ -1,0 +1,2 @@
+UPDATE telegram_starts SET image_url='https://mjkjygzxwysbhgjtvobm.supabase.co/storage/v1/object/public/event-images/telegram-starts%2Fprosecco-run-backfill.jpg' WHERE id='d36a3054-68b2-4b6e-a4d1-90ff4e3de4b7';
+UPDATE telegram_starts SET image_url='https://mjkjygzxwysbhgjtvobm.supabase.co/storage/v1/object/public/event-images/telegram-starts%2Fzabig-vyshyvanky-backfill.jpg' WHERE id='0988ef73-7d92-44a3-882c-4d309d12f453';
