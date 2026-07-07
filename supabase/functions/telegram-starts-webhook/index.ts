@@ -162,6 +162,43 @@ async function downloadAndStorePhoto(supabase: any, fileId: string, slugBase: st
   }
 }
 
+async function downloadAndStoreFromUrl(supabase: any, url: string, slugBase: string): Promise<string | null> {
+  try {
+    // Upgrade http -> https where possible
+    const fetchUrl = url.replace(/^http:\/\//i, "https://");
+    const dl = await fetch(fetchUrl, { redirect: "follow" });
+    if (!dl.ok) {
+      // fallback to original url
+      const dl2 = await fetch(url, { redirect: "follow" });
+      if (!dl2.ok) return null;
+      return await uploadBuffer(supabase, new Uint8Array(await dl2.arrayBuffer()), dl2.headers.get("content-type") || "", slugBase);
+    }
+    const ct = dl.headers.get("content-type") || "";
+    return await uploadBuffer(supabase, new Uint8Array(await dl.arrayBuffer()), ct, slugBase);
+  } catch (e) {
+    console.error("url image download error", e);
+    return null;
+  }
+}
+
+async function uploadBuffer(supabase: any, buf: Uint8Array, contentType: string, slugBase: string): Promise<string | null> {
+  if (!buf || buf.byteLength < 100) return null;
+  // Sniff: must look like image
+  const isPng = buf[0] === 0x89 && buf[1] === 0x50;
+  const isJpg = buf[0] === 0xff && buf[1] === 0xd8;
+  const isWebp = buf[8] === 0x57 && buf[9] === 0x45;
+  if (!isPng && !isJpg && !isWebp && !/^image\//i.test(contentType)) return null;
+  const ext = isPng ? "png" : isWebp ? "webp" : "jpg";
+  const mime = isPng ? "image/png" : isWebp ? "image/webp" : "image/jpeg";
+  const path = `telegram-starts/${slugBase}-${Date.now()}.${ext}`;
+  const { error } = await supabase.storage.from("event-images").upload(path, buf, {
+    contentType: mime, upsert: true,
+  });
+  if (error) { console.error("upload error", error); return null; }
+  const { data: pub } = supabase.storage.from("event-images").getPublicUrl(path);
+  return pub.publicUrl;
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
@@ -215,8 +252,8 @@ Deno.serve(async (req) => {
   }
   if (!imageUrl) {
     const previewUrl: string | undefined = post.link_preview_options?.url;
-    if (previewUrl && /^https?:\/\//i.test(previewUrl) && /(telegra(ph|m)\.(controller\.bot|ph)|\.(jpe?g|png|webp)(\?|$))/i.test(previewUrl)) {
-      imageUrl = previewUrl;
+    if (previewUrl && /^https?:\/\//i.test(previewUrl)) {
+      imageUrl = await downloadAndStoreFromUrl(supabase, previewUrl, slugBase);
     }
   }
 
