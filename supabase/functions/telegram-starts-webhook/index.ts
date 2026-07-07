@@ -252,8 +252,8 @@ Deno.serve(async (req) => {
   }
   if (!imageUrl) {
     const previewUrl: string | undefined = post.link_preview_options?.url;
-    if (previewUrl && /^https?:\/\//i.test(previewUrl) && /(telegra(ph|m)\.(controller\.bot|ph)|\.(jpe?g|png|webp)(\?|$))/i.test(previewUrl)) {
-      imageUrl = previewUrl;
+    if (previewUrl && /^https?:\/\//i.test(previewUrl)) {
+      imageUrl = await downloadAndStoreFromUrl(supabase, previewUrl, slugBase);
     }
   }
 
