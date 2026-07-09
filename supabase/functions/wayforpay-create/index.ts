@@ -112,7 +112,7 @@ Deno.serve(async (req) => {
     return new Response(JSON.stringify({
       checkout: {
         merchantAccount: MERCHANT,
-        merchantAuthType: "simpleSignature",
+        merchantAuthType: "SimpleSignature",
         merchantDomainName: DOMAIN,
         merchantTransactionType: "AUTO",
         merchantTransactionSecureType: "AUTO",
