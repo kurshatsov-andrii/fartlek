@@ -56,7 +56,10 @@ Deno.serve(async (req) => {
     const originHeader = req.headers.get("origin") ?? req.headers.get("referer") ?? "";
     let originDomain = "";
     try { originDomain = originHeader ? new URL(originHeader).hostname : ""; } catch { originDomain = ""; }
-    const DOMAIN = originDomain || settings?.wayforpay_merchant_domain || "";
+    const DOMAIN = (settings?.wayforpay_merchant_domain || originDomain || "")
+      .replace(/^https?:\/\//, "")
+      .replace(/\/.*$/, "")
+      .trim();
 
     if (!MERCHANT || !SECRET || !DOMAIN) {
       return new Response(JSON.stringify({ error: "Організатор не налаштував реквізити WayForPay для цієї події" }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
@@ -108,7 +111,10 @@ Deno.serve(async (req) => {
     return new Response(JSON.stringify({
       checkout: {
         merchantAccount: MERCHANT,
+        merchantAuthType: "simpleSignature",
         merchantDomainName: DOMAIN,
+        merchantTransactionType: "AUTO",
+        merchantTransactionSecureType: "AUTO",
         merchantSignature: signature,
         orderReference: orderRef,
         orderDate,
