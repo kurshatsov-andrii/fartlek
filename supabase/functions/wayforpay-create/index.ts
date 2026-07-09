@@ -51,8 +51,8 @@ Deno.serve(async (req) => {
 
     const MERCHANT = settings?.wayforpay_merchant_login;
     const SECRET = settings?.wayforpay_secret_key;
-    // Домен беремо з origin запиту (де користувач натиснув «Сплатити»),
-    // з фолбеком на збережене значення для зворотної сумісності.
+    // Домен беремо зі збережених реквізитів мерчанта, щоб preview-адреса Lovable
+    // не потрапляла в підпис WayForPay. Origin лишається тільки фолбеком.
     const originHeader = req.headers.get("origin") ?? req.headers.get("referer") ?? "";
     let originDomain = "";
     try { originDomain = originHeader ? new URL(originHeader).hostname : ""; } catch { originDomain = ""; }
