@@ -51,12 +51,15 @@ Deno.serve(async (req) => {
 
     const MERCHANT = settings?.wayforpay_merchant_login;
     const SECRET = settings?.wayforpay_secret_key;
-    // Домен беремо з origin запиту (де користувач натиснув «Сплатити»),
-    // з фолбеком на збережене значення для зворотної сумісності.
+    // Домен беремо зі збережених реквізитів мерчанта, щоб preview-адреса Lovable
+    // не потрапляла в підпис WayForPay. Origin лишається тільки фолбеком.
     const originHeader = req.headers.get("origin") ?? req.headers.get("referer") ?? "";
     let originDomain = "";
     try { originDomain = originHeader ? new URL(originHeader).hostname : ""; } catch { originDomain = ""; }
-    const DOMAIN = originDomain || settings?.wayforpay_merchant_domain || "";
+    const DOMAIN = (settings?.wayforpay_merchant_domain || originDomain || "")
+      .replace(/^https?:\/\//, "")
+      .replace(/\/.*$/, "")
+      .trim();
 
     if (!MERCHANT || !SECRET || !DOMAIN) {
       return new Response(JSON.stringify({ error: "Організатор не налаштував реквізити WayForPay для цієї події" }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
@@ -102,13 +105,17 @@ Deno.serve(async (req) => {
 
     const projectId = Deno.env.get("SUPABASE_URL")!.match(/https:\/\/(.+?)\./)?.[1];
     const serviceUrl = `https://${projectId}.supabase.co/functions/v1/wayforpay-callback`;
-    const origin = req.headers.get("origin") ?? `https://${DOMAIN}`;
+    const requestOrigin = req.headers.get("origin") ?? `https://${DOMAIN}`;
+    const origin = settings?.wayforpay_merchant_domain ? `https://${DOMAIN}` : requestOrigin;
     const returnUrl = `${origin}/payment/success?order=${orderRef}`;
 
     return new Response(JSON.stringify({
       checkout: {
         merchantAccount: MERCHANT,
+        merchantAuthType: "simpleSignature",
         merchantDomainName: DOMAIN,
+        merchantTransactionType: "AUTO",
+        merchantTransactionSecureType: "AUTO",
         merchantSignature: signature,
         orderReference: orderRef,
         orderDate,
