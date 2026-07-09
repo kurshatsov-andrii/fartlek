@@ -1,0 +1,1 @@
+UPDATE public.registrations SET payment_status='pending' WHERE id='74c2e832-5e3a-4e73-ab16-bdb0ea88f28e';
