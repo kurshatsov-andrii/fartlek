@@ -164,11 +164,17 @@ async function downloadAndStorePhoto(supabase: any, fileId: string, slugBase: st
 
 async function downloadAndStoreFromUrl(supabase: any, url: string, slugBase: string): Promise<string | null> {
   try {
-    // Upgrade http -> https where possible
+    // Upgrade http -> https where possible. Some Telegram/Telegraph controller
+    // image URLs have broken/self-signed HTTPS but valid HTTP; if HTTPS throws,
+    // still fall back to the original URL instead of losing the image.
     const fetchUrl = url.replace(/^http:\/\//i, "https://");
-    const dl = await fetch(fetchUrl, { redirect: "follow" });
-    if (!dl.ok) {
-      // fallback to original url
+    let dl: Response | null = null;
+    try {
+      dl = await fetch(fetchUrl, { redirect: "follow" });
+    } catch (e) {
+      console.warn("https image fetch failed, falling back to original url", e);
+    }
+    if (!dl?.ok) {
       const dl2 = await fetch(url, { redirect: "follow" });
       if (!dl2.ok) return null;
       return await uploadBuffer(supabase, new Uint8Array(await dl2.arrayBuffer()), dl2.headers.get("content-type") || "", slugBase);
