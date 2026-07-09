@@ -13,7 +13,7 @@ interface CheckoutData {
   currency: string;
   productName: string[];
   productCount: number[];
-  productPrice: number[];
+  productPrice: (number | string)[];
   serviceUrl: string;
   returnUrl: string;
   language: string;
