@@ -660,7 +660,8 @@ const EventEditor = () => {
                   <p className="font-semibold">⚙️ Налаштуй у кабінеті WayForPay:</p>
                   {(() => {
                     const serviceUrl = `https://${import.meta.env.VITE_SUPABASE_PROJECT_ID}.supabase.co/functions/v1/wayforpay-callback`;
-                    const returnUrl = `${window.location.origin}/payment/success`;
+                    const cleanDomain = form.wfp_merchant_domain.trim().replace(/^https?:\/\//, "").replace(/\/.*$/, "");
+                    const returnUrl = `https://${cleanDomain || window.location.host}/payment/success`;
                     const copy = async (val: string, label: string) => {
                       try {
                         await navigator.clipboard.writeText(val);
