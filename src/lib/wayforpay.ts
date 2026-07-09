@@ -2,7 +2,10 @@ import { supabase } from "@/integrations/supabase/client";
 
 interface CheckoutData {
   merchantAccount: string;
+  merchantAuthType?: string;
   merchantDomainName: string;
+  merchantTransactionType?: string;
+  merchantTransactionSecureType?: string;
   merchantSignature: string;
   orderReference: string;
   orderDate: number;
@@ -37,7 +40,10 @@ export async function startWayForPayCheckout(registrationId: string) {
   };
 
   append("merchantAccount", c.merchantAccount);
+  if (c.merchantAuthType) append("merchantAuthType", c.merchantAuthType);
   append("merchantDomainName", c.merchantDomainName);
+  if (c.merchantTransactionType) append("merchantTransactionType", c.merchantTransactionType);
+  if (c.merchantTransactionSecureType) append("merchantTransactionSecureType", c.merchantTransactionSecureType);
   append("merchantSignature", c.merchantSignature);
   append("orderReference", c.orderReference);
   append("orderDate", c.orderDate);
