@@ -21,7 +21,6 @@ Deno.serve(async (req) => {
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 
-    // Validate JWT and get user
     const authClient = createClient(supabaseUrl, Deno.env.get("SUPABASE_ANON_KEY")!, {
       global: { headers: { Authorization: `Bearer ${token}` } },
     });
@@ -45,28 +44,31 @@ Deno.serve(async (req) => {
 
     const admin = createClient(supabaseUrl, serviceKey);
 
-    // Try WayForPay first, then LiqPay
+    // Знайти order (WFP або LiqPay)
     let registrationId: string | null = null;
     let orderUserId: string | null = null;
+    let orderStatus: string | null = null;
 
     const { data: wfp } = await admin
       .from("wayforpay_orders")
-      .select("registration_id, user_id")
+      .select("registration_id, user_id, status")
       .eq("order_reference", orderRef)
       .maybeSingle();
 
     if (wfp) {
       registrationId = wfp.registration_id;
       orderUserId = wfp.user_id;
+      orderStatus = wfp.status;
     } else {
       const { data: lp } = await admin
         .from("liqpay_orders")
-        .select("registration_id, user_id")
+        .select("registration_id, user_id, status")
         .eq("order_reference", orderRef)
         .maybeSingle();
       if (lp) {
         registrationId = lp.registration_id;
         orderUserId = lp.user_id;
+        orderStatus = lp.status;
       }
     }
 
@@ -84,21 +86,22 @@ Deno.serve(async (req) => {
       });
     }
 
-    // Check current registration status — don't overwrite if already paid
+    // Повертаємо реальний статус — НЕ позначаємо paid без callback від провайдера.
     const { data: reg } = await admin
       .from("registrations")
       .select("payment_status")
       .eq("id", registrationId)
       .maybeSingle();
 
-    if (reg && reg.payment_status !== "paid") {
-      await admin
-        .from("registrations")
-        .update({ payment_status: "paid" })
-        .eq("id", registrationId);
-    }
+    const paid = orderStatus === "paid" || reg?.payment_status === "paid";
 
-    return new Response(JSON.stringify({ ok: true, registration_id: registrationId }), {
+    return new Response(JSON.stringify({
+      ok: true,
+      registration_id: registrationId,
+      order_status: orderStatus,
+      payment_status: reg?.payment_status ?? null,
+      paid,
+    }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (e) {
