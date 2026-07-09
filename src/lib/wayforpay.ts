@@ -9,7 +9,7 @@ interface CheckoutData {
   merchantSignature: string;
   orderReference: string;
   orderDate: number;
-  amount: number;
+  amount: number | string;
   currency: string;
   productName: string[];
   productCount: number[];
@@ -17,6 +17,7 @@ interface CheckoutData {
   serviceUrl: string;
   returnUrl: string;
   language: string;
+  paymentUrl?: string;
 }
 
 export async function startWayForPayCheckout(registrationId: string) {
@@ -27,6 +28,11 @@ export async function startWayForPayCheckout(registrationId: string) {
   if (error || !data?.checkout) throw new Error(error?.message ?? "Не вдалося створити платіж");
 
   const c = data.checkout;
+  if (c.paymentUrl) {
+    window.location.assign(c.paymentUrl);
+    return;
+  }
+
   const form = document.createElement("form");
   form.method = "POST";
   form.action = "https://secure.wayforpay.com/pay";
