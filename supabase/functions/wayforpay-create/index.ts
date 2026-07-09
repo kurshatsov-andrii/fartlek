@@ -105,7 +105,8 @@ Deno.serve(async (req) => {
 
     const projectId = Deno.env.get("SUPABASE_URL")!.match(/https:\/\/(.+?)\./)?.[1];
     const serviceUrl = `https://${projectId}.supabase.co/functions/v1/wayforpay-callback`;
-    const origin = req.headers.get("origin") ?? `https://${DOMAIN}`;
+    const requestOrigin = req.headers.get("origin") ?? `https://${DOMAIN}`;
+    const origin = settings?.wayforpay_merchant_domain ? `https://${DOMAIN}` : requestOrigin;
     const returnUrl = `${origin}/payment/success?order=${orderRef}`;
 
     return new Response(JSON.stringify({
