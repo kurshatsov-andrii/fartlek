@@ -138,7 +138,10 @@ const EventDetails = () => {
         supabase.rpc("get_event_participants_count", { _event_id: ev.id }),
       ]);
       setDistances((ds ?? []) as any);
-      setParticipantsCount((cnt as number) ?? 0);
+      const rawCount = (cnt as number) ?? 0;
+      // Fixed display for Kharkiv Half Marathon — cap at 200
+      const isKharkivHalf = /kharkiv\s*half\s*marathon/i.test(ev.title ?? "") || /kharkiv-half-marathon/i.test(ev.slug ?? "");
+      setParticipantsCount(isKharkivHalf ? Math.min(rawCount, 200) : rawCount);
       // Per-distance counts (for capacity display / blocking) — aggregated, no personal data
       const { data: regRows } = await supabase.rpc("get_event_distance_counts", { _event_id: ev.id });
       const counts: Record<string, number> = {};

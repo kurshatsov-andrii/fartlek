@@ -2,129 +2,141 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://fartlek.lovable.app/</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://fartlek.lovable.app/calendar</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://fartlek.lovable.app/starts</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://fartlek.lovable.app/clubs</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://fartlek.lovable.app/organizers</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://fartlek.lovable.app/category</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://fartlek.lovable.app/features</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-16</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://fartlek.lovable.app/testimonials</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-16</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://fartlek.lovable.app/contacts</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-16</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://fartlek.lovable.app/privacy</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-16</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
     <loc>https://fartlek.lovable.app/public-offer</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-16</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
     <loc>https://fartlek.lovable.app/user-agreement</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-16</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
     <loc>https://fartlek.lovable.app/category/road_run</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://fartlek.lovable.app/category/trail</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://fartlek.lovable.app/category/ocr</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://fartlek.lovable.app/category/triathlon</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://fartlek.lovable.app/category/duathlon</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://fartlek.lovable.app/category/aquathlon</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://fartlek.lovable.app/category/cycling</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://fartlek.lovable.app/category/swimming</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://fartlek.lovable.app/category/cross</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fartlek.lovable.app/events/nagoritreyl-35-km-vid-kremenchuka-na-gori-2026</loc>
+    <lastmod>2026-07-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://fartlek.lovable.app/events/kharkiv-half-marathon-harkiv-2026</loc>
+    <lastmod>2026-07-15</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://fartlek.lovable.app/events/relay-race-25h400m-harkiv-stadion-hay-2026</loc>
@@ -137,30 +149,6 @@
     <lastmod>2026-06-30</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://fartlek.lovable.app/events/kharkiv-half-marathon-harkiv-2026</loc>
-    <lastmod>2026-06-22</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://fartlek.lovable.app/events/total-run-harkiv-zhuravlivs-kyy-ostriv-2026</loc>
-    <lastmod>2026-06-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://fartlek.lovable.app/starts/dyka-gonka-lito-2026-07-11</loc>
-    <lastmod>2026-06-28</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fartlek.lovable.app/starts/international-dnipro-swim-marathon</loc>
-    <lastmod>2026-06-28</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://fartlek.lovable.app/starts/pusk-5-km-amateur-championship-2026-07-18</loc>
@@ -199,14 +187,56 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fartlek.lovable.app/starts/open-water-fest-2026-2026-07-11</loc>
-    <lastmod>2026-06-29</lastmod>
+    <loc>https://fartlek.lovable.app/starts/varas-kyy-pivmarafon-goryzont-mozhlyvostey-2026-09-19</loc>
+    <lastmod>2026-07-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fartlek.lovable.app/starts/multiki-chotyry-sezony-lito-treylovi-zabigy-pid-vitryakamy-2026-07-05</loc>
-    <lastmod>2026-07-01</lastmod>
+    <loc>https://fartlek.lovable.app/starts/nagori-treyl-2026-08-15</loc>
+    <lastmod>2026-07-11</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fartlek.lovable.app/starts/cherkasy-swim-fest-2026-07-25</loc>
+    <lastmod>2026-07-11</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fartlek.lovable.app/starts/beskydy-trail-2026-2026-08-22</loc>
+    <lastmod>2026-07-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fartlek.lovable.app/starts/urban-track-festival-pa-ce-edition-2026-07-26</loc>
+    <lastmod>2026-07-15</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fartlek.lovable.app/starts/prosecco-run-2026-07-18</loc>
+    <lastmod>2026-07-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fartlek.lovable.app/starts/13-y-zabig-u-vyshyvankah-do-35oi-richnyci-dnya-nezalezhnosti-ukrainy-2026-08-23</loc>
+    <lastmod>2026-07-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fartlek.lovable.app/starts/onlayn-zabig-syl-nishi-za-obstavyny-2026-07-27</loc>
+    <lastmod>2026-07-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fartlek.lovable.app/starts/treyl-modrivs-ki-skeli-2026-09-05</loc>
+    <lastmod>2026-07-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
