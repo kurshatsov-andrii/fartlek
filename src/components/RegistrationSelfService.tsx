@@ -215,17 +215,21 @@ export function RegistrationSelfService({ registration, onChanged }: Props) {
         </div>
       )}
 
-      {!allowed ? (
+      {!allowed && !transferAllowed ? (
         <p className="text-sm text-muted-foreground">{T.notAllowed}</p>
       ) : (
         <div className="flex flex-wrap gap-2">
-          <Button variant="outline" size="sm" onClick={() => setOpenDist(true)} disabled={!!pendingCancel}>
-            <Repeat className="h-4 w-4" /> {T.change}
-          </Button>
-          <Button variant="outline" size="sm" onClick={() => setOpenTransfer(true)}>
-            <Send className="h-4 w-4" /> {T.transfer}
-          </Button>
-          {!pendingCancel && (
+          {allowed && (
+            <Button variant="outline" size="sm" onClick={() => setOpenDist(true)} disabled={!!pendingCancel}>
+              <Repeat className="h-4 w-4" /> {T.change}
+            </Button>
+          )}
+          {transferAllowed && (
+            <Button variant="outline" size="sm" onClick={() => setOpenTransfer(true)}>
+              <Send className="h-4 w-4" /> {T.transfer}
+            </Button>
+          )}
+          {allowed && !pendingCancel && (
             <Button variant="outline" size="sm" className="text-destructive hover:text-destructive" onClick={() => setOpenCancel(true)}>
               <XCircle className="h-4 w-4" /> {T.cancel}
             </Button>
