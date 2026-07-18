@@ -19,6 +19,7 @@ export function RegistrationSelfService({ registration, onChanged }: Props) {
   const dist = registration.distances;
 
   const [allowed, setAllowed] = useState(false);
+  const [transferAllowed, setTransferAllowed] = useState(false);
   const [distances, setDistances] = useState<any[]>([]);
   const [pendingCancel, setPendingCancel] = useState<any>(null);
   const [activeTransfer, setActiveTransfer] = useState<any>(null);
