@@ -19,6 +19,7 @@ export function RegistrationSelfService({ registration, onChanged }: Props) {
   const dist = registration.distances;
 
   const [allowed, setAllowed] = useState(false);
+  const [transferAllowed, setTransferAllowed] = useState(false);
   const [distances, setDistances] = useState<any[]>([]);
   const [pendingCancel, setPendingCancel] = useState<any>(null);
   const [activeTransfer, setActiveTransfer] = useState<any>(null);
@@ -85,6 +86,8 @@ export function RegistrationSelfService({ registration, onChanged }: Props) {
   const refresh = async () => {
     const { data: a } = await supabase.rpc("are_changes_allowed", { _event_id: ev.id });
     setAllowed(!!a);
+    const { data: ta } = await supabase.rpc("is_transfer_allowed", { _event_id: ev.id });
+    setTransferAllowed(!!ta);
     const { data: ds } = await supabase
       .from("distances")
       .select("id, name, distance_km, price, max_participants, is_active")
@@ -212,17 +215,21 @@ export function RegistrationSelfService({ registration, onChanged }: Props) {
         </div>
       )}
 
-      {!allowed ? (
+      {!allowed && !transferAllowed ? (
         <p className="text-sm text-muted-foreground">{T.notAllowed}</p>
       ) : (
         <div className="flex flex-wrap gap-2">
-          <Button variant="outline" size="sm" onClick={() => setOpenDist(true)} disabled={!!pendingCancel}>
-            <Repeat className="h-4 w-4" /> {T.change}
-          </Button>
-          <Button variant="outline" size="sm" onClick={() => setOpenTransfer(true)}>
-            <Send className="h-4 w-4" /> {T.transfer}
-          </Button>
-          {!pendingCancel && (
+          {allowed && (
+            <Button variant="outline" size="sm" onClick={() => setOpenDist(true)} disabled={!!pendingCancel}>
+              <Repeat className="h-4 w-4" /> {T.change}
+            </Button>
+          )}
+          {transferAllowed && (
+            <Button variant="outline" size="sm" onClick={() => setOpenTransfer(true)}>
+              <Send className="h-4 w-4" /> {T.transfer}
+            </Button>
+          )}
+          {allowed && !pendingCancel && (
             <Button variant="outline" size="sm" className="text-destructive hover:text-destructive" onClick={() => setOpenCancel(true)}>
               <XCircle className="h-4 w-4" /> {T.cancel}
             </Button>
