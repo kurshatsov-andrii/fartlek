@@ -86,6 +86,8 @@ export function RegistrationSelfService({ registration, onChanged }: Props) {
   const refresh = async () => {
     const { data: a } = await supabase.rpc("are_changes_allowed", { _event_id: ev.id });
     setAllowed(!!a);
+    const { data: ta } = await supabase.rpc("is_transfer_allowed", { _event_id: ev.id });
+    setTransferAllowed(!!ta);
     const { data: ds } = await supabase
       .from("distances")
       .select("id, name, distance_km, price, max_participants, is_active")
