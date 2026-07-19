@@ -70,6 +70,7 @@ Deno.serve(async (req) => {
         full_name: full_name ?? "",
         role: role === "organizer" ? "organizer" : "participant",
         marketing_consent: marketing_consent !== false,
+        captcha_verified: true,
       },
       app_metadata: {
         provider: "email",
