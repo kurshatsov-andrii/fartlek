@@ -281,10 +281,18 @@ const OrganizerEventCampaign = () => {
                 min={1}
                 max={200}
                 value={batchSize}
-                onChange={(e) => setBatchSize(Math.max(1, Math.min(200, Number(e.target.value) || 50)))}
+                onChange={(e) => setBatchSize(Math.max(1, Math.min(200, Number(e.target.value) || 200)))}
               />
             </div>
           </div>
+
+          <div className="rounded-lg border border-amber-500/40 bg-amber-500/10 p-3 text-sm text-amber-900 dark:text-amber-200">
+            <strong>Увага:</strong> денний ліміт поштового провайдера — <strong>200 листів на добу</strong>.
+            Якщо учасників більше, розсилка автоматично зупиниться після 200 і збережеться зі статусом
+            <em> «Призупинено»</em>. Наступного дня відкрийте цю сторінку та натисніть <strong>«Продовжити»</strong>
+            у історії нижче, щоб надіслати решту листів.
+          </div>
+
 
           <div className="border-t border-border pt-5 space-y-4">
             <div>
