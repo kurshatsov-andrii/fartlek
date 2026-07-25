@@ -333,11 +333,11 @@ const OrganizerEventCampaign = () => {
             <h2 className="font-display text-xl font-bold mb-4">Історія листів по цій події</h2>
             <div className="space-y-2">
               {history.map((c) => (
-                <div key={c.id} className="bg-card p-4 rounded-xl flex items-center justify-between gap-4">
+                <div key={c.id} className="bg-card p-4 rounded-xl flex items-center justify-between gap-4 flex-wrap">
                   <div className="min-w-0 flex-1">
                     <div className="font-semibold truncate">{c.subject}</div>
                     <div className="text-xs text-muted-foreground mt-1">
-                      {new Date(c.created_at).toLocaleString("uk-UA")}
+                      {new Date(c.created_at).toLocaleString("uk-UA")} · надіслано {c.sent_count}/{c.recipient_count}
                     </div>
                   </div>
                   <div className="flex items-center gap-2 text-sm shrink-0">
@@ -345,9 +345,20 @@ const OrganizerEventCampaign = () => {
                     {c.status === "sending" && <Badge variant="secondary">Відправка...</Badge>}
                     {c.status === "draft" && <Badge variant="secondary">Чернетка</Badge>}
                     {c.status === "failed" && <Badge variant="destructive">Помилка</Badge>}
+                    {c.status === "paused" && (
+                      <>
+                        <Badge variant="outline" className="border-amber-500 text-amber-700 dark:text-amber-300">
+                          Призупинено (ліміт на добу)
+                        </Badge>
+                        <Button size="sm" disabled={busy} onClick={() => resumeCampaign(c)}>
+                          Продовжити
+                        </Button>
+                      </>
+                    )}
                   </div>
                 </div>
               ))}
+
             </div>
           </section>
         )}
