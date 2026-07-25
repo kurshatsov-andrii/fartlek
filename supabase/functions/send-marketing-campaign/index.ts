@@ -253,8 +253,12 @@ Deno.serve(async (req) => {
 
   let sent = 0
   let failed = 0
+  let quotaExceeded = false
+  let stoppedAtIndex = 0
 
-  for (const r of recipients) {
+  for (let i = 0; i < recipients.length; i++) {
+    const r = recipients[i]
+    stoppedAtIndex = i
     try {
       // Get/create unsubscribe token
       let token: string
@@ -315,13 +319,25 @@ Deno.serve(async (req) => {
 
       const data = await resp.json().catch(() => ({}))
       if (!resp.ok) {
+        const errText = JSON.stringify(data)
+        const isQuota =
+          resp.status === 429 ||
+          /daily_quota_exceeded|quota|rate.?limit/i.test(errText)
+
+        if (isQuota) {
+          // Roll back the pending log so it can be retried tomorrow
+          await admin.from('email_send_log').delete().eq('message_id', messageId)
+          quotaExceeded = true
+          break
+        }
+
         failed++
         await admin.from('email_send_log').insert({
           message_id: messageId,
           template_name: 'marketing-campaign',
           recipient_email: r.email,
           status: 'failed',
-          error_message: `Resend ${resp.status}: ${JSON.stringify(data)}`.slice(0, 500),
+          error_message: `Resend ${resp.status}: ${errText}`.slice(0, 500),
           metadata: { campaign_id },
         })
       } else {
@@ -342,8 +358,10 @@ Deno.serve(async (req) => {
     await new Promise((res) => setTimeout(res, BATCH_DELAY_MS))
   }
 
-  const nextOffset = bOffset + recipients.length
-  const done = test_email ? true : nextOffset >= allRecipients.length
+  // Compute the offset to resume from next time
+  const processedCount = quotaExceeded ? stoppedAtIndex : recipients.length
+  const nextOffset = bOffset + processedCount
+  const done = test_email ? true : (!quotaExceeded && nextOffset >= allRecipients.length)
 
   if (!test_email) {
     // Increment campaign counters and finalize when done
@@ -356,10 +374,14 @@ Deno.serve(async (req) => {
     const newSent = (cur?.sent_count ?? 0) + sent
     const newFailed = (cur?.failed_count ?? 0) + failed
 
+    const newStatus = done
+      ? (newSent === 0 ? 'failed' : 'sent')
+      : (quotaExceeded ? 'paused' : 'sending')
+
     await admin
       .from('marketing_campaigns')
       .update({
-        status: done ? (newSent === 0 ? 'failed' : 'sent') : 'sending',
+        status: newStatus,
         sent_count: newSent,
         failed_count: newFailed,
         ...(done ? { sent_at: new Date().toISOString() } : {}),
@@ -375,6 +397,8 @@ Deno.serve(async (req) => {
     total_recipients: test_email ? recipients.length : allRecipients.length,
     next_offset: done ? null : nextOffset,
     done,
+    quota_exceeded: quotaExceeded,
     test: !!test_email,
   })
 })
+

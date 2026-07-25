@@ -20,7 +20,7 @@ const OrganizerEventCampaign = () => {
   const [subject, setSubject] = useState("");
   const [intro, setIntro] = useState("");
   const [testEmail, setTestEmail] = useState("");
-  const [batchSize, setBatchSize] = useState(50);
+  const [batchSize, setBatchSize] = useState(200);
   const [busy, setBusy] = useState(false);
   const [progress, setProgress] = useState<{ sent: number; failed: number; total: number } | null>(null);
   const [history, setHistory] = useState<any[]>([]);
@@ -136,6 +136,7 @@ const OrganizerEventCampaign = () => {
         let totalFailed = 0;
         let total = recipientCount ?? 0;
         let batchNum = 0;
+        let paused = false;
         while (true) {
           batchNum++;
           const { data, error } = await supabase.functions.invoke("send-marketing-campaign", {
@@ -148,12 +149,21 @@ const OrganizerEventCampaign = () => {
           total = r.total_recipients ?? total;
           setProgress({ sent: totalSent, failed: totalFailed, total });
           toast.message(`Батч ${batchNum}: ${r.sent} відправлено, ${r.failed} помилок`);
+          if (r.quota_exceeded) { paused = true; break; }
           if (r.done || !r.next_offset) break;
           offset = r.next_offset;
           await new Promise((res) => setTimeout(res, 5000));
         }
-        toast.success(`Готово: ${totalSent}/${total}, помилок ${totalFailed}`);
-        try { if (draftKey) localStorage.removeItem(draftKey); } catch {}
+        if (paused) {
+          const remaining = Math.max(0, total - totalSent - totalFailed);
+          toast.warning(
+            `Денний ліміт вичерпано. Надіслано ${totalSent}/${total}. Залишилось ${remaining} — продовжіть завтра кнопкою «Продовжити» у історії нижче.`,
+            { duration: 15000 }
+          );
+        } else {
+          toast.success(`Готово: ${totalSent}/${total}, помилок ${totalFailed}`);
+          try { if (draftKey) localStorage.removeItem(draftKey); } catch {}
+        }
 
         const { data: h } = await supabase
           .from("marketing_campaigns" as any)
@@ -169,6 +179,59 @@ const OrganizerEventCampaign = () => {
       setBusy(false);
     }
   };
+
+  const resumeCampaign = async (c: any) => {
+    if (!event) return;
+    if (!confirm(`Продовжити розсилку «${c.subject}»?`)) return;
+    setBusy(true);
+    setProgress(null);
+    try {
+      let offset = (c.sent_count ?? 0) + (c.failed_count ?? 0);
+      let totalSent = c.sent_count ?? 0;
+      let totalFailed = c.failed_count ?? 0;
+      let total = c.recipient_count ?? 0;
+      let batchNum = 0;
+      let paused = false;
+      while (true) {
+        batchNum++;
+        const { data, error } = await supabase.functions.invoke("send-marketing-campaign", {
+          body: { campaign_id: c.id, batch_size: batchSize, batch_offset: offset },
+        });
+        if (error) throw new Error(error.message);
+        const r = data as any;
+        totalSent += r.sent;
+        totalFailed += r.failed;
+        total = r.total_recipients ?? total;
+        setProgress({ sent: totalSent, failed: totalFailed, total });
+        toast.message(`Батч ${batchNum}: ${r.sent} відправлено, ${r.failed} помилок`);
+        if (r.quota_exceeded) { paused = true; break; }
+        if (r.done || !r.next_offset) break;
+        offset = r.next_offset;
+        await new Promise((res) => setTimeout(res, 5000));
+      }
+      if (paused) {
+        const remaining = Math.max(0, total - totalSent - totalFailed);
+        toast.warning(
+          `Денний ліміт вичерпано. Всього надіслано ${totalSent}/${total}. Залишилось ${remaining} — продовжіть завтра.`,
+          { duration: 15000 }
+        );
+      } else {
+        toast.success(`Готово: ${totalSent}/${total}`);
+      }
+      const { data: h } = await supabase
+        .from("marketing_campaigns" as any)
+        .select("*")
+        .contains("audience_filter", { event_id: event.id })
+        .order("created_at", { ascending: false })
+        .limit(20);
+      setHistory((h ?? []) as any[]);
+    } catch (e: any) {
+      toast.error(e?.message ?? "Помилка");
+    } finally {
+      setBusy(false);
+    }
+  };
+
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
@@ -218,10 +281,18 @@ const OrganizerEventCampaign = () => {
                 min={1}
                 max={200}
                 value={batchSize}
-                onChange={(e) => setBatchSize(Math.max(1, Math.min(200, Number(e.target.value) || 50)))}
+                onChange={(e) => setBatchSize(Math.max(1, Math.min(200, Number(e.target.value) || 200)))}
               />
             </div>
           </div>
+
+          <div className="rounded-lg border border-amber-500/40 bg-amber-500/10 p-3 text-sm text-amber-900 dark:text-amber-200">
+            <strong>Увага:</strong> денний ліміт поштового провайдера — <strong>200 листів на добу</strong>.
+            Якщо учасників більше, розсилка автоматично зупиниться після 200 і збережеться зі статусом
+            <em> «Призупинено»</em>. Наступного дня відкрийте цю сторінку та натисніть <strong>«Продовжити»</strong>
+            у історії нижче, щоб надіслати решту листів.
+          </div>
+
 
           <div className="border-t border-border pt-5 space-y-4">
             <div>
@@ -262,11 +333,11 @@ const OrganizerEventCampaign = () => {
             <h2 className="font-display text-xl font-bold mb-4">Історія листів по цій події</h2>
             <div className="space-y-2">
               {history.map((c) => (
-                <div key={c.id} className="bg-card p-4 rounded-xl flex items-center justify-between gap-4">
+                <div key={c.id} className="bg-card p-4 rounded-xl flex items-center justify-between gap-4 flex-wrap">
                   <div className="min-w-0 flex-1">
                     <div className="font-semibold truncate">{c.subject}</div>
                     <div className="text-xs text-muted-foreground mt-1">
-                      {new Date(c.created_at).toLocaleString("uk-UA")}
+                      {new Date(c.created_at).toLocaleString("uk-UA")} · надіслано {c.sent_count}/{c.recipient_count}
                     </div>
                   </div>
                   <div className="flex items-center gap-2 text-sm shrink-0">
@@ -274,9 +345,20 @@ const OrganizerEventCampaign = () => {
                     {c.status === "sending" && <Badge variant="secondary">Відправка...</Badge>}
                     {c.status === "draft" && <Badge variant="secondary">Чернетка</Badge>}
                     {c.status === "failed" && <Badge variant="destructive">Помилка</Badge>}
+                    {c.status === "paused" && (
+                      <>
+                        <Badge variant="outline" className="border-amber-500 text-amber-700 dark:text-amber-300">
+                          Призупинено (ліміт на добу)
+                        </Badge>
+                        <Button size="sm" disabled={busy} onClick={() => resumeCampaign(c)}>
+                          Продовжити
+                        </Button>
+                      </>
+                    )}
                   </div>
                 </div>
               ))}
+
             </div>
           </section>
         )}

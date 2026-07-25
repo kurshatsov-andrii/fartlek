@@ -50,7 +50,7 @@ const AdminCampaigns = () => {
   const [allEvents, setAllEvents] = useState<EventLite[]>([]);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [testEmail, setTestEmail] = useState("");
-  const [batchSize, setBatchSize] = useState(50);
+  const [batchSize, setBatchSize] = useState(200);
   const [busy, setBusy] = useState(false);
   const [progress, setProgress] = useState<{ sent: number; failed: number; total: number } | null>(null);
   const [pageLoading, setPageLoading] = useState(true);
@@ -183,6 +183,7 @@ const AdminCampaigns = () => {
         let totalFailed = 0;
         let total = recipientCount ?? 0;
         let batchNum = 0;
+        let paused = false;
 
         while (true) {
           batchNum++;
@@ -197,20 +198,33 @@ const AdminCampaigns = () => {
           setProgress({ sent: totalSent, failed: totalFailed, total });
           toast.message(`Батч ${batchNum}: відправлено ${r.sent}, помилок ${r.failed}`);
 
+          if (r.quota_exceeded) {
+            paused = true;
+            break;
+          }
           if (r.done || !r.next_offset) break;
           offset = r.next_offset;
           // Pause between batches to avoid Resend rate limits
           await new Promise((res) => setTimeout(res, 5000));
         }
 
-        toast.success(`Готово: ${totalSent}/${total}, помилок ${totalFailed}`);
+        if (paused) {
+          const remaining = Math.max(0, total - totalSent - totalFailed);
+          toast.warning(
+            `Денний ліміт Resend вичерпано. Надіслано ${totalSent}/${total}. Залишилось ${remaining} — надішліть завтра кнопкою «Продовжити» у історії розсилок.`,
+            { duration: 15000 }
+          );
+        } else {
+          toast.success(`Готово: ${totalSent}/${total}, помилок ${totalFailed}`);
+        }
         const { data: c } = await supabase
           .from("marketing_campaigns" as any)
           .select("*")
           .order("created_at", { ascending: false })
           .limit(20);
         setCampaigns((c ?? []) as unknown as Campaign[]);
-        setSelectedIds(new Set());
+        if (!paused) setSelectedIds(new Set());
+
       }
     } catch (e: any) {
       toast.error(e?.message ?? "Помилка");
@@ -218,6 +232,57 @@ const AdminCampaigns = () => {
       setBusy(false);
     }
   };
+
+  const resumeCampaign = async (c: Campaign) => {
+    if (!confirm(`Продовжити розсилку «${c.subject}»? Буде надіслано наступний батч по ${batchSize} листів.`)) return;
+    setBusy(true);
+    setProgress(null);
+    try {
+      let offset = (c.sent_count ?? 0) + (c.failed_count ?? 0);
+      let totalSent = c.sent_count ?? 0;
+      let totalFailed = c.failed_count ?? 0;
+      let total = c.recipient_count ?? 0;
+      let batchNum = 0;
+      let paused = false;
+      while (true) {
+        batchNum++;
+        const { data, error } = await supabase.functions.invoke("send-marketing-campaign", {
+          body: { campaign_id: c.id, batch_size: batchSize, batch_offset: offset },
+        });
+        if (error) throw new Error(error.message);
+        const r = data as any;
+        totalSent += r.sent;
+        totalFailed += r.failed;
+        total = r.total_recipients ?? total;
+        setProgress({ sent: totalSent, failed: totalFailed, total });
+        toast.message(`Батч ${batchNum}: відправлено ${r.sent}, помилок ${r.failed}`);
+        if (r.quota_exceeded) { paused = true; break; }
+        if (r.done || !r.next_offset) break;
+        offset = r.next_offset;
+        await new Promise((res) => setTimeout(res, 5000));
+      }
+      if (paused) {
+        const remaining = Math.max(0, total - totalSent - totalFailed);
+        toast.warning(
+          `Денний ліміт вичерпано. Всього надіслано ${totalSent}/${total}. Залишилось ${remaining} — продовжіть завтра.`,
+          { duration: 15000 }
+        );
+      } else {
+        toast.success(`Готово: ${totalSent}/${total}`);
+      }
+      const { data: cs } = await supabase
+        .from("marketing_campaigns" as any)
+        .select("*")
+        .order("created_at", { ascending: false })
+        .limit(20);
+      setCampaigns((cs ?? []) as unknown as Campaign[]);
+    } catch (e: any) {
+      toast.error(e?.message ?? "Помилка");
+    } finally {
+      setBusy(false);
+    }
+  };
+
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
@@ -394,14 +459,21 @@ const AdminCampaigns = () => {
                   min={1}
                   max={200}
                   value={batchSize}
-                  onChange={(e) => setBatchSize(Math.max(1, Math.min(200, Number(e.target.value) || 50)))}
+                  onChange={(e) => setBatchSize(Math.max(1, Math.min(200, Number(e.target.value) || 200)))}
                   className="w-32"
                 />
                 <p className="text-xs text-muted-foreground">
-                  Між батчами пауза 5 сек. Рекомендовано 50, щоб не перевищити ліміт Resend (~2 листи/сек).
+                  Між батчами пауза 5 сек.
                 </p>
               </div>
+              <div className="rounded-lg border border-amber-500/40 bg-amber-500/10 p-3 text-sm text-amber-900 dark:text-amber-200">
+                <strong>Увага:</strong> денний ліміт поштового провайдера — <strong>200 листів на добу</strong>.
+                Якщо підписників більше, розсилка автоматично зупиниться після 200 листів і збережеться зі статусом
+                <em> «Призупинено»</em>. Наступного дня відкрийте її в історії нижче та натисніть <strong>«Продовжити»</strong>,
+                щоб надіслати наступну партію.
+              </div>
             </div>
+
 
             {progress && (
               <div className="rounded-lg border border-border bg-muted/30 p-3 text-sm">
@@ -429,12 +501,12 @@ const AdminCampaigns = () => {
           ) : (
             <div className="space-y-2">
               {campaigns.map((c) => (
-                <div key={c.id} className="bg-card p-4 rounded-xl flex items-center justify-between gap-4">
+                <div key={c.id} className="bg-card p-4 rounded-xl flex items-center justify-between gap-4 flex-wrap">
                   <div className="min-w-0 flex-1">
                     <div className="font-semibold truncate">{c.subject}</div>
                     <div className="text-xs text-muted-foreground mt-1">
                       {new Date(c.created_at).toLocaleString("uk-UA")} ·{" "}
-                      {c.event_ids.length} подій
+                      {c.event_ids.length} подій · надіслано {c.sent_count}/{c.recipient_count}
                     </div>
                   </div>
                   <div className="flex items-center gap-3 text-sm shrink-0">
@@ -450,9 +522,20 @@ const AdminCampaigns = () => {
                     )}
                     {c.status === "draft" && <Badge variant="secondary">Чернетка</Badge>}
                     {c.status === "sending" && <Badge variant="secondary">Відправка...</Badge>}
+                    {c.status === "paused" && (
+                      <>
+                        <Badge variant="outline" className="gap-1 border-amber-500 text-amber-700 dark:text-amber-300">
+                          <AlertCircle className="h-3 w-3" /> Призупинено (ліміт на добу)
+                        </Badge>
+                        <Button size="sm" disabled={busy} onClick={() => resumeCampaign(c)}>
+                          Продовжити
+                        </Button>
+                      </>
+                    )}
                     {c.failed_count > 0 && (
                       <span className="text-xs text-destructive">помилок: {c.failed_count}</span>
                     )}
+
                   </div>
                 </div>
               ))}
