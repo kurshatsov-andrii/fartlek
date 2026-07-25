@@ -459,14 +459,21 @@ const AdminCampaigns = () => {
                   min={1}
                   max={200}
                   value={batchSize}
-                  onChange={(e) => setBatchSize(Math.max(1, Math.min(200, Number(e.target.value) || 50)))}
+                  onChange={(e) => setBatchSize(Math.max(1, Math.min(200, Number(e.target.value) || 200)))}
                   className="w-32"
                 />
                 <p className="text-xs text-muted-foreground">
-                  Між батчами пауза 5 сек. Рекомендовано 50, щоб не перевищити ліміт Resend (~2 листи/сек).
+                  Між батчами пауза 5 сек.
                 </p>
               </div>
+              <div className="rounded-lg border border-amber-500/40 bg-amber-500/10 p-3 text-sm text-amber-900 dark:text-amber-200">
+                <strong>Увага:</strong> денний ліміт поштового провайдера — <strong>200 листів на добу</strong>.
+                Якщо підписників більше, розсилка автоматично зупиниться після 200 листів і збережеться зі статусом
+                <em> «Призупинено»</em>. Наступного дня відкрийте її в історії нижче та натисніть <strong>«Продовжити»</strong>,
+                щоб надіслати наступну партію.
+              </div>
             </div>
+
 
             {progress && (
               <div className="rounded-lg border border-border bg-muted/30 p-3 text-sm">
