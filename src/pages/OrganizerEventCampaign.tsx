@@ -136,6 +136,7 @@ const OrganizerEventCampaign = () => {
         let totalFailed = 0;
         let total = recipientCount ?? 0;
         let batchNum = 0;
+        let paused = false;
         while (true) {
           batchNum++;
           const { data, error } = await supabase.functions.invoke("send-marketing-campaign", {
@@ -148,12 +149,21 @@ const OrganizerEventCampaign = () => {
           total = r.total_recipients ?? total;
           setProgress({ sent: totalSent, failed: totalFailed, total });
           toast.message(`Батч ${batchNum}: ${r.sent} відправлено, ${r.failed} помилок`);
+          if (r.quota_exceeded) { paused = true; break; }
           if (r.done || !r.next_offset) break;
           offset = r.next_offset;
           await new Promise((res) => setTimeout(res, 5000));
         }
-        toast.success(`Готово: ${totalSent}/${total}, помилок ${totalFailed}`);
-        try { if (draftKey) localStorage.removeItem(draftKey); } catch {}
+        if (paused) {
+          const remaining = Math.max(0, total - totalSent - totalFailed);
+          toast.warning(
+            `Денний ліміт вичерпано. Надіслано ${totalSent}/${total}. Залишилось ${remaining} — продовжіть завтра кнопкою «Продовжити» у історії нижче.`,
+            { duration: 15000 }
+          );
+        } else {
+          toast.success(`Готово: ${totalSent}/${total}, помилок ${totalFailed}`);
+          try { if (draftKey) localStorage.removeItem(draftKey); } catch {}
+        }
 
         const { data: h } = await supabase
           .from("marketing_campaigns" as any)
@@ -169,6 +179,59 @@ const OrganizerEventCampaign = () => {
       setBusy(false);
     }
   };
+
+  const resumeCampaign = async (c: any) => {
+    if (!event) return;
+    if (!confirm(`Продовжити розсилку «${c.subject}»?`)) return;
+    setBusy(true);
+    setProgress(null);
+    try {
+      let offset = (c.sent_count ?? 0) + (c.failed_count ?? 0);
+      let totalSent = c.sent_count ?? 0;
+      let totalFailed = c.failed_count ?? 0;
+      let total = c.recipient_count ?? 0;
+      let batchNum = 0;
+      let paused = false;
+      while (true) {
+        batchNum++;
+        const { data, error } = await supabase.functions.invoke("send-marketing-campaign", {
+          body: { campaign_id: c.id, batch_size: batchSize, batch_offset: offset },
+        });
+        if (error) throw new Error(error.message);
+        const r = data as any;
+        totalSent += r.sent;
+        totalFailed += r.failed;
+        total = r.total_recipients ?? total;
+        setProgress({ sent: totalSent, failed: totalFailed, total });
+        toast.message(`Батч ${batchNum}: ${r.sent} відправлено, ${r.failed} помилок`);
+        if (r.quota_exceeded) { paused = true; break; }
+        if (r.done || !r.next_offset) break;
+        offset = r.next_offset;
+        await new Promise((res) => setTimeout(res, 5000));
+      }
+      if (paused) {
+        const remaining = Math.max(0, total - totalSent - totalFailed);
+        toast.warning(
+          `Денний ліміт вичерпано. Всього надіслано ${totalSent}/${total}. Залишилось ${remaining} — продовжіть завтра.`,
+          { duration: 15000 }
+        );
+      } else {
+        toast.success(`Готово: ${totalSent}/${total}`);
+      }
+      const { data: h } = await supabase
+        .from("marketing_campaigns" as any)
+        .select("*")
+        .contains("audience_filter", { event_id: event.id })
+        .order("created_at", { ascending: false })
+        .limit(20);
+      setHistory((h ?? []) as any[]);
+    } catch (e: any) {
+      toast.error(e?.message ?? "Помилка");
+    } finally {
+      setBusy(false);
+    }
+  };
+
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
