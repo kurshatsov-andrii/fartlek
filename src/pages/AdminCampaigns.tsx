@@ -183,6 +183,7 @@ const AdminCampaigns = () => {
         let totalFailed = 0;
         let total = recipientCount ?? 0;
         let batchNum = 0;
+        let paused = false;
 
         while (true) {
           batchNum++;
@@ -197,20 +198,33 @@ const AdminCampaigns = () => {
           setProgress({ sent: totalSent, failed: totalFailed, total });
           toast.message(`Батч ${batchNum}: відправлено ${r.sent}, помилок ${r.failed}`);
 
+          if (r.quota_exceeded) {
+            paused = true;
+            break;
+          }
           if (r.done || !r.next_offset) break;
           offset = r.next_offset;
           // Pause between batches to avoid Resend rate limits
           await new Promise((res) => setTimeout(res, 5000));
         }
 
-        toast.success(`Готово: ${totalSent}/${total}, помилок ${totalFailed}`);
+        if (paused) {
+          const remaining = Math.max(0, total - totalSent - totalFailed);
+          toast.warning(
+            `Денний ліміт Resend вичерпано. Надіслано ${totalSent}/${total}. Залишилось ${remaining} — надішліть завтра кнопкою «Продовжити» у історії розсилок.`,
+            { duration: 15000 }
+          );
+        } else {
+          toast.success(`Готово: ${totalSent}/${total}, помилок ${totalFailed}`);
+        }
         const { data: c } = await supabase
           .from("marketing_campaigns" as any)
           .select("*")
           .order("created_at", { ascending: false })
           .limit(20);
         setCampaigns((c ?? []) as unknown as Campaign[]);
-        setSelectedIds(new Set());
+        if (!paused) setSelectedIds(new Set());
+
       }
     } catch (e: any) {
       toast.error(e?.message ?? "Помилка");
