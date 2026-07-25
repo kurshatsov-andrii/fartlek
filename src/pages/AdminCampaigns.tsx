@@ -233,6 +233,57 @@ const AdminCampaigns = () => {
     }
   };
 
+  const resumeCampaign = async (c: Campaign) => {
+    if (!confirm(`Продовжити розсилку «${c.subject}»? Буде надіслано наступний батч по ${batchSize} листів.`)) return;
+    setBusy(true);
+    setProgress(null);
+    try {
+      let offset = (c.sent_count ?? 0) + (c.failed_count ?? 0);
+      let totalSent = c.sent_count ?? 0;
+      let totalFailed = c.failed_count ?? 0;
+      let total = c.recipient_count ?? 0;
+      let batchNum = 0;
+      let paused = false;
+      while (true) {
+        batchNum++;
+        const { data, error } = await supabase.functions.invoke("send-marketing-campaign", {
+          body: { campaign_id: c.id, batch_size: batchSize, batch_offset: offset },
+        });
+        if (error) throw new Error(error.message);
+        const r = data as any;
+        totalSent += r.sent;
+        totalFailed += r.failed;
+        total = r.total_recipients ?? total;
+        setProgress({ sent: totalSent, failed: totalFailed, total });
+        toast.message(`Батч ${batchNum}: відправлено ${r.sent}, помилок ${r.failed}`);
+        if (r.quota_exceeded) { paused = true; break; }
+        if (r.done || !r.next_offset) break;
+        offset = r.next_offset;
+        await new Promise((res) => setTimeout(res, 5000));
+      }
+      if (paused) {
+        const remaining = Math.max(0, total - totalSent - totalFailed);
+        toast.warning(
+          `Денний ліміт вичерпано. Всього надіслано ${totalSent}/${total}. Залишилось ${remaining} — продовжіть завтра.`,
+          { duration: 15000 }
+        );
+      } else {
+        toast.success(`Готово: ${totalSent}/${total}`);
+      }
+      const { data: cs } = await supabase
+        .from("marketing_campaigns" as any)
+        .select("*")
+        .order("created_at", { ascending: false })
+        .limit(20);
+      setCampaigns((cs ?? []) as unknown as Campaign[]);
+    } catch (e: any) {
+      toast.error(e?.message ?? "Помилка");
+    } finally {
+      setBusy(false);
+    }
+  };
+
+
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Header />
