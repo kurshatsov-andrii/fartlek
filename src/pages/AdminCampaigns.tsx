@@ -50,7 +50,7 @@ const AdminCampaigns = () => {
   const [allEvents, setAllEvents] = useState<EventLite[]>([]);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [testEmail, setTestEmail] = useState("");
-  const [batchSize, setBatchSize] = useState(50);
+  const [batchSize, setBatchSize] = useState(200);
   const [busy, setBusy] = useState(false);
   const [progress, setProgress] = useState<{ sent: number; failed: number; total: number } | null>(null);
   const [pageLoading, setPageLoading] = useState(true);
