@@ -21,7 +21,7 @@ const OrganizerEventCampaign = () => {
   const [intro, setIntro] = useState("");
   const [testEmail, setTestEmail] = useState("");
   const [batchSize, setBatchSize] = useState(50);
-  const DAILY_CAP = 200;
+  const DAILY_CAP = 100;
   const [busy, setBusy] = useState(false);
   const [progress, setProgress] = useState<{ sent: number; failed: number; total: number } | null>(null);
   const [history, setHistory] = useState<any[]>([]);
@@ -295,10 +295,10 @@ const OrganizerEventCampaign = () => {
           </div>
 
           <div className="rounded-lg border border-amber-500/40 bg-amber-500/10 p-3 text-sm text-amber-900 dark:text-amber-200">
-            <strong>Увага:</strong> листи надсилаються батчами по <strong>{batchSize}</strong>, а денний ліміт поштового провайдера — <strong>200 листів на добу</strong>.
-            Якщо учасників більше 200, розсилка автоматично зупиниться після 200 листів і збережеться зі статусом
+            <strong>Увага:</strong> листи надсилаються батчами по <strong>{batchSize}</strong>, а денний ліміт поштового провайдера — <strong>100 листів на добу</strong>.
+            Якщо учасників більше 100, розсилка автоматично зупиниться після 100 листів і збережеться зі статусом
             <em> «Призупинено»</em>. Наступного дня відкрийте цю сторінку та натисніть <strong>«Продовжити»</strong>
-            у історії нижче, щоб надіслати наступні 200 листів. І так, доки не буде надіслано всім.
+            у історії нижче, щоб надіслати наступні 100 листів. І так, доки не буде надіслано всім.
           </div>
 
 
