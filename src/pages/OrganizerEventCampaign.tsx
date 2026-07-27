@@ -153,8 +153,11 @@ const OrganizerEventCampaign = () => {
           if (r.quota_exceeded) { paused = true; break; }
           if (r.done || !r.next_offset) break;
           offset = r.next_offset;
+          if (totalSent + totalFailed >= DAILY_CAP) { paused = true; break; }
           await new Promise((res) => setTimeout(res, 5000));
         }
+        // Mark campaign as paused locally so user sees "Продовжити" button next day
+        if (paused && !(await supabase.from("marketing_campaigns" as any).update({ status: "paused" }).eq("id", campaignId)).error) {}
         if (paused) {
           const remaining = Math.max(0, total - totalSent - totalFailed);
           toast.warning(
