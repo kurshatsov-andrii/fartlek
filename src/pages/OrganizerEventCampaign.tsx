@@ -20,7 +20,8 @@ const OrganizerEventCampaign = () => {
   const [subject, setSubject] = useState("");
   const [intro, setIntro] = useState("");
   const [testEmail, setTestEmail] = useState("");
-  const [batchSize, setBatchSize] = useState(200);
+  const [batchSize, setBatchSize] = useState(50);
+  const DAILY_CAP = 200;
   const [busy, setBusy] = useState(false);
   const [progress, setProgress] = useState<{ sent: number; failed: number; total: number } | null>(null);
   const [history, setHistory] = useState<any[]>([]);
@@ -152,8 +153,11 @@ const OrganizerEventCampaign = () => {
           if (r.quota_exceeded) { paused = true; break; }
           if (r.done || !r.next_offset) break;
           offset = r.next_offset;
+          if (totalSent + totalFailed >= DAILY_CAP) { paused = true; break; }
           await new Promise((res) => setTimeout(res, 5000));
         }
+        // Mark campaign as paused locally so user sees "Продовжити" button next day
+        if (paused && !(await supabase.from("marketing_campaigns" as any).update({ status: "paused" }).eq("id", campaignId)).error) {}
         if (paused) {
           const remaining = Math.max(0, total - totalSent - totalFailed);
           toast.warning(
@@ -189,6 +193,7 @@ const OrganizerEventCampaign = () => {
       let offset = (c.sent_count ?? 0) + (c.failed_count ?? 0);
       let totalSent = c.sent_count ?? 0;
       let totalFailed = c.failed_count ?? 0;
+      let sessionCount = 0;
       let total = c.recipient_count ?? 0;
       let batchNum = 0;
       let paused = false;
@@ -201,14 +206,17 @@ const OrganizerEventCampaign = () => {
         const r = data as any;
         totalSent += r.sent;
         totalFailed += r.failed;
+        sessionCount += (r.sent ?? 0) + (r.failed ?? 0);
         total = r.total_recipients ?? total;
         setProgress({ sent: totalSent, failed: totalFailed, total });
         toast.message(`Батч ${batchNum}: ${r.sent} відправлено, ${r.failed} помилок`);
         if (r.quota_exceeded) { paused = true; break; }
         if (r.done || !r.next_offset) break;
         offset = r.next_offset;
+        if (sessionCount >= DAILY_CAP) { paused = true; break; }
         await new Promise((res) => setTimeout(res, 5000));
       }
+      if (paused && !(await supabase.from("marketing_campaigns" as any).update({ status: "paused" }).eq("id", c.id)).error) {}
       if (paused) {
         const remaining = Math.max(0, total - totalSent - totalFailed);
         toast.warning(
@@ -281,16 +289,16 @@ const OrganizerEventCampaign = () => {
                 min={1}
                 max={200}
                 value={batchSize}
-                onChange={(e) => setBatchSize(Math.max(1, Math.min(200, Number(e.target.value) || 200)))}
+                onChange={(e) => setBatchSize(Math.max(1, Math.min(200, Number(e.target.value) || 50)))}
               />
             </div>
           </div>
 
           <div className="rounded-lg border border-amber-500/40 bg-amber-500/10 p-3 text-sm text-amber-900 dark:text-amber-200">
-            <strong>Увага:</strong> денний ліміт поштового провайдера — <strong>200 листів на добу</strong>.
-            Якщо учасників більше, розсилка автоматично зупиниться після 200 і збережеться зі статусом
+            <strong>Увага:</strong> листи надсилаються батчами по <strong>{batchSize}</strong>, а денний ліміт поштового провайдера — <strong>200 листів на добу</strong>.
+            Якщо учасників більше 200, розсилка автоматично зупиниться після 200 листів і збережеться зі статусом
             <em> «Призупинено»</em>. Наступного дня відкрийте цю сторінку та натисніть <strong>«Продовжити»</strong>
-            у історії нижче, щоб надіслати решту листів.
+            у історії нижче, щоб надіслати наступні 200 листів. І так, доки не буде надіслано всім.
           </div>
 
 
