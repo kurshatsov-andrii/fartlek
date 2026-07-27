@@ -193,6 +193,7 @@ const OrganizerEventCampaign = () => {
       let offset = (c.sent_count ?? 0) + (c.failed_count ?? 0);
       let totalSent = c.sent_count ?? 0;
       let totalFailed = c.failed_count ?? 0;
+      let sessionCount = 0;
       let total = c.recipient_count ?? 0;
       let batchNum = 0;
       let paused = false;
@@ -205,14 +206,17 @@ const OrganizerEventCampaign = () => {
         const r = data as any;
         totalSent += r.sent;
         totalFailed += r.failed;
+        sessionCount += (r.sent ?? 0) + (r.failed ?? 0);
         total = r.total_recipients ?? total;
         setProgress({ sent: totalSent, failed: totalFailed, total });
         toast.message(`Батч ${batchNum}: ${r.sent} відправлено, ${r.failed} помилок`);
         if (r.quota_exceeded) { paused = true; break; }
         if (r.done || !r.next_offset) break;
         offset = r.next_offset;
+        if (sessionCount >= DAILY_CAP) { paused = true; break; }
         await new Promise((res) => setTimeout(res, 5000));
       }
+      if (paused && !(await supabase.from("marketing_campaigns" as any).update({ status: "paused" }).eq("id", c.id)).error) {}
       if (paused) {
         const remaining = Math.max(0, total - totalSent - totalFailed);
         toast.warning(
