@@ -193,12 +193,6 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fartlek.lovable.app/starts/urban-track-festival-pa-ce-edition-2026-07-26</loc>
-    <lastmod>2026-07-15</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://fartlek.lovable.app/starts/13-y-zabig-u-vyshyvankah-do-35oi-richnyci-dnya-nezalezhnosti-ukrainy-2026-08-23</loc>
     <lastmod>2026-07-07</lastmod>
     <changefreq>weekly</changefreq>
@@ -243,6 +237,18 @@
   <url>
     <loc>https://fartlek.lovable.app/starts/kyivs-kyy-marafon-nezlamnosti-2026-10-10</loc>
     <lastmod>2026-07-25</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fartlek.lovable.app/starts/litniy-blagodiynyy-treyl-bezdryk-2026-kremenec-2026-08-02</loc>
+    <lastmod>2026-07-27</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fartlek.lovable.app/starts/kros-tryatlon-2026-08-15</loc>
+    <lastmod>2026-07-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
