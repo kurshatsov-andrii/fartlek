@@ -466,7 +466,7 @@ const AdminCampaigns = () => {
                   min={1}
                   max={200}
                   value={batchSize}
-                  onChange={(e) => setBatchSize(Math.max(1, Math.min(200, Number(e.target.value) || 200)))}
+                  onChange={(e) => setBatchSize(Math.max(1, Math.min(200, Number(e.target.value) || 50)))}
                   className="w-32"
                 />
                 <p className="text-xs text-muted-foreground">
@@ -474,10 +474,10 @@ const AdminCampaigns = () => {
                 </p>
               </div>
               <div className="rounded-lg border border-amber-500/40 bg-amber-500/10 p-3 text-sm text-amber-900 dark:text-amber-200">
-                <strong>Увага:</strong> денний ліміт поштового провайдера — <strong>200 листів на добу</strong>.
-                Якщо підписників більше, розсилка автоматично зупиниться після 200 листів і збережеться зі статусом
+                <strong>Увага:</strong> листи надсилаються батчами по <strong>{batchSize}</strong>, а денний ліміт поштового провайдера — <strong>200 листів на добу</strong>.
+                Якщо підписників більше 200, розсилка автоматично зупиниться після 200 листів і збережеться зі статусом
                 <em> «Призупинено»</em>. Наступного дня відкрийте її в історії нижче та натисніть <strong>«Продовжити»</strong>,
-                щоб надіслати наступну партію.
+                щоб надіслати наступні 200 листів. І так, доки не буде надіслано всім.
               </div>
             </div>
 
