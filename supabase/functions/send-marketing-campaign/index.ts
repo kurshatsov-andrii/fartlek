@@ -184,26 +184,41 @@ Deno.serve(async (req) => {
     // Recipients = users registered for this event (still respecting marketing_consent)
     const { data: regs, error: rErr } = await admin
       .from('registrations')
-      .select('user_id')
+      .select('user_id, created_at')
       .eq('event_id', audienceEventId)
+      .order('created_at', { ascending: false })
     if (rErr) return jsonResponse({ error: rErr.message }, 500)
-    const userIds = Array.from(new Set((regs ?? []).map((r: any) => r.user_id)))
-    if (userIds.length === 0) {
+    // Preserve newest-first order, dedupe user_ids
+    const orderedUserIds: string[] = []
+    const seenIds = new Set<string>()
+    for (const r of (regs ?? []) as Array<{ user_id: string }>) {
+      if (!seenIds.has(r.user_id)) {
+        seenIds.add(r.user_id)
+        orderedUserIds.push(r.user_id)
+      }
+    }
+    if (orderedUserIds.length === 0) {
       allRecipients = []
     } else {
       const { data: profs, error: pErr } = await admin
         .from('profiles')
-        .select('email, full_name')
-        .in('id', userIds)
+        .select('id, email, full_name')
+        .in('id', orderedUserIds)
         .eq('marketing_consent', true)
         .not('email', 'is', null)
-        .order('email', { ascending: true })
       if (pErr) return jsonResponse({ error: pErr.message }, 500)
       const { data: suppressed } = await admin.from('suppressed_emails').select('email')
       const suppressedSet = new Set((suppressed ?? []).map((s) => s.email.toLowerCase()))
-      allRecipients = (profs ?? [])
-        .filter((p) => p.email && !suppressedSet.has(p.email.toLowerCase()))
-        .map((p) => ({ email: p.email!, full_name: p.full_name }))
+      const byId = new Map<string, { email: string; full_name: string | null }>()
+      for (const p of profs ?? []) {
+        if (p.email && !suppressedSet.has(p.email.toLowerCase())) {
+          byId.set(p.id, { email: p.email, full_name: p.full_name })
+        }
+      }
+      // Emit in newest-registration-first order
+      allRecipients = orderedUserIds
+        .map((uid) => byId.get(uid))
+        .filter((r): r is Recipient => !!r)
     }
   } else {
     let q = admin
