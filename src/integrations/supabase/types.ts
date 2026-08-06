@@ -1191,6 +1191,8 @@ export type Database = {
           marketing_consent: boolean
           marketing_consent_at: string | null
           phone: string | null
+          shirt_size: string | null
+          tax_id: string | null
           updated_at: string
         }
         Insert: {
@@ -1206,6 +1208,8 @@ export type Database = {
           marketing_consent?: boolean
           marketing_consent_at?: string | null
           phone?: string | null
+          shirt_size?: string | null
+          tax_id?: string | null
           updated_at?: string
         }
         Update: {
@@ -1221,6 +1225,8 @@ export type Database = {
           marketing_consent?: boolean
           marketing_consent_at?: string | null
           phone?: string | null
+          shirt_size?: string | null
+          tax_id?: string | null
           updated_at?: string
         }
         Relationships: []

@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { AthleteFormDialog, Athlete } from "@/components/AthleteFormDialog";
 import { StravaConnect } from "@/components/StravaConnect";
+import { getShirtSizes, validateTaxId } from "@/lib/shirtSizes";
 import { useApp } from "@/contexts/AppContext";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
@@ -36,7 +37,7 @@ const Profile = () => {
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState(false);
   const [form, setForm] = useState({
-    full_name: "", birth_date: "", gender: "", city: "", club: "", email: "", phone: "", marketing_consent: true, avatar_url: "",
+    full_name: "", birth_date: "", gender: "", city: "", club: "", email: "", phone: "", marketing_consent: true, avatar_url: "", tax_id: "", shirt_size: "",
   });
   const [athletes, setAthletes] = useState<Athlete[]>([]);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -64,6 +65,16 @@ const Profile = () => {
     return out;
   };
 
+  const taxIdCheck = form.tax_id.trim() ? validateTaxId(form.tax_id, form.birth_date) : null;
+  const taxIdError =
+    taxIdCheck && taxIdCheck.ok === false
+      ? taxIdCheck.error === "format"
+        ? "ІПН має містити 10 цифр"
+        : "ІПН не збігається з датою народження"
+      : null;
+
+  const shirtSizes = getShirtSizes(form.gender);
+
   const isComplete =
     !!form.full_name.trim() && !!form.birth_date && !!form.gender && !!form.city.trim() && isPhoneValid;
 
@@ -88,6 +99,8 @@ const Profile = () => {
           phone: (data as any).phone ?? "",
           marketing_consent: (data as any).marketing_consent ?? true,
           avatar_url: (data as any).avatar_url ?? "",
+          tax_id: (data as any).tax_id ?? "",
+          shirt_size: (data as any).shirt_size ?? "",
         });
       }
       await reloadAthletes(user.id);
@@ -169,6 +182,10 @@ const Profile = () => {
       toast.error(t.profile.phoneInvalid);
       return;
     }
+    if (taxIdError) {
+      toast.error(taxIdError);
+      return;
+    }
     setBusy(true);
     const { error } = await supabase.from("profiles").update({
       full_name: form.full_name.trim(),
@@ -177,6 +194,8 @@ const Profile = () => {
       city: form.city.trim(),
       club: form.club.trim() || null,
       phone: form.phone,
+      tax_id: form.tax_id.replace(/\D/g, "") || null,
+      shirt_size: form.shirt_size || null,
     } as any).eq("id", user.id);
     if (!error) await reloadAthletes(user.id);
     setBusy(false);
@@ -307,7 +326,7 @@ const Profile = () => {
                 </div>
                 <div className="space-y-2">
                   <Label>{t.profile.gender} <span className="text-destructive">*</span></Label>
-                  <Select value={form.gender} onValueChange={(v) => setForm({ ...form, gender: v })}>
+                  <Select value={form.gender} onValueChange={(v) => setForm({ ...form, gender: v, shirt_size: "" })}>
                     <SelectTrigger><SelectValue placeholder="—" /></SelectTrigger>
                     <SelectContent>
                       <SelectItem value="male">{t.profile.male}</SelectItem>
@@ -329,6 +348,44 @@ const Profile = () => {
                     {t.profile.club} <span className="text-muted-foreground text-xs">({t.profile.clubOptional})</span>
                   </Label>
                   <Input id="club" value={form.club} onChange={(e) => setForm({ ...form, club: e.target.value })} />
+                </div>
+              </div>
+              <div className="grid sm:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="tax_id">
+                    ІПН <span className="text-muted-foreground text-xs">({t.profile.clubOptional})</span>
+                  </Label>
+                  <Input
+                    id="tax_id"
+                    inputMode="numeric"
+                    maxLength={10}
+                    placeholder="10 цифр"
+                    value={form.tax_id}
+                    onChange={(e) => setForm({ ...form, tax_id: e.target.value.replace(/\D/g, "").slice(0, 10) })}
+                  />
+                  {taxIdError && <p className="text-xs text-destructive">{taxIdError}</p>}
+                </div>
+                <div className="space-y-2">
+                  <Label>
+                    Розмір футболки <span className="text-muted-foreground text-xs">({t.profile.clubOptional})</span>
+                  </Label>
+                  <Select
+                    value={form.shirt_size}
+                    onValueChange={(v) => setForm({ ...form, shirt_size: v })}
+                    disabled={!form.gender}
+                  >
+                    <SelectTrigger><SelectValue placeholder={form.gender ? "—" : "Спочатку оберіть стать"} /></SelectTrigger>
+                    <SelectContent>
+                      {shirtSizes.map((s) => (
+                        <SelectItem key={s.label} value={s.label}>
+                          {s.label} · {s.measures}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <p className="text-xs text-muted-foreground">
+                    Довжина/ширина, см ({form.gender === "female" || form.gender === "girl" ? "жіноча" : "чоловіча"} модель)
+                  </p>
                 </div>
               </div>
               <p className="text-xs text-muted-foreground rounded-lg bg-muted/30 p-3 border border-border leading-snug">
