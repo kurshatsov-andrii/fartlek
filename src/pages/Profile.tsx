@@ -67,7 +67,7 @@ const Profile = () => {
 
   const taxIdCheck = form.tax_id.trim() ? validateTaxId(form.tax_id, form.birth_date) : null;
   const taxIdError =
-    taxIdCheck && !taxIdCheck.ok
+    taxIdCheck && taxIdCheck.ok === false
       ? taxIdCheck.error === "format"
         ? "ІПН має містити 10 цифр"
         : "ІПН не збігається з датою народження"
@@ -99,6 +99,8 @@ const Profile = () => {
           phone: (data as any).phone ?? "",
           marketing_consent: (data as any).marketing_consent ?? true,
           avatar_url: (data as any).avatar_url ?? "",
+          tax_id: (data as any).tax_id ?? "",
+          shirt_size: (data as any).shirt_size ?? "",
         });
       }
       await reloadAthletes(user.id);
