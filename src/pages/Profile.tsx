@@ -326,7 +326,7 @@ const Profile = () => {
                 </div>
                 <div className="space-y-2">
                   <Label>{t.profile.gender} <span className="text-destructive">*</span></Label>
-                  <Select value={form.gender} onValueChange={(v) => setForm({ ...form, gender: v })}>
+                  <Select value={form.gender} onValueChange={(v) => setForm({ ...form, gender: v, shirt_size: "" })}>
                     <SelectTrigger><SelectValue placeholder="—" /></SelectTrigger>
                     <SelectContent>
                       <SelectItem value="male">{t.profile.male}</SelectItem>
