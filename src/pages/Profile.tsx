@@ -37,7 +37,7 @@ const Profile = () => {
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState(false);
   const [form, setForm] = useState({
-    full_name: "", birth_date: "", gender: "", city: "", club: "", email: "", phone: "", marketing_consent: true, avatar_url: "",
+    full_name: "", birth_date: "", gender: "", city: "", club: "", email: "", phone: "", marketing_consent: true, avatar_url: "", tax_id: "", shirt_size: "",
   });
   const [athletes, setAthletes] = useState<Athlete[]>([]);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -64,6 +64,16 @@ const Profile = () => {
     if (digits.length > 8) out += "-" + digits.slice(8, 10);
     return out;
   };
+
+  const taxIdCheck = form.tax_id.trim() ? validateTaxId(form.tax_id, form.birth_date) : null;
+  const taxIdError =
+    taxIdCheck && !taxIdCheck.ok
+      ? taxIdCheck.error === "format"
+        ? "ІПН має містити 10 цифр"
+        : "ІПН не збігається з датою народження"
+      : null;
+
+  const shirtSizes = getShirtSizes(form.gender);
 
   const isComplete =
     !!form.full_name.trim() && !!form.birth_date && !!form.gender && !!form.city.trim() && isPhoneValid;
