@@ -182,6 +182,10 @@ const Profile = () => {
       toast.error(t.profile.phoneInvalid);
       return;
     }
+    if (taxIdError) {
+      toast.error(taxIdError);
+      return;
+    }
     setBusy(true);
     const { error } = await supabase.from("profiles").update({
       full_name: form.full_name.trim(),
@@ -190,6 +194,8 @@ const Profile = () => {
       city: form.city.trim(),
       club: form.club.trim() || null,
       phone: form.phone,
+      tax_id: form.tax_id.replace(/\D/g, "") || null,
+      shirt_size: form.shirt_size || null,
     } as any).eq("id", user.id);
     if (!error) await reloadAthletes(user.id);
     setBusy(false);
