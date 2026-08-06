@@ -350,6 +350,44 @@ const Profile = () => {
                   <Input id="club" value={form.club} onChange={(e) => setForm({ ...form, club: e.target.value })} />
                 </div>
               </div>
+              <div className="grid sm:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="tax_id">
+                    ІПН <span className="text-muted-foreground text-xs">({t.profile.clubOptional})</span>
+                  </Label>
+                  <Input
+                    id="tax_id"
+                    inputMode="numeric"
+                    maxLength={10}
+                    placeholder="10 цифр"
+                    value={form.tax_id}
+                    onChange={(e) => setForm({ ...form, tax_id: e.target.value.replace(/\D/g, "").slice(0, 10) })}
+                  />
+                  {taxIdError && <p className="text-xs text-destructive">{taxIdError}</p>}
+                </div>
+                <div className="space-y-2">
+                  <Label>
+                    Розмір футболки <span className="text-muted-foreground text-xs">({t.profile.clubOptional})</span>
+                  </Label>
+                  <Select
+                    value={form.shirt_size}
+                    onValueChange={(v) => setForm({ ...form, shirt_size: v })}
+                    disabled={!form.gender}
+                  >
+                    <SelectTrigger><SelectValue placeholder={form.gender ? "—" : "Спочатку оберіть стать"} /></SelectTrigger>
+                    <SelectContent>
+                      {shirtSizes.map((s) => (
+                        <SelectItem key={s.label} value={s.label}>
+                          {s.label} · {s.measures}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <p className="text-xs text-muted-foreground">
+                    Довжина/ширина, см ({form.gender === "female" || form.gender === "girl" ? "жіноча" : "чоловіча"} модель)
+                  </p>
+                </div>
+              </div>
               <p className="text-xs text-muted-foreground rounded-lg bg-muted/30 p-3 border border-border leading-snug">
                 📧 Ми надсилаємо вам тільки важливі оновлення по ваших забігах та події платформи. Відписатися можна в будь-який момент через посилання внизу будь-якого листа.
               </p>
