@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { AthleteFormDialog, Athlete } from "@/components/AthleteFormDialog";
 import { StravaConnect } from "@/components/StravaConnect";
+import { getShirtSizes, validateTaxId } from "@/lib/shirtSizes";
 import { useApp } from "@/contexts/AppContext";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
