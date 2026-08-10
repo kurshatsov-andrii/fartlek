@@ -16,7 +16,7 @@ Deno.serve(async (req) => {
     Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
   );
 
-  const today = new Date().toISOString().slice(0, 10);
+  
 
   // 1) Auto-publish ready drafts
   const { data: pubData, error: pubErr } = await supabase
@@ -30,13 +30,10 @@ Deno.serve(async (req) => {
     .neq("title", "")
     .select("id");
 
-  // 2) Hide past published starts
-  const { data: hideData, error: hideErr } = await supabase
-    .from("telegram_starts")
-    .update({ status: "hidden" })
-    .eq("status", "published")
-    .lt("event_date", today)
-    .select("id");
+  // 2) Past published starts stay published — they are shown in the "Completed" section
+  const hideData: { id: string }[] = [];
+  const hideErr: { message?: string } | null = null;
+
 
   return new Response(JSON.stringify({
     ok: true,
