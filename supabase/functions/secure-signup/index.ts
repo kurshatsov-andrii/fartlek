@@ -89,18 +89,28 @@ Deno.serve(async (req) => {
       return json({ error: msg }, 400);
     }
 
-    // 4) Send confirmation email (signup link)
-    const { error: linkErr } = await admin.auth.admin.generateLink({
-      type: "signup",
-      email,
-      password,
-      options: {
-        redirectTo: redirect_to || undefined,
-      },
-    });
-    if (linkErr) {
-      console.warn("generateLink warning", linkErr.message);
-      // Not fatal — user is created; they can use "resend confirmation"
+    // 4) Actually SEND the confirmation email.
+    //    admin.generateLink() only creates a link — it does not send anything.
+    //    auth.resend() on a public (anon) client triggers the real signup email
+    //    through the auth email hook.
+    const ANON_KEY =
+      Deno.env.get("SUPABASE_ANON_KEY") ??
+      Deno.env.get("SUPABASE_PUBLISHABLE_KEY") ??
+      "";
+    if (ANON_KEY) {
+      const publicClient = createClient(SUPABASE_URL, ANON_KEY);
+      const { error: sendErr } = await publicClient.auth.resend({
+        type: "signup",
+        email,
+        options: { emailRedirectTo: redirect_to || undefined },
+      });
+      if (sendErr) {
+        console.error("confirmation email send failed", sendErr.message);
+      } else {
+        console.log("confirmation email sent", email);
+      }
+    } else {
+      console.error("SUPABASE_ANON_KEY missing — confirmation email not sent");
     }
 
     return json({ success: true });
