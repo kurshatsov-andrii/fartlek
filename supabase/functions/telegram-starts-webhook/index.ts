@@ -121,7 +121,12 @@ function parsePost(text: string, entities: any[] | undefined, post?: any) {
     eventDate = `${y}-${mo.toString().padStart(2,"0")}-${d.toString().padStart(2,"0")}`;
   }
 
-  return { title: firstLine, registerUrl, eventDate };
+  // Прибираємо емодзі та зайві символи в кінці назви
+  const cleanedTitle = (firstLine || "")
+    .replace(/[\s\p{Extended_Pictographic}\u200d\uFE0F\u20E3•·—–\-|]+$/gu, "")
+    .trim();
+
+  return { title: cleanedTitle, registerUrl, eventDate };
 }
 
 
