@@ -1,11 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { Calendar, MapPin, FileText, Loader2, Search, X, Filter } from "lucide-react";
+import { Calendar, MapPin, FileText, Loader2, Search, X, Filter, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { DocumentDialog } from "@/components/DocumentDialog";
 import { useApp } from "@/contexts/AppContext";
+import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { eventCity } from "@/lib/utils";
 
@@ -27,6 +28,7 @@ interface CompletedEvent {
 
 export const CompletedEventsSection = () => {
   const { t, lang } = useApp();
+  const { user } = useAuth();
   const [events, setEvents] = useState<CompletedEvent[]>([]);
   const [loading, setLoading] = useState(true);
   const [docDialog, setDocDialog] = useState<{ url: string; title: string } | null>(null);
@@ -261,6 +263,13 @@ export const CompletedEventsSection = () => {
                         <a href={ev.photos_url!} target="_blank" rel="noopener noreferrer">
                           <FileText className="h-4 w-4" /> {t.events.openPhotos}
                         </a>
+                      </Button>
+                    )}
+                    {user && (
+                      <Button size="sm" variant="outline" className="w-full" asChild>
+                        <Link to={`/events/${ev.id}/participants`}>
+                          <Users className="h-4 w-4" /> {t.events.participants}
+                        </Link>
                       </Button>
                     )}
                   </div>
