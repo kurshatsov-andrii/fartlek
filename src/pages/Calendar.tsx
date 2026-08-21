@@ -37,7 +37,26 @@ interface Row {
   created_by?: string | null;
 }
 
+// Returns internal path if the URL points to this same site, otherwise null
+const internalPath = (url: string): string | null => {
+  if (!url) return null;
+  try {
+    if (url.startsWith("/")) return url;
+    const u = new URL(url);
+    const host = u.hostname.replace(/^www\./, "");
+    const current = window.location.hostname.replace(/^www\./, "");
+    const known = ["fartlek.lovable.app", current];
+    if (known.includes(host) || host.endsWith("--b87e16a4-d487-48fd-8f66-fbbf2b0ac3dd.lovable.app")) {
+      return `${u.pathname}${u.search}${u.hash}` || "/";
+    }
+    return null;
+  } catch {
+    return null;
+  }
+};
+
 const emptyForm = {
+
   id: "" as string | "",
   title: "",
   event_date: "",
@@ -442,9 +461,13 @@ const CalendarPage = () => {
                             {r.source === "platform" ? (
                               <Link to={r.url ?? "#"} className="hover:text-primary">{r.title}</Link>
                             ) : r.url ? (
-                              <a href={r.url} target="_blank" rel="noreferrer" className="hover:text-primary inline-flex items-center gap-1">
-                                {r.title}<ExternalLink className="h-3 w-3" />
-                              </a>
+                              internalPath(r.url) ? (
+                                <Link to={internalPath(r.url)!} className="hover:text-primary">{r.title}</Link>
+                              ) : (
+                                <a href={r.url} target="_blank" rel="noreferrer" className="hover:text-primary inline-flex items-center gap-1">
+                                  {r.title}<ExternalLink className="h-3 w-3" />
+                                </a>
+                              )
                             ) : r.title}
                             {r.category && (
                               <div className="text-[10px] uppercase tracking-wider text-muted-foreground mt-0.5">
@@ -463,13 +486,20 @@ const CalendarPage = () => {
                             ) : (
                               <div className="flex justify-end items-center gap-1">
                                 {r.url && (
-                                  <Button asChild size="sm" variant="secondary" className="hover:bg-primary hover:text-primary-foreground transition-colors">
-                                    <a href={r.url} target="_blank" rel="noreferrer">
-                                      {lang === "uk" ? "Перейти" : "Open"}
-                                      <ExternalLink className="h-3 w-3" />
-                                    </a>
-                                  </Button>
+                                  internalPath(r.url) ? (
+                                    <Button asChild size="sm" variant="outline">
+                                      <Link to={internalPath(r.url)!}>{lang === "uk" ? "Деталі" : "Details"}</Link>
+                                    </Button>
+                                  ) : (
+                                    <Button asChild size="sm" variant="secondary" className="hover:bg-primary hover:text-primary-foreground transition-colors">
+                                      <a href={r.url} target="_blank" rel="noreferrer">
+                                        {lang === "uk" ? "Перейти" : "Open"}
+                                        <ExternalLink className="h-3 w-3" />
+                                      </a>
+                                    </Button>
+                                  )
                                 )}
+
                                 {(isAdmin || (isOrganizer && r.created_by === user?.id)) && (
                                   <>
                                     <Button size="icon" variant="ghost" onClick={() => openEdit(r)} title={lang === "uk" ? "Редагувати" : "Edit"}>
