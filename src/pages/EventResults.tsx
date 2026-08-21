@@ -151,15 +151,13 @@ const EventResults = () => {
   const dnsRows = useMemo<ResultRow[]>(() => {
     if (!event || participants.length === 0 || rows.length === 0) return [];
 
-    const finisherKeys = new Set(rows.map((r) => `${normName(r.full_name)}|${r.distance_km}`));
-    const finisherNames = new Set(rows.map((r) => normName(r.full_name)));
+    const finisherNames = rows.map((r) => nameWords(r.full_name));
 
     return participants
       .filter((p) => p.full_name && (p.payment_status === "paid" || p.payment_status === "free"))
       .filter((p) => {
-        const n = normName(p.full_name as string);
-        if (p.distance_km != null && finisherKeys.has(`${n}|${p.distance_km}`)) return false;
-        return !finisherNames.has(n);
+        const words = nameWords(p.full_name as string);
+        return !finisherNames.some((fw) => namesMatch(fw, words));
       })
       .map((p) => ({
         id: p.registration_id,
