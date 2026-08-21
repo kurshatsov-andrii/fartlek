@@ -72,6 +72,7 @@ export type Database = {
           location: string | null
           notes: string | null
           organizer_name: string | null
+          telegram_start_id: string | null
           title: string
           updated_at: string
           url: string | null
@@ -86,6 +87,7 @@ export type Database = {
           location?: string | null
           notes?: string | null
           organizer_name?: string | null
+          telegram_start_id?: string | null
           title: string
           updated_at?: string
           url?: string | null
@@ -100,6 +102,7 @@ export type Database = {
           location?: string | null
           notes?: string | null
           organizer_name?: string | null
+          telegram_start_id?: string | null
           title?: string
           updated_at?: string
           url?: string | null
