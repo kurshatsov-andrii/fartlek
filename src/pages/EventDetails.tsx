@@ -138,10 +138,7 @@ const EventDetails = () => {
         supabase.rpc("get_event_participants_count", { _event_id: ev.id }),
       ]);
       setDistances((ds ?? []) as any);
-      const rawCount = (cnt as number) ?? 0;
-      // Fixed display for Kharkiv Half Marathon — cap at 200
-      const isKharkivHalf = /kharkiv\s*half\s*marathon/i.test(ev.title ?? "") || /kharkiv-half-marathon/i.test(ev.slug ?? "");
-      setParticipantsCount(isKharkivHalf ? Math.min(rawCount, 200) : rawCount);
+      setParticipantsCount((cnt as number) ?? 0);
       // Per-distance counts (for capacity display / blocking) — aggregated, no personal data
       const { data: regRows } = await supabase.rpc("get_event_distance_counts", { _event_id: ev.id });
       const counts: Record<string, number> = {};
@@ -294,6 +291,18 @@ const EventDetails = () => {
     day: "numeric", month: "long", year: "numeric",
   });
 
+  // Public (guest) display overrides — logged-in users always see the real count
+  const isKharkivHalf = /kharkiv\s*half\s*marathon/i.test(event.title ?? "") || /kharkiv-half-marathon/i.test(event.slug ?? "");
+  const isSarzhynYar = /саржин\s*яр/i.test(event.title ?? "") || /sarzhyn/i.test(event.slug ?? "");
+  const displayParticipantsCount = user
+    ? participantsCount
+    : isSarzhynYar
+      ? 50
+      : isKharkivHalf
+        ? Math.min(participantsCount, 200)
+        : participantsCount;
+
+
   const seo = buildEventSeo({
     title: event.title,
     city: event.location,
@@ -378,7 +387,7 @@ const EventDetails = () => {
               <div className="flex flex-wrap gap-x-6 gap-y-3 text-sm">
                 <div className="flex items-center gap-2"><Calendar className="h-4 w-4 text-primary" />{fmtDate} · {event.event_time.slice(0, 5)}</div>
                 {event.location && <div className="flex items-center gap-2"><MapPin className="h-4 w-4 text-primary" />{event.location}</div>}
-                <div className="flex items-center gap-2"><Users className="h-4 w-4 text-primary" />{participantsCount} {t.events.participants.toLowerCase()}</div>
+                <div className="flex items-center gap-2"><Users className="h-4 w-4 text-primary" />{displayParticipantsCount} {t.events.participants.toLowerCase()}</div>
                 <div className="flex items-center gap-2" title={t.events.organizer}>
                   <UserCircle2 className="h-4 w-4 text-primary" />
                   {organizerSlug ? (
