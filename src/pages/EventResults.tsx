@@ -119,7 +119,7 @@ const EventResults = () => {
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
 
-  const [distance, setDistance] = useState<string>("all");
+  const [distance, setDistance] = useState<string>("21.1");
   const [gender, setGender] = useState<string>("all");
   const [ageGroup, setAgeGroup] = useState<string>("all");
   const [status, setStatus] = useState<string>("finished");
@@ -214,6 +214,12 @@ const EventResults = () => {
     () => Array.from(new Set(allRows.map((r) => r.distance_km))).sort((a, b) => b - a),
     [allRows],
   );
+
+  useEffect(() => {
+    if (distances.length === 0) return;
+    if (distances.map((d) => String(d)).includes(distance)) return;
+    setDistance(distances.includes(21.1) ? "21.1" : String(distances[0]));
+  }, [distances, distance]);
 
   const ageGroups = useMemo(() => {
     const set = new Set(allRows.filter((r) => r.age_group).map((r) => r.age_group as string));
@@ -331,17 +337,6 @@ const EventResults = () => {
         ) : (
           <>
             <div className="flex flex-wrap gap-2 mb-4">
-              <button
-                onClick={() => setDistance("all")}
-                className={cn(
-                  "px-4 py-2 rounded-full text-sm font-semibold border transition-colors",
-                  distance === "all"
-                    ? "bg-primary text-primary-foreground border-primary"
-                    : "bg-card text-foreground border-border hover:border-primary/50",
-                )}
-              >
-                {uk ? "Всі дистанції" : "All distances"}
-              </button>
               {distances.map((d) => (
                 <button
                   key={d}
