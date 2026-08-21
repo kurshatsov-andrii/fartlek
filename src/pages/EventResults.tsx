@@ -215,6 +215,12 @@ const EventResults = () => {
     [allRows],
   );
 
+  useEffect(() => {
+    if (distances.length === 0) return;
+    if (distances.map((d) => String(d)).includes(distance)) return;
+    setDistance(distances.includes(21.1) ? "21.1" : String(distances[0]));
+  }, [distances, distance]);
+
   const ageGroups = useMemo(() => {
     const set = new Set(allRows.filter((r) => r.age_group).map((r) => r.age_group as string));
     return AGE_GROUP_ORDER.filter((g) => set.has(g)).concat(
