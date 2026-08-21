@@ -407,11 +407,31 @@ const EventResults = () => {
                 </thead>
                 <tbody>
                   {filtered.map((r) => (
-                    <tr key={r.id} className={cn("border-b border-border/50 last:border-0 hover:bg-muted/40", r.status === "dns" && "text-muted-foreground")}>
+                    <tr key={r.id} className={cn("border-b border-border/50 last:border-0 hover:bg-muted/40", r.status !== "finished" && "text-muted-foreground")}>
                       <td className="px-4 py-3 font-bold">
-                        {r.status === "dns" ? (
-                          <span className="inline-flex items-center gap-1 text-xs font-semibold px-2 py-1 rounded-full bg-muted text-muted-foreground whitespace-nowrap">
-                            <UserX className="h-3.5 w-3.5" /> DNS/DNF
+                        {r.status !== "finished" ? (
+                          <span className="inline-flex items-center gap-1.5">
+                            <span
+                              className={cn(
+                                "inline-flex items-center gap-1 text-xs font-semibold px-2 py-1 rounded-full whitespace-nowrap",
+                                r.status === "dnf" ? "bg-amber-500/15 text-amber-600" : "bg-muted text-muted-foreground",
+                              )}
+                              title={r.status === "dnf" ? (uk ? "Стартував, але не фінішував" : "Started but did not finish") : (uk ? "Не стартував" : "Did not start")}
+                            >
+                              <UserX className="h-3.5 w-3.5" /> {r.status === "dnf" ? "DNF" : "DNS"}
+                            </span>
+                            {canManage && (
+                              <button
+                                type="button"
+                                onClick={() => toggleDnf(r)}
+                                title={r.status === "dnf"
+                                  ? (uk ? "Позначити як «не стартував»" : "Mark as did not start")
+                                  : (uk ? "Позначити як «не фінішував»" : "Mark as did not finish")}
+                                className="p-1 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+                              >
+                                <ArrowLeftRight className="h-3.5 w-3.5" />
+                              </button>
+                            )}
                           </span>
                         ) : r.overall_rank != null && r.overall_rank <= 3 ? (
                           <span className="inline-flex items-center gap-1 text-primary">
