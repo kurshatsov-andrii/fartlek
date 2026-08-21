@@ -72,6 +72,7 @@ const EventDetails = () => {
   const [teamCategory, setTeamCategory] = useState<string>("");
   const [relayMembers, setRelayMembers] = useState<RelayMember[]>([]);
   const [delivery, setDelivery] = useState<DeliveryData>(emptyDelivery());
+  const [hasExternalResults, setHasExternalResults] = useState(false);
 
   const selectedDist = distances.find((d) => d.id === selectedDistance);
   const isRelay = !!selectedDist?.is_relay;
