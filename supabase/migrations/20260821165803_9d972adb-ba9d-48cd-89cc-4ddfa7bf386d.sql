@@ -1,0 +1,2 @@
+UPDATE public.event_external_results SET bib = bib + 200 WHERE event_id = 'e2a181e4-93ce-4b03-82d4-347fce8bcf5b' AND distance_km = 5.0 AND bib <> 136;
+UPDATE public.event_external_results SET bib = bib - 220 WHERE event_id = 'e2a181e4-93ce-4b03-82d4-347fce8bcf5b' AND distance_km = 21.1 AND bib BETWEEN 321 AND 333;
