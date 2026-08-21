@@ -1,0 +1,2 @@
+UPDATE public.telegram_starts SET city='Дніпро, Тунельна балка', region='Дніпропетровська', distances_km=ARRAY[5,11]::numeric[] WHERE title ILIKE '%Simple Trail%';
+UPDATE public.calendar_events SET location='Дніпро, Тунельна балка' WHERE title ILIKE '%Simple Trail%';
