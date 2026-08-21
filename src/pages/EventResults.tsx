@@ -106,11 +106,14 @@ const ageGroupOf = (birthYear: number | null, eventDate: string): string | null 
 const EventResults = () => {
   const { id } = useParams<{ id: string }>();
   const { lang } = useApp();
+  const { user } = useAuth();
   const uk = lang === "uk";
 
   const [event, setEvent] = useState<EventInfo | null>(null);
   const [rows, setRows] = useState<ResultRow[]>([]);
   const [participants, setParticipants] = useState<PlatformParticipant[]>([]);
+  const [dnfIds, setDnfIds] = useState<Set<string>>(new Set());
+  const [canManage, setCanManage] = useState(false);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
 
