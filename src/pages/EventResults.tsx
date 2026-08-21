@@ -108,7 +108,7 @@ const ageGroupOf = (birthYear: number | null, eventDate: string): string | null 
 const EventResults = () => {
   const { id } = useParams<{ id: string }>();
   const { lang } = useApp();
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const uk = lang === "uk";
 
   const [event, setEvent] = useState<EventInfo | null>(null);
@@ -127,6 +127,16 @@ const EventResults = () => {
 
   useEffect(() => {
     if (!id) return;
+    // Results are visible only to registered users — skip all data loads for guests
+    if (!user) {
+      setEvent(null);
+      setRows([]);
+      setParticipants([]);
+      setDnfIds(new Set());
+      setCanManage(false);
+      setLoading(false);
+      return;
+    }
     (async () => {
       const { data: ev } = await supabase
         .from("events")
@@ -267,10 +277,34 @@ const EventResults = () => {
   }, [allRows, status, distance, gender, ageGroup, query]);
 
 
-  if (loading) {
+  if (loading || authLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <Loader2 className="h-6 w-6 animate-spin" />
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <div className="min-h-screen flex flex-col">
+        <Header />
+        <main className="flex-1 container py-20 text-center">
+          <Medal className="h-10 w-10 mx-auto mb-4 text-muted-foreground" />
+          <h1 className="font-display text-2xl mb-3">
+            {uk ? "Результати доступні лише зареєстрованим користувачам" : "Results are available to registered users only"}
+          </h1>
+          <p className="text-muted-foreground mb-6">
+            {uk ? "Увійдіть або зареєструйтеся, щоб переглянути результати події." : "Sign in or create an account to view the event results."}
+          </p>
+          <Link
+            to="/auth"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-primary text-primary-foreground font-semibold hover:opacity-90 transition-opacity"
+          >
+            {uk ? "Увійти або зареєструватися" : "Sign in or sign up"}
+          </Link>
+        </main>
+        <Footer />
       </div>
     );
   }
