@@ -5,7 +5,8 @@ import {
   Trophy, Bell, UserCircle, Edit3, Smile, Reply, AtSign, Image as ImageIcon,
   CalendarPlus, FileSpreadsheet, CreditCard, Globe, Clock, MapPin, Sparkles,
   Megaphone, Building2, CheckCircle2, ArrowDown, Truck, Repeat, Send, XCircle,
-  History, Lock, Activity, Settings, KeyRound, Upload
+  History, Lock, Activity, Settings, KeyRound, Upload,
+  Shirt, Hash, ClipboardCheck, ShieldCheck, Filter, FileDown, RefreshCw
 } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
@@ -63,6 +64,8 @@ const Features = () => {
         { icon: Calendar, title: "Календар майбутніх подій", desc: "Окрема сторінка з усіма майбутніми стартами України — і платформними, і доданими адміном чи організаторами. Фільтри за категорією, місяцем, пошук та сортування." },
         { icon: Building2, title: "Каталог клубів", desc: "Усі бігові клуби України на одній сторінці — пошук за містом, видом активності, перегляд профілю клубу зі списком подій та контактами." },
         { icon: Megaphone, title: "Каталог організаторів 🆕", desc: "Окрема сторінка з усіма організаторами подій — логотип, місто, опис, соцмережі та активні події. Зручно знайти перевіреного організатора або зв'язатися напряму." },
+        { icon: Send, title: "Старти з Telegram-каналу 🆕", desc: "Сторінка «Старти» збирає анонси забігів із нашого Telegram-каналу: автоматична синхронізація щодня, фільтри за місяцем, містом, організатором та видом спорту, кнопка «Зареєструватися». Нові старти одразу потрапляють і в Календар." },
+        { icon: Filter, title: "Розширені фільтри подій 🆕", desc: "На головній сторінці майбутні й завершені події фільтруються за містом, місяцем, форматом та типом (платні/безкоштовні) — плюс живий пошук за назвою, місцем чи організатором." },
       ],
     },
     {
@@ -75,6 +78,7 @@ const Features = () => {
         { icon: Trophy, title: "Результати забігу", desc: "Після фінішу організатор завантажує результати — ви бачите свій час і місце." },
         { icon: Activity, title: "Автозалік результату через Strava 🆕", desc: "Для віртуальних гонок: підключіть Strava у профілі — ми самі знайдемо вашу активність у вікні дат із потрібною дистанцією, зарахуємо час і поставимо позначку «підтверджено». У квитку буде пряме посилання на активність." },
         { icon: ImageIcon, title: "Світлини з події", desc: "Організатор додає посилання на фотоальбом — переглядайте світлини прямо з картки завершеної події." },
+        { icon: RefreshCw, title: "Автооновлення статусу оплати 🆕", desc: "Сплатили зі сторінки квитка? Вона сама перевіряє оплату кожні кілька секунд та щоразу, коли ви повертаєтесь на вкладку, — зелена галочка «Сплачено» з'являється без ручного оновлення." },
       ],
     },
     {
@@ -91,7 +95,7 @@ const Features = () => {
       title: "Керування власною реєстрацією 🆕",
       items: [
         { icon: Repeat, title: "Зміна дистанції", desc: "Самостійно перейдіть на іншу дистанцію до дедлайну події. Якщо нова дорожча — доплачуєте різницю, якщо дешевша — без повернення." },
-        { icon: Send, title: "Передача реєстрації", desc: "Не можете бігти? Згенеруйте 8-символьний код передачі — інший учасник вводить його у «Мої події» і отримує ваш слот." },
+        { icon: Send, title: "Передача реєстрації", desc: "Не можете бігти? Згенеруйте 8-символьний код передачі — інший учасник вводить його у «Мої події» і отримує ваш слот. Працює навіть тоді, коли реєстрацію на подію вже закрито." },
         { icon: XCircle, title: "Заявка на скасування", desc: "Подайте запит на скасування реєстрації — організатор розглядає вручну та вирішує щодо повернення коштів." },
         { icon: Truck, title: "Доставка стартового пакету Новою Поштою", desc: "Якщо подія підтримує доставку — оберіть місто та відділення/поштомат прямо при реєстрації. Можна замовити пізніше зі сторінки квитка." },
       ],
@@ -102,6 +106,8 @@ const Features = () => {
         { icon: UserCircle, title: "Особистий профіль", desc: "Ім'я, дата народження, стать, місто, клуб і телефон — заповнюється один раз." },
         { icon: ImageIcon, title: "Фото профілю", desc: "Завантажте аватар — він з'являтиметься у чатах та списках учасників." },
         { icon: Building2, title: "Прив'язка до клубу", desc: "Оберіть свій біговий клуб — він відображатиметься в результатах та списках." },
+        { icon: FileSpreadsheet, title: "ІПН з автоперевіркою 🆕", desc: "Необов'язкове поле ІПН у профілі: якщо його вказано, система автоматично звіряє номер із вашою датою народження." },
+        { icon: Shirt, title: "Розмір футболки за статтю 🆕", desc: "У профілі обирається розмір стартової футболки: жіноча сітка S–2XL або чоловіча S–3XL — залежно від вказаної статі." },
         { icon: Activity, title: "Підключення Strava 🆕", desc: "Прив'яжіть акаунт Strava у профілі одним кліком (OAuth). Це потрібно для автоматичного зарахування результатів віртуальних гонок. Можна відключити будь-коли." },
         { icon: Sparkles, title: "Стати організатором 🆕", desc: "Зареєструвалися через Google або Apple як учасник, а тепер хочете створювати події? Один клік у профілі — і ви отримуєте роль організатора, доступ до створення подій, клубів і публічного профілю." },
       ],
@@ -117,6 +123,8 @@ const Features = () => {
         { icon: Calendar, title: "Upcoming events calendar", desc: "Dedicated page with every upcoming race in Ukraine — both from the platform and added by admins or organizers. Filters by category, month, search and sorting." },
         { icon: Building2, title: "Clubs catalog", desc: "All running clubs in Ukraine on a single page — search by city and activity, view club profile with events and contacts." },
         { icon: Megaphone, title: "Organizers catalog 🆕", desc: "A dedicated page with all event organizers — logo, city, description, social links and active events. Easily find a trusted organizer or contact them directly." },
+        { icon: Send, title: "Starts from our Telegram channel 🆕", desc: "The «Starts» page collects race announcements from our Telegram channel: automatic daily sync, filters by month, city, organizer and sport, plus a «Register» button. New starts also land in the Calendar automatically." },
+        { icon: Filter, title: "Advanced event filters 🆕", desc: "On the home page, upcoming and completed events filter by city, month, format and type (paid/free) — plus live search by name, location or organizer." },
       ],
     },
     {
@@ -129,6 +137,7 @@ const Features = () => {
         { icon: Trophy, title: "Race results", desc: "After the finish, organizers upload results — see your time and position." },
         { icon: Activity, title: "Auto-verify results via Strava 🆕", desc: "For virtual races: connect Strava in your profile — we automatically pick the matching activity within the date window and distance tolerance, count your time and mark it as «verified». Your ticket gets a direct link to the activity." },
         { icon: ImageIcon, title: "Event photos", desc: "Organizers attach a photo album link — open it right from the completed event card." },
+        { icon: RefreshCw, title: "Auto payment status refresh 🆕", desc: "Paid from the ticket page? It re-checks the payment every few seconds and whenever you return to the tab — the green «Paid» check appears without a manual reload." },
       ],
     },
     {
@@ -145,7 +154,7 @@ const Features = () => {
       title: "Manage your registration 🆕",
       items: [
         { icon: Repeat, title: "Change distance", desc: "Switch to another distance yourself before the event deadline. If the new one costs more — pay the difference, if less — no refund." },
-        { icon: Send, title: "Transfer registration", desc: "Can't run? Generate an 8-character transfer code — another participant enters it in «My events» and gets your slot." },
+        { icon: Send, title: "Transfer registration", desc: "Can't run? Generate an 8-character transfer code — another participant enters it in «My events» and gets your slot. Works even after event registration is closed." },
         { icon: XCircle, title: "Cancellation request", desc: "Submit a cancellation request — the organizer reviews it manually and decides on refund." },
         { icon: Truck, title: "Nova Poshta race kit delivery", desc: "If the event supports delivery — pick a city and branch/parcel locker right at registration. You can also order it later from the ticket page." },
       ],
@@ -156,6 +165,8 @@ const Features = () => {
         { icon: UserCircle, title: "Personal profile", desc: "Name, date of birth, gender, city, club and phone — filled once." },
         { icon: ImageIcon, title: "Profile photo", desc: "Upload an avatar — it shows up in chats and participant lists." },
         { icon: Building2, title: "Club membership", desc: "Pick your running club — it appears in results and lists." },
+        { icon: FileSpreadsheet, title: "Tax ID with auto-check 🆕", desc: "Optional tax ID (ІПН) field in the profile: when filled in, the system automatically validates it against your date of birth." },
+        { icon: Shirt, title: "Gender-based T-shirt size 🆕", desc: "Pick your race T-shirt size in the profile: women's S–2XL or men's S–3XL grid depending on the selected gender." },
         { icon: Activity, title: "Connect Strava 🆕", desc: "Link your Strava account from the profile in one click (OAuth). Required to auto-credit virtual race results. Disconnect anytime." },
         { icon: Sparkles, title: "Become an organizer 🆕", desc: "Signed up via Google or Apple as a participant but want to create events? One click in your profile grants you the organizer role and unlocks event, club and public-profile creation." },
       ],
@@ -175,6 +186,7 @@ const Features = () => {
         { icon: Clock, title: "Дедлайн самообслуговування 🆕", desc: "Налаштуйте за скільки днів до події учасники можуть самостійно змінювати дистанцію, передавати слот або просити скасування." },
         { icon: Activity, title: "Віртуальна гонка зі Strava 🆕", desc: "Позначте дистанцію як віртуальну: задайте вікно дат (з / по) і допуск дистанції у % (через похибку GPS). Активності учасників зі Strava, що потрапляють у вікно й відповідають дистанції, зараховуються автоматично." },
         { icon: Globe, title: "Мультиспорт дистанції 🆕", desc: "Триатлон, дуатлон, акватлон, OCR, запливи, велогонки та комбіновані формати. Створюйте дистанції з кількома етапами: плавання → вело → біг, з пресетами Sprint / Olympic / 70.3 / Full. Для OCR — вкажіть кількість перешкод." },
+        { icon: Users, title: "Ліміт учасників 🆕", desc: "Задайте загальний ліміт місць на подію — щойно він досягнутий, реєстрація закривається автоматично." },
       ],
     },
     {
@@ -192,13 +204,16 @@ const Features = () => {
         { icon: Settings, title: "Габарити та оплата стартового пакета 🆕", desc: "Задавайте власні параметри посилки: вага, ширина/довжина/висота (см), оголошена вартість, к-ть місць, опис вантажу. Обирайте платника (Відправник / Отримувач / Третя особа) і спосіб оплати — учасник може платити готівкою або карткою при отриманні." },
         { icon: History, title: "Історія змін реєстрацій 🆕", desc: "Окрема вкладка з повним аудитом: зміни дистанцій, передачі слотів, заявки на скасування — хто, коли і що зробив." },
         { icon: Activity, title: "Синхронізація результатів зі Strava 🆕", desc: "Кнопка «Синхронізувати Strava» у списку учасників: одним кліком тягнемо активності всіх підключених учасників і ставимо результат із позначкою «підтверджено». У таблиці видно джерело (Strava) та посилання на активність." },
+        { icon: FileDown, title: "Експорт «Хронометраж» та «Стартовий протокол» 🆕", desc: "Окремі кнопки вивантаження учасників у CSV у форматі для служби хронометражу: ID, BIB, ім'я, стать, дата народження, дистанція, місто, клуб." },
+        { icon: ClipboardCheck, title: "Контроль підписаних згод 🆕", desc: "Колонка «Згода» у списку учасників — одразу видно, хто підписав згоду на участь, а хто ще ні." },
+        { icon: Hash, title: "Нумерація BIB без пропусків 🆕", desc: "Якщо учасника видалено, його номер не губиться: наступна реєстрація автоматично отримує найменший вільний номер у послідовності." },
       ],
     },
     {
       title: "Маркетинг та оплати",
       items: [
         { icon: Tag, title: "Промокоди", desc: "Створюйте знижкові коди (фіксована сума або відсоток) з лімітом використання." },
-        { icon: Mail, title: "Email-розсилки", desc: "Маркетингові кампанії учасникам події з готових шаблонів." },
+        { icon: Mail, title: "Email-розсилки", desc: "Маркетингові кампанії учасникам події з готових шаблонів. Розсилка стартує з найновіших реєстрацій, надсилається партіями з автопаузами при лімітах поштового сервісу, а кнопка «Продовжити» досилає решту." },
         { icon: CreditCard, title: "Прийом оплат WayForPay та LiqPay (автопідтвердження)", desc: "Підключіть свій акаунт WayForPay або LiqPay — гроші йдуть напряму вам, а статус оплати ✅ ставиться автоматично. Деталі — у блоці «Оплата» нижче." },
         { icon: Megaphone, title: "Профіль клубу/організатора", desc: "Окрема сторінка з усіма вашими подіями та інформацією про клуб." },
         { icon: Building2, title: "Публічний профіль організатора 🆕", desc: "Створіть окрему сторінку організатора: логотип, місто, опис, види активності, соцмережі та контакти. Профіль з'являється у каталозі організаторів і отримує SEO-оптимізацію (заголовки, опис, JSON-LD)." },
@@ -212,6 +227,8 @@ const Features = () => {
         { icon: Bell, title: "Лічильник непрочитаних", desc: "На дашборді видно скільки нових повідомлень у чаті кожної події." },
         { icon: Shield, title: "Модерація чату", desc: "Видалення будь-яких повідомлень, редагування своїх анонсів." },
         { icon: Activity, title: "Онлайн-користувачі (адмін) 🆕", desc: "Адміністратор платформи в реальному часі бачить кількість авторизованих користувачів на сайті — плаваючий індикатор у куті екрана." },
+        { icon: Bell, title: "Telegram-сповіщення організатора 🆕", desc: "Миттєві повідомлення у Telegram про нові реєстрації та заявки на скасування — ви завжди в курсі без перевірки сайту." },
+        { icon: ShieldCheck, title: "Захист від ботів 🆕", desc: "Cloudflare Turnstile, блокування тимчасових поштових адрес і валідація імені при реєстрації — спам-акаунти не проходять." },
       ],
     },
   ] : [
@@ -227,6 +244,7 @@ const Features = () => {
         { icon: Clock, title: "Self-service deadline 🆕", desc: "Configure how many days before the event participants can change distance, transfer slots or request cancellation by themselves." },
         { icon: Activity, title: "Virtual race via Strava 🆕", desc: "Mark a distance as virtual: set a date window (from / to) and a distance tolerance in % (to account for GPS drift). Participants' Strava activities that fall in the window and match the distance are credited automatically." },
         { icon: Globe, title: "Multisport distances 🆕", desc: "Triathlon, duathlon, aquathlon, OCR, swim, bike and combined formats. Create distances with multiple segments: swim → bike → run, with Sprint / Olympic / 70.3 / Full presets. For OCR — specify the number of obstacles." },
+        { icon: Users, title: "Participant limit 🆕", desc: "Set a total slot limit for the event — once it's reached, registration closes automatically." },
       ],
     },
     {
@@ -244,13 +262,16 @@ const Features = () => {
         { icon: Settings, title: "Custom parcel dimensions & payment 🆕", desc: "Set your own parcel parameters: weight, width/length/height (cm), declared cost, seats, cargo description. Pick the payer (Sender / Recipient / Third person) and payment method — recipients can pay cash or by card on pickup." },
         { icon: History, title: "Registration changes history 🆕", desc: "A dedicated tab with full audit: distance changes, slot transfers, cancellation requests — who, when and what changed." },
         { icon: Activity, title: "Sync results from Strava 🆕", desc: "«Sync Strava» button on the participants list: one click pulls activities from all connected participants and saves their result with a «verified» mark. The table shows the source (Strava) and a link to the activity." },
+        { icon: FileDown, title: "«Timing» & «Start list» exports 🆕", desc: "Dedicated one-click CSV exports in the timing-company format: ID, BIB, name, gender, birth date, distance, city, club." },
+        { icon: ClipboardCheck, title: "Consent tracking 🆕", desc: "A «Consent» column in the participants list instantly shows who has signed the participation waiver and who hasn't." },
+        { icon: Hash, title: "Gap-free BIB numbering 🆕", desc: "If a participant is removed, their number isn't lost: the next registration automatically gets the lowest free number in the sequence." },
       ],
     },
     {
       title: "Marketing & payments",
       items: [
         { icon: Tag, title: "Promo codes", desc: "Discount codes (fixed amount or percentage) with usage limits." },
-        { icon: Mail, title: "Email campaigns", desc: "Send marketing emails to participants from ready-made templates." },
+        { icon: Mail, title: "Email campaigns", desc: "Send marketing emails to participants from ready-made templates. Campaigns start from the newest registrations, send in batches with automatic pauses when the mail service rate-limits, and a «Resume» button delivers the rest." },
         { icon: CreditCard, title: "WayForPay & LiqPay payments (auto-confirm)", desc: "Connect your WayForPay or LiqPay account — money goes directly to you, payment status ✅ is set automatically. See the «Payments» block below." },
         { icon: Megaphone, title: "Club / organizer page", desc: "A dedicated page with all your events and club information." },
         { icon: Building2, title: "Public organizer profile 🆕", desc: "Create a dedicated organizer page: logo, city, description, activity types, social links and contacts. The profile appears in the organizers catalog and gets full SEO optimization (titles, descriptions, JSON-LD)." },
@@ -264,6 +285,8 @@ const Features = () => {
         { icon: Bell, title: "Unread counter", desc: "Dashboard shows how many new chat messages each event has." },
         { icon: Shield, title: "Chat moderation", desc: "Delete any message, edit your own announcements." },
         { icon: Activity, title: "Online users (admin) 🆕", desc: "The platform admin sees the number of authenticated users on the site in real time — a floating indicator in the corner." },
+        { icon: Bell, title: "Telegram notifications for organizers 🆕", desc: "Instant Telegram alerts about new registrations and cancellation requests — always in the loop without checking the site." },
+        { icon: ShieldCheck, title: "Bot protection 🆕", desc: "Cloudflare Turnstile, disposable-email blocking and name validation at sign-up keep spam accounts out." },
       ],
     },
   ];
