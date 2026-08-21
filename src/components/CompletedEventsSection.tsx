@@ -28,6 +28,7 @@ interface CompletedEvent {
 
 export const CompletedEventsSection = () => {
   const { t, lang } = useApp();
+  const { user } = useAuth();
   const [events, setEvents] = useState<CompletedEvent[]>([]);
   const [loading, setLoading] = useState(true);
   const [docDialog, setDocDialog] = useState<{ url: string; title: string } | null>(null);
