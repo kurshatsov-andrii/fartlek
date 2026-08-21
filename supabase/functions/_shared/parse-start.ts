@@ -72,6 +72,13 @@ export function parseStartContent(text: string) {
     }
   }
 
+  // Місце проведення з рядка "Де: ..."
+  const venueM = text.match(/(?:^|\n)\s*\*{0,2}де\*{0,2}\s*[:\-—]\s*([^\n]{2,80})/i);
+  if (city && venueM) {
+    const venue = venueM[1].replace(/\*+/g, "").trim().replace(/[.,;:]+$/, "").trim();
+    if (venue.length >= 2 && !city.toLowerCase().includes(venue.toLowerCase())) city = `${city}, ${venue}`;
+  }
+
   // За замовчуванням всі старти платні; явно позначаємо безкоштовний лише за ключовими словами.
   let is_paid: boolean | null = true;
   if (/безкоштовн|free\s?entry|free\s?race|вільний\s?вхід/i.test(text)) is_paid = false;

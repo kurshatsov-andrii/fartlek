@@ -152,6 +152,15 @@ function detectCity(text: string): { city: string | null; region: string | null 
   return { city: null, region: null };
 }
 
+// Місце проведення з рядка "Де: ..." — додається до міста через кому.
+function detectVenue(text: string): string | null {
+  const m = text.match(/(?:^|\n)\s*\*{0,2}де\*{0,2}\s*[:\-—]\s*([^\n]{2,80})/i);
+  if (!m) return null;
+  let v = m[1].replace(/\*+/g, "").trim().replace(/[.,;:]+$/, "").trim();
+  if (v.length < 2) return null;
+  return v;
+}
+
 function detectPaid(_text: string): boolean | null {
   // За замовчуванням всі старти платні; організатор може вручну позначити безкоштовний.
   if (/безкоштовн|free\s?entry|free\s?race|вільний\s?вхід/i.test(_text)) return false;
@@ -173,10 +182,15 @@ function escapeRe(s: string): string {
 }
 
 export function parseStartContent(text: string): ParsedStart {
+  const loc = detectCity(text);
+  const venue = detectVenue(text);
+  if (loc.city && venue && !loc.city.toLowerCase().includes(venue.toLowerCase())) {
+    loc.city = `${loc.city}, ${venue}`;
+  }
   return {
     sport_types: detectSports(text),
     distances_km: detectDistances(text),
-    ...detectCity(text),
+    ...loc,
     organizer_name: detectOrganizer(text),
     is_paid: detectPaid(text),
   };
