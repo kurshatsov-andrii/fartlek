@@ -265,6 +265,13 @@ export const CompletedEventsSection = () => {
                         </a>
                       </Button>
                     )}
+                    {user && (
+                      <Button size="sm" variant="outline" className="w-full" asChild>
+                        <Link to={`/events/${ev.id}/participants`}>
+                          <Users className="h-4 w-4" /> {t.events.participants}
+                        </Link>
+                      </Button>
+                    )}
                   </div>
                 </div>
               </article>
