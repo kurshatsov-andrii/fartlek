@@ -291,6 +291,18 @@ const EventDetails = () => {
     day: "numeric", month: "long", year: "numeric",
   });
 
+  // Public (guest) display overrides — logged-in users always see the real count
+  const isKharkivHalf = /kharkiv\s*half\s*marathon/i.test(event.title ?? "") || /kharkiv-half-marathon/i.test(event.slug ?? "");
+  const isSarzhynYar = /саржин\s*яр/i.test(event.title ?? "") || /sarzhyn/i.test(event.slug ?? "");
+  const displayParticipantsCount = user
+    ? participantsCount
+    : isSarzhynYar
+      ? 50
+      : isKharkivHalf
+        ? Math.min(participantsCount, 200)
+        : participantsCount;
+
+
   const seo = buildEventSeo({
     title: event.title,
     city: event.location,
