@@ -119,7 +119,7 @@ const EventResults = () => {
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
 
-  const [distance, setDistance] = useState<string>("all");
+  const [distance, setDistance] = useState<string>("21.1");
   const [gender, setGender] = useState<string>("all");
   const [ageGroup, setAgeGroup] = useState<string>("all");
   const [status, setStatus] = useState<string>("finished");
