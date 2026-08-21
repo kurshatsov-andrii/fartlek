@@ -147,12 +147,23 @@ const EventResults = () => {
       const { data: parts } = await (supabase as any).rpc("get_event_participants", { _event_id: id });
       setParticipants((parts ?? []) as PlatformParticipant[]);
 
+      // DNF marks set by the organizer
+      const { data: dnfData } = await (supabase as any).rpc("get_event_dnf_flags", { _event_id: id });
+      setDnfIds(new Set(((dnfData ?? []) as { registration_id: string }[]).map((d) => d.registration_id)));
+
+      if (user) {
+        const { data: cm } = await (supabase as any).rpc("can_manage_event", { _event_id: id, _user_id: user.id });
+        setCanManage(Boolean(cm));
+      } else {
+        setCanManage(false);
+      }
+
       setLoading(false);
     })();
-  }, [id]);
+  }, [id, user]);
 
   // Registered participants who are NOT in the finishers list (DNS / DNF)
-  const dnsRows = useMemo<ResultRow[]>(() => {
+  const nonFinishers = useMemo<ResultRow[]>(() => {
     if (!event || participants.length === 0 || rows.length === 0) return [];
 
     const finisherNames = rows.map((r) => nameWords(r.full_name));
@@ -175,11 +186,27 @@ const EventResults = () => {
         gun_time_seconds: null,
         chip_time_seconds: null,
         overall_rank: null,
-        status: "dns" as const,
+        status: dnfIds.has(p.registration_id) ? ("dnf" as const) : ("dns" as const),
       }));
-  }, [event, participants, rows]);
+  }, [event, participants, rows, dnfIds]);
 
-  const allRows = useMemo(() => [...rows, ...dnsRows], [rows, dnsRows]);
+  const dnsCount = useMemo(() => nonFinishers.filter((r) => r.status === "dns").length, [nonFinishers]);
+  const dnfCount = useMemo(() => nonFinishers.filter((r) => r.status === "dnf").length, [nonFinishers]);
+
+  const allRows = useMemo(() => [...rows, ...nonFinishers], [rows, nonFinishers]);
+
+  const toggleDnf = async (r: ResultRow) => {
+    if (!canManage) return;
+    const toDnf = r.status !== "dnf";
+    const prev = new Set(dnfIds);
+    setDnfIds((cur) => {
+      const next = new Set(cur);
+      if (toDnf) next.add(r.id); else next.delete(r.id);
+      return next;
+    });
+    const { error } = await (supabase as any).from("registrations").update({ dnf: toDnf }).eq("id", r.id);
+    if (error) setDnfIds(prev);
+  };
 
   const distances = useMemo(
     () => Array.from(new Set(allRows.map((r) => r.distance_km))).sort((a, b) => b - a),
