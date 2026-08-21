@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { Loader2, ArrowLeft, Search, Calendar as CalendarIcon, MapPin, Medal, UserX } from "lucide-react";
+import { Loader2, ArrowLeft, Search, Calendar as CalendarIcon, MapPin, Medal, UserX, ArrowLeftRight } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { SEO } from "@/components/SEO";
@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
 import { useApp } from "@/contexts/AppContext";
+import { useAuth } from "@/hooks/useAuth";
 import { cn } from "@/lib/utils";
 
 interface ResultRow {
@@ -22,7 +23,7 @@ interface ResultRow {
   gun_time_seconds: number | null;
   chip_time_seconds: number | null;
   overall_rank: number | null;
-  status: "finished" | "dns";
+  status: "finished" | "dns" | "dnf";
 }
 
 interface PlatformParticipant {
@@ -105,11 +106,14 @@ const ageGroupOf = (birthYear: number | null, eventDate: string): string | null 
 const EventResults = () => {
   const { id } = useParams<{ id: string }>();
   const { lang } = useApp();
+  const { user } = useAuth();
   const uk = lang === "uk";
 
   const [event, setEvent] = useState<EventInfo | null>(null);
   const [rows, setRows] = useState<ResultRow[]>([]);
   const [participants, setParticipants] = useState<PlatformParticipant[]>([]);
+  const [dnfIds, setDnfIds] = useState<Set<string>>(new Set());
+  const [canManage, setCanManage] = useState(false);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
 
@@ -143,12 +147,23 @@ const EventResults = () => {
       const { data: parts } = await (supabase as any).rpc("get_event_participants", { _event_id: id });
       setParticipants((parts ?? []) as PlatformParticipant[]);
 
+      // DNF marks set by the organizer
+      const { data: dnfData } = await (supabase as any).rpc("get_event_dnf_flags", { _event_id: id });
+      setDnfIds(new Set(((dnfData ?? []) as { registration_id: string }[]).map((d) => d.registration_id)));
+
+      if (user) {
+        const { data: cm } = await (supabase as any).rpc("can_manage_event", { _event_id: id, _user_id: user.id });
+        setCanManage(Boolean(cm));
+      } else {
+        setCanManage(false);
+      }
+
       setLoading(false);
     })();
-  }, [id]);
+  }, [id, user]);
 
   // Registered participants who are NOT in the finishers list (DNS / DNF)
-  const dnsRows = useMemo<ResultRow[]>(() => {
+  const nonFinishers = useMemo<ResultRow[]>(() => {
     if (!event || participants.length === 0 || rows.length === 0) return [];
 
     const finisherNames = rows.map((r) => nameWords(r.full_name));
@@ -171,11 +186,27 @@ const EventResults = () => {
         gun_time_seconds: null,
         chip_time_seconds: null,
         overall_rank: null,
-        status: "dns" as const,
+        status: dnfIds.has(p.registration_id) ? ("dnf" as const) : ("dns" as const),
       }));
-  }, [event, participants, rows]);
+  }, [event, participants, rows, dnfIds]);
 
-  const allRows = useMemo(() => [...rows, ...dnsRows], [rows, dnsRows]);
+  const dnsCount = useMemo(() => nonFinishers.filter((r) => r.status === "dns").length, [nonFinishers]);
+  const dnfCount = useMemo(() => nonFinishers.filter((r) => r.status === "dnf").length, [nonFinishers]);
+
+  const allRows = useMemo(() => [...rows, ...nonFinishers], [rows, nonFinishers]);
+
+  const toggleDnf = async (r: ResultRow) => {
+    if (!canManage) return;
+    const toDnf = r.status !== "dnf";
+    const prev = new Set(dnfIds);
+    setDnfIds((cur) => {
+      const next = new Set(cur);
+      if (toDnf) next.add(r.id); else next.delete(r.id);
+      return next;
+    });
+    const { error } = await (supabase as any).from("registrations").update({ dnf: toDnf }).eq("id", r.id);
+    if (error) setDnfIds(prev);
+  };
 
   const distances = useMemo(
     () => Array.from(new Set(allRows.map((r) => r.distance_km))).sort((a, b) => b - a),
@@ -194,6 +225,7 @@ const EventResults = () => {
     return allRows.filter((r) => {
       if (status === "finished" && r.status !== "finished") return false;
       if (status === "dns" && r.status !== "dns") return false;
+      if (status === "dnf" && r.status !== "dnf") return false;
       if (distance !== "all" && r.distance_km !== Number(distance)) return false;
       if (gender !== "all" && r.gender !== gender) return false;
       if (ageGroup !== "all" && r.age_group !== ageGroup) return false;
@@ -252,10 +284,16 @@ const EventResults = () => {
             <Medal className="h-4 w-4" />
             {uk ? `Фінішували: ${rows.length}` : `Finishers: ${rows.length}`}
           </span>
-          {dnsRows.length > 0 && (
+          {dnsCount > 0 && (
             <span className="inline-flex items-center gap-2">
               <UserX className="h-4 w-4" />
-              {uk ? `Не стартували / не фінішували: ${dnsRows.length}` : `Did not start / finish: ${dnsRows.length}`}
+              {uk ? `Не стартували: ${dnsCount}` : `Did not start: ${dnsCount}`}
+            </span>
+          )}
+          {dnfCount > 0 && (
+            <span className="inline-flex items-center gap-2">
+              <UserX className="h-4 w-4" />
+              {uk ? `Не фінішували: ${dnfCount}` : `Did not finish: ${dnfCount}`}
             </span>
           )}
         </div>
@@ -312,10 +350,13 @@ const EventResults = () => {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="finished">{uk ? "Фінішували" : "Finishers"}</SelectItem>
-                  {dnsRows.length > 0 && (
-                    <SelectItem value="dns">{uk ? "Не стартували / не фінішували" : "Did not start / finish"}</SelectItem>
+                  {dnsCount > 0 && (
+                    <SelectItem value="dns">{uk ? "Не стартували" : "Did not start"}</SelectItem>
                   )}
-                  {dnsRows.length > 0 && (
+                  {dnfCount > 0 && (
+                    <SelectItem value="dnf">{uk ? "Не фінішували" : "Did not finish"}</SelectItem>
+                  )}
+                  {dnsCount + dnfCount > 0 && (
                     <SelectItem value="all">{uk ? "Всі учасники" : "All participants"}</SelectItem>
                   )}
                 </SelectContent>
@@ -345,8 +386,8 @@ const EventResults = () => {
 
             <p className="text-sm text-muted-foreground mb-3">
               {uk
-                ? `Показано: ${filtered.length} з ${status === "all" ? allRows.length : status === "dns" ? dnsRows.length : rows.length}`
-                : `Showing ${filtered.length} of ${status === "all" ? allRows.length : status === "dns" ? dnsRows.length : rows.length}`}
+                ? `Показано: ${filtered.length} з ${status === "all" ? allRows.length : status === "dns" ? dnsCount : status === "dnf" ? dnfCount : rows.length}`
+                : `Showing ${filtered.length} of ${status === "all" ? allRows.length : status === "dns" ? dnsCount : status === "dnf" ? dnfCount : rows.length}`}
             </p>
 
             <div className="overflow-x-auto rounded-2xl border border-border bg-card">
@@ -366,11 +407,31 @@ const EventResults = () => {
                 </thead>
                 <tbody>
                   {filtered.map((r) => (
-                    <tr key={r.id} className={cn("border-b border-border/50 last:border-0 hover:bg-muted/40", r.status === "dns" && "text-muted-foreground")}>
+                    <tr key={r.id} className={cn("border-b border-border/50 last:border-0 hover:bg-muted/40", r.status !== "finished" && "text-muted-foreground")}>
                       <td className="px-4 py-3 font-bold">
-                        {r.status === "dns" ? (
-                          <span className="inline-flex items-center gap-1 text-xs font-semibold px-2 py-1 rounded-full bg-muted text-muted-foreground whitespace-nowrap">
-                            <UserX className="h-3.5 w-3.5" /> DNS/DNF
+                        {r.status !== "finished" ? (
+                          <span className="inline-flex items-center gap-1.5">
+                            <span
+                              className={cn(
+                                "inline-flex items-center gap-1 text-xs font-semibold px-2 py-1 rounded-full whitespace-nowrap",
+                                r.status === "dnf" ? "bg-amber-500/15 text-amber-600" : "bg-muted text-muted-foreground",
+                              )}
+                              title={r.status === "dnf" ? (uk ? "Стартував, але не фінішував" : "Started but did not finish") : (uk ? "Не стартував" : "Did not start")}
+                            >
+                              <UserX className="h-3.5 w-3.5" /> {r.status === "dnf" ? "DNF" : "DNS"}
+                            </span>
+                            {canManage && (
+                              <button
+                                type="button"
+                                onClick={() => toggleDnf(r)}
+                                title={r.status === "dnf"
+                                  ? (uk ? "Позначити як «не стартував»" : "Mark as did not start")
+                                  : (uk ? "Позначити як «не фінішував»" : "Mark as did not finish")}
+                                className="p-1 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+                              >
+                                <ArrowLeftRight className="h-3.5 w-3.5" />
+                              </button>
+                            )}
                           </span>
                         ) : r.overall_rank != null && r.overall_rank <= 3 ? (
                           <span className="inline-flex items-center gap-1 text-primary">
