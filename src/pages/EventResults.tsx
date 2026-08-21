@@ -224,7 +224,7 @@ const EventResults = () => {
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return allRows.filter((r) => {
+    const result = allRows.filter((r) => {
       if (status === "finished" && r.status !== "finished") return false;
       if (status === "dns" && r.status !== "dns") return false;
       if (status === "dnf" && r.status !== "dnf") return false;
@@ -237,7 +237,20 @@ const EventResults = () => {
       }
       return true;
     });
+
+    const hasCategoryFilter = ageGroup !== "all" || gender !== "all";
+    if (!hasCategoryFilter) {
+      return result.map((r) => ({ ...r, categoryRank: null }));
+    }
+
+    const finished = result
+      .filter((r) => r.status === "finished" && r.chip_time_seconds != null)
+      .sort((a, b) => (a.chip_time_seconds as number) - (b.chip_time_seconds as number));
+    const rankMap = new Map<string, number>();
+    finished.forEach((r, i) => rankMap.set(r.id, i + 1));
+    return result.map((r) => ({ ...r, categoryRank: rankMap.get(r.id) ?? null }));
   }, [allRows, status, distance, gender, ageGroup, query]);
+
 
   if (loading) {
     return (
