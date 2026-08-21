@@ -25,6 +25,10 @@ export const EventsSection = () => {
   const [loading, setLoading] = useState(true);
   const [activeCat, setActiveCat] = useState<EventCategory | "all">("all");
   const [search, setSearch] = useState("");
+  const [city, setCity] = useState<string>("all");
+  const [month, setMonth] = useState<string>("all");
+  const [format, setFormat] = useState<string>("all");
+  const [paid, setPaid] = useState<"all" | "paid" | "free">("all");
   const PAGE_SIZE = 9;
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 
@@ -36,10 +40,35 @@ export const EventsSection = () => {
       .then(({ data }) => { setEvents((data as any) ?? []); setLoading(false); });
   }, []);
 
+  const eventCity = (e: EventCard) => (e.location ?? "").split(",")[0].trim();
+
+  const cities = useMemo(() => {
+    const s = new Set<string>();
+    events.forEach((e) => { const c = eventCity(e); if (c) s.add(c); });
+    return Array.from(s).sort((a, b) => a.localeCompare(b, "uk"));
+  }, [events]);
+
+  const months = useMemo(() => {
+    const s = new Set<string>();
+    events.forEach((e) => { if (e.event_date) s.add(e.event_date.slice(0, 7)); });
+    return Array.from(s).sort();
+  }, [events]);
+
+  const monthLabel = (ym: string) => {
+    const [y, m] = ym.split("-").map(Number);
+    const label = new Date(y, m - 1, 1).toLocaleDateString(lang === "uk" ? "uk-UA" : "en-US", { month: "long", year: "numeric" });
+    return label.charAt(0).toUpperCase() + label.slice(1);
+  };
+
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
     return events.filter((e) => {
       if (activeCat !== "all" && e.category !== activeCat) return false;
+      if (city !== "all" && eventCity(e) !== city) return false;
+      if (month !== "all" && !(e.event_date ?? "").startsWith(month)) return false;
+      if (format !== "all" && e.format !== format) return false;
+      if (paid === "paid" && !e.is_paid) return false;
+      if (paid === "free" && e.is_paid) return false;
       if (!q) return true;
       return (
         e.title.toLowerCase().includes(q) ||
@@ -48,11 +77,14 @@ export const EventsSection = () => {
         (e.description ?? "").toLowerCase().includes(q)
       );
     });
-  }, [events, activeCat, search]);
+  }, [events, activeCat, search, city, month, format, paid]);
 
-  useEffect(() => { setVisibleCount(PAGE_SIZE); }, [activeCat, search]);
+  useEffect(() => { setVisibleCount(PAGE_SIZE); }, [activeCat, search, city, month, format, paid]);
 
   const visible = filtered.slice(0, visibleCount);
+
+  const activeFilters = (search ? 1 : 0) + (city !== "all" ? 1 : 0) + (month !== "all" ? 1 : 0) + (format !== "all" ? 1 : 0) + (paid !== "all" ? 1 : 0);
+  const resetFilters = () => { setSearch(""); setCity("all"); setMonth("all"); setFormat("all"); setPaid("all"); };
 
   const fmtDate = (iso: string) =>
     new Date(iso).toLocaleDateString(lang === "uk" ? "uk-UA" : "en-US", {
