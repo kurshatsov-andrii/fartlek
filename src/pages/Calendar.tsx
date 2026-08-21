@@ -37,7 +37,26 @@ interface Row {
   created_by?: string | null;
 }
 
+// Returns internal path if the URL points to this same site, otherwise null
+const internalPath = (url: string): string | null => {
+  if (!url) return null;
+  try {
+    if (url.startsWith("/")) return url;
+    const u = new URL(url);
+    const host = u.hostname.replace(/^www\./, "");
+    const current = window.location.hostname.replace(/^www\./, "");
+    const known = ["fartlek.lovable.app", current];
+    if (known.includes(host) || host.endsWith("--b87e16a4-d487-48fd-8f66-fbbf2b0ac3dd.lovable.app")) {
+      return `${u.pathname}${u.search}${u.hash}` || "/";
+    }
+    return null;
+  } catch {
+    return null;
+  }
+};
+
 const emptyForm = {
+
   id: "" as string | "",
   title: "",
   event_date: "",
