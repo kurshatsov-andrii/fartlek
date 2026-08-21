@@ -148,6 +148,13 @@ const EventDetails = () => {
       if (ds && ds.length > 0) setSelectedDistance(ds[0].id);
       const { data: hasPromo } = await supabase.rpc("event_has_active_promo_codes", { _event_id: ev.id });
       setHasPromoCodes(!!hasPromo);
+      if (ev.status === "completed") {
+        const { count } = await (supabase as any)
+          .from("event_external_results")
+          .select("id", { count: "exact", head: true })
+          .eq("event_id", ev.id);
+        setHasExternalResults((count ?? 0) > 0);
+      }
       if (ev.organizer_name) {
         const [{ data: club }, { data: org }] = await Promise.all([
           supabase.from("clubs").select("slug").ilike("name", ev.organizer_name.trim()).not("slug", "is", null).maybeSingle(),
