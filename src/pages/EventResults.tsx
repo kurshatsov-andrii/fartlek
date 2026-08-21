@@ -248,7 +248,16 @@ const EventResults = () => {
       .sort((a, b) => (a.chip_time_seconds as number) - (b.chip_time_seconds as number));
     const rankMap = new Map<string, number>();
     finished.forEach((r, i) => rankMap.set(r.id, i + 1));
-    return result.map((r) => ({ ...r, categoryRank: rankMap.get(r.id) ?? null }));
+    const ranked = result.map((r) => ({ ...r, categoryRank: rankMap.get(r.id) ?? null }));
+
+    return ranked.sort((a, b) => {
+      if (a.status === "finished" && b.status !== "finished") return -1;
+      if (a.status !== "finished" && b.status === "finished") return 1;
+      if (a.categoryRank != null && b.categoryRank != null) return a.categoryRank - b.categoryRank;
+      if (a.categoryRank != null) return -1;
+      if (b.categoryRank != null) return 1;
+      return (a.chip_time_seconds ?? Infinity) - (b.chip_time_seconds ?? Infinity);
+    });
   }, [allRows, status, distance, gender, ageGroup, query]);
 
 
