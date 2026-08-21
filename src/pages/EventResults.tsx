@@ -448,13 +448,18 @@ const EventResults = () => {
                               </button>
                             )}
                           </span>
+                        ) : (r.categoryRank && r.categoryRank <= 3) ? (
+                          <span className="inline-flex items-center gap-1 text-primary">
+                            <Medal className="h-4 w-4" /> {r.categoryRank}
+                          </span>
                         ) : r.overall_rank != null && r.overall_rank <= 3 ? (
                           <span className="inline-flex items-center gap-1 text-primary">
                             <Medal className="h-4 w-4" /> {r.overall_rank}
                           </span>
                         ) : (
-                          r.overall_rank ?? "—"
+                          (ageGroup !== "all" || gender !== "all") ? (r.categoryRank ?? "—") : (r.overall_rank ?? "—")
                         )}
+
                       </td>
                       <td className="px-4 py-3 font-mono">{r.bib ?? "—"}</td>
                       <td className="px-4 py-3 font-semibold whitespace-nowrap">{r.full_name}</td>
