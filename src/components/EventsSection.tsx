@@ -7,7 +7,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useApp } from "@/contexts/AppContext";
 import { supabase } from "@/integrations/supabase/client";
 import { EVENT_CATEGORIES, type EventCategory } from "@/lib/i18n";
-import { cn } from "@/lib/utils";
+import { cn, eventCity } from "@/lib/utils";
+
 
 interface EventCard {
   id: string; slug: string | null; title: string; description: string | null; organizer_name: string;
@@ -40,20 +41,12 @@ export const EventsSection = () => {
       .then(({ data }) => { setEvents((data as any) ?? []); setLoading(false); });
   }, []);
 
-  const eventCity = (e: EventCard) => {
-    const loc = (e.location ?? "").trim();
-    if (!loc) return "";
-    const beforeComma = loc.split(",")[0].trim();
-    const parts = beforeComma.split(/\.\s*/).map((p) => p.trim()).filter(Boolean);
-    const mIdx = parts.findIndex((p) => /^м\.?$/i.test(p));
-    if (mIdx >= 0 && parts[mIdx + 1]) return parts[mIdx + 1];
-    const noRegion = parts.filter((p) => !/обл\.?$/i.test(p) && !/^область$/i.test(p));
-    return noRegion[0] ?? "";
-  };
+  const getEventCity = (e: EventCard) => eventCity(e.location);
+
 
   const cities = useMemo(() => {
     const s = new Set<string>();
-    events.forEach((e) => { const c = eventCity(e); if (c) s.add(c); });
+    events.forEach((e) => { const c = getEventCity(e); if (c) s.add(c); });
     return Array.from(s).sort((a, b) => a.localeCompare(b, "uk"));
   }, [events]);
 
@@ -73,7 +66,7 @@ export const EventsSection = () => {
     const q = search.trim().toLowerCase();
     return events.filter((e) => {
       if (activeCat !== "all" && e.category !== activeCat) return false;
-      if (city !== "all" && eventCity(e) !== city) return false;
+      if (city !== "all" && getEventCity(e) !== city) return false;
       if (month !== "all" && !(e.event_date ?? "").startsWith(month)) return false;
       if (format !== "all" && e.format !== format) return false;
       if (paid === "paid" && !e.is_paid) return false;
@@ -87,6 +80,7 @@ export const EventsSection = () => {
       );
     });
   }, [events, activeCat, search, city, month, format, paid]);
+
 
   useEffect(() => { setVisibleCount(PAGE_SIZE); }, [activeCat, search, city, month, format, paid]);
 
