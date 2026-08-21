@@ -387,7 +387,7 @@ const EventDetails = () => {
               <div className="flex flex-wrap gap-x-6 gap-y-3 text-sm">
                 <div className="flex items-center gap-2"><Calendar className="h-4 w-4 text-primary" />{fmtDate} · {event.event_time.slice(0, 5)}</div>
                 {event.location && <div className="flex items-center gap-2"><MapPin className="h-4 w-4 text-primary" />{event.location}</div>}
-                <div className="flex items-center gap-2"><Users className="h-4 w-4 text-primary" />{participantsCount} {t.events.participants.toLowerCase()}</div>
+                <div className="flex items-center gap-2"><Users className="h-4 w-4 text-primary" />{displayParticipantsCount} {t.events.participants.toLowerCase()}</div>
                 <div className="flex items-center gap-2" title={t.events.organizer}>
                   <UserCircle2 className="h-4 w-4 text-primary" />
                   {organizerSlug ? (
