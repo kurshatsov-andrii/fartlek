@@ -132,10 +132,10 @@ function detectDistances(text: string): number[] {
 function detectCity(text: string): { city: string | null; region: string | null } {
   const lower = text.toLowerCase();
   // Explicit "Місто: Київ" label has highest priority.
-  const labeled = text.match(/місто\s*[:\-—]\s*([А-ЯІЇЄҐA-Za-zа-яіїєґ'’\-]+(?:\s[А-ЯІЇЄҐA-Za-zа-яіїєґ'’\-]+)?)/i);
+  const labeled = text.match(/місто\s*[:\-—]\s*([^\n]{2,80})/i);
   if (labeled) {
-    const c = labeled[1].trim().toLowerCase();
-    return { city: capitalize(c), region: CITY_REGION[c] ?? null };
+    const c = cleanCity(labeled[1]);
+    if (c) return { city: capitalize(c), region: CITY_REGION[c] ?? null };
   }
   // "м. Київ" or "м.Київ" — but skip initials like "М.М." (single-letter token).
   const mDot = lower.match(/(?:^|[^а-яa-zіїєґ])м\.\s*([а-яіїєґa-z'’\-]{2,}(?:\s[а-яіїєґa-z'’\-]+)?)/i);
@@ -252,3 +252,13 @@ export const MONTH_NAMES_UK = [
   "Січень","Лютий","Березень","Квітень","Травень","Червень",
   "Липень","Серпень","Вересень","Жовтень","Листопад","Грудень",
 ];
+
+function cleanCity(raw: string): string | null {
+  let s = raw.split("\n")[0].replace(/\*+/g, "").trim();
+  // Відрізаємо хвости на кшталт "Київ або онлайн", "Дніпро, Дистанції: ..."
+  s = s.split(/\s*[,;(|/]|\s+(?:або|чи|онлайн|online|дистанц|час|дата|де|організатор)/i)[0].trim();
+  s = s.replace(/^(?:м\.|с\.|смт\.?|місто|село)\s*/i, "").trim();
+  s = s.replace(/[.,:;]+$/, "").trim();
+  if (s.length < 2) return null;
+  return s.toLowerCase();
+}

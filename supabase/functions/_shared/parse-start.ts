@@ -53,11 +53,12 @@ export function parseStartContent(text: string) {
   let city: string | null = null;
   let region: string | null = null;
   // "Місто: Київ" label has priority.
-  const labeled = text.match(/місто\s*[:\-—]\s*([А-ЯІЇЄҐA-Za-zа-яіїєґ'’\-]+(?:\s[А-ЯІЇЄҐA-Za-zа-яіїєґ'’\-]+)?)/i);
+  const labeled = text.match(/місто\s*[:\-—]\s*([^\n]{2,80})/i);
   if (labeled) {
-    const c = labeled[1].trim().toLowerCase();
-    city = cap(c); region = CITY_REGION[c] ?? null;
-  } else {
+    const c = cleanCity(labeled[1]);
+    if (c) { city = cap(c); region = CITY_REGION[c] ?? null; }
+  }
+  if (!city) {
     // "м. Київ" — skip single-letter initials like "М.М."
     const mDot = lower.match(/(?:^|[^а-яa-zіїєґ])м\.\s*([а-яіїєґa-z'’\-]{2,}(?:\s[а-яіїєґa-z'’\-]+)?)/i);
     if (mDot) {
@@ -124,4 +125,14 @@ export function generateStartSeo(input: {
     160
   );
   return { seo_title, seo_description };
+}
+
+function cleanCity(raw: string): string | null {
+  let s = raw.split("\n")[0].replace(/\*+/g, "").trim();
+  // Відрізаємо хвости на кшталт "Київ або онлайн", "Дніпро, Дистанції: ..."
+  s = s.split(/\s*[,;(|/]|\s+(?:або|чи|онлайн|online|дистанц|час|дата|де|організатор)/i)[0].trim();
+  s = s.replace(/^(?:м\.|с\.|смт\.?|місто|село)\s*/i, "").trim();
+  s = s.replace(/[.,:;]+$/, "").trim();
+  if (s.length < 2) return null;
+  return s.toLowerCase();
 }

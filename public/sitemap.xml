@@ -212,7 +212,7 @@
   </url>
   <url>
     <loc>https://fartlek.lovable.app/starts/simple-trail-2026-08-22</loc>
-    <lastmod>2026-08-10</lastmod>
+    <lastmod>2026-08-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -235,32 +235,20 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fartlek.lovable.app/starts/urban-track-festival-pa-ce-edition-2026-07-26</loc>
-    <lastmod>2026-08-10</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fartlek.lovable.app/starts/prosecco-run-2026-07-18</loc>
-    <lastmod>2026-08-10</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://fartlek.lovable.app/starts/13-y-zabig-u-vyshyvankah-do-35oi-richnyci-dnya-nezalezhnosti-ukrainy-2026-08-23</loc>
     <lastmod>2026-07-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fartlek.lovable.app/starts/treyl-modrivs-ki-skeli-2026-09-05</loc>
-    <lastmod>2026-07-13</lastmod>
+    <loc>https://fartlek.lovable.app/starts/urban-track-festival-pa-ce-edition-2026-07-26</loc>
+    <lastmod>2026-08-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fartlek.lovable.app/starts/swimrun-cherkasy-2026-08-30-2</loc>
-    <lastmod>2026-08-07</lastmod>
+    <loc>https://fartlek.lovable.app/starts/treyl-modrivs-ki-skeli-2026-09-05</loc>
+    <lastmod>2026-07-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -279,6 +267,12 @@
   <url>
     <loc>https://fartlek.lovable.app/starts/onlayn-zabig-velozaizd-aura-2026-08-01</loc>
     <lastmod>2026-08-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fartlek.lovable.app/starts/swimrun-cherkasy-2026-08-30-2</loc>
+    <lastmod>2026-08-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -325,6 +319,12 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://fartlek.lovable.app/starts/prosecco-run-2026-07-18</loc>
+    <lastmod>2026-08-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://fartlek.lovable.app/starts/kros-tryatlon-2026-08-15</loc>
     <lastmod>2026-07-27</lastmod>
     <changefreq>weekly</changefreq>
@@ -338,7 +338,7 @@
   </url>
   <url>
     <loc>https://fartlek.lovable.app/starts/dino-trail-2026-11-08</loc>
-    <lastmod>2026-07-31</lastmod>
+    <lastmod>2026-08-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -350,12 +350,6 @@
   </url>
   <url>
     <loc>https://fartlek.lovable.app/starts/bigozbir-speka-2026-07-22</loc>
-    <lastmod>2026-08-10</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fartlek.lovable.app/starts/cherkasy-swim-fest-2026-07-25</loc>
     <lastmod>2026-08-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
@@ -379,13 +373,13 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fartlek.lovable.app/starts/blagodiynyy-zabig-chyste-nebo-2026-09-06</loc>
-    <lastmod>2026-08-12</lastmod>
+    <loc>https://fartlek.lovable.app/starts/cherkasy-swim-fest-2026-07-25</loc>
+    <lastmod>2026-08-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fartlek.lovable.app/starts/zabig-u-vyshyvankah-pam-yati-zahysnyka-ukrainy-oleksiya-chernobaya-ta-vsih-zahysnykiv-ta-zahysnyc-ukrainy-2026-08-23</loc>
+    <loc>https://fartlek.lovable.app/starts/blagodiynyy-zabig-chyste-nebo-2026-09-06</loc>
     <lastmod>2026-08-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
@@ -393,6 +387,12 @@
   <url>
     <loc>https://fartlek.lovable.app/starts/estafeta-pokolin-2026-09-20</loc>
     <lastmod>2026-08-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fartlek.lovable.app/starts/zabig-u-vyshyvankah-pam-yati-zahysnyka-ukrainy-oleksiya-chernobaya-ta-vsih-zahysnykiv-ta-zahysnyc-ukrainy-2026-08-23</loc>
+    <lastmod>2026-08-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
