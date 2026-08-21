@@ -125,7 +125,7 @@ const Starts = () => {
       <div className="p-4 flex flex-col gap-3 flex-1">
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
           {r.event_date && (<span className="inline-flex items-center gap-1"><CalendarIcon className="h-3.5 w-3.5" />{fmtDate(r.event_date)}</span>)}
-          <span className="inline-flex items-center gap-1"><MapPin className="h-3.5 w-3.5" />{r.city || "онлайн"}</span>
+          <span className="inline-flex items-center gap-1"><MapPin className="h-3.5 w-3.5" />{r.city || "Україна та весь світ"}</span>
         </div>
         <h2 className="font-semibold text-lg leading-snug">
           <Link to={`/starts/${r.slug}`} className="hover:underline">{r.title || "Без назви"}</Link>
@@ -134,9 +134,11 @@ const Starts = () => {
           {Array.from(new Set((r.sport_types || []).filter((s): s is SportType => s in SPORT_LABELS))).slice(0, 3).map((s) => (
             <span key={s} className="text-[10px] px-1.5 py-0.5 rounded bg-muted">{SPORT_LABELS[s]}</span>
           ))}
-          {(r.distances_km || []).slice(0, 4).map((d) => (
+          {(r.distances_km || []).length > 0 ? (r.distances_km || []).slice(0, 4).map((d) => (
             <span key={String(d)} className="text-[10px] px-1.5 py-0.5 rounded bg-primary/10 text-primary">{d} км</span>
-          ))}
+          )) : (
+            <span className="text-[10px] px-1.5 py-0.5 rounded bg-primary/10 text-primary">Вільна дистанція</span>
+          )}
           {r.is_paid === false && <span className="text-[10px] px-1.5 py-0.5 rounded bg-accent text-accent-foreground">Безкоштовно</span>}
         </div>
         <p className="text-sm text-muted-foreground line-clamp-3 flex-1">{r.description}</p>
