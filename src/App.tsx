@@ -91,6 +91,7 @@ const App = () => (
               <Route path="/events/:id" element={<EventDetails />} />
               <Route path="/event/:id" element={<EventSingularRedirect />} />
               <Route path="/events/:id/participants" element={<Participants />} />
+              <Route path="/events/:id/results" element={<EventResults />} />
               <Route path="/ticket/:id" element={<Ticket />} />
               <Route path="/organizer" element={<OrganizerDashboard />} />
               <Route path="/organizer/events/new" element={<EventEditor />} />
