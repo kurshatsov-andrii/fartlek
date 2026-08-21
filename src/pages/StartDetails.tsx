@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { Loader2, ExternalLink, Calendar as CalendarIcon, ArrowLeft } from "lucide-react";
+import { Loader2, ExternalLink, Calendar as CalendarIcon, ArrowLeft, MapPin } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { SEO } from "@/components/SEO";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { linkifyText } from "@/lib/linkify";
+import { SPORT_LABELS, SPORT_TYPES, type SportType } from "@/lib/parseStart";
 
 interface StartRow {
   id: string;
@@ -18,6 +19,11 @@ interface StartRow {
   event_date: string | null;
   seo_title: string | null;
   seo_description: string | null;
+  city: string | null;
+  region: string | null;
+  sport_types: string[];
+  distances_km: number[];
+  is_paid: boolean | null;
 }
 
 const StartDetails = () => {
