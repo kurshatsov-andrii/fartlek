@@ -119,26 +119,69 @@ export const EventsSection = () => {
           </div>
         </div>
 
-        <div className="mb-6 max-w-md relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
-          <Input
-            type="search"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder={lang === "uk" ? "Пошук подій за назвою, місцем, організатором…" : "Search events by name, location, organizer…"}
-            className="pl-9 pr-9"
-            aria-label={lang === "uk" ? "Пошук подій" : "Search events"}
-          />
-          {search && (
-            <button
-              type="button"
-              onClick={() => setSearch("")}
-              className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-muted-foreground hover:text-foreground"
-              aria-label={lang === "uk" ? "Очистити" : "Clear"}
-            >
-              <X className="h-4 w-4" />
-            </button>
-          )}
+        <div className="mb-10 rounded-2xl border bg-card p-4 space-y-3">
+          <div className="flex items-center gap-2 text-sm font-medium">
+            <Filter className="h-4 w-4" /> {lang === "uk" ? "Фільтри" : "Filters"}
+            {activeFilters > 0 && (
+              <Button variant="ghost" size="sm" className="ml-auto h-7" onClick={resetFilters}>
+                <X className="h-3.5 w-3.5 mr-1" /> {lang === "uk" ? `Скинути (${activeFilters})` : `Reset (${activeFilters})`}
+              </Button>
+            )}
+          </div>
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+            <Input
+              type="search"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder={lang === "uk" ? "Пошук подій за назвою, місцем, організатором…" : "Search events by name, location, organizer…"}
+              className="pl-9 pr-9"
+              aria-label={lang === "uk" ? "Пошук подій" : "Search events"}
+            />
+            {search && (
+              <button
+                type="button"
+                onClick={() => setSearch("")}
+                className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-muted-foreground hover:text-foreground"
+                aria-label={lang === "uk" ? "Очистити" : "Clear"}
+              >
+                <X className="h-4 w-4" />
+              </button>
+            )}
+          </div>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
+            <Select value={city} onValueChange={setCity}>
+              <SelectTrigger aria-label={lang === "uk" ? "Місто" : "City"}><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">{lang === "uk" ? "Усі міста" : "All cities"}</SelectItem>
+                {cities.map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}
+              </SelectContent>
+            </Select>
+            <Select value={month} onValueChange={setMonth}>
+              <SelectTrigger aria-label={lang === "uk" ? "Місяць" : "Month"}><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">{lang === "uk" ? "Усі місяці" : "All months"}</SelectItem>
+                {months.map((m) => <SelectItem key={m} value={m}>{monthLabel(m)}</SelectItem>)}
+              </SelectContent>
+            </Select>
+            <Select value={format} onValueChange={setFormat}>
+              <SelectTrigger aria-label={lang === "uk" ? "Формат" : "Format"}><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">{lang === "uk" ? "Будь-який формат" : "Any format"}</SelectItem>
+                <SelectItem value="offline">{t.format.badgeOffline}</SelectItem>
+                <SelectItem value="online">{t.format.badgeOnline}</SelectItem>
+                <SelectItem value="hybrid">{t.format.badgeHybrid}</SelectItem>
+              </SelectContent>
+            </Select>
+            <Select value={paid} onValueChange={(v) => setPaid(v as any)}>
+              <SelectTrigger aria-label={lang === "uk" ? "Тип" : "Type"}><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">{lang === "uk" ? "Платні і безкоштовні" : "Paid and free"}</SelectItem>
+                <SelectItem value="free">{lang === "uk" ? "Безкоштовні" : "Free"}</SelectItem>
+                <SelectItem value="paid">{lang === "uk" ? "Платні" : "Paid"}</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </div>
 
         <div className="mb-10 flex flex-wrap gap-2">
