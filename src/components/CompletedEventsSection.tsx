@@ -248,9 +248,9 @@ export const CompletedEventsSection = () => {
                   </div>
                   <div className="mt-4 pt-3 border-t border-border space-y-2">
                     {resultsEventIds.has(ev.id) ? (
-                      <Button size="sm" variant="outline" className="w-full" asChild>
+                      <Button size="sm" className="w-full" asChild>
                         <Link to={`/events/${ev.id}/results`}>
-                          <FileText className="h-4 w-4" /> {t.events.results}
+                          <FileText className="h-4 w-4" /> {lang === "uk" ? "Переглянути результати" : "View results"}
                         </Link>
                       </Button>
                     ) : ev.results_pdf_url || ev.results_url ? (
