@@ -46,7 +46,7 @@ export const EventsSection = () => {
 
   const cities = useMemo(() => {
     const s = new Set<string>();
-    events.forEach((e) => { const c = eventCity(e); if (c) s.add(c); });
+    events.forEach((e) => { const c = getEventCity(e); if (c) s.add(c); });
     return Array.from(s).sort((a, b) => a.localeCompare(b, "uk"));
   }, [events]);
 
@@ -66,7 +66,7 @@ export const EventsSection = () => {
     const q = search.trim().toLowerCase();
     return events.filter((e) => {
       if (activeCat !== "all" && e.category !== activeCat) return false;
-      if (city !== "all" && eventCity(e) !== city) return false;
+      if (city !== "all" && getEventCity(e) !== city) return false;
       if (month !== "all" && !(e.event_date ?? "").startsWith(month)) return false;
       if (format !== "all" && e.format !== format) return false;
       if (paid === "paid" && !e.is_paid) return false;
@@ -80,6 +80,7 @@ export const EventsSection = () => {
       );
     });
   }, [events, activeCat, search, city, month, format, paid]);
+
 
   useEffect(() => { setVisibleCount(PAGE_SIZE); }, [activeCat, search, city, month, format, paid]);
 
