@@ -475,7 +475,7 @@ const CalendarPage = () => {
                               </div>
                             )}
                           </TableCell>
-                          <TableCell className="text-sm text-muted-foreground">{r.location || "—"}</TableCell>
+                          <TableCell className="text-sm text-muted-foreground">{r.location || "онлайн"}</TableCell>
                           <TableCell className="text-sm">{r.distances || "—"}</TableCell>
                           <TableCell className="text-sm text-muted-foreground">{r.organizer_name || "—"}</TableCell>
                           <TableCell className="text-right">

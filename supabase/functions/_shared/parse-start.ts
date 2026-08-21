@@ -42,7 +42,7 @@ export function parseStartContent(text: string) {
   if (out.size === 0 || /(\brun\b|забіг|пробіг|біговий|fun\s?run|charity\s?run)/i.test(t)) out.add("run");
 
   const distSet = new Set<number>();
-  const re = /(\d{1,3}(?:[.,]\d{1,2})?)\s?(?:км|km)(?![а-яА-Яa-zA-Z])/gi;
+  const re = /(\d{1,3}(?:[.,]\d{1,2})?)\s?\+?\s?(?:км|km)(?![а-яА-Яa-zA-Z])/gi;
   let m: RegExpExecArray | null;
   while ((m = re.exec(text)) !== null) {
     const n = parseFloat(m[1].replace(",","."));
@@ -70,6 +70,13 @@ export function parseStartContent(text: string) {
         if (r.test(lower)) { city = cap(key); region = CITY_REGION[key]; break; }
       }
     }
+  }
+
+  // Місце проведення з рядка "Де: ..."
+  const venueM = text.match(/(?:^|\n)\s*\*{0,2}де\*{0,2}\s*[:\-—]\s*([^\n]{2,80})/i);
+  if (city && venueM) {
+    const venue = venueM[1].replace(/\*+/g, "").trim().replace(/[.,;:]+$/, "").trim();
+    if (venue.length >= 2 && !city.toLowerCase().includes(venue.toLowerCase())) city = `${city}, ${venue}`;
   }
 
   // За замовчуванням всі старти платні; явно позначаємо безкоштовний лише за ключовими словами.

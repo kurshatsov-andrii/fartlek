@@ -125,7 +125,7 @@ const Starts = () => {
       <div className="p-4 flex flex-col gap-3 flex-1">
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
           {r.event_date && (<span className="inline-flex items-center gap-1"><CalendarIcon className="h-3.5 w-3.5" />{fmtDate(r.event_date)}</span>)}
-          {r.city && (<span className="inline-flex items-center gap-1"><MapPin className="h-3.5 w-3.5" />{r.city}</span>)}
+          <span className="inline-flex items-center gap-1"><MapPin className="h-3.5 w-3.5" />{r.city || "онлайн"}</span>
         </div>
         <h2 className="font-semibold text-lg leading-snug">
           <Link to={`/starts/${r.slug}`} className="hover:underline">{r.title || "Без назви"}</Link>
