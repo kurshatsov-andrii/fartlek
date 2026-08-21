@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { Loader2, ArrowLeft, Search, Calendar as CalendarIcon, MapPin, Medal } from "lucide-react";
+import { Loader2, ArrowLeft, Search, Calendar as CalendarIcon, MapPin, Medal, UserX } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { SEO } from "@/components/SEO";
@@ -22,6 +22,18 @@ interface ResultRow {
   gun_time_seconds: number | null;
   chip_time_seconds: number | null;
   overall_rank: number | null;
+  status: "finished" | "dns";
+}
+
+interface PlatformParticipant {
+  registration_id: string;
+  bib_number: number | null;
+  full_name: string | null;
+  gender: string | null;
+  birth_year: number | null;
+  city: string | null;
+  distance_km: number | null;
+  payment_status: string;
 }
 
 interface EventInfo {
@@ -43,6 +55,53 @@ const formatTime = (s: number | null): string => {
 
 const AGE_GROUP_ORDER = ["До 18", "18-29", "30-39", "40-49", "50-59", "60+"];
 
+// Cyrillic -> latin transliteration for name matching
+const TRANSLIT: Record<string, string> = {
+  а: "a", б: "b", в: "v", г: "h", ґ: "g", д: "d", е: "e", є: "ie", ж: "zh",
+  з: "z", и: "y", і: "i", ї: "i", й: "i", к: "k", л: "l", м: "m", н: "n",
+  о: "o", п: "p", р: "r", с: "s", т: "t", у: "u", ф: "f", х: "kh", ц: "ts",
+  ч: "ch", ш: "sh", щ: "shch", ь: "", ю: "iu", я: "ia", "'": "", "’": "", "ʼ": "",
+  ё: "e", э: "e", ъ: "", ы: "y",
+};
+
+const translit = (s: string): string =>
+  s
+    .split("")
+    .map((ch) => TRANSLIT[ch] ?? ch)
+    .join("");
+
+// Normalize a name into a sorted unique word list for comparison:
+// lowercase, transliterate, drop stray characters (corrupted apostrophes etc.)
+// so "Ivan Petrenko" matches "Petrenko Ivan" and "М?ясников" matches "Мʼясников".
+const nameWords = (s: string): string[] => {
+  const words = translit(s.toLowerCase())
+    .replace(/-/g, " ")
+    .replace(/[^a-z\s]/g, "")
+    .split(/\s+/)
+    .filter(Boolean);
+  const significant = words.filter((w) => w.length > 1);
+  const list = significant.length >= 2 ? significant : words;
+  return Array.from(new Set(list)).sort();
+};
+
+// Two names match when they share at least 2 words (handles middle names,
+// reversed order, transliteration differences).
+const namesMatch = (a: string[], b: string[]): boolean => {
+  const setB = new Set(b);
+  return a.filter((w) => setB.has(w)).length >= 2;
+};
+
+const ageGroupOf = (birthYear: number | null, eventDate: string): string | null => {
+  if (!birthYear) return null;
+  const age = new Date(eventDate).getFullYear() - birthYear;
+  if (age < 18) return "До 18";
+  if (age <= 29) return "18-29";
+  if (age <= 39) return "30-39";
+  if (age <= 49) return "40-49";
+  if (age <= 59) return "50-59";
+  return "60+";
+};
+
 const EventResults = () => {
   const { id } = useParams<{ id: string }>();
   const { lang } = useApp();
@@ -50,12 +109,14 @@ const EventResults = () => {
 
   const [event, setEvent] = useState<EventInfo | null>(null);
   const [rows, setRows] = useState<ResultRow[]>([]);
+  const [participants, setParticipants] = useState<PlatformParticipant[]>([]);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
 
   const [distance, setDistance] = useState<string>("all");
   const [gender, setGender] = useState<string>("all");
   const [ageGroup, setAgeGroup] = useState<string>("all");
+  const [status, setStatus] = useState<string>("finished");
   const [query, setQuery] = useState("");
 
   useEffect(() => {
@@ -76,26 +137,63 @@ const EventResults = () => {
         .order("distance_km", { ascending: false })
         .order("chip_time_seconds", { ascending: true })
         .limit(5000);
-      setRows((data ?? []) as ResultRow[]);
+      setRows(((data ?? []) as Omit<ResultRow, "status">[]).map((r) => ({ ...r, status: "finished" as const })));
+
+      // Platform registrations (returns rows only for authorized users)
+      const { data: parts } = await (supabase as any).rpc("get_event_participants", { _event_id: id });
+      setParticipants((parts ?? []) as PlatformParticipant[]);
+
       setLoading(false);
     })();
   }, [id]);
 
+  // Registered participants who are NOT in the finishers list (DNS / DNF)
+  const dnsRows = useMemo<ResultRow[]>(() => {
+    if (!event || participants.length === 0 || rows.length === 0) return [];
+
+    const finisherNames = rows.map((r) => nameWords(r.full_name));
+
+    return participants
+      .filter((p) => p.full_name && (p.payment_status === "paid" || p.payment_status === "free"))
+      .filter((p) => {
+        const words = nameWords(p.full_name as string);
+        return !finisherNames.some((fw) => namesMatch(fw, words));
+      })
+      .map((p) => ({
+        id: p.registration_id,
+        distance_km: p.distance_km ?? 0,
+        bib: p.bib_number,
+        full_name: p.full_name as string,
+        gender: p.gender === "male" ? "M" : p.gender === "female" ? "F" : null,
+        age: null,
+        age_group: ageGroupOf(p.birth_year, event.event_date),
+        city: p.city,
+        gun_time_seconds: null,
+        chip_time_seconds: null,
+        overall_rank: null,
+        status: "dns" as const,
+      }));
+  }, [event, participants, rows]);
+
+  const allRows = useMemo(() => [...rows, ...dnsRows], [rows, dnsRows]);
+
   const distances = useMemo(
-    () => Array.from(new Set(rows.map((r) => r.distance_km))).sort((a, b) => b - a),
-    [rows],
+    () => Array.from(new Set(allRows.map((r) => r.distance_km))).sort((a, b) => b - a),
+    [allRows],
   );
 
   const ageGroups = useMemo(() => {
-    const set = new Set(rows.filter((r) => r.age_group).map((r) => r.age_group as string));
+    const set = new Set(allRows.filter((r) => r.age_group).map((r) => r.age_group as string));
     return AGE_GROUP_ORDER.filter((g) => set.has(g)).concat(
       [...set].filter((g) => !AGE_GROUP_ORDER.includes(g)),
     );
-  }, [rows]);
+  }, [allRows]);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return rows.filter((r) => {
+    return allRows.filter((r) => {
+      if (status === "finished" && r.status !== "finished") return false;
+      if (status === "dns" && r.status !== "dns") return false;
       if (distance !== "all" && r.distance_km !== Number(distance)) return false;
       if (gender !== "all" && r.gender !== gender) return false;
       if (ageGroup !== "all" && r.age_group !== ageGroup) return false;
@@ -105,7 +203,7 @@ const EventResults = () => {
       }
       return true;
     });
-  }, [rows, distance, gender, ageGroup, query]);
+  }, [allRows, status, distance, gender, ageGroup, query]);
 
   if (loading) {
     return (
@@ -154,6 +252,12 @@ const EventResults = () => {
             <Medal className="h-4 w-4" />
             {uk ? `Фінішували: ${rows.length}` : `Finishers: ${rows.length}`}
           </span>
+          {dnsRows.length > 0 && (
+            <span className="inline-flex items-center gap-2">
+              <UserX className="h-4 w-4" />
+              {uk ? `Не стартували / не фінішували: ${dnsRows.length}` : `Did not start / finish: ${dnsRows.length}`}
+            </span>
+          )}
         </div>
 
         {rows.length === 0 ? (
@@ -192,7 +296,7 @@ const EventResults = () => {
               ))}
             </div>
 
-            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4 mb-6">
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5 mb-6">
               <div className="relative lg:col-span-2">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
@@ -202,6 +306,20 @@ const EventResults = () => {
                   className="pl-9"
                 />
               </div>
+              <Select value={status} onValueChange={setStatus}>
+                <SelectTrigger>
+                  <SelectValue placeholder={uk ? "Статус" : "Status"} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="finished">{uk ? "Фінішували" : "Finishers"}</SelectItem>
+                  {dnsRows.length > 0 && (
+                    <SelectItem value="dns">{uk ? "Не стартували / не фінішували" : "Did not start / finish"}</SelectItem>
+                  )}
+                  {dnsRows.length > 0 && (
+                    <SelectItem value="all">{uk ? "Всі учасники" : "All participants"}</SelectItem>
+                  )}
+                </SelectContent>
+              </Select>
               <Select value={gender} onValueChange={setGender}>
                 <SelectTrigger>
                   <SelectValue placeholder={uk ? "Стать" : "Gender"} />
@@ -226,7 +344,9 @@ const EventResults = () => {
             </div>
 
             <p className="text-sm text-muted-foreground mb-3">
-              {uk ? `Показано: ${filtered.length} з ${rows.length}` : `Showing ${filtered.length} of ${rows.length}`}
+              {uk
+                ? `Показано: ${filtered.length} з ${status === "all" ? allRows.length : status === "dns" ? dnsRows.length : rows.length}`
+                : `Showing ${filtered.length} of ${status === "all" ? allRows.length : status === "dns" ? dnsRows.length : rows.length}`}
             </p>
 
             <div className="overflow-x-auto rounded-2xl border border-border bg-card">
@@ -246,9 +366,13 @@ const EventResults = () => {
                 </thead>
                 <tbody>
                   {filtered.map((r) => (
-                    <tr key={r.id} className="border-b border-border/50 last:border-0 hover:bg-muted/40">
+                    <tr key={r.id} className={cn("border-b border-border/50 last:border-0 hover:bg-muted/40", r.status === "dns" && "text-muted-foreground")}>
                       <td className="px-4 py-3 font-bold">
-                        {r.overall_rank != null && r.overall_rank <= 3 ? (
+                        {r.status === "dns" ? (
+                          <span className="inline-flex items-center gap-1 text-xs font-semibold px-2 py-1 rounded-full bg-muted text-muted-foreground whitespace-nowrap">
+                            <UserX className="h-3.5 w-3.5" /> DNS/DNF
+                          </span>
+                        ) : r.overall_rank != null && r.overall_rank <= 3 ? (
                           <span className="inline-flex items-center gap-1 text-primary">
                             <Medal className="h-4 w-4" /> {r.overall_rank}
                           </span>
