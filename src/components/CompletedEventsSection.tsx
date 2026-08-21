@@ -4,7 +4,7 @@ import { Calendar, MapPin, FileText, Loader2, Search, X, Filter } from "lucide-r
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { DocumentDialog } from "@/DocumentDialog";
+import { DocumentDialog } from "@/components/DocumentDialog";
 import { useApp } from "@/contexts/AppContext";
 import { supabase } from "@/integrations/supabase/client";
 import { eventCity } from "@/lib/utils";
