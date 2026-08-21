@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { Loader2, ArrowLeft, Search, Calendar as CalendarIcon, MapPin, Medal, UserX } from "lucide-react";
+import { Loader2, ArrowLeft, Search, Calendar as CalendarIcon, MapPin, Medal, UserX, ArrowLeftRight } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { SEO } from "@/components/SEO";
@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
 import { useApp } from "@/contexts/AppContext";
+import { useAuth } from "@/hooks/useAuth";
 import { cn } from "@/lib/utils";
 
 interface ResultRow {
@@ -22,7 +23,7 @@ interface ResultRow {
   gun_time_seconds: number | null;
   chip_time_seconds: number | null;
   overall_rank: number | null;
-  status: "finished" | "dns";
+  status: "finished" | "dns" | "dnf";
 }
 
 interface PlatformParticipant {
