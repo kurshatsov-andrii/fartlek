@@ -123,6 +123,8 @@ const Features = () => {
         { icon: Calendar, title: "Upcoming events calendar", desc: "Dedicated page with every upcoming race in Ukraine — both from the platform and added by admins or organizers. Filters by category, month, search and sorting." },
         { icon: Building2, title: "Clubs catalog", desc: "All running clubs in Ukraine on a single page — search by city and activity, view club profile with events and contacts." },
         { icon: Megaphone, title: "Organizers catalog 🆕", desc: "A dedicated page with all event organizers — logo, city, description, social links and active events. Easily find a trusted organizer or contact them directly." },
+        { icon: Send, title: "Starts from our Telegram channel 🆕", desc: "The «Starts» page collects race announcements from our Telegram channel: automatic daily sync, filters by month, city, organizer and sport, plus a «Register» button. New starts also land in the Calendar automatically." },
+        { icon: Filter, title: "Advanced event filters 🆕", desc: "On the home page, upcoming and completed events filter by city, month, format and type (paid/free) — plus live search by name, location or organizer." },
       ],
     },
     {
@@ -135,6 +137,7 @@ const Features = () => {
         { icon: Trophy, title: "Race results", desc: "After the finish, organizers upload results — see your time and position." },
         { icon: Activity, title: "Auto-verify results via Strava 🆕", desc: "For virtual races: connect Strava in your profile — we automatically pick the matching activity within the date window and distance tolerance, count your time and mark it as «verified». Your ticket gets a direct link to the activity." },
         { icon: ImageIcon, title: "Event photos", desc: "Organizers attach a photo album link — open it right from the completed event card." },
+        { icon: RefreshCw, title: "Auto payment status refresh 🆕", desc: "Paid from the ticket page? It re-checks the payment every few seconds and whenever you return to the tab — the green «Paid» check appears without a manual reload." },
       ],
     },
     {
@@ -151,7 +154,7 @@ const Features = () => {
       title: "Manage your registration 🆕",
       items: [
         { icon: Repeat, title: "Change distance", desc: "Switch to another distance yourself before the event deadline. If the new one costs more — pay the difference, if less — no refund." },
-        { icon: Send, title: "Transfer registration", desc: "Can't run? Generate an 8-character transfer code — another participant enters it in «My events» and gets your slot." },
+        { icon: Send, title: "Transfer registration", desc: "Can't run? Generate an 8-character transfer code — another participant enters it in «My events» and gets your slot. Works even after event registration is closed." },
         { icon: XCircle, title: "Cancellation request", desc: "Submit a cancellation request — the organizer reviews it manually and decides on refund." },
         { icon: Truck, title: "Nova Poshta race kit delivery", desc: "If the event supports delivery — pick a city and branch/parcel locker right at registration. You can also order it later from the ticket page." },
       ],
@@ -162,6 +165,8 @@ const Features = () => {
         { icon: UserCircle, title: "Personal profile", desc: "Name, date of birth, gender, city, club and phone — filled once." },
         { icon: ImageIcon, title: "Profile photo", desc: "Upload an avatar — it shows up in chats and participant lists." },
         { icon: Building2, title: "Club membership", desc: "Pick your running club — it appears in results and lists." },
+        { icon: FileSpreadsheet, title: "Tax ID with auto-check 🆕", desc: "Optional tax ID (ІПН) field in the profile: when filled in, the system automatically validates it against your date of birth." },
+        { icon: Shirt, title: "Gender-based T-shirt size 🆕", desc: "Pick your race T-shirt size in the profile: women's S–2XL or men's S–3XL grid depending on the selected gender." },
         { icon: Activity, title: "Connect Strava 🆕", desc: "Link your Strava account from the profile in one click (OAuth). Required to auto-credit virtual race results. Disconnect anytime." },
         { icon: Sparkles, title: "Become an organizer 🆕", desc: "Signed up via Google or Apple as a participant but want to create events? One click in your profile grants you the organizer role and unlocks event, club and public-profile creation." },
       ],
@@ -239,6 +244,7 @@ const Features = () => {
         { icon: Clock, title: "Self-service deadline 🆕", desc: "Configure how many days before the event participants can change distance, transfer slots or request cancellation by themselves." },
         { icon: Activity, title: "Virtual race via Strava 🆕", desc: "Mark a distance as virtual: set a date window (from / to) and a distance tolerance in % (to account for GPS drift). Participants' Strava activities that fall in the window and match the distance are credited automatically." },
         { icon: Globe, title: "Multisport distances 🆕", desc: "Triathlon, duathlon, aquathlon, OCR, swim, bike and combined formats. Create distances with multiple segments: swim → bike → run, with Sprint / Olympic / 70.3 / Full presets. For OCR — specify the number of obstacles." },
+        { icon: Users, title: "Participant limit 🆕", desc: "Set a total slot limit for the event — once it's reached, registration closes automatically." },
       ],
     },
     {
@@ -256,13 +262,16 @@ const Features = () => {
         { icon: Settings, title: "Custom parcel dimensions & payment 🆕", desc: "Set your own parcel parameters: weight, width/length/height (cm), declared cost, seats, cargo description. Pick the payer (Sender / Recipient / Third person) and payment method — recipients can pay cash or by card on pickup." },
         { icon: History, title: "Registration changes history 🆕", desc: "A dedicated tab with full audit: distance changes, slot transfers, cancellation requests — who, when and what changed." },
         { icon: Activity, title: "Sync results from Strava 🆕", desc: "«Sync Strava» button on the participants list: one click pulls activities from all connected participants and saves their result with a «verified» mark. The table shows the source (Strava) and a link to the activity." },
+        { icon: FileDown, title: "«Timing» & «Start list» exports 🆕", desc: "Dedicated one-click CSV exports in the timing-company format: ID, BIB, name, gender, birth date, distance, city, club." },
+        { icon: ClipboardCheck, title: "Consent tracking 🆕", desc: "A «Consent» column in the participants list instantly shows who has signed the participation waiver and who hasn't." },
+        { icon: Hash, title: "Gap-free BIB numbering 🆕", desc: "If a participant is removed, their number isn't lost: the next registration automatically gets the lowest free number in the sequence." },
       ],
     },
     {
       title: "Marketing & payments",
       items: [
         { icon: Tag, title: "Promo codes", desc: "Discount codes (fixed amount or percentage) with usage limits." },
-        { icon: Mail, title: "Email campaigns", desc: "Send marketing emails to participants from ready-made templates." },
+        { icon: Mail, title: "Email campaigns", desc: "Send marketing emails to participants from ready-made templates. Campaigns start from the newest registrations, send in batches with automatic pauses when the mail service rate-limits, and a «Resume» button delivers the rest." },
         { icon: CreditCard, title: "WayForPay & LiqPay payments (auto-confirm)", desc: "Connect your WayForPay or LiqPay account — money goes directly to you, payment status ✅ is set automatically. See the «Payments» block below." },
         { icon: Megaphone, title: "Club / organizer page", desc: "A dedicated page with all your events and club information." },
         { icon: Building2, title: "Public organizer profile 🆕", desc: "Create a dedicated organizer page: logo, city, description, activity types, social links and contacts. The profile appears in the organizers catalog and gets full SEO optimization (titles, descriptions, JSON-LD)." },
@@ -276,6 +285,8 @@ const Features = () => {
         { icon: Bell, title: "Unread counter", desc: "Dashboard shows how many new chat messages each event has." },
         { icon: Shield, title: "Chat moderation", desc: "Delete any message, edit your own announcements." },
         { icon: Activity, title: "Online users (admin) 🆕", desc: "The platform admin sees the number of authenticated users on the site in real time — a floating indicator in the corner." },
+        { icon: Bell, title: "Telegram notifications for organizers 🆕", desc: "Instant Telegram alerts about new registrations and cancellation requests — always in the loop without checking the site." },
+        { icon: ShieldCheck, title: "Bot protection 🆕", desc: "Cloudflare Turnstile, disposable-email blocking and name validation at sign-up keep spam accounts out." },
       ],
     },
   ];
