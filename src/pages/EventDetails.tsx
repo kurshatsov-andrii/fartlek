@@ -72,6 +72,7 @@ const EventDetails = () => {
   const [teamCategory, setTeamCategory] = useState<string>("");
   const [relayMembers, setRelayMembers] = useState<RelayMember[]>([]);
   const [delivery, setDelivery] = useState<DeliveryData>(emptyDelivery());
+  const [hasExternalResults, setHasExternalResults] = useState(false);
 
   const selectedDist = distances.find((d) => d.id === selectedDistance);
   const isRelay = !!selectedDist?.is_relay;
@@ -147,6 +148,13 @@ const EventDetails = () => {
       if (ds && ds.length > 0) setSelectedDistance(ds[0].id);
       const { data: hasPromo } = await supabase.rpc("event_has_active_promo_codes", { _event_id: ev.id });
       setHasPromoCodes(!!hasPromo);
+      if (ev.status === "completed") {
+        const { count } = await (supabase as any)
+          .from("event_external_results")
+          .select("id", { count: "exact", head: true })
+          .eq("event_id", ev.id);
+        setHasExternalResults((count ?? 0) > 0);
+      }
       if (ev.organizer_name) {
         const [{ data: club }, { data: org }] = await Promise.all([
           supabase.from("clubs").select("slug").ilike("name", ev.organizer_name.trim()).not("slug", "is", null).maybeSingle(),
@@ -451,10 +459,18 @@ const EventDetails = () => {
                     <FileText className="h-5 w-5 text-primary" />
                     {t.events.resultsTitle}
                   </h3>
-                  {event.results_pdf_url || event.results_url || event.photos_url ? (
+                  {hasExternalResults || event.results_pdf_url || event.results_url || event.photos_url ? (
                     <div className="flex flex-col gap-2">
+                      {hasExternalResults && (
+                        <Button className="w-full" asChild>
+                          <Link to={`/events/${event.id}/results`}>
+                            <FileText className="h-4 w-4" /> {lang === "uk" ? "Переглянути результати" : "View results"}
+                          </Link>
+                        </Button>
+                      )}
                       {event.results_pdf_url && (
                         <Button
+                          variant={hasExternalResults ? "outline" : "default"}
                           className="w-full"
                           onClick={() => setDocDialog({ url: event.results_pdf_url!, title: t.events.resultsTitle })}
                         >
@@ -463,7 +479,7 @@ const EventDetails = () => {
                       )}
                       {event.results_url && (
                         <Button
-                          variant={event.results_pdf_url ? "outline" : "default"}
+                          variant={event.results_pdf_url || hasExternalResults ? "outline" : "default"}
                           className="w-full"
                           onClick={() => setDocDialog({ url: event.results_url!, title: t.events.resultsTitle })}
                         >

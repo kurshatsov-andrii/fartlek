@@ -518,6 +518,71 @@ export type Database = {
         }
         Relationships: []
       }
+      event_external_results: {
+        Row: {
+          age: number | null
+          age_group: string | null
+          age_group_rank: number | null
+          bib: number | null
+          chip_time_seconds: number | null
+          city: string | null
+          created_at: string
+          distance_km: number
+          event_id: string
+          full_name: string
+          gender: string | null
+          gender_rank: number | null
+          gun_time_seconds: number | null
+          id: string
+          overall_rank: number | null
+          source_url: string | null
+        }
+        Insert: {
+          age?: number | null
+          age_group?: string | null
+          age_group_rank?: number | null
+          bib?: number | null
+          chip_time_seconds?: number | null
+          city?: string | null
+          created_at?: string
+          distance_km: number
+          event_id: string
+          full_name: string
+          gender?: string | null
+          gender_rank?: number | null
+          gun_time_seconds?: number | null
+          id?: string
+          overall_rank?: number | null
+          source_url?: string | null
+        }
+        Update: {
+          age?: number | null
+          age_group?: string | null
+          age_group_rank?: number | null
+          bib?: number | null
+          chip_time_seconds?: number | null
+          city?: string | null
+          created_at?: string
+          distance_km?: number
+          event_id?: string
+          full_name?: string
+          gender?: string | null
+          gender_rank?: number | null
+          gun_time_seconds?: number | null
+          id?: string
+          overall_rank?: number | null
+          source_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "event_external_results_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       event_gpx_tracks: {
         Row: {
           created_at: string

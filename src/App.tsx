@@ -16,6 +16,7 @@ import Auth from "./pages/Auth.tsx";
 import ResetPassword from "./pages/ResetPassword.tsx";
 import Profile from "./pages/Profile.tsx";
 import EventDetails from "./pages/EventDetails.tsx";
+import EventResults from "./pages/EventResults.tsx";
 import Ticket from "./pages/Ticket.tsx";
 import MyEvents from "./pages/MyEvents.tsx";
 import Participants from "./pages/Participants.tsx";
@@ -90,6 +91,7 @@ const App = () => (
               <Route path="/events/:id" element={<EventDetails />} />
               <Route path="/event/:id" element={<EventSingularRedirect />} />
               <Route path="/events/:id/participants" element={<Participants />} />
+              <Route path="/events/:id/results" element={<EventResults />} />
               <Route path="/ticket/:id" element={<Ticket />} />
               <Route path="/organizer" element={<OrganizerDashboard />} />
               <Route path="/organizer/events/new" element={<EventEditor />} />
