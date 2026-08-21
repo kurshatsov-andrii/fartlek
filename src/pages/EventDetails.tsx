@@ -477,9 +477,9 @@ const EventDetails = () => {
                           <FileText className="h-4 w-4" /> {t.events.results}
                         </Button>
                       )}
-                      {event.results_url && (
+                      {event.results_url && !hasExternalResults && (
                         <Button
-                          variant={event.results_pdf_url || hasExternalResults ? "outline" : "default"}
+                          variant={event.results_pdf_url ? "outline" : "default"}
                           className="w-full"
                           onClick={() => setDocDialog({ url: event.results_url!, title: t.events.resultsTitle })}
                         >
