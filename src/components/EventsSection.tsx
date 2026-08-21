@@ -7,7 +7,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useApp } from "@/contexts/AppContext";
 import { supabase } from "@/integrations/supabase/client";
 import { EVENT_CATEGORIES, type EventCategory } from "@/lib/i18n";
-import { cn } from "@/lib/utils";
+import { cn, eventCity } from "@/lib/utils";
+
 
 interface EventCard {
   id: string; slug: string | null; title: string; description: string | null; organizer_name: string;
