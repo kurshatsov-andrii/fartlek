@@ -459,10 +459,18 @@ const EventDetails = () => {
                     <FileText className="h-5 w-5 text-primary" />
                     {t.events.resultsTitle}
                   </h3>
-                  {event.results_pdf_url || event.results_url || event.photos_url ? (
+                  {hasExternalResults || event.results_pdf_url || event.results_url || event.photos_url ? (
                     <div className="flex flex-col gap-2">
+                      {hasExternalResults && (
+                        <Button className="w-full" asChild>
+                          <Link to={`/events/${event.id}/results`}>
+                            <FileText className="h-4 w-4" /> {lang === "uk" ? "Переглянути результати" : "View results"}
+                          </Link>
+                        </Button>
+                      )}
                       {event.results_pdf_url && (
                         <Button
+                          variant={hasExternalResults ? "outline" : "default"}
                           className="w-full"
                           onClick={() => setDocDialog({ url: event.results_pdf_url!, title: t.events.resultsTitle })}
                         >
@@ -471,7 +479,7 @@ const EventDetails = () => {
                       )}
                       {event.results_url && (
                         <Button
-                          variant={event.results_pdf_url ? "outline" : "default"}
+                          variant={event.results_pdf_url || hasExternalResults ? "outline" : "default"}
                           className="w-full"
                           onClick={() => setDocDialog({ url: event.results_url!, title: t.events.resultsTitle })}
                         >
