@@ -108,7 +108,7 @@ const ageGroupOf = (birthYear: number | null, eventDate: string): string | null 
 const EventResults = () => {
   const { id } = useParams<{ id: string }>();
   const { lang } = useApp();
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const uk = lang === "uk";
 
   const [event, setEvent] = useState<EventInfo | null>(null);
@@ -127,6 +127,16 @@ const EventResults = () => {
 
   useEffect(() => {
     if (!id) return;
+    // Results are visible only to registered users — skip all data loads for guests
+    if (!user) {
+      setEvent(null);
+      setRows([]);
+      setParticipants([]);
+      setDnfIds(new Set());
+      setCanManage(false);
+      setLoading(false);
+      return;
+    }
     (async () => {
       const { data: ev } = await supabase
         .from("events")
