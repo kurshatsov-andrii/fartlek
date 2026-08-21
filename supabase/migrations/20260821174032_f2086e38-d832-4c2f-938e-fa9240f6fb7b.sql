@@ -1,0 +1,1 @@
+UPDATE public.events SET results_url = NULL WHERE title ILIKE '%Kharkiv Half Marathon%' AND results_url IS NOT NULL;
