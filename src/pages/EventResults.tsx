@@ -24,7 +24,9 @@ interface ResultRow {
   chip_time_seconds: number | null;
   overall_rank: number | null;
   status: "finished" | "dns" | "dnf";
+  categoryRank?: number | null;
 }
+
 
 interface PlatformParticipant {
   registration_id: string;
@@ -222,7 +224,7 @@ const EventResults = () => {
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return allRows.filter((r) => {
+    const result = allRows.filter((r) => {
       if (status === "finished" && r.status !== "finished") return false;
       if (status === "dns" && r.status !== "dns") return false;
       if (status === "dnf" && r.status !== "dnf") return false;
@@ -235,7 +237,20 @@ const EventResults = () => {
       }
       return true;
     });
+
+    const hasCategoryFilter = ageGroup !== "all" || gender !== "all";
+    if (!hasCategoryFilter) {
+      return result.map((r) => ({ ...r, categoryRank: null }));
+    }
+
+    const finished = result
+      .filter((r) => r.status === "finished" && r.chip_time_seconds != null)
+      .sort((a, b) => (a.chip_time_seconds as number) - (b.chip_time_seconds as number));
+    const rankMap = new Map<string, number>();
+    finished.forEach((r, i) => rankMap.set(r.id, i + 1));
+    return result.map((r) => ({ ...r, categoryRank: rankMap.get(r.id) ?? null }));
   }, [allRows, status, distance, gender, ageGroup, query]);
+
 
   if (loading) {
     return (
@@ -433,13 +448,18 @@ const EventResults = () => {
                               </button>
                             )}
                           </span>
+                        ) : (r.categoryRank && r.categoryRank <= 3) ? (
+                          <span className="inline-flex items-center gap-1 text-primary">
+                            <Medal className="h-4 w-4" /> {r.categoryRank}
+                          </span>
                         ) : r.overall_rank != null && r.overall_rank <= 3 ? (
                           <span className="inline-flex items-center gap-1 text-primary">
                             <Medal className="h-4 w-4" /> {r.overall_rank}
                           </span>
                         ) : (
-                          r.overall_rank ?? "—"
+                          (ageGroup !== "all" || gender !== "all") ? (r.categoryRank ?? "—") : (r.overall_rank ?? "—")
                         )}
+
                       </td>
                       <td className="px-4 py-3 font-mono">{r.bib ?? "—"}</td>
                       <td className="px-4 py-3 font-semibold whitespace-nowrap">{r.full_name}</td>
