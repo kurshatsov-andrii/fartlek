@@ -37,7 +37,7 @@ const StartDetails = () => {
     (async () => {
       const { data } = await supabase
         .from("telegram_starts")
-        .select("id,slug,title,description,image_url,register_url,event_date,seo_title,seo_description")
+        .select("id,slug,title,description,image_url,register_url,event_date,seo_title,seo_description,city,region,sport_types,distances_km,is_paid")
         .eq("slug", slug)
         .maybeSingle();
       if (!data) { setNotFound(true); setLoading(false); return; }
@@ -89,12 +89,25 @@ const StartDetails = () => {
         <h1 className="font-display text-3xl md:text-4xl font-bold mb-3">{row.title || "Без назви"}</h1>
 
         {row.event_date && (
-          <div className="flex items-center gap-2 text-muted-foreground mb-6">
+          <div className="flex items-center gap-2 text-muted-foreground mb-2">
             <CalendarIcon className="h-4 w-4" />{fmtDate(row.event_date)}
           </div>
         )}
+        <div className="flex items-center gap-2 text-muted-foreground mb-6">
+          <MapPin className="h-4 w-4" />{row.city || "Україна та весь світ"}
+        </div>
 
-        <div className="prose prose-sm max-w-none whitespace-pre-wrap break-words mb-8 text-foreground">
+        <div className="flex flex-wrap gap-1 mb-4">
+          {Array.from(new Set((row.sport_types || []).filter((s): s is SportType => s in SPORT_LABELS))).map((s) => (
+            <span key={s} className="text-xs px-2 py-1 rounded bg-muted">{SPORT_LABELS[s]}</span>
+          ))}
+          {(row.distances_km || []).length > 0 ? (row.distances_km || []).map((d) => (
+            <span key={String(d)} className="text-xs px-2 py-1 rounded bg-primary/10 text-primary">{d} км</span>
+          )) : (
+            <span className="text-xs px-2 py-1 rounded bg-primary/10 text-primary">Вільна дистанція</span>
+          )}
+          {row.is_paid === false && <span className="text-xs px-2 py-1 rounded bg-accent text-accent-foreground">Безкоштовно</span>}
+        </div>
           {linkifyText(row.description || "")}
         </div>
 
