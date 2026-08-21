@@ -126,3 +126,13 @@ export function generateStartSeo(input: {
   );
   return { seo_title, seo_description };
 }
+
+function cleanCity(raw: string): string | null {
+  let s = raw.split("\n")[0].replace(/\*+/g, "").trim();
+  // Відрізаємо хвости на кшталт "Київ або онлайн", "Дніпро, Дистанції: ..."
+  s = s.split(/\s*[,;(|/]|\s+(?:або|чи|онлайн|online|дистанц|час|дата|де|організатор)/i)[0].trim();
+  s = s.replace(/^(?:м\.|с\.|смт\.?|місто|село)\s*/i, "").trim();
+  s = s.replace(/[.,:;]+$/, "").trim();
+  if (s.length < 2) return null;
+  return s.toLowerCase();
+}
