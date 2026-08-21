@@ -30,6 +30,7 @@ export const CompletedEventsSection = () => {
   const { t, lang } = useApp();
   const { user } = useAuth();
   const [events, setEvents] = useState<CompletedEvent[]>([]);
+  const [resultsEventIds, setResultsEventIds] = useState<Set<string>>(new Set());
   const [loading, setLoading] = useState(true);
   const [docDialog, setDocDialog] = useState<{ url: string; title: string } | null>(null);
 
@@ -45,8 +46,17 @@ export const CompletedEventsSection = () => {
       .select("id, slug, title, event_date, location, image_url, results_pdf_url, results_url, photos_url, format, is_paid, description, organizer_name")
       .eq("status", "completed")
       .order("event_date", { ascending: false })
-      .then(({ data }) => {
-        setEvents((data as any) ?? []);
+      .then(async ({ data }) => {
+        const list = (data as any) ?? [];
+        setEvents(list);
+        if (list.length > 0) {
+          const { data: res } = await (supabase as any)
+            .from("event_external_results")
+            .select("event_id")
+            .in("event_id", list.map((e: CompletedEvent) => e.id))
+            .limit(5000);
+          setResultsEventIds(new Set(((res ?? []) as { event_id: string }[]).map((r) => r.event_id)));
+        }
         setLoading(false);
       });
   }, []);
@@ -237,7 +247,13 @@ export const CompletedEventsSection = () => {
                     )}
                   </div>
                   <div className="mt-4 pt-3 border-t border-border space-y-2">
-                    {ev.results_pdf_url || ev.results_url ? (
+                    {resultsEventIds.has(ev.id) ? (
+                      <Button size="sm" variant="outline" className="w-full" asChild>
+                        <Link to={`/events/${ev.id}/results`}>
+                          <FileText className="h-4 w-4" /> {t.events.results}
+                        </Link>
+                      </Button>
+                    ) : ev.results_pdf_url || ev.results_url ? (
                       <Button
                         size="sm"
                         variant="outline"
