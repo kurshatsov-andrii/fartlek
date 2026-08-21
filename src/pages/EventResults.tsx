@@ -24,7 +24,9 @@ interface ResultRow {
   chip_time_seconds: number | null;
   overall_rank: number | null;
   status: "finished" | "dns" | "dnf";
+  categoryRank?: number | null;
 }
+
 
 interface PlatformParticipant {
   registration_id: string;
