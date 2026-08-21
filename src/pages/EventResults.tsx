@@ -225,6 +225,7 @@ const EventResults = () => {
     return allRows.filter((r) => {
       if (status === "finished" && r.status !== "finished") return false;
       if (status === "dns" && r.status !== "dns") return false;
+      if (status === "dnf" && r.status !== "dnf") return false;
       if (distance !== "all" && r.distance_km !== Number(distance)) return false;
       if (gender !== "all" && r.gender !== gender) return false;
       if (ageGroup !== "all" && r.age_group !== ageGroup) return false;
@@ -283,10 +284,16 @@ const EventResults = () => {
             <Medal className="h-4 w-4" />
             {uk ? `Фінішували: ${rows.length}` : `Finishers: ${rows.length}`}
           </span>
-          {dnsRows.length > 0 && (
+          {dnsCount > 0 && (
             <span className="inline-flex items-center gap-2">
               <UserX className="h-4 w-4" />
-              {uk ? `Не стартували / не фінішували: ${dnsRows.length}` : `Did not start / finish: ${dnsRows.length}`}
+              {uk ? `Не стартували: ${dnsCount}` : `Did not start: ${dnsCount}`}
+            </span>
+          )}
+          {dnfCount > 0 && (
+            <span className="inline-flex items-center gap-2">
+              <UserX className="h-4 w-4" />
+              {uk ? `Не фінішували: ${dnfCount}` : `Did not finish: ${dnfCount}`}
             </span>
           )}
         </div>
@@ -343,10 +350,13 @@ const EventResults = () => {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="finished">{uk ? "Фінішували" : "Finishers"}</SelectItem>
-                  {dnsRows.length > 0 && (
-                    <SelectItem value="dns">{uk ? "Не стартували / не фінішували" : "Did not start / finish"}</SelectItem>
+                  {dnsCount > 0 && (
+                    <SelectItem value="dns">{uk ? "Не стартували" : "Did not start"}</SelectItem>
                   )}
-                  {dnsRows.length > 0 && (
+                  {dnfCount > 0 && (
+                    <SelectItem value="dnf">{uk ? "Не фінішували" : "Did not finish"}</SelectItem>
+                  )}
+                  {dnsCount + dnfCount > 0 && (
                     <SelectItem value="all">{uk ? "Всі учасники" : "All participants"}</SelectItem>
                   )}
                 </SelectContent>
@@ -376,8 +386,8 @@ const EventResults = () => {
 
             <p className="text-sm text-muted-foreground mb-3">
               {uk
-                ? `Показано: ${filtered.length} з ${status === "all" ? allRows.length : status === "dns" ? dnsRows.length : rows.length}`
-                : `Showing ${filtered.length} of ${status === "all" ? allRows.length : status === "dns" ? dnsRows.length : rows.length}`}
+                ? `Показано: ${filtered.length} з ${status === "all" ? allRows.length : status === "dns" ? dnsCount : status === "dnf" ? dnfCount : rows.length}`
+                : `Showing ${filtered.length} of ${status === "all" ? allRows.length : status === "dns" ? dnsCount : status === "dnf" ? dnfCount : rows.length}`}
             </p>
 
             <div className="overflow-x-auto rounded-2xl border border-border bg-card">
