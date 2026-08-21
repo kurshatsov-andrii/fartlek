@@ -7,7 +7,7 @@ import { SEO } from "@/components/SEO";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { linkifyText } from "@/lib/linkify";
-import { SPORT_LABELS, SPORT_TYPES, type SportType } from "@/lib/parseStart";
+import { SPORT_LABELS, type SportType } from "@/lib/parseStart";
 
 interface StartRow {
   id: string;
@@ -108,6 +108,7 @@ const StartDetails = () => {
           )}
           {row.is_paid === false && <span className="text-xs px-2 py-1 rounded bg-accent text-accent-foreground">Безкоштовно</span>}
         </div>
+        <div className="prose prose-sm max-w-none whitespace-pre-wrap break-words mb-8 text-foreground">
           {linkifyText(row.description || "")}
         </div>
 
