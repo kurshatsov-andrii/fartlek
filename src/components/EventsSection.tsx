@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { Calendar, MapPin, ArrowUpRight, Loader2, Search, X } from "lucide-react";
+import { Calendar, MapPin, ArrowUpRight, Loader2, Search, X, Filter } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useApp } from "@/contexts/AppContext";
 import { supabase } from "@/integrations/supabase/client";
 import { EVENT_CATEGORIES, type EventCategory } from "@/lib/i18n";
@@ -24,6 +25,10 @@ export const EventsSection = () => {
   const [loading, setLoading] = useState(true);
   const [activeCat, setActiveCat] = useState<EventCategory | "all">("all");
   const [search, setSearch] = useState("");
+  const [city, setCity] = useState<string>("all");
+  const [month, setMonth] = useState<string>("all");
+  const [format, setFormat] = useState<string>("all");
+  const [paid, setPaid] = useState<"all" | "paid" | "free">("all");
   const PAGE_SIZE = 9;
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 
@@ -35,10 +40,35 @@ export const EventsSection = () => {
       .then(({ data }) => { setEvents((data as any) ?? []); setLoading(false); });
   }, []);
 
+  const eventCity = (e: EventCard) => (e.location ?? "").split(",")[0].trim();
+
+  const cities = useMemo(() => {
+    const s = new Set<string>();
+    events.forEach((e) => { const c = eventCity(e); if (c) s.add(c); });
+    return Array.from(s).sort((a, b) => a.localeCompare(b, "uk"));
+  }, [events]);
+
+  const months = useMemo(() => {
+    const s = new Set<string>();
+    events.forEach((e) => { if (e.event_date) s.add(e.event_date.slice(0, 7)); });
+    return Array.from(s).sort();
+  }, [events]);
+
+  const monthLabel = (ym: string) => {
+    const [y, m] = ym.split("-").map(Number);
+    const label = new Date(y, m - 1, 1).toLocaleDateString(lang === "uk" ? "uk-UA" : "en-US", { month: "long", year: "numeric" });
+    return label.charAt(0).toUpperCase() + label.slice(1);
+  };
+
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
     return events.filter((e) => {
       if (activeCat !== "all" && e.category !== activeCat) return false;
+      if (city !== "all" && eventCity(e) !== city) return false;
+      if (month !== "all" && !(e.event_date ?? "").startsWith(month)) return false;
+      if (format !== "all" && e.format !== format) return false;
+      if (paid === "paid" && !e.is_paid) return false;
+      if (paid === "free" && e.is_paid) return false;
       if (!q) return true;
       return (
         e.title.toLowerCase().includes(q) ||
@@ -47,11 +77,14 @@ export const EventsSection = () => {
         (e.description ?? "").toLowerCase().includes(q)
       );
     });
-  }, [events, activeCat, search]);
+  }, [events, activeCat, search, city, month, format, paid]);
 
-  useEffect(() => { setVisibleCount(PAGE_SIZE); }, [activeCat, search]);
+  useEffect(() => { setVisibleCount(PAGE_SIZE); }, [activeCat, search, city, month, format, paid]);
 
   const visible = filtered.slice(0, visibleCount);
+
+  const activeFilters = (search ? 1 : 0) + (city !== "all" ? 1 : 0) + (month !== "all" ? 1 : 0) + (format !== "all" ? 1 : 0) + (paid !== "all" ? 1 : 0);
+  const resetFilters = () => { setSearch(""); setCity("all"); setMonth("all"); setFormat("all"); setPaid("all"); };
 
   const fmtDate = (iso: string) =>
     new Date(iso).toLocaleDateString(lang === "uk" ? "uk-UA" : "en-US", {
@@ -86,26 +119,69 @@ export const EventsSection = () => {
           </div>
         </div>
 
-        <div className="mb-6 max-w-md relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
-          <Input
-            type="search"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder={lang === "uk" ? "Пошук подій за назвою, місцем, організатором…" : "Search events by name, location, organizer…"}
-            className="pl-9 pr-9"
-            aria-label={lang === "uk" ? "Пошук подій" : "Search events"}
-          />
-          {search && (
-            <button
-              type="button"
-              onClick={() => setSearch("")}
-              className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-muted-foreground hover:text-foreground"
-              aria-label={lang === "uk" ? "Очистити" : "Clear"}
-            >
-              <X className="h-4 w-4" />
-            </button>
-          )}
+        <div className="mb-10 rounded-2xl border bg-card p-4 space-y-3">
+          <div className="flex items-center gap-2 text-sm font-medium">
+            <Filter className="h-4 w-4" /> {lang === "uk" ? "Фільтри" : "Filters"}
+            {activeFilters > 0 && (
+              <Button variant="ghost" size="sm" className="ml-auto h-7" onClick={resetFilters}>
+                <X className="h-3.5 w-3.5 mr-1" /> {lang === "uk" ? `Скинути (${activeFilters})` : `Reset (${activeFilters})`}
+              </Button>
+            )}
+          </div>
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+            <Input
+              type="search"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder={lang === "uk" ? "Пошук подій за назвою, місцем, організатором…" : "Search events by name, location, organizer…"}
+              className="pl-9 pr-9"
+              aria-label={lang === "uk" ? "Пошук подій" : "Search events"}
+            />
+            {search && (
+              <button
+                type="button"
+                onClick={() => setSearch("")}
+                className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-muted-foreground hover:text-foreground"
+                aria-label={lang === "uk" ? "Очистити" : "Clear"}
+              >
+                <X className="h-4 w-4" />
+              </button>
+            )}
+          </div>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
+            <Select value={city} onValueChange={setCity}>
+              <SelectTrigger aria-label={lang === "uk" ? "Місто" : "City"}><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">{lang === "uk" ? "Усі міста" : "All cities"}</SelectItem>
+                {cities.map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}
+              </SelectContent>
+            </Select>
+            <Select value={month} onValueChange={setMonth}>
+              <SelectTrigger aria-label={lang === "uk" ? "Місяць" : "Month"}><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">{lang === "uk" ? "Усі місяці" : "All months"}</SelectItem>
+                {months.map((m) => <SelectItem key={m} value={m}>{monthLabel(m)}</SelectItem>)}
+              </SelectContent>
+            </Select>
+            <Select value={format} onValueChange={setFormat}>
+              <SelectTrigger aria-label={lang === "uk" ? "Формат" : "Format"}><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">{lang === "uk" ? "Будь-який формат" : "Any format"}</SelectItem>
+                <SelectItem value="offline">{t.format.badgeOffline}</SelectItem>
+                <SelectItem value="online">{t.format.badgeOnline}</SelectItem>
+                <SelectItem value="hybrid">{t.format.badgeHybrid}</SelectItem>
+              </SelectContent>
+            </Select>
+            <Select value={paid} onValueChange={(v) => setPaid(v as any)}>
+              <SelectTrigger aria-label={lang === "uk" ? "Тип" : "Type"}><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">{lang === "uk" ? "Платні і безкоштовні" : "Paid and free"}</SelectItem>
+                <SelectItem value="free">{lang === "uk" ? "Безкоштовні" : "Free"}</SelectItem>
+                <SelectItem value="paid">{lang === "uk" ? "Платні" : "Paid"}</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </div>
 
         <div className="mb-10 flex flex-wrap gap-2">
