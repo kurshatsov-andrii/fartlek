@@ -53,11 +53,12 @@ export function parseStartContent(text: string) {
   let city: string | null = null;
   let region: string | null = null;
   // "Місто: Київ" label has priority.
-  const labeled = text.match(/місто\s*[:\-—]\s*([А-ЯІЇЄҐA-Za-zа-яіїєґ'’\-]+(?:\s[А-ЯІЇЄҐA-Za-zа-яіїєґ'’\-]+)?)/i);
+  const labeled = text.match(/місто\s*[:\-—]\s*([^\n]{2,80})/i);
   if (labeled) {
-    const c = labeled[1].trim().toLowerCase();
-    city = cap(c); region = CITY_REGION[c] ?? null;
-  } else {
+    const c = cleanCity(labeled[1]);
+    if (c) { city = cap(c); region = CITY_REGION[c] ?? null; }
+  }
+  if (!city) {
     // "м. Київ" — skip single-letter initials like "М.М."
     const mDot = lower.match(/(?:^|[^а-яa-zіїєґ])м\.\s*([а-яіїєґa-z'’\-]{2,}(?:\s[а-яіїєґa-z'’\-]+)?)/i);
     if (mDot) {

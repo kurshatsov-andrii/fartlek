@@ -132,10 +132,10 @@ function detectDistances(text: string): number[] {
 function detectCity(text: string): { city: string | null; region: string | null } {
   const lower = text.toLowerCase();
   // Explicit "Місто: Київ" label has highest priority.
-  const labeled = text.match(/місто\s*[:\-—]\s*([А-ЯІЇЄҐA-Za-zа-яіїєґ'’\-]+(?:\s[А-ЯІЇЄҐA-Za-zа-яіїєґ'’\-]+)?)/i);
+  const labeled = text.match(/місто\s*[:\-—]\s*([^\n]{2,80})/i);
   if (labeled) {
-    const c = labeled[1].trim().toLowerCase();
-    return { city: capitalize(c), region: CITY_REGION[c] ?? null };
+    const c = cleanCity(labeled[1]);
+    if (c) return { city: capitalize(c), region: CITY_REGION[c] ?? null };
   }
   // "м. Київ" or "м.Київ" — but skip initials like "М.М." (single-letter token).
   const mDot = lower.match(/(?:^|[^а-яa-zіїєґ])м\.\s*([а-яіїєґa-z'’\-]{2,}(?:\s[а-яіїєґa-z'’\-]+)?)/i);
