@@ -41,16 +41,8 @@ export const EventsSection = () => {
       .then(({ data }) => { setEvents((data as any) ?? []); setLoading(false); });
   }, []);
 
-  const eventCity = (e: EventCard) => {
-    const loc = (e.location ?? "").trim();
-    if (!loc) return "";
-    const beforeComma = loc.split(",")[0].trim();
-    const parts = beforeComma.split(/\.\s*/).map((p) => p.trim()).filter(Boolean);
-    const mIdx = parts.findIndex((p) => /^м\.?$/i.test(p));
-    if (mIdx >= 0 && parts[mIdx + 1]) return parts[mIdx + 1];
-    const noRegion = parts.filter((p) => !/обл\.?$/i.test(p) && !/^область$/i.test(p));
-    return noRegion[0] ?? "";
-  };
+  const getEventCity = (e: EventCard) => eventCity(e.location);
+
 
   const cities = useMemo(() => {
     const s = new Set<string>();
