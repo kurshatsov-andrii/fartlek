@@ -1507,6 +1507,7 @@ export type Database = {
           delivery_warehouse_ref: string | null
           delivery_warehouse_type: string | null
           distance_id: string
+          dnf: boolean
           event_id: string
           id: string
           np_ttn_cost: number | null
@@ -1540,6 +1541,7 @@ export type Database = {
           delivery_warehouse_ref?: string | null
           delivery_warehouse_type?: string | null
           distance_id: string
+          dnf?: boolean
           event_id: string
           id?: string
           np_ttn_cost?: number | null
@@ -1573,6 +1575,7 @@ export type Database = {
           delivery_warehouse_ref?: string | null
           delivery_warehouse_type?: string | null
           distance_id?: string
+          dnf?: boolean
           event_id?: string
           id?: string
           np_ttn_cost?: number | null
@@ -2102,6 +2105,12 @@ export type Database = {
         Returns: {
           cnt: number
           distance_id: string
+        }[]
+      }
+      get_event_dnf_flags: {
+        Args: { _event_id: string }
+        Returns: {
+          registration_id: string
         }[]
       }
       get_event_participants: {
