@@ -60,7 +60,8 @@ const TRANSLIT: Record<string, string> = {
   а: "a", б: "b", в: "v", г: "h", ґ: "g", д: "d", е: "e", є: "ie", ж: "zh",
   з: "z", и: "y", і: "i", ї: "i", й: "i", к: "k", л: "l", м: "m", н: "n",
   о: "o", п: "p", р: "r", с: "s", т: "t", у: "u", ф: "f", х: "kh", ц: "ts",
-  ч: "ch", ш: "sh", щ: "shch", ь: "", ю: "iu", я: "ia", "'": "", "’": "", "ё": "e", э: "e", ъ: "",
+  ч: "ch", ш: "sh", щ: "shch", ь: "", ю: "iu", я: "ia", "'": "", "’": "", "ʼ": "",
+  ё: "e", э: "e", ъ: "", ы: "y",
 };
 
 const translit = (s: string): string =>
@@ -69,17 +70,25 @@ const translit = (s: string): string =>
     .map((ch) => TRANSLIT[ch] ?? ch)
     .join("");
 
-// Normalize a name for comparison: lowercase, transliterate, keep letters only,
-// sort words so "Ivan Petrenko" matches "Petrenko Ivan".
-const normName = (s: string): string => {
+// Normalize a name into a sorted unique word list for comparison:
+// lowercase, transliterate, drop stray characters (corrupted apostrophes etc.)
+// so "Ivan Petrenko" matches "Petrenko Ivan" and "М?ясников" matches "Мʼясников".
+const nameWords = (s: string): string[] => {
   const words = translit(s.toLowerCase())
-    .replace(/[^a-z\s-]/g, " ")
-    .replace(/[-\s]+/g, " ")
-    .trim()
-    .split(" ")
-    .filter(Boolean)
-    .sort();
-  return words.join(" ");
+    .replace(/-/g, " ")
+    .replace(/[^a-z\s]/g, "")
+    .split(/\s+/)
+    .filter(Boolean);
+  const significant = words.filter((w) => w.length > 1);
+  const list = significant.length >= 2 ? significant : words;
+  return Array.from(new Set(list)).sort();
+};
+
+// Two names match when they share at least 2 words (handles middle names,
+// reversed order, transliteration differences).
+const namesMatch = (a: string[], b: string[]): boolean => {
+  const setB = new Set(b);
+  return a.filter((w) => setB.has(w)).length >= 2;
 };
 
 const ageGroupOf = (birthYear: number | null, eventDate: string): string | null => {
