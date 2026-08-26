@@ -71,7 +71,11 @@ const Starts = () => {
   };
 
   // unique facet values from data
-  const cities = useMemo(() => Array.from(new Set(rows.map((r) => r.city).filter(Boolean) as string[])).sort(), [rows]);
+  const baseCity = (c: string | null) => (c ?? "").split(",")[0].trim();
+  const cities = useMemo(
+    () => Array.from(new Set(rows.map((r) => baseCity(r.city)).filter(Boolean))).sort(),
+    [rows]
+  );
   const regions = useMemo(() => Array.from(new Set(rows.map((r) => r.region).filter(Boolean) as string[])).sort(), [rows]);
   const organizers = useMemo(() => Array.from(new Set(rows.map((r) => r.organizer_name).filter(Boolean) as string[])).sort(), [rows]);
 
@@ -88,7 +92,7 @@ const Starts = () => {
         const m = parseInt(r.event_date.split("-")[1], 10);
         if (String(m) !== month) return false;
       } else if (month !== "all" && !r.event_date) return false;
-      if (city !== "all" && r.city !== city) return false;
+      if (city !== "all" && baseCity(r.city) !== city) return false;
       if (region !== "all" && r.region !== region) return false;
       if (organizer !== "all" && r.organizer_name !== organizer) return false;
       if (sport !== "all" && !(r.sport_types || []).includes(sport)) return false;
