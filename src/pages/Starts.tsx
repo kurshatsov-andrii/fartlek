@@ -92,7 +92,7 @@ const Starts = () => {
         const m = parseInt(r.event_date.split("-")[1], 10);
         if (String(m) !== month) return false;
       } else if (month !== "all" && !r.event_date) return false;
-      if (city !== "all" && r.city !== city) return false;
+      if (city !== "all" && baseCity(r.city) !== city) return false;
       if (region !== "all" && r.region !== region) return false;
       if (organizer !== "all" && r.organizer_name !== organizer) return false;
       if (sport !== "all" && !(r.sport_types || []).includes(sport)) return false;
