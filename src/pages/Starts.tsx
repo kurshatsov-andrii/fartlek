@@ -71,7 +71,11 @@ const Starts = () => {
   };
 
   // unique facet values from data
-  const cities = useMemo(() => Array.from(new Set(rows.map((r) => r.city).filter(Boolean) as string[])).sort(), [rows]);
+  const baseCity = (c: string | null) => (c ?? "").split(",")[0].trim();
+  const cities = useMemo(
+    () => Array.from(new Set(rows.map((r) => baseCity(r.city)).filter(Boolean))).sort(),
+    [rows]
+  );
   const regions = useMemo(() => Array.from(new Set(rows.map((r) => r.region).filter(Boolean) as string[])).sort(), [rows]);
   const organizers = useMemo(() => Array.from(new Set(rows.map((r) => r.organizer_name).filter(Boolean) as string[])).sort(), [rows]);
 
