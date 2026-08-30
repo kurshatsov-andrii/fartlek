@@ -6,7 +6,7 @@ import { useApp } from "@/contexts/AppContext";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import heroImg from "@/assets/hero-runners.jpg";
-import tigerMascot from "@/assets/tiger-mascot.png.asset.json";
+import tigerMascot from "@/assets/tiger-mascot-transparent.png";
 
 
 const formatCount = (n: number) => {
@@ -93,9 +93,9 @@ export const Hero = () => {
             <div className="mt-10 flex flex-col gap-3 sm:flex-row">
               <div className="relative">
                 <img
-                  src={tigerMascot.url}
+                  src={tigerMascot}
                   alt="Тигр-бігун Фартлек показує на кнопку входу для учасників"
-                  className="pointer-events-none absolute bottom-[62%] left-[-24%] z-20 hidden w-52 origin-bottom animate-mascot-out drop-shadow-2xl md:block lg:w-64"
+                  className="pointer-events-none absolute bottom-[62%] left-1/2 z-20 hidden w-52 -translate-x-1/2 origin-bottom animate-mascot-out md:block lg:w-64"
                   loading="lazy"
                   decoding="async"
                 />
