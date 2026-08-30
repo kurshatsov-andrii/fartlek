@@ -82,9 +82,9 @@ export default {
           "100%": { transform: "translateX(-50%)" },
         },
         "mascot-out": {
-          "0%": { opacity: "0", transform: "translate(-10%, 60%) rotate(-8deg) scale(0.85)" },
-          "60%": { opacity: "1", transform: "translate(0, -6%) rotate(2deg) scale(1.02)" },
-          "100%": { opacity: "1", transform: "translate(0, 0) rotate(0deg) scale(1)" },
+          "0%": { opacity: "0", transform: "translate(-50%, 70%) rotate(-6deg) scale(0.85)" },
+          "60%": { opacity: "1", transform: "translate(-50%, -6%) rotate(2deg) scale(1.02)" },
+          "100%": { opacity: "1", transform: "translate(-50%, 0) rotate(0deg) scale(1)" },
         },
         "mascot-bob": {
           "0%, 100%": { transform: "translateY(0)" },
