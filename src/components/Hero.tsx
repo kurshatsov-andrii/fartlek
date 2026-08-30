@@ -95,7 +95,7 @@ export const Hero = () => {
                 <img
                   src={tigerMascot}
                   alt="Тигр-бігун Фартлек показує на кнопку входу для учасників"
-                  className="pointer-events-none absolute bottom-[55%] left-1/2 z-0 hidden w-52 origin-bottom animate-mascot-out md:block lg:w-64"
+                  className="pointer-events-none absolute bottom-[calc(100%-0.5rem)] left-1/2 z-20 block w-36 origin-bottom animate-mascot-out sm:w-44 md:w-52 lg:w-64"
                   loading="lazy"
                   decoding="async"
                 />
