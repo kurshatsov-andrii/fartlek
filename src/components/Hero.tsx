@@ -6,6 +6,8 @@ import { useApp } from "@/contexts/AppContext";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import heroImg from "@/assets/hero-runners.jpg";
+import tigerMascot from "@/assets/tiger-mascot.png.asset.json";
+
 
 const formatCount = (n: number) => {
   if (n >= 1000) {
