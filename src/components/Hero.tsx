@@ -6,6 +6,8 @@ import { useApp } from "@/contexts/AppContext";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import heroImg from "@/assets/hero-runners.jpg";
+import tigerMascot from "@/assets/tiger-mascot.png.asset.json";
+
 
 const formatCount = (n: number) => {
   if (n >= 1000) {
@@ -89,13 +91,22 @@ export const Hero = () => {
 
           {!user && (
             <div className="mt-10 flex flex-col gap-3 sm:flex-row">
-              <Button asChild size="lg" className="group h-14 px-8 text-base shadow-glow">
-                <Link to="/auth?role=participant">
-                  <User className="mr-2 h-5 w-5" />
-                  {t.hero.ctaParticipant}
-                  <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
-                </Link>
-              </Button>
+              <div className="relative">
+                <img
+                  src={tigerMascot.url}
+                  alt="Тигр-бігун Фартлек показує на кнопку входу для учасників"
+                  className="pointer-events-none absolute bottom-[62%] left-[-24%] z-20 hidden w-52 origin-bottom animate-mascot-out drop-shadow-2xl md:block lg:w-64"
+                  loading="lazy"
+                  decoding="async"
+                />
+                <Button asChild size="lg" className="group relative z-10 h-14 w-full px-8 text-base shadow-glow">
+                  <Link to="/auth?role=participant">
+                    <User className="mr-2 h-5 w-5" />
+                    {t.hero.ctaParticipant}
+                    <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
+                  </Link>
+                </Button>
+              </div>
               <Button
                 asChild
                 size="lg"
@@ -109,6 +120,7 @@ export const Hero = () => {
               </Button>
             </div>
           )}
+
 
           <div className="mt-8 inline-flex max-w-full items-center gap-3 rounded-full border border-secondary-foreground/15 bg-secondary-foreground/5 py-2 pl-2 pr-4 backdrop-blur">
             <button
