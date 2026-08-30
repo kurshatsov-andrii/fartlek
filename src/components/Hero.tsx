@@ -6,7 +6,7 @@ import { useApp } from "@/contexts/AppContext";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import heroImg from "@/assets/hero-runners.jpg";
-import tigerMascot from "@/assets/tiger-mascot.png.asset.json";
+import tigerMascot from "@/assets/tiger-mascot-transparent.png";
 
 
 const formatCount = (n: number) => {
