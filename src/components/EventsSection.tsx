@@ -109,28 +109,29 @@ export const EventsSection = () => {
   return (
     <section id="events" className="relative py-24 sm:py-32">
       <div className="container">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between mb-14">
-          <div className="max-w-2xl">
-            <div className="text-xs font-semibold uppercase tracking-wider text-primary mb-3">
-              {lang === "uk"
-                ? `Сезон ${new Date().getFullYear()} — ${new Date().getFullYear() + 1}`
-                : `${new Date().getFullYear()} — ${new Date().getFullYear() + 1} season`}
-            </div>
-            <h2 className="font-display text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl">
-              {t.events.heading}
-            </h2>
-            <p className="mt-4 text-lg text-muted-foreground">{t.events.sub}</p>
+        <div className="mb-14">
+          <div className="text-xs font-semibold uppercase tracking-wider text-primary mb-3">
+            {lang === "uk"
+              ? `Сезон ${new Date().getFullYear()} — ${new Date().getFullYear() + 1}`
+              : `${new Date().getFullYear()} — ${new Date().getFullYear() + 1} season`}
           </div>
-          <div className="shrink-0 self-end animate-mascot-in-right pointer-events-none">
-            <img
-              src={tigerLeft}
-              alt=""
-              aria-hidden="true"
-              loading="lazy"
-              className="w-40 sm:w-52 lg:w-64 animate-mascot-bob select-none"
-            />
+          <h2 className="font-display text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl">
+            {t.events.heading}
+          </h2>
+          <div className="mt-4 flex items-center gap-2 sm:gap-4">
+            <p className="text-lg text-muted-foreground">{t.events.sub}</p>
+            <div className="shrink-0 animate-mascot-in-right pointer-events-none">
+              <img
+                src={tigerLeft}
+                alt=""
+                aria-hidden="true"
+                loading="lazy"
+                className="w-24 sm:w-36 lg:w-44 animate-mascot-bob select-none"
+              />
+            </div>
           </div>
         </div>
+
 
 
         <div className="mb-10 rounded-2xl border bg-card p-4 space-y-3">
