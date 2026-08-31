@@ -8,6 +8,7 @@ import { useApp } from "@/contexts/AppContext";
 import { supabase } from "@/integrations/supabase/client";
 import { EVENT_CATEGORIES, type EventCategory } from "@/lib/i18n";
 import { cn, eventCity } from "@/lib/utils";
+import tigerLeft from "@/assets/tiger-left.png";
 
 
 interface EventCard {
@@ -120,7 +121,17 @@ export const EventsSection = () => {
             </h2>
             <p className="mt-4 text-lg text-muted-foreground">{t.events.sub}</p>
           </div>
+          <div className="shrink-0 self-end animate-mascot-in-right pointer-events-none">
+            <img
+              src={tigerLeft}
+              alt=""
+              aria-hidden="true"
+              loading="lazy"
+              className="w-40 sm:w-52 lg:w-64 animate-mascot-bob select-none"
+            />
+          </div>
         </div>
+
 
         <div className="mb-10 rounded-2xl border bg-card p-4 space-y-3">
           <div className="flex items-center gap-2 text-sm font-medium">
