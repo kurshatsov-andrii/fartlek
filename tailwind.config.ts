@@ -97,7 +97,7 @@ export default {
         "fade-in-up": "fade-in-up 0.6s cubic-bezier(0.4, 0, 0.2, 1) both",
         "scale-in": "scale-in 0.4s cubic-bezier(0.4, 0, 0.2, 1) both",
         "ticker": "ticker 30s linear infinite",
-        "mascot-out": "mascot-out 0.9s cubic-bezier(0.34, 1.3, 0.5, 1) 0.5s both",
+        "mascot-out": "mascot-out 2.4s cubic-bezier(0.22, 0.9, 0.3, 1) 1.6s both",
         "mascot-bob": "mascot-bob 3s ease-in-out infinite",
       },
 
