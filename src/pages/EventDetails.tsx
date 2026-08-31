@@ -25,6 +25,8 @@ import { PromoCodeInput, PromoPreview } from "@/components/PromoCodeInput";
 import { EventChat } from "@/components/EventChat";
 import { NovaPoshtaDelivery, DeliveryData, emptyDelivery, validateDelivery } from "@/components/NovaPoshtaDelivery";
 import type { EventCategory } from "@/lib/i18n";
+import tigerUp from "@/assets/tiger-up.png";
+
 
 interface EventRow {
   id: string; slug: string | null; title: string; description: string | null; organizer_name: string;
@@ -511,7 +513,7 @@ const EventDetails = () => {
                   )}
                 </div>
               ) : (
-              <div className="sticky top-24 bg-card p-6 rounded-2xl shadow-card space-y-4">
+              <div className="relative sticky top-24 bg-card p-6 rounded-2xl shadow-card space-y-4">
                 {registration && (
                   <div className="rounded-xl border border-primary/40 bg-primary/10 p-3 space-y-2 text-sm">
                     <p className="text-foreground">{t.events.alreadyRegistered}</p>
@@ -774,7 +776,15 @@ const EventDetails = () => {
                   }}
                 />
 
+                <img
+                  src={tigerUp}
+                  alt="Тигр-бігун Фартлек показує вгору на кнопки реєстрації"
+                  className="pointer-events-none absolute left-1/2 top-[calc(100%-1.25rem)] z-10 w-32 origin-top animate-mascot-out sm:w-40"
+                  loading="lazy"
+                  decoding="async"
+                />
               </div>
+
               )}
             </aside>
           </div>
