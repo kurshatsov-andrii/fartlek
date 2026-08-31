@@ -90,6 +90,11 @@ export default {
           "0%, 100%": { transform: "translateY(0)" },
           "50%": { transform: "translateY(-6px)" },
         },
+        "mascot-in-right": {
+          "0%": { opacity: "0", transform: "translateX(60%) rotate(6deg) scale(0.9)" },
+          "60%": { opacity: "1", transform: "translateX(-3%) rotate(-2deg) scale(1.02)" },
+          "100%": { opacity: "1", transform: "translateX(0) rotate(0deg) scale(1)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
