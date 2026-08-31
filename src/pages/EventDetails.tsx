@@ -511,7 +511,7 @@ const EventDetails = () => {
                   )}
                 </div>
               ) : (
-              <div className="sticky top-24 bg-card p-6 rounded-2xl shadow-card space-y-4">
+              <div className="relative sticky top-24 bg-card p-6 rounded-2xl shadow-card space-y-4">
                 {registration && (
                   <div className="rounded-xl border border-primary/40 bg-primary/10 p-3 space-y-2 text-sm">
                     <p className="text-foreground">{t.events.alreadyRegistered}</p>
