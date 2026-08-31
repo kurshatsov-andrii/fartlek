@@ -8,6 +8,7 @@ import { useApp } from "@/contexts/AppContext";
 import { supabase } from "@/integrations/supabase/client";
 import { EVENT_CATEGORIES, type EventCategory } from "@/lib/i18n";
 import { cn, eventCity } from "@/lib/utils";
+import tigerLeft from "@/assets/tiger-left.png";
 
 
 interface EventCard {
