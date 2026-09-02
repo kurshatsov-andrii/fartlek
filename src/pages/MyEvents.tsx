@@ -25,6 +25,22 @@ const MyEvents = () => {
   const [transferOpen, setTransferOpen] = useState(false);
   const [transferCode, setTransferCode] = useState("");
   const [acceptingTransfer, setAcceptingTransfer] = useState(false);
+  const [payingId, setPayingId] = useState<string | null>(null);
+
+  const payRegistration = async (r: any) => {
+    if (r.events?.payment_url) {
+      window.open(r.events.payment_url, "_blank", "noopener,noreferrer");
+      return;
+    }
+    setPayingId(r.id);
+    try {
+      await startAutomatedPaymentCheckout(r.id);
+    } catch (e: any) {
+      toast.error(e?.message ?? (lang === "uk" ? "Не вдалося створити платіж" : "Payment failed"));
+      setPayingId(null);
+    }
+  };
+
 
   const reload = () => {
     if (!user) return;
