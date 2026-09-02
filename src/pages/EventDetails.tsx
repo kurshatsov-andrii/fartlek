@@ -304,13 +304,17 @@ const EventDetails = () => {
   // Public (guest) display overrides — logged-in users always see the real count
   const isKharkivHalf = /kharkiv\s*half\s*marathon/i.test(event.title ?? "") || /kharkiv-half-marathon/i.test(event.slug ?? "");
   const isSarzhynYar = /саржин\s*яр/i.test(event.title ?? "") || /sarzhyn/i.test(event.slug ?? "");
-  const displayParticipantsCount = user
-    ? participantsCount
-    : isSarzhynYar
-      ? 50
-      : isKharkivHalf
-        ? Math.min(participantsCount, 200)
-        : participantsCount;
+  const isTraktorRun = /traktor\s*run/i.test(event.title ?? "") || /traktor-run/i.test(event.slug ?? "");
+  const displayParticipantsCount = isTraktorRun
+    ? 50
+    : user
+      ? participantsCount
+      : isSarzhynYar
+        ? 50
+        : isKharkivHalf
+          ? Math.min(participantsCount, 200)
+          : participantsCount;
+
 
 
   const seo = buildEventSeo({
