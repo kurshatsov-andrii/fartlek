@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, Navigate } from "react-router-dom";
-import { Loader2, QrCode, Calendar, FileText, Users, Inbox } from "lucide-react";
+import { Loader2, QrCode, Calendar, FileText, Users, Inbox, CreditCard, CheckCircle2, AlertCircle } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -11,7 +11,9 @@ import { ConsentDialog } from "@/components/ConsentDialog";
 import { useApp } from "@/contexts/AppContext";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
+import { startAutomatedPaymentCheckout } from "@/lib/paymentCheckout";
 import { toast } from "sonner";
+
 
 const MyEvents = () => {
   const { t, lang } = useApp();
