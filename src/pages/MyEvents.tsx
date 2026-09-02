@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, Navigate } from "react-router-dom";
-import { Loader2, QrCode, Calendar, FileText, Users, Inbox } from "lucide-react";
+import { Loader2, QrCode, Calendar, FileText, Users, Inbox, CreditCard, CheckCircle2, AlertCircle } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -11,7 +11,9 @@ import { ConsentDialog } from "@/components/ConsentDialog";
 import { useApp } from "@/contexts/AppContext";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
+import { startAutomatedPaymentCheckout } from "@/lib/paymentCheckout";
 import { toast } from "sonner";
+
 
 const MyEvents = () => {
   const { t, lang } = useApp();
@@ -23,6 +25,22 @@ const MyEvents = () => {
   const [transferOpen, setTransferOpen] = useState(false);
   const [transferCode, setTransferCode] = useState("");
   const [acceptingTransfer, setAcceptingTransfer] = useState(false);
+  const [payingId, setPayingId] = useState<string | null>(null);
+
+  const payRegistration = async (r: any) => {
+    if (r.events?.payment_url) {
+      window.open(r.events.payment_url, "_blank", "noopener,noreferrer");
+      return;
+    }
+    setPayingId(r.id);
+    try {
+      await startAutomatedPaymentCheckout(r.id);
+    } catch (e: any) {
+      toast.error(e?.message ?? (lang === "uk" ? "Не вдалося створити платіж" : "Payment failed"));
+      setPayingId(null);
+    }
+  };
+
 
   const reload = () => {
     if (!user) return;
@@ -54,6 +72,19 @@ const MyEvents = () => {
 
   useEffect(() => { reload(); /* eslint-disable-next-line */ }, [user]);
 
+  // Оновлюємо статуси, коли користувач повертається на вкладку після оплати
+  useEffect(() => {
+    const onFocus = () => { if (document.visibilityState === "visible") reload(); };
+    document.addEventListener("visibilitychange", onFocus);
+    window.addEventListener("focus", onFocus);
+    return () => {
+      document.removeEventListener("visibilitychange", onFocus);
+      window.removeEventListener("focus", onFocus);
+    };
+    // eslint-disable-next-line
+  }, [user]);
+
+
   if (authLoading) return null;
   if (!user) return <Navigate to="/auth" replace />;
 
@@ -82,6 +113,9 @@ const MyEvents = () => {
               const isCancelled = r.events.status === "cancelled";
               const isUpcoming = !isCompleted && !isCancelled && new Date(r.events.event_date) >= new Date(new Date().toDateString());
               const resultsHref = r.events.results_pdf_url || r.events.results_url;
+              const needsPayment = r.payment_status === "pending" && !isCancelled;
+              const isPaid = r.payment_status === "paid" || r.payment_status === "free";
+
               return (
                 <div key={r.id} className="bg-card p-5 rounded-2xl shadow-card flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                   <div className="min-w-0">
@@ -102,7 +136,20 @@ const MyEvents = () => {
                           {t.organizer.cancelled}
                         </span>
                       )}
+                      {needsPayment && (
+                        <span className="inline-flex items-center gap-1 rounded-full bg-yellow-500/15 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-yellow-700 dark:text-yellow-500">
+                          <AlertCircle className="h-3 w-3" />
+                          {lang === "uk" ? "Очікує оплати" : "Payment pending"}
+                        </span>
+                      )}
+                      {isPaid && !isCancelled && (
+                        <span className="inline-flex items-center gap-1 rounded-full bg-green-500/15 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-green-700 dark:text-green-500">
+                          <CheckCircle2 className="h-3 w-3" />
+                          {r.payment_status === "free" ? (lang === "uk" ? "Безкоштовно" : "Free") : (lang === "uk" ? "Оплачено" : "Paid")}
+                        </span>
+                      )}
                     </div>
+
                     <div className="text-sm text-muted-foreground flex items-center gap-2 mt-1 flex-wrap">
                       <Calendar className="h-4 w-4 text-primary" />
                       {new Date(r.events.event_date).toLocaleDateString(lang === "uk" ? "uk-UA" : "en-US")}
@@ -115,6 +162,13 @@ const MyEvents = () => {
                     </div>
                   </div>
                   <div className="flex flex-col sm:flex-row gap-2 sm:items-center shrink-0">
+                    {needsPayment && (
+                      <Button onClick={() => payRegistration(r)} disabled={payingId === r.id}>
+                        {payingId === r.id ? <Loader2 className="h-4 w-4 animate-spin" /> : <CreditCard className="h-4 w-4" />}
+                        {lang === "uk" ? "Сплатити" : "Pay now"}
+                      </Button>
+                    )}
+
                     {isCompleted && resultsHref && (
                       <Button
                         variant="outline"
