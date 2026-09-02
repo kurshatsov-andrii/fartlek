@@ -72,6 +72,19 @@ const MyEvents = () => {
 
   useEffect(() => { reload(); /* eslint-disable-next-line */ }, [user]);
 
+  // Оновлюємо статуси, коли користувач повертається на вкладку після оплати
+  useEffect(() => {
+    const onFocus = () => { if (document.visibilityState === "visible") reload(); };
+    document.addEventListener("visibilitychange", onFocus);
+    window.addEventListener("focus", onFocus);
+    return () => {
+      document.removeEventListener("visibilitychange", onFocus);
+      window.removeEventListener("focus", onFocus);
+    };
+    // eslint-disable-next-line
+  }, [user]);
+
+
   if (authLoading) return null;
   if (!user) return <Navigate to="/auth" replace />;
 
