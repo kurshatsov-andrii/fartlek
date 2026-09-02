@@ -136,7 +136,20 @@ const MyEvents = () => {
                           {t.organizer.cancelled}
                         </span>
                       )}
+                      {needsPayment && (
+                        <span className="inline-flex items-center gap-1 rounded-full bg-yellow-500/15 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-yellow-700 dark:text-yellow-500">
+                          <AlertCircle className="h-3 w-3" />
+                          {lang === "uk" ? "Очікує оплати" : "Payment pending"}
+                        </span>
+                      )}
+                      {isPaid && !isCancelled && (
+                        <span className="inline-flex items-center gap-1 rounded-full bg-green-500/15 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-green-700 dark:text-green-500">
+                          <CheckCircle2 className="h-3 w-3" />
+                          {r.payment_status === "free" ? (lang === "uk" ? "Безкоштовно" : "Free") : (lang === "uk" ? "Оплачено" : "Paid")}
+                        </span>
+                      )}
                     </div>
+
                     <div className="text-sm text-muted-foreground flex items-center gap-2 mt-1 flex-wrap">
                       <Calendar className="h-4 w-4 text-primary" />
                       {new Date(r.events.event_date).toLocaleDateString(lang === "uk" ? "uk-UA" : "en-US")}
