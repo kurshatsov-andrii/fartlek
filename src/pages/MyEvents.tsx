@@ -162,6 +162,13 @@ const MyEvents = () => {
                     </div>
                   </div>
                   <div className="flex flex-col sm:flex-row gap-2 sm:items-center shrink-0">
+                    {needsPayment && (
+                      <Button onClick={() => payRegistration(r)} disabled={payingId === r.id}>
+                        {payingId === r.id ? <Loader2 className="h-4 w-4 animate-spin" /> : <CreditCard className="h-4 w-4" />}
+                        {lang === "uk" ? "Сплатити" : "Pay now"}
+                      </Button>
+                    )}
+
                     {isCompleted && resultsHref && (
                       <Button
                         variant="outline"
