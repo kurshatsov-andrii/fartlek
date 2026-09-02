@@ -152,7 +152,7 @@
   </url>
   <url>
     <loc>https://fartlek.lovable.app/events/traktor-run-2026-harkiv-park-zelenyy-gay-2026</loc>
-    <lastmod>2026-09-01</lastmod>
+    <lastmod>2026-09-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -339,6 +339,12 @@
   <url>
     <loc>https://fartlek.lovable.app/starts/diysno-rivnyy-marafon-drogobych-2026-09-20</loc>
     <lastmod>2026-08-27</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fartlek.lovable.app/starts/bilocerkivs-kyy-blagodiynyy-marafon-2026-10-04</loc>
+    <lastmod>2026-09-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
