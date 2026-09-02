@@ -113,6 +113,9 @@ const MyEvents = () => {
               const isCancelled = r.events.status === "cancelled";
               const isUpcoming = !isCompleted && !isCancelled && new Date(r.events.event_date) >= new Date(new Date().toDateString());
               const resultsHref = r.events.results_pdf_url || r.events.results_url;
+              const needsPayment = r.payment_status === "pending" && !isCancelled;
+              const isPaid = r.payment_status === "paid" || r.payment_status === "free";
+
               return (
                 <div key={r.id} className="bg-card p-5 rounded-2xl shadow-card flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                   <div className="min-w-0">
