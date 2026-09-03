@@ -97,7 +97,7 @@ export function parseStartContent(text: string) {
 
   return {
     sport_types: Array.from(out),
-    distances_km: Array.from(distSet).sort((a,b)=>a-b),
+    distances_km: dists,
     city, region, organizer_name, is_paid,
   };
 }
