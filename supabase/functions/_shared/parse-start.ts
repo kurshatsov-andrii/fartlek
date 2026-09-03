@@ -27,9 +27,23 @@ const escRe = (s:string)=>s.replace(/[.*+?^${}()|[\]\\]/g,"\\$&");
 export function parseStartContent(text: string) {
   const t = " " + text.toLowerCase() + " ";
   const out = new Set<SportType>();
-  if (/(ultra|ультра|100\s?км|160\s?км|50\s?км|ultratrail)/i.test(t)) out.add("ultra");
-  if (/(half\s?marathon|напівмарафон|полумарафон|21[.,]?0?9?7?\s?км)/i.test(t)) out.add("half_marathon");
-  if (/(marathon|марафон)/i.test(t) && !/(напівмарафон|полумарафон|half)/i.test(t)) out.add("marathon");
+
+  const distSet = new Set<number>();
+  const re = /(?<![\d.,])(\d{1,3}(?:[.,]\d{1,4})?)\s?\+?\s?(?:км|km)(?![а-яА-Яa-zA-Z])/gi;
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(text)) !== null) {
+    const n = parseFloat(m[1].replace(",", "."));
+    if (!isNaN(n) && n > 0 && n <= 250) distSet.add(Math.round(n * 10) / 10);
+  }
+  const dists = Array.from(distSet).sort((a, b) => a - b);
+  const hasFull = dists.some((d) => d >= 41.5 && d <= 42.5);
+  const hasHalf = dists.some((d) => d >= 20.8 && d <= 21.3);
+  const hasUltra = dists.some((d) => d >= 50);
+  const noHalfWords = t.replace(/(напів|пів|полу|half\s?-?\s?)\s?марафон|half\s?marathon/gi, " ");
+
+  if (hasUltra || (dists.length === 0 && /(ultra|ультра|ultratrail)/i.test(t))) out.add("ultra");
+  if (hasHalf || (dists.length === 0 && /(half\s?marathon|напівмарафон|півмарафон|полумарафон)/i.test(t))) out.add("half_marathon");
+  if (hasFull || (dists.length === 0 && /(marathon|марафон)/i.test(noHalfWords))) out.add("marathon");
   if (/(trail|трейл|гірський забіг)/i.test(t)) out.add("trail");
   if (/(ocr|перешкод|spartan|spart|hyrox|дика\s?гонка|з\s?перешкодами|обстаклс|штурм)/i.test(t)) out.add("ocr");
   if (/(swim|плаванн|заплив|swimrun|open\s?water)/i.test(t)) out.add("swim");
@@ -41,13 +55,6 @@ export function parseStartContent(text: string) {
   if (/(online|онлайн|virtual)/i.test(t)) out.add("online");
   if (out.size === 0 || /(\brun\b|забіг|пробіг|біговий|fun\s?run|charity\s?run)/i.test(t)) out.add("run");
 
-  const distSet = new Set<number>();
-  const re = /(?<![\d.,])(\d{1,3}(?:[.,]\d{1,4})?)\s?\+?\s?(?:км|km)(?![а-яА-Яa-zA-Z])/gi;
-  let m: RegExpExecArray | null;
-  while ((m = re.exec(text)) !== null) {
-    const n = parseFloat(m[1].replace(",","."));
-    if (!isNaN(n) && n > 0 && n <= 250) distSet.add(Math.round(n*10)/10);
-  }
 
   const lower = text.toLowerCase();
   let city: string | null = null;
