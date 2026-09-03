@@ -195,9 +195,10 @@ export function parseStartContent(text: string): ParsedStart {
   if (loc.city && venue && !loc.city.toLowerCase().includes(venue.toLowerCase())) {
     loc.city = `${loc.city}, ${venue}`;
   }
+  const dists = detectDistances(text);
   return {
-    sport_types: detectSports(text),
-    distances_km: detectDistances(text),
+    sport_types: detectSports(text, dists),
+    distances_km: dists,
     ...loc,
     organizer_name: detectOrganizer(text),
     is_paid: detectPaid(text),
