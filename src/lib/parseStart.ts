@@ -97,12 +97,19 @@ export interface ParsedStart {
   is_paid: boolean | null;
 }
 
-function detectSports(text: string): SportType[] {
+function detectSports(text: string, dists: number[] = []): SportType[] {
   const t = " " + text.toLowerCase() + " ";
   const out = new Set<SportType>();
-  if (/(ultra|ультра|100\s?км|160\s?км|50\s?км|ultratrail)/i.test(t)) out.add("ultra");
-  if (/(half\s?marathon|напівмарафон|полумарафон|21[.,]?0?9?7?\s?км)/i.test(t)) out.add("half_marathon");
-  if (/(marathon|марафон)/i.test(t) && !/(напівмарафон|полумарафон|half)/i.test(t)) out.add("marathon");
+  const hasFull = dists.some((d) => d >= 41.5 && d <= 42.5);
+  const hasHalf = dists.some((d) => d >= 20.8 && d <= 21.3);
+  const hasUltra = dists.some((d) => d >= 50);
+  // Текст без згадок напівмарафону — щоб "півмарафон" не рахувався марафоном.
+  const noHalfWords = t.replace(/(напів|пів|полу|half\s?-?\s?)\s?марафон|half\s?marathon/gi, " ");
+
+  if (hasUltra || (dists.length === 0 && /(ultra|ультра|ultratrail)/i.test(t))) out.add("ultra");
+  if (hasHalf || (dists.length === 0 && /(half\s?marathon|напівмарафон|півмарафон|полумарафон)/i.test(t)))
+    out.add("half_marathon");
+  if (hasFull || (dists.length === 0 && /(marathon|марафон)/i.test(noHalfWords))) out.add("marathon");
   if (/(trail|трейл|гірський забіг)/i.test(t)) out.add("trail");
   if (/(ocr|перешкод|spartan|spart|hyrox|тяжкий\s?біг|дика\s?гонка|з\s?перешкодами|обстаклс|штурм)/i.test(t)) out.add("ocr");
   if (/(swim|плаванн|заплив|swimrun|open\s?water)/i.test(t)) out.add("swim");
@@ -117,6 +124,7 @@ function detectSports(text: string): SportType[] {
   if (out.size === 0 || /(\brun\b|забіг|пробіг|біговий|fun\s?run|charity\s?run)/i.test(t)) out.add("run");
   return Array.from(out);
 }
+
 
 function detectDistances(text: string): number[] {
   const set = new Set<number>();
@@ -187,9 +195,10 @@ export function parseStartContent(text: string): ParsedStart {
   if (loc.city && venue && !loc.city.toLowerCase().includes(venue.toLowerCase())) {
     loc.city = `${loc.city}, ${venue}`;
   }
+  const dists = detectDistances(text);
   return {
-    sport_types: detectSports(text),
-    distances_km: detectDistances(text),
+    sport_types: detectSports(text, dists),
+    distances_km: dists,
     ...loc,
     organizer_name: detectOrganizer(text),
     is_paid: detectPaid(text),

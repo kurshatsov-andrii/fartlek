@@ -101,7 +101,7 @@ const StartDetails = () => {
           {Array.from(new Set((row.sport_types || []).filter((s): s is SportType => s in SPORT_LABELS))).map((s) => (
             <span key={s} className="text-xs px-2 py-1 rounded bg-muted">{SPORT_LABELS[s]}</span>
           ))}
-          {(row.distances_km || []).length > 0 ? (row.distances_km || []).map((d) => (
+          {(row.distances_km || []).length > 0 ? [...(row.distances_km || [])].sort((a, b) => Number(b) - Number(a)).map((d) => (
             <span key={String(d)} className="text-xs px-2 py-1 rounded bg-primary/10 text-primary">{d} км</span>
           )) : (
             <span className="text-xs px-2 py-1 rounded bg-primary/10 text-primary">Вільна дистанція</span>
