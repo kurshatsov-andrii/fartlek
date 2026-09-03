@@ -138,7 +138,7 @@ const Starts = () => {
           {Array.from(new Set((r.sport_types || []).filter((s): s is SportType => s in SPORT_LABELS))).slice(0, 3).map((s) => (
             <span key={s} className="text-[10px] px-1.5 py-0.5 rounded bg-muted">{SPORT_LABELS[s]}</span>
           ))}
-          {(r.distances_km || []).length > 0 ? (r.distances_km || []).slice(0, 4).map((d) => (
+          {(r.distances_km || []).length > 0 ? [...(r.distances_km || [])].sort((a, b) => Number(b) - Number(a)).slice(0, 4).map((d) => (
             <span key={String(d)} className="text-[10px] px-1.5 py-0.5 rounded bg-primary/10 text-primary">{d} км</span>
           )) : (
             <span className="text-[10px] px-1.5 py-0.5 rounded bg-primary/10 text-primary">Вільна дистанція</span>
