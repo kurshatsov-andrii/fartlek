@@ -42,7 +42,7 @@ export function parseStartContent(text: string) {
   if (out.size === 0 || /(\brun\b|забіг|пробіг|біговий|fun\s?run|charity\s?run)/i.test(t)) out.add("run");
 
   const distSet = new Set<number>();
-  const re = /(\d{1,3}(?:[.,]\d{1,2})?)\s?\+?\s?(?:км|km)(?![а-яА-Яa-zA-Z])/gi;
+  const re = /(?<![\d.,])(\d{1,3}(?:[.,]\d{1,4})?)\s?\+?\s?(?:км|km)(?![а-яА-Яa-zA-Z])/gi;
   let m: RegExpExecArray | null;
   while ((m = re.exec(text)) !== null) {
     const n = parseFloat(m[1].replace(",","."));
