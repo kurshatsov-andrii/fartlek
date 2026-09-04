@@ -29,6 +29,8 @@ const Ticket = () => {
   const [data, setData] = useState<any>(null);
   const [profileName, setProfileName] = useState<string | null>(null);
   const [profileClub, setProfileClub] = useState<string | null>(null);
+  const [profileBirth, setProfileBirth] = useState<string | null>(null);
+  const [profileCity, setProfileCity] = useState<string | null>(null);
   const [qrUrl, setQrUrl] = useState<string>("");
   const [loading, setLoading] = useState(true);
   const [uploadingReceipt, setUploadingReceipt] = useState(false);
@@ -57,11 +59,13 @@ const Ticket = () => {
     if (reg) {
       const { data: prof } = await supabase
         .from("profiles")
-        .select("full_name, email, club")
+        .select("full_name, email, club, birth_date, city")
         .eq("id", user.id)
         .maybeSingle();
       setProfileName(prof?.full_name ?? null);
       setProfileClub((prof as any)?.club ?? null);
+      setProfileBirth((prof as any)?.birth_date ?? null);
+      setProfileCity((prof as any)?.city ?? null);
       const ev = (reg as any).events;
       const dist = (reg as any).distances;
       const ath = (reg as any).athletes;
@@ -244,6 +248,16 @@ const Ticket = () => {
 
   const pdfStatusColor = data.payment_status === "pending" ? "#b45309" : "#15803d";
 
+  const ticketName = data.athletes?.full_name ?? profileName;
+  const ticketBirthRaw = data.athletes?.birth_date ?? profileBirth;
+  const ticketBirth = ticketBirthRaw
+    ? new Date(ticketBirthRaw).toLocaleDateString(lang === "uk" ? "uk-UA" : "en-US")
+    : null;
+  const ticketCity = data.athletes?.city ?? profileCity;
+  const birthLabel = lang === "uk" ? "Дата народження" : "Date of birth";
+  const cityLabel = lang === "uk" ? "Місто" : "City";
+
+
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Header />
@@ -281,12 +295,25 @@ const Ticket = () => {
               />
             )}
             <div style={{ flex: 1 }}>
-              {(data.athletes?.full_name || profileName) && (
+              {ticketName && (
                 <div style={{ marginBottom: 16 }}>
+                  <div style={{ fontSize: 22, fontWeight: 800 }}>{ticketName}</div>
+                </div>
+              )}
+              {ticketBirth && (
+                <div style={{ marginBottom: 12 }}>
                   <div style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: 1.5, color: "#666" }}>
-                    {t.athletes.registeringAs}
+                    {birthLabel}
                   </div>
-                  <div style={{ fontSize: 20, fontWeight: 700 }}>{data.athletes?.full_name ?? profileName}</div>
+                  <div style={{ fontSize: 17, fontWeight: 700 }}>{ticketBirth}</div>
+                </div>
+              )}
+              {ticketCity && (
+                <div style={{ marginBottom: 12 }}>
+                  <div style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: 1.5, color: "#666" }}>
+                    {cityLabel}
+                  </div>
+                  <div style={{ fontSize: 17, fontWeight: 700 }}>{ticketCity}</div>
                 </div>
               )}
               <div style={{ marginBottom: 16 }}>
@@ -305,6 +332,7 @@ const Ticket = () => {
                   {dist.distance_km} km {dist.name ? `· ${dist.name}` : ""}
                 </div>
               </div>
+
               <div style={{ marginBottom: 12 }}>
                 <div style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: 1.5, color: "#666" }}>
                   {t.ticket.status}
@@ -333,12 +361,24 @@ const Ticket = () => {
               {qrUrl && <img src={qrUrl} alt="QR" className="w-56 h-56 rounded-xl border-4 border-foreground" />}
             </div>
             <div className="space-y-4">
-              {data.athletes?.full_name && (
+              {ticketName && (
                 <div>
-                  <div className="text-xs uppercase text-muted-foreground tracking-wider">{t.athletes.registeringAs}</div>
-                  <div className="font-bold text-lg">{data.athletes.full_name}</div>
+                  <div className="font-bold text-xl">{ticketName}</div>
                 </div>
               )}
+              {ticketBirth && (
+                <div>
+                  <div className="text-xs uppercase text-muted-foreground tracking-wider">{birthLabel}</div>
+                  <div className="font-bold">{ticketBirth}</div>
+                </div>
+              )}
+              {ticketCity && (
+                <div>
+                  <div className="text-xs uppercase text-muted-foreground tracking-wider">{cityLabel}</div>
+                  <div className="font-bold">{ticketCity}</div>
+                </div>
+              )}
+
               <div>
                 <div className="text-xs uppercase text-muted-foreground tracking-wider">{t.ticket.bib}</div>
                 <div className="font-display text-5xl font-bold text-primary">{data.bib_number ?? "—"}</div>
