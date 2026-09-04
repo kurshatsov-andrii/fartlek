@@ -29,6 +29,8 @@ const Ticket = () => {
   const [data, setData] = useState<any>(null);
   const [profileName, setProfileName] = useState<string | null>(null);
   const [profileClub, setProfileClub] = useState<string | null>(null);
+  const [profileBirth, setProfileBirth] = useState<string | null>(null);
+  const [profileCity, setProfileCity] = useState<string | null>(null);
   const [qrUrl, setQrUrl] = useState<string>("");
   const [loading, setLoading] = useState(true);
   const [uploadingReceipt, setUploadingReceipt] = useState(false);
@@ -57,11 +59,13 @@ const Ticket = () => {
     if (reg) {
       const { data: prof } = await supabase
         .from("profiles")
-        .select("full_name, email, club")
+        .select("full_name, email, club, birth_date, city")
         .eq("id", user.id)
         .maybeSingle();
       setProfileName(prof?.full_name ?? null);
       setProfileClub((prof as any)?.club ?? null);
+      setProfileBirth((prof as any)?.birth_date ?? null);
+      setProfileCity((prof as any)?.city ?? null);
       const ev = (reg as any).events;
       const dist = (reg as any).distances;
       const ath = (reg as any).athletes;
