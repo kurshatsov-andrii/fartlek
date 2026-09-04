@@ -361,12 +361,24 @@ const Ticket = () => {
               {qrUrl && <img src={qrUrl} alt="QR" className="w-56 h-56 rounded-xl border-4 border-foreground" />}
             </div>
             <div className="space-y-4">
-              {data.athletes?.full_name && (
+              {ticketName && (
                 <div>
-                  <div className="text-xs uppercase text-muted-foreground tracking-wider">{t.athletes.registeringAs}</div>
-                  <div className="font-bold text-lg">{data.athletes.full_name}</div>
+                  <div className="font-bold text-xl">{ticketName}</div>
                 </div>
               )}
+              {ticketBirth && (
+                <div>
+                  <div className="text-xs uppercase text-muted-foreground tracking-wider">{birthLabel}</div>
+                  <div className="font-bold">{ticketBirth}</div>
+                </div>
+              )}
+              {ticketCity && (
+                <div>
+                  <div className="text-xs uppercase text-muted-foreground tracking-wider">{cityLabel}</div>
+                  <div className="font-bold">{ticketCity}</div>
+                </div>
+              )}
+
               <div>
                 <div className="text-xs uppercase text-muted-foreground tracking-wider">{t.ticket.bib}</div>
                 <div className="font-display text-5xl font-bold text-primary">{data.bib_number ?? "—"}</div>
