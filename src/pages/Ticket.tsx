@@ -295,12 +295,25 @@ const Ticket = () => {
               />
             )}
             <div style={{ flex: 1 }}>
-              {(data.athletes?.full_name || profileName) && (
+              {ticketName && (
                 <div style={{ marginBottom: 16 }}>
+                  <div style={{ fontSize: 22, fontWeight: 800 }}>{ticketName}</div>
+                </div>
+              )}
+              {ticketBirth && (
+                <div style={{ marginBottom: 12 }}>
                   <div style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: 1.5, color: "#666" }}>
-                    {t.athletes.registeringAs}
+                    {birthLabel}
                   </div>
-                  <div style={{ fontSize: 20, fontWeight: 700 }}>{data.athletes?.full_name ?? profileName}</div>
+                  <div style={{ fontSize: 17, fontWeight: 700 }}>{ticketBirth}</div>
+                </div>
+              )}
+              {ticketCity && (
+                <div style={{ marginBottom: 12 }}>
+                  <div style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: 1.5, color: "#666" }}>
+                    {cityLabel}
+                  </div>
+                  <div style={{ fontSize: 17, fontWeight: 700 }}>{ticketCity}</div>
                 </div>
               )}
               <div style={{ marginBottom: 16 }}>
@@ -319,6 +332,7 @@ const Ticket = () => {
                   {dist.distance_km} km {dist.name ? `· ${dist.name}` : ""}
                 </div>
               </div>
+
               <div style={{ marginBottom: 12 }}>
                 <div style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: 1.5, color: "#666" }}>
                   {t.ticket.status}
