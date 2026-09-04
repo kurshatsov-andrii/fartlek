@@ -41,6 +41,8 @@ const Ticket = () => {
   const [deliveryDraft, setDeliveryDraft] = useState<DeliveryData>(emptyDelivery());
   const [savingDelivery, setSavingDelivery] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
+  const pdfRef = useRef<HTMLDivElement>(null);
+
   const fileRef = useRef<HTMLInputElement>(null);
 
   const loadRegistration = async (opts: { silent?: boolean } = {}) => {
@@ -205,22 +207,30 @@ const Ticket = () => {
   if (!user) return <Navigate to="/auth" replace />;
 
   const downloadPdf = async () => {
-    if (!data || !qrUrl || !cardRef.current) return;
-    const canvas = await html2canvas(cardRef.current, {
-      scale: 2,
-      backgroundColor: "#ffffff",
-      useCORS: true,
-    });
-    const imgData = canvas.toDataURL("image/png");
-    // Match aspect ratio of the rendered card
-    const pxW = canvas.width;
-    const pxH = canvas.height;
-    const pdfW = 148; // mm (A6 width)
-    const pdfH = (pxH / pxW) * pdfW;
-    const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: [pdfW, pdfH] });
-    doc.addImage(imgData, "PNG", 0, 0, pdfW, pdfH);
-    doc.save(`fartlek-ticket-${data.bib_number ?? id}.pdf`);
+    if (!data || !qrUrl || !pdfRef.current) return;
+    const node = pdfRef.current;
+    node.style.display = "block";
+    try {
+      const canvas = await html2canvas(node, {
+        scale: 2,
+        backgroundColor: "#ffffff",
+        useCORS: true,
+      });
+      const imgData = canvas.toDataURL("image/png");
+      const pxW = canvas.width;
+      const pxH = canvas.height;
+      const pdfW = 148; // mm (A6 width)
+      const pdfH = (pxH / pxW) * pdfW;
+      const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: [pdfW, pdfH] });
+      doc.addImage(imgData, "PNG", 0, 0, pdfW, pdfH);
+      doc.save(`fartlek-ticket-${data.bib_number ?? id}.pdf`);
+    } catch (e: any) {
+      toast.error(e?.message ?? t.common.error);
+    } finally {
+      node.style.display = "none";
+    }
   };
+
 
   if (loading) return <div className="min-h-screen flex items-center justify-center"><Loader2 className="h-8 w-8 animate-spin" /></div>;
   if (!data) return <div className="min-h-screen flex items-center justify-center text-muted-foreground">404</div>;
@@ -232,10 +242,83 @@ const Ticket = () => {
   const statusLabel = data.payment_status === "paid" ? t.ticket.paid : data.payment_status === "free" ? t.ticket.free : t.ticket.pending;
   const statusColor = data.payment_status === "pending" ? "text-yellow-600 dark:text-yellow-500" : "text-green-600 dark:text-green-500";
 
+  const pdfStatusColor = data.payment_status === "pending" ? "#b45309" : "#15803d";
+
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Header />
+
+      {/* Офскрін-шаблон для PDF (прості кольори, які підтримує html2canvas) */}
+      <div
+        ref={pdfRef}
+        style={{ display: "none", position: "fixed", left: -10000, top: 0, zIndex: -1 }}
+        aria-hidden
+      >
+        <div
+          style={{
+            width: 720,
+            background: "#ffffff",
+            fontFamily: "Arial, Helvetica, sans-serif",
+            color: "#0a0a0a",
+            boxSizing: "border-box",
+          }}
+        >
+          <div style={{ background: "#F97316", color: "#ffffff", padding: 32 }}>
+            <div style={{ fontSize: 12, fontWeight: 700, textTransform: "uppercase", letterSpacing: 2 }}>
+              {t.ticket.title}
+            </div>
+            <div style={{ fontSize: 32, fontWeight: 800, marginTop: 8, lineHeight: 1.15 }}>{ev.title}</div>
+            <div style={{ fontSize: 15, marginTop: 12 }}>
+              {fmtDate} · {ev.event_time.slice(0, 5)}
+            </div>
+          </div>
+          <div style={{ display: "flex", gap: 32, padding: 32, alignItems: "center" }}>
+            {qrUrl && (
+              <img
+                src={qrUrl}
+                alt="QR"
+                style={{ width: 240, height: 240, border: "4px solid #0a0a0a", borderRadius: 12 }}
+              />
+            )}
+            <div style={{ flex: 1 }}>
+              {(data.athletes?.full_name || profileName) && (
+                <div style={{ marginBottom: 16 }}>
+                  <div style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: 1.5, color: "#666" }}>
+                    {t.athletes.registeringAs}
+                  </div>
+                  <div style={{ fontSize: 20, fontWeight: 700 }}>{data.athletes?.full_name ?? profileName}</div>
+                </div>
+              )}
+              <div style={{ marginBottom: 16 }}>
+                <div style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: 1.5, color: "#666" }}>
+                  {t.ticket.bib}
+                </div>
+                <div style={{ fontSize: 52, fontWeight: 900, color: "#F97316", lineHeight: 1.1 }}>
+                  {data.bib_number ?? "—"}
+                </div>
+              </div>
+              <div style={{ marginBottom: 16 }}>
+                <div style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: 1.5, color: "#666" }}>
+                  {t.events.distances}
+                </div>
+                <div style={{ fontSize: 20, fontWeight: 700 }}>
+                  {dist.distance_km} km {dist.name ? `· ${dist.name}` : ""}
+                </div>
+              </div>
+              <div style={{ marginBottom: 12 }}>
+                <div style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: 1.5, color: "#666" }}>
+                  {t.ticket.status}
+                </div>
+                <div style={{ fontSize: 16, fontWeight: 700, color: pdfStatusColor }}>{statusLabel}</div>
+              </div>
+              <div style={{ fontSize: 12, color: "#666" }}>{t.ticket.qrHint}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <main className="flex-1 container max-w-2xl py-10">
+
         <Link to="/my-events" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-6">
           <ArrowLeft className="h-4 w-4" /> {t.nav.myEvents}
         </Link>
