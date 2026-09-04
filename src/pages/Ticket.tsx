@@ -248,6 +248,16 @@ const Ticket = () => {
 
   const pdfStatusColor = data.payment_status === "pending" ? "#b45309" : "#15803d";
 
+  const ticketName = data.athletes?.full_name ?? profileName;
+  const ticketBirthRaw = data.athletes?.birth_date ?? profileBirth;
+  const ticketBirth = ticketBirthRaw
+    ? new Date(ticketBirthRaw).toLocaleDateString(lang === "uk" ? "uk-UA" : "en-US")
+    : null;
+  const ticketCity = data.athletes?.city ?? profileCity;
+  const birthLabel = lang === "uk" ? "Дата народження" : "Date of birth";
+  const cityLabel = lang === "uk" ? "Місто" : "City";
+
+
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Header />
