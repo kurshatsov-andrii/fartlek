@@ -205,22 +205,30 @@ const Ticket = () => {
   if (!user) return <Navigate to="/auth" replace />;
 
   const downloadPdf = async () => {
-    if (!data || !qrUrl || !cardRef.current) return;
-    const canvas = await html2canvas(cardRef.current, {
-      scale: 2,
-      backgroundColor: "#ffffff",
-      useCORS: true,
-    });
-    const imgData = canvas.toDataURL("image/png");
-    // Match aspect ratio of the rendered card
-    const pxW = canvas.width;
-    const pxH = canvas.height;
-    const pdfW = 148; // mm (A6 width)
-    const pdfH = (pxH / pxW) * pdfW;
-    const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: [pdfW, pdfH] });
-    doc.addImage(imgData, "PNG", 0, 0, pdfW, pdfH);
-    doc.save(`fartlek-ticket-${data.bib_number ?? id}.pdf`);
+    if (!data || !qrUrl || !pdfRef.current) return;
+    const node = pdfRef.current;
+    node.style.display = "block";
+    try {
+      const canvas = await html2canvas(node, {
+        scale: 2,
+        backgroundColor: "#ffffff",
+        useCORS: true,
+      });
+      const imgData = canvas.toDataURL("image/png");
+      const pxW = canvas.width;
+      const pxH = canvas.height;
+      const pdfW = 148; // mm (A6 width)
+      const pdfH = (pxH / pxW) * pdfW;
+      const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: [pdfW, pdfH] });
+      doc.addImage(imgData, "PNG", 0, 0, pdfW, pdfH);
+      doc.save(`fartlek-ticket-${data.bib_number ?? id}.pdf`);
+    } catch (e: any) {
+      toast.error(e?.message ?? t.common.error);
+    } finally {
+      node.style.display = "none";
+    }
   };
+
 
   if (loading) return <div className="min-h-screen flex items-center justify-center"><Loader2 className="h-8 w-8 animate-spin" /></div>;
   if (!data) return <div className="min-h-screen flex items-center justify-center text-muted-foreground">404</div>;
