@@ -41,6 +41,8 @@ const Ticket = () => {
   const [deliveryDraft, setDeliveryDraft] = useState<DeliveryData>(emptyDelivery());
   const [savingDelivery, setSavingDelivery] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
+  const pdfRef = useRef<HTMLDivElement>(null);
+
   const fileRef = useRef<HTMLInputElement>(null);
 
   const loadRegistration = async (opts: { silent?: boolean } = {}) => {
