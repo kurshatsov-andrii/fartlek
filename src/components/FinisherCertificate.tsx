@@ -187,7 +187,26 @@ export const FinisherCertificate = ({
         <div style={{ position: "absolute", inset: 34, border: `2px solid ${C.yellow}`, borderRadius: 16 }} />
         <div style={{ position: "absolute", inset: 46, border: `1px solid #35558f`, borderRadius: 10 }} />
 
-        <div style={{ position: "relative", textAlign: "center", paddingTop: portrait ? 84 : 72, paddingLeft: 70, paddingRight: 70 }}>
+        <div
+          style={
+            portrait
+              ? {
+                  position: "absolute",
+                  top: 120,
+                  bottom: 90,
+                  left: 0,
+                  right: 0,
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  textAlign: "center",
+                  paddingLeft: 70,
+                  paddingRight: 70,
+                  boxSizing: "border-box",
+                }
+              : { position: "relative", textAlign: "center", paddingTop: 72, paddingLeft: 70, paddingRight: 70 }
+          }
+        >
           <div style={{ letterSpacing: 12, fontSize: 26 * f, fontWeight: 700, color: C.yellow }}>FARTLEK</div>
           <div style={{ letterSpacing: 4, fontSize: 13 * f, color: C.muted, marginTop: 6 }}>
             {uk ? "ПЛАТФОРМА БІГОВИХ ПОДІЙ" : "RUNNING EVENTS PLATFORM"}
