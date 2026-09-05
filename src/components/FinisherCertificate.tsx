@@ -231,10 +231,11 @@ export const FinisherCertificate = ({
                 )}
               </div>
 
-              <div style={{ position: "absolute", bottom: -180, left: 0, right: 0, fontSize: 14, color: "#999999" }}>
-                fartlek.lovable.app
-              </div>
             </div>
+            <div style={{ position: "absolute", bottom: 56, left: 0, right: 0, textAlign: "center", fontSize: 14, color: "#999999" }}>
+              fartlek.lovable.app
+            </div>
+
           </div>
           </div>
         </div>
