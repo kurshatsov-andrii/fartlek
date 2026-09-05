@@ -72,7 +72,7 @@ export const FinisherCertificate = ({
   const render = async () => {
     const node = nodeRef.current;
     if (!node) return null;
-    return html2canvas(node, { scale: 2, backgroundColor: "#ffffff", useCORS: true });
+    return html2canvas(node, { scale: 2, backgroundColor: "#0a1f4b", useCORS: true });
   };
 
   const fileBase = `fartlek-certificate-${slug(data.eventTitle)}-${slug(data.fullName)}`;
@@ -108,125 +108,91 @@ export const FinisherCertificate = ({
     }
   };
 
+  const C = {
+    navy: "#0a1f4b",
+    navyDeep: "#071539",
+    yellow: "#ffd23f",
+    yellowSoft: "#ffe98a",
+    blueSoft: "#1b3a7a",
+    text: "#ffffff",
+    muted: "#a9bde0",
+  };
+
+  const stat = (label: string, value: string | number, accent?: boolean) => (
+    <div style={{ minWidth: 150 }}>
+      <div style={{ fontSize: 13, letterSpacing: 3, color: C.muted, textTransform: "uppercase" }}>{label}</div>
+      <div style={{ fontSize: 38, fontWeight: 700, marginTop: 6, color: accent ? C.yellow : C.text }}>{value}</div>
+    </div>
+  );
+
   const sheet = (innerRef?: Ref<HTMLDivElement>) => (
-          <div
-            ref={innerRef}
-            style={{
-              width: 1188,
-              height: 840,
-              position: "relative",
-              backgroundColor: "#ffffff",
-              fontFamily: "Georgia, 'Times New Roman', serif",
-              color: "#111111",
-              boxSizing: "border-box",
-              padding: 48,
-            }}
-          >
+    <div
+      ref={innerRef}
+      style={{
+        width: 1188,
+        height: 840,
+        position: "relative",
+        overflow: "hidden",
+        backgroundColor: C.navy,
+        fontFamily: "Georgia, 'Times New Roman', serif",
+        color: C.text,
+        boxSizing: "border-box",
+      }}
+    >
+      {/* decorative blocks */}
+      <div style={{ position: "absolute", top: -220, left: -180, width: 620, height: 620, borderRadius: 620, backgroundColor: C.navyDeep }} />
+      <div style={{ position: "absolute", bottom: -260, right: -200, width: 700, height: 700, borderRadius: 700, backgroundColor: C.blueSoft }} />
+      <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 14, backgroundColor: C.yellow }} />
+      <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 14, backgroundColor: C.yellow }} />
+      <div style={{ position: "absolute", top: 96, left: 0, width: 250, height: 6, backgroundColor: C.yellow }} />
+      <div style={{ position: "absolute", top: 96, right: 0, width: 250, height: 6, backgroundColor: C.yellow }} />
 
-            <div
-              style={{
-                position: "absolute",
-                inset: 24,
-                border: "3px solid #ff6633",
-                borderRadius: 18,
-              }}
-            />
-            <div
-              style={{
-                position: "absolute",
-                inset: 36,
-                border: "1px solid #f2c200",
-                borderRadius: 12,
-              }}
-            />
-            <div style={{ position: "relative", textAlign: "center", paddingTop: 42 }}>
-              <div style={{ letterSpacing: 10, fontSize: 26, fontWeight: 700, color: "#ff6633" }}>
-                FARTLEK
-              </div>
-              <div style={{ letterSpacing: 4, fontSize: 14, color: "#777777", marginTop: 4 }}>
-                {uk ? "ПЛАТФОРМА БІГОВИХ ПОДІЙ" : "RUNNING EVENTS PLATFORM"}
-              </div>
+      {/* frame */}
+      <div style={{ position: "absolute", inset: 34, border: `2px solid ${C.yellow}`, borderRadius: 16 }} />
+      <div style={{ position: "absolute", inset: 46, border: `1px solid #35558f`, borderRadius: 10 }} />
 
-              <div style={{ fontSize: 52, fontWeight: 700, marginTop: 44, letterSpacing: 2 }}>
-                {uk ? "СЕРТИФІКАТ ФІНІШЕРА" : "FINISHER CERTIFICATE"}
-              </div>
-              <div style={{ fontSize: 20, color: "#555555", marginTop: 14 }}>
-                {uk ? "Цим підтверджується, що" : "This certifies that"}
-              </div>
+      <div style={{ position: "relative", textAlign: "center", paddingTop: 72 }}>
+        <div style={{ letterSpacing: 12, fontSize: 26, fontWeight: 700, color: C.yellow }}>FARTLEK</div>
+        <div style={{ letterSpacing: 4, fontSize: 13, color: C.muted, marginTop: 6 }}>
+          {uk ? "ПЛАТФОРМА БІГОВИХ ПОДІЙ" : "RUNNING EVENTS PLATFORM"}
+        </div>
 
-              <div style={{ fontSize: 58, fontWeight: 700, marginTop: 18, color: "#111111" }}>
-                {data.fullName}
-              </div>
-              <div
-                style={{
-                  width: 460,
-                  height: 3,
-                  backgroundColor: "#ff6633",
-                  margin: "16px auto 0",
-                }}
-              />
+        <div style={{ fontSize: 48, fontWeight: 700, marginTop: 38, letterSpacing: 3, color: C.text }}>
+          {uk ? "СЕРТИФІКАТ ФІНІШЕРА" : "FINISHER CERTIFICATE"}
+        </div>
+        <div style={{ fontSize: 19, color: C.muted, marginTop: 12 }}>
+          {uk ? "Цим підтверджується, що" : "This certifies that"}
+        </div>
 
-              <div style={{ fontSize: 22, color: "#333333", marginTop: 28, lineHeight: 1.5 }}>
-                {uk ? "успішно подолав(-ла) дистанцію" : "successfully completed the distance"}{" "}
-                <strong>{data.distanceKm} {uk ? "км" : "km"}</strong>
-                <br />
-                {uk ? "на події" : "at"} <strong>{data.eventTitle}</strong>
-                <br />
-                {dateLabel}
-                {data.location ? ` · ${data.location}` : ""}
-              </div>
+        <div style={{ fontSize: 56, fontWeight: 700, marginTop: 14, color: C.yellow }}>{data.fullName}</div>
+        <div style={{ width: 440, height: 3, backgroundColor: C.yellowSoft, margin: "14px auto 0" }} />
 
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  gap: 64,
-                  marginTop: 46,
-                }}
-              >
-                {data.timeSeconds != null && (
-                  <div>
-                    <div style={{ fontSize: 14, letterSpacing: 3, color: "#777777" }}>
-                      {uk ? "ЧАС" : "TIME"}
-                    </div>
-                    <div style={{ fontSize: 40, fontWeight: 700, color: "#ff6633" }}>
-                      {fmtTime(data.timeSeconds)}
-                    </div>
-                  </div>
-                )}
-                {data.overallRank != null && (
-                  <div>
-                    <div style={{ fontSize: 14, letterSpacing: 3, color: "#777777" }}>
-                      {uk ? "МІСЦЕ АБСОЛЮТ" : "OVERALL PLACE"}
-                    </div>
-                    <div style={{ fontSize: 40, fontWeight: 700 }}>{data.overallRank}</div>
-                  </div>
-                )}
-                {data.categoryRank != null && (
-                  <div>
-                    <div style={{ fontSize: 14, letterSpacing: 3, color: "#777777" }}>
-                      {uk ? "МІСЦЕ В КАТЕГОРІЇ" : "CATEGORY PLACE"}
-                      {data.categoryLabel ? ` (${data.categoryLabel})` : ""}
-                    </div>
-                    <div style={{ fontSize: 40, fontWeight: 700 }}>{data.categoryRank}</div>
-                  </div>
-                )}
-                {data.bib != null && (
-                  <div>
-                    <div style={{ fontSize: 14, letterSpacing: 3, color: "#777777" }}>
-                      {uk ? "НОМЕР" : "BIB"}
-                    </div>
-                    <div style={{ fontSize: 40, fontWeight: 700 }}>{data.bib}</div>
-                  </div>
-                )}
-              </div>
+        <div style={{ fontSize: 21, color: "#dde7f7", marginTop: 26, lineHeight: 1.55 }}>
+          {uk ? "успішно подолав(-ла) дистанцію" : "successfully completed the distance"}{" "}
+          <strong style={{ color: C.yellow }}>{data.distanceKm} {uk ? "км" : "km"}</strong>
+          <br />
+          {uk ? "на події" : "at"} <strong style={{ color: C.text }}>{data.eventTitle}</strong>
+          <br />
+          {dateLabel}
+          {data.location ? ` · ${data.location}` : ""}
+        </div>
 
-            </div>
-            <div style={{ position: "absolute", bottom: 56, left: 0, right: 0, textAlign: "center", fontSize: 14, color: "#999999" }}>
-              fartlek.lovable.app
-            </div>
+        <div style={{ display: "flex", justifyContent: "center", gap: 40, marginTop: 42 }}>
+          {data.timeSeconds != null && stat(uk ? "Час" : "Time", fmtTime(data.timeSeconds), true)}
+          {data.overallRank != null && stat(uk ? "Місце абсолют" : "Overall place", data.overallRank)}
+          {data.categoryRank != null &&
+            stat(
+              `${uk ? "Місце в категорії" : "Category place"}${data.categoryLabel ? ` (${data.categoryLabel})` : ""}`,
+              data.categoryRank,
+            )}
+          {data.bib != null && stat(uk ? "Номер" : "Bib", data.bib)}
+        </div>
+      </div>
 
-          </div>
+      <div style={{ position: "absolute", bottom: 48, left: 0, right: 0, textAlign: "center", fontSize: 14, letterSpacing: 2, color: C.muted }}>
+        fartlek.lovable.app
+      </div>
+    </div>
   );
 
   return (
