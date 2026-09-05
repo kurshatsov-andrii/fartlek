@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { Loader2, ArrowLeft, Search, Calendar as CalendarIcon, MapPin, Medal, UserX, ArrowLeftRight } from "lucide-react";
+import { Loader2, ArrowLeft, Search, Calendar as CalendarIcon, MapPin, Medal, UserX, ArrowLeftRight, Award } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { SEO } from "@/components/SEO";
@@ -10,6 +10,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useApp } from "@/contexts/AppContext";
 import { useAuth } from "@/hooks/useAuth";
 import { cn } from "@/lib/utils";
+import { FinisherCertificate, type CertificateData } from "@/components/FinisherCertificate";
 
 interface ResultRow {
   id: string;
@@ -124,6 +125,7 @@ const EventResults = () => {
   const [ageGroup, setAgeGroup] = useState<string>("all");
   const [status, setStatus] = useState<string>("finished");
   const [query, setQuery] = useState("");
+  const [certificate, setCertificate] = useState<CertificateData | null>(null);
 
   useEffect(() => {
     if (!id) return;
@@ -456,6 +458,7 @@ const EventResults = () => {
                     <th className="px-4 py-3 font-semibold">{uk ? "Місто" : "City"}</th>
                     <th className="px-4 py-3 font-semibold text-right">{uk ? "Чіп" : "Chip"}</th>
                     <th className="px-4 py-3 font-semibold text-right">{uk ? "Ган" : "Gun"}</th>
+                    <th className="px-4 py-3 font-semibold text-right">{uk ? "Сертифікат" : "Certificate"}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -507,6 +510,32 @@ const EventResults = () => {
                       <td className="px-4 py-3 text-muted-foreground">{r.city ?? "—"}</td>
                       <td className="px-4 py-3 text-right font-mono font-semibold">{formatTime(r.chip_time_seconds)}</td>
                       <td className="px-4 py-3 text-right font-mono text-muted-foreground">{formatTime(r.gun_time_seconds)}</td>
+                      <td className="px-4 py-3 text-right">
+                        {r.status === "finished" && (
+                          <button
+                            type="button"
+                            onClick={() => setCertificate({
+                              fullName: r.full_name,
+                              eventTitle: event.title,
+                              eventDate: event.event_date,
+                              location: event.location,
+                              distanceKm: r.distance_km,
+                              timeSeconds: r.chip_time_seconds ?? r.gun_time_seconds,
+                              bib: r.bib,
+                              overallRank: r.overall_rank,
+                              categoryRank: r.categoryRank ?? null,
+                              categoryLabel: r.categoryRank != null
+                                ? [r.gender === "F" ? (uk ? "Ж" : "W") : r.gender === "M" ? (uk ? "Ч" : "M") : null, r.age_group]
+                                    .filter(Boolean).join(" ") || null
+                                : null,
+                            })}
+                            title={uk ? "Сертифікат фінішера" : "Finisher certificate"}
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border border-border hover:border-primary hover:text-primary transition-colors whitespace-nowrap"
+                          >
+                            <Award className="h-3.5 w-3.5" /> {uk ? "Сертифікат" : "Certificate"}
+                          </button>
+                        )}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -520,6 +549,14 @@ const EventResults = () => {
           </>
         )}
       </main>
+      {certificate && (
+        <FinisherCertificate
+          open={!!certificate}
+          onOpenChange={(v) => { if (!v) setCertificate(null); }}
+          data={certificate}
+          uk={uk}
+        />
+      )}
       <Footer />
     </div>
   );
