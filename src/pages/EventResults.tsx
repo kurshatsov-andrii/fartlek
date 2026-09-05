@@ -209,6 +209,37 @@ const EventResults = () => {
 
   const allRows = useMemo(() => [...rows, ...nonFinishers], [rows, nonFinishers]);
 
+  // Місця у категоріях: абсолют по статі та вікова група всередині статі (незалежно від фільтрів)
+  const categoryRanks = useMemo(() => {
+    const genderMap = new Map<string, number>();
+    const ageMap = new Map<string, number>();
+    const buckets = new Map<string, ResultRow[]>();
+    const ageBuckets = new Map<string, ResultRow[]>();
+
+    allRows
+      .filter((r) => r.status === "finished" && r.chip_time_seconds != null && r.gender)
+      .forEach((r) => {
+        const gk = `${r.distance_km}|${r.gender}`;
+        if (!buckets.has(gk)) buckets.set(gk, []);
+        buckets.get(gk)!.push(r);
+        if (r.age_group) {
+          const ak = `${gk}|${r.age_group}`;
+          if (!ageBuckets.has(ak)) ageBuckets.set(ak, []);
+          ageBuckets.get(ak)!.push(r);
+        }
+      });
+
+    const rank = (list: ResultRow[], target: Map<string, number>) => {
+      list
+        .sort((a, b) => (a.chip_time_seconds as number) - (b.chip_time_seconds as number))
+        .forEach((r, i) => target.set(r.id, i + 1));
+    };
+    buckets.forEach((list) => rank(list, genderMap));
+    ageBuckets.forEach((list) => rank(list, ageMap));
+    return { genderMap, ageMap };
+  }, [allRows]);
+
+
   const toggleDnf = async (r: ResultRow) => {
     if (!canManage) return;
     const toDnf = r.status !== "dnf";
@@ -514,21 +545,29 @@ const EventResults = () => {
                         {r.status === "finished" && (
                           <button
                             type="button"
-                            onClick={() => setCertificate({
-                              fullName: r.full_name,
-                              eventTitle: event.title,
-                              eventDate: event.event_date,
-                              location: event.location,
-                              distanceKm: r.distance_km,
-                              timeSeconds: r.chip_time_seconds ?? r.gun_time_seconds,
-                              bib: r.bib,
-                              overallRank: r.overall_rank,
-                              categoryRank: r.categoryRank ?? null,
-                              categoryLabel: r.categoryRank != null
-                                ? [r.gender === "F" ? (uk ? "Ж" : "W") : r.gender === "M" ? (uk ? "Ч" : "M") : null, r.age_group]
-                                    .filter(Boolean).join(" ") || null
-                                : null,
-                            })}
+                            onClick={() => {
+                              const genderLabel = r.gender === "F" ? (uk ? "жінки" : "women") : r.gender === "M" ? (uk ? "чоловіки" : "men") : null;
+                              setCertificate({
+                                fullName: r.full_name,
+                                eventTitle: event.title,
+                                eventDate: event.event_date,
+                                location: event.location,
+                                distanceKm: r.distance_km,
+                                timeSeconds: r.chip_time_seconds ?? r.gun_time_seconds,
+                                bib: r.bib,
+                                overallRank: r.overall_rank,
+                                genderRank: categoryRanks.genderMap.get(r.id) ?? null,
+                                genderLabel,
+                                ageGroupRank: categoryRanks.ageMap.get(r.id) ?? null,
+                                ageGroupLabel: [genderLabel, r.age_group].filter(Boolean).join(" "),
+                                categoryRank: r.categoryRank ?? null,
+                                categoryLabel: r.categoryRank != null
+                                  ? [r.gender === "F" ? (uk ? "Ж" : "W") : r.gender === "M" ? (uk ? "Ч" : "M") : null, r.age_group]
+                                      .filter(Boolean).join(" ") || null
+                                  : null,
+                              });
+                            }}
+
                             title={uk ? "Сертифікат фінішера" : "Finisher certificate"}
                             className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border border-border hover:border-primary hover:text-primary transition-colors whitespace-nowrap"
                           >

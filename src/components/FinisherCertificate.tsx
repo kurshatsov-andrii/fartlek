@@ -17,6 +17,12 @@ export interface CertificateData {
   overallRank?: number | null;
   categoryRank?: number | null;
   categoryLabel?: string | null;
+  /** Місце серед своєї статі (абсолют по чоловіках/жінках) */
+  genderRank?: number | null;
+  genderLabel?: string | null;
+  /** Місце у віковій категорії всередині своєї статі */
+  ageGroupRank?: number | null;
+  ageGroupLabel?: string | null;
 }
 
 const fmtTime = (s: number | null): string => {
@@ -30,8 +36,15 @@ const fmtTime = (s: number | null): string => {
 const slug = (s: string) =>
   s.toLowerCase().replace(/[^a-z0-9а-яіїєґ]+/gi, "-").replace(/(^-|-$)/g, "").slice(0, 60);
 
+type Orientation = "landscape" | "portrait";
+
+const SIZE: Record<Orientation, { w: number; h: number }> = {
+  landscape: { w: 1188, h: 840 },
+  portrait: { w: 840, h: 1188 },
+};
+
 /**
- * Finisher certificate: preview dialog + PNG/PDF download.
+ * Finisher certificate: preview dialog + PNG/PDF download, landscape or portrait.
  * The printable node uses plain hex colors (html2canvas cannot parse oklch/CSS vars).
  */
 export const FinisherCertificate = ({
@@ -49,19 +62,21 @@ export const FinisherCertificate = ({
   const wrapRef = useRef<HTMLDivElement>(null);
   const [busy, setBusy] = useState(false);
   const [scale, setScale] = useState(0.5);
+  const [orientation, setOrientation] = useState<Orientation>("landscape");
+
+  const dims = SIZE[orientation];
 
   // Fit the fixed-size certificate into the dialog width
   useEffect(() => {
     if (!open) return;
     const el = wrapRef.current;
     if (!el) return;
-    const update = () => setScale(Math.min(1, el.clientWidth / 1188));
+    const update = () => setScale(Math.min(1, el.clientWidth / dims.w, 620 / dims.h));
     update();
     const ro = new ResizeObserver(update);
     ro.observe(el);
     return () => ro.disconnect();
-  }, [open]);
-
+  }, [open, dims.w, dims.h]);
 
   const dateLabel = new Date(data.eventDate).toLocaleDateString(uk ? "uk-UA" : "en-US", {
     day: "numeric",
@@ -98,8 +113,10 @@ export const FinisherCertificate = ({
     try {
       const canvas = await render();
       if (!canvas) return;
-      const doc = new jsPDF({ orientation: "landscape", unit: "mm", format: "a4" });
-      doc.addImage(canvas.toDataURL("image/png"), "PNG", 0, 0, 297, 210);
+      const doc = new jsPDF({ orientation, unit: "mm", format: "a4" });
+      const w = orientation === "landscape" ? 297 : 210;
+      const h = orientation === "landscape" ? 210 : 297;
+      doc.addImage(canvas.toDataURL("image/png"), "PNG", 0, 0, w, h);
       doc.save(`${fileBase}.pdf`);
     } catch (e: any) {
       toast.error(e?.message ?? "Error");
@@ -118,86 +135,113 @@ export const FinisherCertificate = ({
     muted: "#a9bde0",
   };
 
-  const stat = (label: string, value: string | number, accent?: boolean) => (
-    <div style={{ minWidth: 150 }}>
-      <div style={{ fontSize: 13, letterSpacing: 3, color: C.muted, textTransform: "uppercase" }}>{label}</div>
-      <div style={{ fontSize: 38, fontWeight: 700, marginTop: 6, color: accent ? C.yellow : C.text }}>{value}</div>
-    </div>
-  );
+  const stats: { label: string; value: string | number; accent?: boolean }[] = [];
+  if (data.timeSeconds != null)
+    stats.push({ label: uk ? "Час" : "Time", value: fmtTime(data.timeSeconds), accent: true });
+  if (data.overallRank != null)
+    stats.push({ label: uk ? "Місце абсолют" : "Overall place", value: data.overallRank });
+  if (data.genderRank != null)
+    stats.push({
+      label: `${uk ? "Місце" : "Place"}${data.genderLabel ? ` · ${data.genderLabel}` : ""}`,
+      value: data.genderRank,
+    });
+  if (data.ageGroupRank != null)
+    stats.push({
+      label: `${uk ? "Вікова категорія" : "Age group"}${data.ageGroupLabel ? ` ${data.ageGroupLabel}` : ""}`,
+      value: data.ageGroupRank,
+    });
+  if (data.categoryRank != null && data.ageGroupRank == null && data.genderRank == null)
+    stats.push({
+      label: `${uk ? "Місце в категорії" : "Category place"}${data.categoryLabel ? ` (${data.categoryLabel})` : ""}`,
+      value: data.categoryRank,
+    });
+  if (data.bib != null) stats.push({ label: uk ? "Номер" : "Bib", value: data.bib });
 
-  const sheet = (innerRef?: Ref<HTMLDivElement>) => (
-    <div
-      ref={innerRef}
-      style={{
-        width: 1188,
-        height: 840,
-        position: "relative",
-        overflow: "hidden",
-        backgroundColor: C.navy,
-        fontFamily: "Georgia, 'Times New Roman', serif",
-        color: C.text,
-        boxSizing: "border-box",
-      }}
-    >
-      {/* decorative blocks */}
-      <div style={{ position: "absolute", top: -220, left: -180, width: 620, height: 620, borderRadius: 620, backgroundColor: C.navyDeep }} />
-      <div style={{ position: "absolute", bottom: -260, right: -200, width: 700, height: 700, borderRadius: 700, backgroundColor: C.blueSoft }} />
-      <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 14, backgroundColor: C.yellow }} />
-      <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 14, backgroundColor: C.yellow }} />
-      <div style={{ position: "absolute", top: 96, left: 0, width: 250, height: 6, backgroundColor: C.yellow }} />
-      <div style={{ position: "absolute", top: 96, right: 0, width: 250, height: 6, backgroundColor: C.yellow }} />
+  const sheet = (innerRef?: Ref<HTMLDivElement>) => {
+    const portrait = orientation === "portrait";
+    const f = portrait ? 0.84 : 1; // font scale for the narrower sheet
 
-      {/* frame */}
-      <div style={{ position: "absolute", inset: 34, border: `2px solid ${C.yellow}`, borderRadius: 16 }} />
-      <div style={{ position: "absolute", inset: 46, border: `1px solid #35558f`, borderRadius: 10 }} />
+    return (
+      <div
+        ref={innerRef}
+        style={{
+          width: dims.w,
+          height: dims.h,
+          position: "relative",
+          overflow: "hidden",
+          backgroundColor: C.navy,
+          fontFamily: "Georgia, 'Times New Roman', serif",
+          color: C.text,
+          boxSizing: "border-box",
+        }}
+      >
+        {/* decorative blocks */}
+        <div style={{ position: "absolute", top: -220, left: -180, width: 620, height: 620, borderRadius: 620, backgroundColor: C.navyDeep }} />
+        <div style={{ position: "absolute", bottom: -260, right: -200, width: 700, height: 700, borderRadius: 700, backgroundColor: C.blueSoft }} />
+        <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 14, backgroundColor: C.yellow }} />
+        <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 14, backgroundColor: C.yellow }} />
+        <div style={{ position: "absolute", top: portrait ? 108 : 96, left: 0, width: portrait ? 170 : 250, height: 6, backgroundColor: C.yellow }} />
+        <div style={{ position: "absolute", top: portrait ? 108 : 96, right: 0, width: portrait ? 170 : 250, height: 6, backgroundColor: C.yellow }} />
 
-      <div style={{ position: "relative", textAlign: "center", paddingTop: 72 }}>
-        <div style={{ letterSpacing: 12, fontSize: 26, fontWeight: 700, color: C.yellow }}>FARTLEK</div>
-        <div style={{ letterSpacing: 4, fontSize: 13, color: C.muted, marginTop: 6 }}>
-          {uk ? "ПЛАТФОРМА БІГОВИХ ПОДІЙ" : "RUNNING EVENTS PLATFORM"}
+        {/* frame */}
+        <div style={{ position: "absolute", inset: 34, border: `2px solid ${C.yellow}`, borderRadius: 16 }} />
+        <div style={{ position: "absolute", inset: 46, border: `1px solid #35558f`, borderRadius: 10 }} />
+
+        <div style={{ position: "relative", textAlign: "center", paddingTop: portrait ? 84 : 72, paddingLeft: 70, paddingRight: 70 }}>
+          <div style={{ letterSpacing: 12, fontSize: 26 * f, fontWeight: 700, color: C.yellow }}>FARTLEK</div>
+          <div style={{ letterSpacing: 4, fontSize: 13 * f, color: C.muted, marginTop: 6 }}>
+            {uk ? "ПЛАТФОРМА БІГОВИХ ПОДІЙ" : "RUNNING EVENTS PLATFORM"}
+          </div>
+
+          <div style={{ fontSize: 48 * f, fontWeight: 700, marginTop: portrait ? 46 : 38, letterSpacing: 3, color: C.text }}>
+            {uk ? "СЕРТИФІКАТ ФІНІШЕРА" : "FINISHER CERTIFICATE"}
+          </div>
+          <div style={{ fontSize: 19 * f, color: C.muted, marginTop: 12 }}>
+            {uk ? "Цим підтверджується, що" : "This certifies that"}
+          </div>
+
+          <div style={{ fontSize: 56 * f, fontWeight: 700, marginTop: 14, color: C.yellow }}>{data.fullName}</div>
+          <div style={{ width: portrait ? 380 : 440, height: 3, backgroundColor: C.yellowSoft, margin: "14px auto 0" }} />
+
+          <div style={{ fontSize: 21 * f, color: "#dde7f7", marginTop: 26, lineHeight: 1.55 }}>
+            {uk ? "успішно подолав(-ла) дистанцію" : "successfully completed the distance"}{" "}
+            <strong style={{ color: C.yellow }}>{data.distanceKm} {uk ? "км" : "km"}</strong>
+            <br />
+            {uk ? "на події" : "at"} <strong style={{ color: C.text }}>{data.eventTitle}</strong>
+            <br />
+            {dateLabel}
+            {data.location ? ` · ${data.location}` : ""}
+          </div>
+
+          <div
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              justifyContent: "center",
+              gap: portrait ? 28 : 40,
+              rowGap: portrait ? 26 : 24,
+              marginTop: portrait ? 52 : 42,
+            }}
+          >
+            {stats.map((s) => (
+              <div key={s.label} style={{ minWidth: portrait ? 180 : 150 }}>
+                <div style={{ fontSize: 13 * f, letterSpacing: 3, color: C.muted, textTransform: "uppercase" }}>{s.label}</div>
+                <div style={{ fontSize: 38 * f, fontWeight: 700, marginTop: 6, color: s.accent ? C.yellow : C.text }}>{s.value}</div>
+              </div>
+            ))}
+          </div>
         </div>
 
-        <div style={{ fontSize: 48, fontWeight: 700, marginTop: 38, letterSpacing: 3, color: C.text }}>
-          {uk ? "СЕРТИФІКАТ ФІНІШЕРА" : "FINISHER CERTIFICATE"}
-        </div>
-        <div style={{ fontSize: 19, color: C.muted, marginTop: 12 }}>
-          {uk ? "Цим підтверджується, що" : "This certifies that"}
-        </div>
-
-        <div style={{ fontSize: 56, fontWeight: 700, marginTop: 14, color: C.yellow }}>{data.fullName}</div>
-        <div style={{ width: 440, height: 3, backgroundColor: C.yellowSoft, margin: "14px auto 0" }} />
-
-        <div style={{ fontSize: 21, color: "#dde7f7", marginTop: 26, lineHeight: 1.55 }}>
-          {uk ? "успішно подолав(-ла) дистанцію" : "successfully completed the distance"}{" "}
-          <strong style={{ color: C.yellow }}>{data.distanceKm} {uk ? "км" : "km"}</strong>
-          <br />
-          {uk ? "на події" : "at"} <strong style={{ color: C.text }}>{data.eventTitle}</strong>
-          <br />
-          {dateLabel}
-          {data.location ? ` · ${data.location}` : ""}
-        </div>
-
-        <div style={{ display: "flex", justifyContent: "center", gap: 40, marginTop: 42 }}>
-          {data.timeSeconds != null && stat(uk ? "Час" : "Time", fmtTime(data.timeSeconds), true)}
-          {data.overallRank != null && stat(uk ? "Місце абсолют" : "Overall place", data.overallRank)}
-          {data.categoryRank != null &&
-            stat(
-              `${uk ? "Місце в категорії" : "Category place"}${data.categoryLabel ? ` (${data.categoryLabel})` : ""}`,
-              data.categoryRank,
-            )}
-          {data.bib != null && stat(uk ? "Номер" : "Bib", data.bib)}
+        <div style={{ position: "absolute", bottom: 48, left: 0, right: 0, textAlign: "center", fontSize: 14 * f, letterSpacing: 2, color: C.muted }}>
+          fartlek.lovable.app
         </div>
       </div>
-
-      <div style={{ position: "absolute", bottom: 48, left: 0, right: 0, textAlign: "center", fontSize: 14, letterSpacing: 2, color: C.muted }}>
-        fartlek.lovable.app
-      </div>
-    </div>
-  );
+    );
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-4xl w-[95vw]">
+      <DialogContent className="max-w-4xl w-[95vw] max-h-[92vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Award className="h-5 w-5 text-primary" />
@@ -205,15 +249,34 @@ export const FinisherCertificate = ({
           </DialogTitle>
         </DialogHeader>
 
-        <div ref={wrapRef} className="w-full overflow-hidden" style={{ height: 840 * scale }}>
-          {/* Printable node — fixed A4 landscape ratio (1188 x 840) */}
-          <div style={{ transform: `scale(${scale})`, transformOrigin: "top left" }}>
-{sheet()}
+        <div className="flex gap-2">
+          <Button
+            size="sm"
+            variant={orientation === "landscape" ? "default" : "outline"}
+            onClick={() => setOrientation("landscape")}
+          >
+            {uk ? "Горизонтальний" : "Landscape"}
+          </Button>
+          <Button
+            size="sm"
+            variant={orientation === "portrait" ? "default" : "outline"}
+            onClick={() => setOrientation("portrait")}
+          >
+            {uk ? "Вертикальний" : "Portrait"}
+          </Button>
+        </div>
+
+        <div ref={wrapRef} className="w-full overflow-hidden flex justify-center" style={{ height: dims.h * scale }}>
+          <div style={{ transform: `scale(${scale})`, transformOrigin: "top center", width: dims.w }}>
+            {sheet()}
           </div>
         </div>
 
         {/* Offscreen unscaled copy used for PNG/PDF capture (html2canvas mis-renders scaled nodes) */}
-        <div style={{ position: "fixed", left: -99999, top: 0, width: 1188, height: 840, pointerEvents: "none", opacity: 0 }} aria-hidden>
+        <div
+          style={{ position: "fixed", left: -99999, top: 0, width: dims.w, height: dims.h, pointerEvents: "none", opacity: 0 }}
+          aria-hidden
+        >
           {sheet(nodeRef)}
         </div>
 
