@@ -196,14 +196,16 @@ export const FinisherCertificate = ({
                   marginTop: 46,
                 }}
               >
-                <div>
-                  <div style={{ fontSize: 14, letterSpacing: 3, color: "#777777" }}>
-                    {uk ? "ЧАС" : "TIME"}
+                {data.timeSeconds != null && (
+                  <div>
+                    <div style={{ fontSize: 14, letterSpacing: 3, color: "#777777" }}>
+                      {uk ? "ЧАС" : "TIME"}
+                    </div>
+                    <div style={{ fontSize: 40, fontWeight: 700, color: "#ff6633" }}>
+                      {fmtTime(data.timeSeconds)}
+                    </div>
                   </div>
-                  <div style={{ fontSize: 40, fontWeight: 700, color: "#ff6633" }}>
-                    {fmtTime(data.timeSeconds)}
-                  </div>
-                </div>
+                )}
                 {data.overallRank != null && (
                   <div>
                     <div style={{ fontSize: 14, letterSpacing: 3, color: "#777777" }}>
