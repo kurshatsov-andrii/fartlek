@@ -103,8 +103,9 @@ export const FinisherCertificate = ({
           </DialogTitle>
         </DialogHeader>
 
-        <div className="overflow-x-auto">
+        <div ref={wrapRef} className="w-full overflow-hidden" style={{ height: 840 * scale }}>
           {/* Printable node — fixed A4 landscape ratio (1188 x 840) */}
+          <div style={{ transform: `scale(${scale})`, transformOrigin: "top left" }}>
           <div
             ref={nodeRef}
             style={{
@@ -116,11 +117,9 @@ export const FinisherCertificate = ({
               color: "#111111",
               boxSizing: "border-box",
               padding: 48,
-              transform: "scale(var(--cert-scale, 1))",
-              transformOrigin: "top left",
             }}
-            className="[--cert-scale:0.3] sm:[--cert-scale:0.45] md:[--cert-scale:0.62]"
           >
+
             <div
               style={{
                 position: "absolute",
