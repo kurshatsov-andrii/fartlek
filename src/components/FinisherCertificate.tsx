@@ -46,7 +46,22 @@ export const FinisherCertificate = ({
   uk?: boolean;
 }) => {
   const nodeRef = useRef<HTMLDivElement>(null);
+  const wrapRef = useRef<HTMLDivElement>(null);
   const [busy, setBusy] = useState(false);
+  const [scale, setScale] = useState(0.5);
+
+  // Fit the fixed-size certificate into the dialog width
+  useEffect(() => {
+    if (!open) return;
+    const el = wrapRef.current;
+    if (!el) return;
+    const update = () => setScale(Math.min(1, el.clientWidth / 1188));
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [open]);
+
 
   const dateLabel = new Date(data.eventDate).toLocaleDateString(uk ? "uk-UA" : "en-US", {
     day: "numeric",
