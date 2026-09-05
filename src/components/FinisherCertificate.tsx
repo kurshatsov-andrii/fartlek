@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type Ref } from "react";
 import { jsPDF } from "jspdf";
 import html2canvas from "html2canvas";
 import { Award, Download, Loader2, Image as ImageIcon } from "lucide-react";
@@ -108,21 +108,9 @@ export const FinisherCertificate = ({
     }
   };
 
-  return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-4xl w-[95vw]">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <Award className="h-5 w-5 text-primary" />
-            {uk ? "Сертифікат фінішера" : "Finisher certificate"}
-          </DialogTitle>
-        </DialogHeader>
-
-        <div ref={wrapRef} className="w-full overflow-hidden" style={{ height: 840 * scale }}>
-          {/* Printable node — fixed A4 landscape ratio (1188 x 840) */}
-          <div style={{ transform: `scale(${scale})`, transformOrigin: "top left" }}>
+  const sheet = (innerRef?: Ref<HTMLDivElement>) => (
           <div
-            ref={nodeRef}
+            ref={innerRef}
             style={{
               width: 1188,
               height: 840,
@@ -239,9 +227,29 @@ export const FinisherCertificate = ({
             </div>
 
           </div>
+  );
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-4xl w-[95vw]">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2">
+            <Award className="h-5 w-5 text-primary" />
+            {uk ? "Сертифікат фінішера" : "Finisher certificate"}
+          </DialogTitle>
+        </DialogHeader>
+
+        <div ref={wrapRef} className="w-full overflow-hidden" style={{ height: 840 * scale }}>
+          {/* Printable node — fixed A4 landscape ratio (1188 x 840) */}
+          <div style={{ transform: `scale(${scale})`, transformOrigin: "top left" }}>
+{sheet()}
           </div>
         </div>
 
+        {/* Offscreen unscaled copy used for PNG/PDF capture (html2canvas mis-renders scaled nodes) */}
+        <div style={{ position: "fixed", left: -99999, top: 0, width: 1188, height: 840, pointerEvents: "none", opacity: 0 }} aria-hidden>
+          {sheet(nodeRef)}
+        </div>
 
         <div className="flex flex-wrap gap-2 justify-end">
           <Button variant="outline" onClick={downloadPng} disabled={busy}>
