@@ -545,21 +545,29 @@ const EventResults = () => {
                         {r.status === "finished" && (
                           <button
                             type="button"
-                            onClick={() => setCertificate({
-                              fullName: r.full_name,
-                              eventTitle: event.title,
-                              eventDate: event.event_date,
-                              location: event.location,
-                              distanceKm: r.distance_km,
-                              timeSeconds: r.chip_time_seconds ?? r.gun_time_seconds,
-                              bib: r.bib,
-                              overallRank: r.overall_rank,
-                              categoryRank: r.categoryRank ?? null,
-                              categoryLabel: r.categoryRank != null
-                                ? [r.gender === "F" ? (uk ? "Ж" : "W") : r.gender === "M" ? (uk ? "Ч" : "M") : null, r.age_group]
-                                    .filter(Boolean).join(" ") || null
-                                : null,
-                            })}
+                            onClick={() => {
+                              const genderLabel = r.gender === "F" ? (uk ? "жінки" : "women") : r.gender === "M" ? (uk ? "чоловіки" : "men") : null;
+                              setCertificate({
+                                fullName: r.full_name,
+                                eventTitle: event.title,
+                                eventDate: event.event_date,
+                                location: event.location,
+                                distanceKm: r.distance_km,
+                                timeSeconds: r.chip_time_seconds ?? r.gun_time_seconds,
+                                bib: r.bib,
+                                overallRank: r.overall_rank,
+                                genderRank: categoryRanks.genderMap.get(r.id) ?? null,
+                                genderLabel,
+                                ageGroupRank: categoryRanks.ageMap.get(r.id) ?? null,
+                                ageGroupLabel: [genderLabel, r.age_group].filter(Boolean).join(" "),
+                                categoryRank: r.categoryRank ?? null,
+                                categoryLabel: r.categoryRank != null
+                                  ? [r.gender === "F" ? (uk ? "Ж" : "W") : r.gender === "M" ? (uk ? "Ч" : "M") : null, r.age_group]
+                                      .filter(Boolean).join(" ") || null
+                                  : null,
+                              });
+                            }}
+
                             title={uk ? "Сертифікат фінішера" : "Finisher certificate"}
                             className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border border-border hover:border-primary hover:text-primary transition-colors whitespace-nowrap"
                           >
