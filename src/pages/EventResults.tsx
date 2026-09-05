@@ -209,6 +209,37 @@ const EventResults = () => {
 
   const allRows = useMemo(() => [...rows, ...nonFinishers], [rows, nonFinishers]);
 
+  // Місця у категоріях: абсолют по статі та вікова група всередині статі (незалежно від фільтрів)
+  const categoryRanks = useMemo(() => {
+    const genderMap = new Map<string, number>();
+    const ageMap = new Map<string, number>();
+    const buckets = new Map<string, ResultRow[]>();
+    const ageBuckets = new Map<string, ResultRow[]>();
+
+    allRows
+      .filter((r) => r.status === "finished" && r.chip_time_seconds != null && r.gender)
+      .forEach((r) => {
+        const gk = `${r.distance_km}|${r.gender}`;
+        if (!buckets.has(gk)) buckets.set(gk, []);
+        buckets.get(gk)!.push(r);
+        if (r.age_group) {
+          const ak = `${gk}|${r.age_group}`;
+          if (!ageBuckets.has(ak)) ageBuckets.set(ak, []);
+          ageBuckets.get(ak)!.push(r);
+        }
+      });
+
+    const rank = (list: ResultRow[], target: Map<string, number>) => {
+      list
+        .sort((a, b) => (a.chip_time_seconds as number) - (b.chip_time_seconds as number))
+        .forEach((r, i) => target.set(r.id, i + 1));
+    };
+    buckets.forEach((list) => rank(list, genderMap));
+    ageBuckets.forEach((list) => rank(list, ageMap));
+    return { genderMap, ageMap };
+  }, [allRows]);
+
+
   const toggleDnf = async (r: ResultRow) => {
     if (!canManage) return;
     const toDnf = r.status !== "dnf";
