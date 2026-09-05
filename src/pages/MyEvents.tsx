@@ -13,6 +13,8 @@ import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { startAutomatedPaymentCheckout } from "@/lib/paymentCheckout";
 import { toast } from "sonner";
+import { Award } from "lucide-react";
+import { FinisherCertificate, type CertificateData } from "@/components/FinisherCertificate";
 
 
 const MyEvents = () => {
@@ -26,6 +28,8 @@ const MyEvents = () => {
   const [transferCode, setTransferCode] = useState("");
   const [acceptingTransfer, setAcceptingTransfer] = useState(false);
   const [payingId, setPayingId] = useState<string | null>(null);
+  const [results, setResults] = useState<Record<string, number | null>>({});
+  const [cert, setCert] = useState<CertificateData | null>(null);
 
   const payRegistration = async (r: any) => {
     if (r.events?.payment_url) {
@@ -48,7 +52,23 @@ const MyEvents = () => {
       .select("*, events(*), distances(*), athletes(full_name, is_self, birth_date, city)")
       .eq("user_id", user.id)
       .order("created_at", { ascending: false })
-      .then(({ data }) => { setRegs(data ?? []); setLoading(false); });
+      .then(async ({ data }) => {
+        const list = data ?? [];
+        setRegs(list);
+        setLoading(false);
+        const ids = list.map((r: any) => r.id);
+        if (ids.length) {
+          const { data: res } = await supabase
+            .from("event_results")
+            .select("registration_id, chip_time_seconds, gun_time_seconds, time_seconds")
+            .in("registration_id", ids);
+          const map: Record<string, number | null> = {};
+          (res ?? []).forEach((x: any) => {
+            map[x.registration_id] = x.chip_time_seconds ?? x.gun_time_seconds ?? x.time_seconds ?? null;
+          });
+          setResults(map);
+        }
+      });
     supabase.from("profiles").select("*").eq("id", user.id).maybeSingle()
       .then(({ data }) => setProfile(data));
   };
@@ -187,6 +207,24 @@ const MyEvents = () => {
                     <Button asChild variant="outline">
                       <Link to={`/events/${r.event_id}/participants`}><Users className="h-4 w-4" /> {t.events.participants}</Link>
                     </Button>
+                    {isCompleted && (
+                      <Button
+                        variant="outline"
+                        onClick={() =>
+                          setCert({
+                            fullName: r.athletes?.full_name || profile?.full_name || user.email || "",
+                            eventTitle: r.events.title,
+                            eventDate: r.events.event_date,
+                            location: r.events.location,
+                            distanceKm: r.distances.distance_km,
+                            timeSeconds: results[r.id] ?? null,
+                            bib: r.bib_number,
+                          })
+                        }
+                      >
+                        <Award className="h-4 w-4" /> {lang === "uk" ? "Сертифікат" : "Certificate"}
+                      </Button>
+                    )}
                     <Button asChild variant="outline">
                       <Link to={`/ticket/${r.id}`}><QrCode className="h-4 w-4" /> {t.events.viewTicket}</Link>
                     </Button>
@@ -216,6 +254,15 @@ const MyEvents = () => {
           onOpenChange={(o) => !o && setDocDialog(null)}
           url={docDialog.url}
           title={docDialog.title}
+        />
+      )}
+
+      {cert && (
+        <FinisherCertificate
+          open={!!cert}
+          onOpenChange={(o) => !o && setCert(null)}
+          data={cert}
+          uk={lang === "uk"}
         />
       )}
 
