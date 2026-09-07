@@ -187,13 +187,13 @@ const EventsMap = () => {
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <SEO
-        title="Карта спортивних подій України — Fartlek"
+        title="Мапа спортивних подій України — Fartlek"
         description="Інтерактивна карта забігів, трейлів і стартів по містах України. Обери місто на карті та переходь до реєстрації."
         canonical="/map"
       />
       <Header />
       <main className="flex-1 container py-8">
-        <h1 className="font-display text-3xl md:text-4xl font-bold mb-2">Карта спортивних подій України</h1>
+        <h1 className="font-display text-3xl md:text-4xl font-bold mb-2">Мапа спортивних подій України</h1>
         <p className="text-muted-foreground mb-6">
           Натисни на місто, щоб побачити старти та перейти до реєстрації. Усього {items.length} подій у {groups.length} містах.
         </p>
