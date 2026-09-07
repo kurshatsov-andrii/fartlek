@@ -109,7 +109,6 @@ export const UA_CITY_COORDS: Record<string, [number, number]> = {
   "володимир": [50.8480, 24.3230],
   "дубно": [50.4160, 25.7550],
   "острог": [50.3290, 26.5150],
-  "沙": [0, 0],
 };
 
 export const normalizeCityKey = (raw: string) =>
