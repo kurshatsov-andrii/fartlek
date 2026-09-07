@@ -24,7 +24,7 @@ interface SitemapEntry {
   priority?: string;
 }
 
-const today = new Date().toISOString().slice(0, 10);
+ 
 
 const CATEGORIES = [
   "road_run",
@@ -42,6 +42,7 @@ const staticEntries: SitemapEntry[] = [
   { path: "/", changefreq: "daily", priority: "1.0" },
   { path: "/calendar", changefreq: "daily", priority: "0.9" },
   { path: "/starts", changefreq: "daily", priority: "0.9" },
+  { path: "/map", changefreq: "daily", priority: "0.8" },
   { path: "/clubs", changefreq: "weekly", priority: "0.9" },
   { path: "/organizers", changefreq: "weekly", priority: "0.9" },
   { path: "/category", changefreq: "weekly", priority: "0.8" },
@@ -100,7 +101,7 @@ async function buildDynamicEntries(): Promise<SitemapEntry[]> {
     if (!e.slug) continue;
     entries.push({
       path: `/events/${e.slug}`,
-      lastmod: formatDate(e.updated_at) ?? today,
+      lastmod: formatDate(e.updated_at),
       changefreq: "weekly",
       priority: "0.8",
     });
@@ -108,7 +109,7 @@ async function buildDynamicEntries(): Promise<SitemapEntry[]> {
   for (const s of starts) {
     entries.push({
       path: `/starts/${s.slug}`,
-      lastmod: formatDate(s.updated_at) ?? today,
+      lastmod: formatDate(s.updated_at),
       changefreq: "weekly",
       priority: "0.7",
     });
@@ -116,7 +117,7 @@ async function buildDynamicEntries(): Promise<SitemapEntry[]> {
   for (const c of clubs) {
     entries.push({
       path: `/clubs/${c.slug}`,
-      lastmod: formatDate(c.updated_at) ?? today,
+      lastmod: formatDate(c.updated_at),
       changefreq: "monthly",
       priority: "0.6",
     });
@@ -124,7 +125,7 @@ async function buildDynamicEntries(): Promise<SitemapEntry[]> {
   for (const o of organizers) {
     entries.push({
       path: `/organizers/${o.slug}`,
-      lastmod: formatDate(o.updated_at) ?? today,
+      lastmod: formatDate(o.updated_at),
       changefreq: "monthly",
       priority: "0.6",
     });
@@ -172,7 +173,7 @@ function generateSitemap(entries: SitemapEntry[]) {
 
 (async () => {
   const dynamic = await buildDynamicEntries();
-  const stamped = staticEntries.map((e) => ({ lastmod: today, ...e }));
+  const stamped = staticEntries;
   const all = [...stamped, ...dynamic];
   writeFileSync(resolve("public/sitemap.xml"), generateSitemap(all));
   console.log(`sitemap.xml written (${all.length} entries)`);
