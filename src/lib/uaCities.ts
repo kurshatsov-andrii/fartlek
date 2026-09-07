@@ -129,7 +129,8 @@ export const findCityCoords = (raw: string): [number, number] | null => {
   return null;
 };
 
-export const prettyCity = (raw: string) => {
-  const s = normalizeCityKey(raw);
-  return s.charAt(0).toUpperCase() + s.slice(1);
-};
+export const prettyCity = (raw: string) =>
+  normalizeCityKey(raw)
+    .split(/([ -])/)
+    .map((part) => (part === " " || part === "-" ? part : part.charAt(0).toUpperCase() + part.slice(1)))
+    .join("");
