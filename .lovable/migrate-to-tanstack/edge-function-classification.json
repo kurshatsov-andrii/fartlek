@@ -1,0 +1,28 @@
+{
+  "lifecycle": "mig_01m1zyy8teeg4rrm1ppcasmg08",
+  "functions": {
+    "admin-delete-user": { "classification": "migrated", "target": "src/lib/admin-delete-user.functions.ts" },
+    "secure-signup": { "classification": "migrated", "target": "src/lib/secure-signup.functions.ts" },
+    "strava-oauth-exchange": { "classification": "migrated", "target": "src/lib/strava-oauth-exchange.functions.ts" },
+    "payment-confirm": { "classification": "migrated", "target": "src/lib/payment-confirm.functions.ts" },
+    "nova-poshta": { "classification": "migrated", "target": "src/lib/nova-poshta.functions.ts" },
+    "strava-sync-activities": { "classification": "migrated", "target": "src/lib/strava-sync-activities.functions.ts" },
+    "liqpay-create": { "classification": "migrated", "target": "src/lib/liqpay-create.functions.ts", "note": "callback URL still points to Supabase liqpay-callback" },
+    "wayforpay-create": { "classification": "migrated", "target": "src/lib/wayforpay-create.functions.ts", "note": "callback URL still points to Supabase wayforpay-callback" },
+    "send-marketing-campaign": { "classification": "leave", "reason": "large batched email sender tied to email queue/suppression edge functions; retained on Supabase" },
+    "send-transactional-email": { "classification": "leave", "reason": "shared by SQL-triggered flows and email queue; retained on Supabase" },
+    "auth-email-hook": { "classification": "leave", "reason": "Supabase Auth hook endpoint" },
+    "handle-email-suppression": { "classification": "leave", "reason": "webhook receiver" },
+    "handle-email-unsubscribe": { "classification": "leave", "reason": "external RFC 8058 one-click unsubscribe URL embedded in sent emails" },
+    "liqpay-callback": { "classification": "leave", "reason": "external payment provider callback URL" },
+    "wayforpay-callback": { "classification": "leave", "reason": "external payment provider callback URL" },
+    "preview-transactional-email": { "classification": "leave", "reason": "shares template code with edge email stack" },
+    "process-email-queue": { "classification": "leave", "reason": "cron-invoked" },
+    "results-ingest": { "classification": "leave", "reason": "external timing-provider endpoint with fixed URL" },
+    "telegram-notify-cancellation": { "classification": "leave", "reason": "invoked from SQL triggers" },
+    "telegram-notify-registration": { "classification": "leave", "reason": "invoked from SQL triggers" },
+    "telegram-starts-webhook": { "classification": "leave", "reason": "Telegram webhook + cron sync" },
+    "sync-telegram-starts": { "classification": "leave", "reason": "cron-invoked" },
+    "verify-turnstile": { "classification": "leave", "reason": "referenced by auth flows; unknown external callers" }
+  }
+}

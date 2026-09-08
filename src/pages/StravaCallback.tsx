@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useSearchParams } from "@/lib/router-compat";
 import { Loader2, CheckCircle2, XCircle } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { invokeCompat } from "@/lib/fn-compat";
 import { stravaOauthExchange } from "@/lib/strava-oauth-exchange.functions";
