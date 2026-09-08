@@ -171,8 +171,7 @@ const AdminCampaigns = () => {
       const campaignId = (campaign as any).id;
 
       if (mode === "test") {
-        const { data, error } = await supabase.functions.invoke("send-marketing-campaign", {
-          body: { campaign_id: campaignId, test_email: testEmail.trim() },
+        const { data, error } = await invokeCompat(sendMarketingCampaign, { campaign_id: campaignId, test_email: testEmail.trim() },
         });
         if (error) throw new Error(error.message);
         const r = data as any;
@@ -188,8 +187,7 @@ const AdminCampaigns = () => {
 
         while (true) {
           batchNum++;
-          const { data, error } = await supabase.functions.invoke("send-marketing-campaign", {
-            body: { campaign_id: campaignId, batch_size: batchSize, batch_offset: offset },
+          const { data, error } = await invokeCompat(sendMarketingCampaign, { campaign_id: campaignId, batch_size: batchSize, batch_offset: offset },
           });
           if (error) throw new Error(error.message);
           const r = data as any;
@@ -250,8 +248,7 @@ const AdminCampaigns = () => {
       let paused = false;
       while (true) {
         batchNum++;
-        const { data, error } = await supabase.functions.invoke("send-marketing-campaign", {
-          body: { campaign_id: c.id, batch_size: batchSize, batch_offset: offset },
+        const { data, error } = await invokeCompat(sendMarketingCampaign, { campaign_id: c.id, batch_size: batchSize, batch_offset: offset },
         });
         if (error) throw new Error(error.message);
         const r = data as any;
