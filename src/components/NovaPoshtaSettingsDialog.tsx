@@ -10,6 +10,8 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
 import { useApp } from "@/contexts/AppContext";
+import { invokeCompat } from "@/lib/fn-compat";
+import { novaPoshta } from "@/lib/nova-poshta.functions";
 
 type Settings = {
   sender_ref: string;
@@ -78,9 +80,7 @@ export function NovaPoshtaSettingsDialog({ eventId, trigger, onSaved }: { eventI
 
   const loadCounterparties = async (silent = false) => {
     setLoadingCps(true);
-    const { data, error } = await supabase.functions.invoke("nova-poshta", {
-      body: { action: "getCounterparties", event_id: eventId },
-    });
+    const { data, error } = await invokeCompat(novaPoshta, { action: "getCounterparties", event_id: eventId });
     setLoadingCps(false);
     if (error) { if (!silent) toast.error(error.message); return; }
     if ((data as any)?.error) { if (!silent) toast.error((data as any).error); return; }
@@ -99,9 +99,7 @@ export function NovaPoshtaSettingsDialog({ eventId, trigger, onSaved }: { eventI
   };
 
   const loadContacts = async (ref: string) => {
-    const { data, error } = await supabase.functions.invoke("nova-poshta", {
-      body: { action: "getCounterpartyContactPersons", event_id: eventId, counterpartyRef: ref },
-    });
+    const { data, error } = await invokeCompat(novaPoshta, { action: "getCounterpartyContactPersons", event_id: eventId, counterpartyRef: ref });
     if (error) { toast.error(error.message); return; }
     if ((data as any)?.error) { toast.error((data as any).error); return; }
     const list = (data as any)?.data ?? [];
@@ -119,16 +117,12 @@ export function NovaPoshtaSettingsDialog({ eventId, trigger, onSaved }: { eventI
   const searchCities = async (q: string) => {
     setCitySearch(q);
     if (q.trim().length < 2) { setCities([]); return; }
-    const { data } = await supabase.functions.invoke("nova-poshta", {
-      body: { action: "searchCities", query: q },
-    });
+    const { data } = await invokeCompat(novaPoshta, { action: "searchCities", query: q });
     setCities((data as any)?.data ?? []);
   };
 
   const loadWarehouses = async (cityRef: string) => {
-    const { data } = await supabase.functions.invoke("nova-poshta", {
-      body: { action: "getSenderAddresses", event_id: eventId, cityRef },
-    });
+    const { data } = await invokeCompat(novaPoshta, { action: "getSenderAddresses", event_id: eventId, cityRef });
     setWarehouses((data as any)?.data ?? []);
   };
 

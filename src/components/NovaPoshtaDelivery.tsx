@@ -6,6 +6,8 @@ import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { supabase } from "@/integrations/supabase/client";
 import { useApp } from "@/contexts/AppContext";
+import { invokeCompat } from "@/lib/fn-compat";
+import { novaPoshta } from "@/lib/nova-poshta.functions";
 
 export interface DeliveryData {
   enabled: boolean;
@@ -90,9 +92,7 @@ export const NovaPoshtaDelivery = ({ value, onChange }: Props) => {
     }
     cityTimer.current = window.setTimeout(async () => {
       setCityLoading(true);
-      const { data } = await supabase.functions.invoke("nova-poshta", {
-        body: { action: "searchCities", query: cityQuery.trim() },
-      });
+      const { data } = await invokeCompat(novaPoshta, { action: "searchCities", query: cityQuery.trim() });
       setCityResults(data?.data ?? []);
       setCityLoading(false);
     }, 300);
@@ -107,14 +107,12 @@ export const NovaPoshtaDelivery = ({ value, onChange }: Props) => {
     if (whTimer.current) window.clearTimeout(whTimer.current);
     whTimer.current = window.setTimeout(async () => {
       setWhLoading(true);
-      const { data } = await supabase.functions.invoke("nova-poshta", {
-        body: {
+      const { data } = await invokeCompat(novaPoshta, {
           action: "searchWarehouses",
           cityRef: value.city_ref,
           warehouseType: value.warehouse_type,
           query: whQuery.trim(),
-        },
-      });
+        });
       setWhResults(data?.data ?? []);
       setWhLoading(false);
     }, 300);

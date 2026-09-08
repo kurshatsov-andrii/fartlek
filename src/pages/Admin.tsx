@@ -23,6 +23,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { invokeCompat } from "@/lib/fn-compat";
+import { adminDeleteUser } from "@/lib/admin-delete-user.functions";
 
 type AppRole = "participant" | "organizer" | "admin";
 
@@ -183,9 +185,7 @@ const Admin = () => {
   const deleteUser = async (userId: string) => {
     if (userId === user.id) return toast.error("Не можна видалити самого себе");
     setBusy(true);
-    const { data, error } = await supabase.functions.invoke("admin-delete-user", {
-      body: { user_id: userId },
-    });
+    const { data, error } = await invokeCompat(adminDeleteUser, { user_id: userId });
     setBusy(false);
     if (error || (data as any)?.error) {
       return toast.error((data as any)?.error ?? error?.message ?? "Помилка видалення");

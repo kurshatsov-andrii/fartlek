@@ -1,4 +1,6 @@
 import { supabase } from "@/integrations/supabase/client";
+import { invokeCompat } from "@/lib/fn-compat";
+import { wayforpayCreate } from "@/lib/wayforpay-create.functions";
 
 interface CheckoutData {
   merchantAccount: string;
@@ -21,10 +23,7 @@ interface CheckoutData {
 }
 
 export async function startWayForPayCheckout(registrationId: string) {
-  const { data, error } = await supabase.functions.invoke<{ checkout: CheckoutData }>(
-    "wayforpay-create",
-    { body: { registration_id: registrationId } },
-  );
+  const { data, error } = await invokeCompat(wayforpayCreate, { registration_id: registrationId });
   if (error || !data?.checkout) throw new Error(error?.message ?? "Не вдалося створити платіж");
 
   const c = data.checkout;

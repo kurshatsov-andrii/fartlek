@@ -1,4 +1,6 @@
 import { supabase } from "@/integrations/supabase/client";
+import { invokeCompat } from "@/lib/fn-compat";
+import { liqpayCreate } from "@/lib/liqpay-create.functions";
 
 interface LiqPayCheckout {
   action: string;
@@ -7,10 +9,7 @@ interface LiqPayCheckout {
 }
 
 export async function startLiqPayCheckout(registrationId: string) {
-  const { data, error } = await supabase.functions.invoke<{ checkout: LiqPayCheckout }>(
-    "liqpay-create",
-    { body: { registration_id: registrationId } },
-  );
+  const { data, error } = await invokeCompat(liqpayCreate, { registration_id: registrationId });
   if (error || !data?.checkout) throw new Error(error?.message ?? "Не вдалося створити платіж");
 
   const c = data.checkout;

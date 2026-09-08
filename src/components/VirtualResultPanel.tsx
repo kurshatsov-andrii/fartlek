@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Link } from "@/lib/router-compat";
+import { invokeCompat } from "@/lib/fn-compat";
+import { stravaSyncActivities } from "@/lib/strava-sync-activities.functions";
 
 interface Props {
   eventId: string;
@@ -93,9 +95,7 @@ export const VirtualResultPanel = ({ eventId, userId }: Props) => {
   const sync = async () => {
     setSyncing(true);
     try {
-      const { data, error } = await supabase.functions.invoke("strava-sync-activities", {
-        body: { event_id: eventId },
-      });
+      const { data, error } = await invokeCompat(stravaSyncActivities, { event_id: eventId });
       if (error) throw error;
       const m = (data as any)?.matched ?? 0;
       if (m > 0) {

@@ -3,6 +3,8 @@ import { useNavigate, useSearchParams } from "@/lib/router-compat";
 import { Loader2, CheckCircle2, XCircle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { invokeCompat } from "@/lib/fn-compat";
+import { stravaOauthExchange } from "@/lib/strava-oauth-exchange.functions";
 
 const StravaCallback = () => {
   const [params] = useSearchParams();
@@ -25,9 +27,7 @@ const StravaCallback = () => {
     }
 
     (async () => {
-      const { data, error: fnErr } = await supabase.functions.invoke("strava-oauth-exchange", {
-        body: { code },
-      });
+      const { data, error: fnErr } = await invokeCompat(stravaOauthExchange, { code });
       if (fnErr || (data as any)?.error) {
         setStatus("error");
         setMessage(`Помилка: ${fnErr?.message ?? (data as any)?.error ?? "невідома"}`);
