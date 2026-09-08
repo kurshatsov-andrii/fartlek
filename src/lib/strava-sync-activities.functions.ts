@@ -122,7 +122,7 @@ type Result = {
   total_virtual?: number;
   skipped_no_strava?: number;
   message?: string;
-  details?: unknown[];
+  details?: any[];
 };
 
 export const stravaSyncActivities = createServerFn({ method: "POST" })

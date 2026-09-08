@@ -22,7 +22,7 @@ type Input = {
   registration_id?: string;
 };
 
-type Result = Record<string, unknown>;
+type Result = Record<string, any>;
 
 export const novaPoshta = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => (input ?? {}) as Input)
