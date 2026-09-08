@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "@/lib/router-compat";
 import { CheckCircle2, Loader2, AlertCircle } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
+import { invokeCompat } from "@/lib/fn-compat";
+import { paymentConfirm } from "@/lib/payment-confirm.functions";
 
 const PaymentSuccess = () => {
   const [params] = useSearchParams();
@@ -24,10 +26,7 @@ const PaymentSuccess = () => {
       while (!cancelled && attempts < maxAttempts) {
         attempts++;
         try {
-          const { data } = await supabase.functions.invoke<{ paid: boolean }>(
-            "payment-confirm",
-            { body: { order } },
-          );
+          const { data } = await invokeCompat(paymentConfirm, { order });
           if (data?.paid) {
             if (!cancelled) setStatus("paid");
             return;

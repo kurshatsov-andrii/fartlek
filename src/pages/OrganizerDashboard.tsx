@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, Navigate } from "react-router-dom";
+import { Link, Navigate } from "@/lib/router-compat";
 import { Plus, Edit, Trash2, Users, Loader2, Download, FileText, Eye, BarChart3, Ticket, UsersRound, Mail, MessageCircle, History } from "lucide-react";
 import * as XLSX from "xlsx";
 import { Header } from "@/components/Header";

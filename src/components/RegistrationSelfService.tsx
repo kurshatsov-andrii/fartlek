@@ -173,7 +173,7 @@ export function RegistrationSelfService({ registration, onChanged }: Props) {
     try {
       const { error } = await supabase.rpc("participant_request_cancellation", {
         _registration_id: registration.id,
-        _reason: reason.trim() || null,
+        _reason: (reason.trim() || null) as unknown as string,
       });
       if (error) throw error;
       toast.success(lang === "uk" ? "Заявку надіслано" : "Request sent");

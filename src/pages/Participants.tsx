@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link, Navigate, useParams } from "react-router-dom";
+import { Link, Navigate, useParams } from "@/lib/router-compat";
 import { ArrowLeft, Loader2, CheckCircle2, XCircle, FileText, RotateCcw, Trash2, X, Bell, ArrowRightLeft, Download, Package, Mail, Trophy, Hash, Truck, Settings, Copy } from "lucide-react";
 import { BibCard } from "@/components/BibCard";
 import { NovaPoshtaSettingsDialog } from "@/components/NovaPoshtaSettingsDialog";
@@ -20,6 +20,9 @@ import {
 import { useApp } from "@/contexts/AppContext";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
+import { invokeCompat } from "@/lib/fn-compat";
+import { novaPoshta } from "@/lib/nova-poshta.functions";
+import { stravaSyncActivities } from "@/lib/strava-sync-activities.functions";
 
 const Participants = () => {
   const { id } = useParams<{ id: string }>();
@@ -143,9 +146,7 @@ const Participants = () => {
       return;
     }
     setTtnBusy(registrationId);
-    const { data, error } = await supabase.functions.invoke("nova-poshta", {
-      body: { action: "createTtn", event_id: id, registration_id: registrationId },
-    });
+    const { data, error } = await invokeCompat(novaPoshta, { action: "createTtn", event_id: id, registration_id: registrationId });
     setTtnBusy(null);
     if (error) {
       const detail = await readErrBody(error);
@@ -162,9 +163,7 @@ const Participants = () => {
     if (!id) return;
     if (!window.confirm(lang === "uk" ? "Видалити ТТН?" : "Delete TTN?")) return;
     setTtnBusy(registrationId);
-    const { data, error } = await supabase.functions.invoke("nova-poshta", {
-      body: { action: "deleteTtn", event_id: id, registration_id: registrationId },
-    });
+    const { data, error } = await invokeCompat(novaPoshta, { action: "deleteTtn", event_id: id, registration_id: registrationId });
     setTtnBusy(null);
     if (error) {
       const detail = await readErrBody(error);
@@ -665,9 +664,7 @@ const Participants = () => {
                   if (!id) return;
                   setSyncingAll(true);
                   try {
-                    const { data, error } = await supabase.functions.invoke("strava-sync-activities", {
-                      body: { event_id: id, all_users: true },
-                    });
+                    const { data, error } = await invokeCompat(stravaSyncActivities, { event_id: id, all_users: true });
                     if (error) throw error;
                     const m = (data as any)?.matched ?? 0;
                     toast.success(lang === "uk" ? `Синхронізовано: ${m}` : `Synced: ${m}`);

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Navigate, Link } from "react-router-dom";
+import { Navigate, Link } from "@/lib/router-compat";
 import { Loader2, Trash2, ArrowUp, ArrowDown, Upload } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";

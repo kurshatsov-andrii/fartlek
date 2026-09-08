@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, Navigate, useParams } from "react-router-dom";
+import { Link, Navigate, useParams } from "@/lib/router-compat";
 import { ArrowLeft, Loader2, CheckCircle2, XCircle } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
@@ -70,7 +70,7 @@ const EventChangesAdmin = () => {
       const { error } = await supabase.rpc("organizer_resolve_cancellation", {
         _request_id: reqId,
         _approve: approve,
-        _note: notes[reqId] || null,
+        _note: (notes[reqId] || null) as unknown as string,
       });
       if (error) throw error;
       toast.success(approve

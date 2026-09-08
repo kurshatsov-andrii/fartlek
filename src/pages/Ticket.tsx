@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Link, useParams, Navigate } from "react-router-dom";
+import { Link, useParams, Navigate } from "@/lib/router-compat";
 import QRCode from "qrcode";
 import { jsPDF } from "jspdf";
 import html2canvas from "html2canvas";

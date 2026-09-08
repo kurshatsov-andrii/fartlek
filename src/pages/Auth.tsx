@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "@/lib/router-compat";
 import { Loader2, Eye, EyeOff } from "lucide-react";
 import logoFartlek from "@/assets/logo-fartlek.jpg";
 import { Button } from "@/components/ui/button";
@@ -12,6 +12,8 @@ import { lovable } from "@/integrations/lovable";
 import { translateAuthError } from "@/lib/authErrors";
 import { toast } from "sonner";
 import { TurnstileWidget } from "@/components/TurnstileWidget";
+import { invokeCompat } from "@/lib/fn-compat";
+import { secureSignup } from "@/lib/secure-signup.functions";
 
 const TURNSTILE_SITE_KEY = "0x4AAAAAADqTpZFbZ--nataL";
 
@@ -114,8 +116,7 @@ const Auth = () => {
     // blocks disposable domains, and creates the user with a server-trusted
     // captcha_verified flag. Direct supabase.auth.signUp from bots is rejected
     // by the DB trigger (CAPTCHA_REQUIRED).
-    const { data, error } = await supabase.functions.invoke("secure-signup", {
-      body: {
+    const { data, error } = await invokeCompat(secureSignup, {
         email,
         password,
         full_name: fullName,
@@ -123,8 +124,7 @@ const Auth = () => {
         marketing_consent: marketingConsent,
         captcha_token: captchaToken,
         redirect_to: `${window.location.origin}/auth`,
-      },
-    });
+      });
     setBusy(false);
     setCaptchaToken(null);
 
@@ -185,7 +185,7 @@ const Auth = () => {
                 type="button"
                 onClick={() => setMode("signin")}
                 className={`rounded-md px-4 py-2 text-sm font-semibold transition-base ${
-                  mode === "signin" ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
+                  mode === "signin" ? "bg-background text-foreground shadow-xs" : "text-muted-foreground hover:text-foreground"
                 }`}
               >
                 {t.auth.signIn}
@@ -194,7 +194,7 @@ const Auth = () => {
                 type="button"
                 onClick={() => setMode("signup")}
                 className={`rounded-md px-4 py-2 text-sm font-semibold transition-base ${
-                  mode === "signup" ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
+                  mode === "signup" ? "bg-background text-foreground shadow-xs" : "text-muted-foreground hover:text-foreground"
                 }`}
               >
                 {t.auth.signUp}

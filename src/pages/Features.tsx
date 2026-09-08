@@ -1,4 +1,4 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation } from "@/lib/router-compat";
 import { useEffect, useState } from "react";
 import {
   Users, Calendar, Ticket, MessageSquare, BarChart3, Tag, Mail, Shield, QrCode,
