@@ -1,4 +1,3 @@
-import { supabase } from "@/integrations/supabase/client";
 import { invokeCompat } from "@/lib/fn-compat";
 import { wayforpayCreate } from "@/lib/wayforpay-create.functions";
 
