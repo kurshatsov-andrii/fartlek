@@ -21,6 +21,7 @@ import { useApp } from "@/contexts/AppContext";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { invokeCompat } from "@/lib/fn-compat";
+import { sendTransactionalEmail } from "@/lib/send-transactional-email.functions";
 import { novaPoshta } from "@/lib/nova-poshta.functions";
 import { stravaSyncActivities } from "@/lib/strava-sync-activities.functions";
 
@@ -318,15 +319,13 @@ const Participants = () => {
         ticketUrl: `${ticketBase}${t.registration_id}`,
       };
       if (t.kind === "payment" && t.amount > 0) templateData.amount = t.amount;
-      const { error } = await supabase.functions.invoke("send-transactional-email", {
-        body: {
-          templateName,
-          recipientEmail: t.email,
-          idempotencyKey: `reminder-${t.kind}-${t.registration_id}-${new Date().toISOString().slice(0, 10)}`,
-          templateData,
-        },
+      const { data: res, error } = await invokeCompat(sendTransactionalEmail, {
+        templateName,
+        recipientEmail: t.email,
+        idempotencyKey: `reminder-${t.kind}-${t.registration_id}-${new Date().toISOString().slice(0, 10)}`,
+        templateData,
       });
-      if (error) fail++;
+      if (error || res?.error) fail++;
       else ok++;
     }
     setSendingReminders(false);
