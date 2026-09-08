@@ -1,4 +1,4 @@
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "@/lib/router-compat";
 import { LogOut, User, LayoutDashboard, Ticket, Shield, Mail, Users, Sparkles, Star, Menu, MapPin, Calendar as CalendarIcon } from "lucide-react";
 import logoFartlek from "@/assets/logo-fartlek.jpg";
 import { Button } from "@/components/ui/button";

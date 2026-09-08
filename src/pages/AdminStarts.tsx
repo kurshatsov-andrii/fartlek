@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Navigate, Link } from "react-router-dom";
+import { Navigate, Link } from "@/lib/router-compat";
 import { ArrowLeft, Trash2, Loader2, Plus, ExternalLink, Eye, EyeOff, Pencil, Sparkles } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link, Navigate, useParams } from "react-router-dom";
+import { Link, Navigate, useParams } from "@/lib/router-compat";
 import { ArrowLeft, Loader2, CheckCircle2, XCircle, FileText, RotateCcw, Trash2, X, Bell, ArrowRightLeft, Download, Package, Mail, Trophy, Hash, Truck, Settings, Copy } from "lucide-react";
 import { BibCard } from "@/components/BibCard";
 import { NovaPoshtaSettingsDialog } from "@/components/NovaPoshtaSettingsDialog";

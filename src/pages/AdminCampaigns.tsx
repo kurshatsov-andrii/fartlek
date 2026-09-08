@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate } from "@/lib/router-compat";
 import { Loader2, Send, Mail, CheckCircle2, AlertCircle, Eye } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";

@@ -1,0 +1,27 @@
+{
+  "customizations": [
+    { "token": ":root/.dark full Energy Orange HSL token set (background, foreground, card, popover, primary, primary-glow, secondary, muted, accent, destructive, border, input, ring, radius, sidebar-*)", "source": "src/index.css", "reappliedIn": "src/styles.css" },
+    { "token": "--gradient-hero", "source": "src/index.css", "reappliedIn": "src/styles.css" },
+    { "token": "--gradient-dark", "source": "src/index.css", "reappliedIn": "src/styles.css" },
+    { "token": "--gradient-card", "source": "src/index.css", "reappliedIn": "src/styles.css" },
+    { "token": "--shadow-glow", "source": "src/index.css", "reappliedIn": "src/styles.css" },
+    { "token": "--shadow-card", "source": "src/index.css", "reappliedIn": "src/styles.css" },
+    { "token": "--shadow-elevated", "source": "src/index.css", "reappliedIn": "src/styles.css" },
+    { "token": "--transition-base", "source": "src/index.css", "reappliedIn": "src/styles.css" },
+    { "token": "--transition-bounce", "source": "src/index.css", "reappliedIn": "src/styles.css" },
+    { "token": ".text-gradient utility", "source": "src/index.css", "reappliedIn": "src/styles.css" },
+    { "token": ".bg-gradient-hero utility", "source": "src/index.css", "reappliedIn": "src/styles.css" },
+    { "token": ".shadow-glow utility", "source": "src/index.css", "reappliedIn": "src/styles.css" },
+    { "token": ".shadow-card utility", "source": "src/index.css", "reappliedIn": "src/styles.css" },
+    { "token": ".shadow-elevated utility", "source": "src/index.css", "reappliedIn": "src/styles.css" },
+    { "token": ".transition-base utility", "source": "src/index.css", "reappliedIn": "src/styles.css" },
+    { "token": ".transition-bounce utility", "source": "src/index.css", "reappliedIn": "src/styles.css" },
+    { "token": ".card-overlay utility", "source": "src/index.css", "reappliedIn": "src/styles.css" },
+    { "token": "base layer rules (border-border, scroll-behavior, body font/feature-settings, heading font-display)", "source": "src/index.css", "reappliedIn": "src/styles.css" },
+    { "token": "Leaflet z-index/isolation rules", "source": "src/index.css", "reappliedIn": "src/styles.css" },
+    { "token": "Google Fonts import (Space Grotesk, DM Sans)", "source": "src/index.css", "reappliedIn": "src/styles.css" },
+    { "token": "font-display / font-sans families", "source": "tailwind.config.ts", "reappliedIn": "src/styles.css" },
+    { "token": "container config (center, 1.5rem padding, 1400px)", "source": "tailwind.config.ts", "reappliedIn": "src/styles.css" },
+    { "token": "keyframes/animations: accordion-down, accordion-up, fade-in-up, scale-in, ticker, mascot-out, mascot-bob, mascot-in-right", "source": "tailwind.config.ts", "reappliedIn": "src/styles.css" }
+  ]
+}

@@ -67,7 +67,7 @@ export function NovaPoshtaSettingsDialog({ eventId, trigger, onSaved }: { eventI
         .eq("event_id", eventId)
         .maybeSingle();
       if (data) {
-        setS({ ...DEFAULTS, ...data });
+        setS({ ...DEFAULTS, ...data } as Settings);
         if ((data as any).sender_city_name) setCitySearch((data as any).sender_city_name);
       } else setS(DEFAULTS);
       setLoading(false);

@@ -117,7 +117,7 @@ export const FeaturesCarousel = () => {
               type="button"
               aria-label="Previous slide"
               onClick={() => api?.scrollPrev()}
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-border bg-card text-foreground shadow-sm active:scale-95 transition"
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-border bg-card text-foreground shadow-xs active:scale-95 transition"
             >
               <ChevronLeft className="h-4 w-4" />
             </button>
@@ -138,7 +138,7 @@ export const FeaturesCarousel = () => {
               type="button"
               aria-label="Next slide"
               onClick={() => api?.scrollNext()}
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-border bg-card text-foreground shadow-sm active:scale-95 transition"
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-border bg-card text-foreground shadow-xs active:scale-95 transition"
             >
               <ChevronRight className="h-4 w-4" />
             </button>

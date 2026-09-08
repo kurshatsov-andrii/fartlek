@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "@/lib/router-compat";
 import { Loader2, Eye, EyeOff } from "lucide-react";
 import logoFartlek from "@/assets/logo-fartlek.jpg";
 import { Button } from "@/components/ui/button";
@@ -185,7 +185,7 @@ const Auth = () => {
                 type="button"
                 onClick={() => setMode("signin")}
                 className={`rounded-md px-4 py-2 text-sm font-semibold transition-base ${
-                  mode === "signin" ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
+                  mode === "signin" ? "bg-background text-foreground shadow-xs" : "text-muted-foreground hover:text-foreground"
                 }`}
               >
                 {t.auth.signIn}
@@ -194,7 +194,7 @@ const Auth = () => {
                 type="button"
                 onClick={() => setMode("signup")}
                 className={`rounded-md px-4 py-2 text-sm font-semibold transition-base ${
-                  mode === "signup" ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
+                  mode === "signup" ? "bg-background text-foreground shadow-xs" : "text-muted-foreground hover:text-foreground"
                 }`}
               >
                 {t.auth.signUp}

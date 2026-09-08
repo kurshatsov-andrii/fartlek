@@ -3,7 +3,7 @@ import { Loader2, RefreshCw, CheckCircle2, Trophy, Link2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Link } from "react-router-dom";
+import { Link } from "@/lib/router-compat";
 
 interface Props {
   eventId: string;

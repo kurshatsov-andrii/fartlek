@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link } from "@/lib/router-compat";
 import { Activity } from "lucide-react";
 import { useApp } from "@/contexts/AppContext";
 
