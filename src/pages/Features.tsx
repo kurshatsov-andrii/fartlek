@@ -222,6 +222,8 @@ const Features = () => {
         { icon: FileDown, title: "Експорт «Хронометраж» та «Стартовий протокол» 🆕", desc: "Окремі кнопки вивантаження учасників у CSV у форматі для служби хронометражу: ID, BIB, ім'я, стать, дата народження, дистанція, місто, клуб." },
         { icon: ClipboardCheck, title: "Контроль підписаних згод 🆕", desc: "Колонка «Згода» у списку учасників — одразу видно, хто підписав згоду на участь, а хто ще ні." },
         { icon: Hash, title: "Нумерація BIB без пропусків 🆕", desc: "Якщо учасника видалено, його номер не губиться: наступна реєстрація автоматично отримує найменший вільний номер у послідовності." },
+        { icon: Award, title: "Позначки DNS / DNF 🆕", desc: "Порівнюйте список зареєстрованих із фінішним протоколом: система показує, хто не стартував (DNS) і хто не фінішував (DNF), а ви можете виставити ці статуси вручну." },
+
       ],
     },
     {
@@ -280,6 +282,8 @@ const Features = () => {
         { icon: FileDown, title: "«Timing» & «Start list» exports 🆕", desc: "Dedicated one-click CSV exports in the timing-company format: ID, BIB, name, gender, birth date, distance, city, club." },
         { icon: ClipboardCheck, title: "Consent tracking 🆕", desc: "A «Consent» column in the participants list instantly shows who has signed the participation waiver and who hasn't." },
         { icon: Hash, title: "Gap-free BIB numbering 🆕", desc: "If a participant is removed, their number isn't lost: the next registration automatically gets the lowest free number in the sequence." },
+        { icon: Award, title: "DNS / DNF marks 🆕", desc: "Compare the registration list with the finish protocol: the system highlights who didn't start (DNS) and who didn't finish (DNF), and you can set these statuses manually." },
+
       ],
     },
     {
