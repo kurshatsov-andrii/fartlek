@@ -41,7 +41,13 @@ export function getAuthHeader(): string {
 }
 
 export function getClientOrigin(): string {
-  return getRequestHeader("Origin") ?? getRequestHeader("Referer") ?? "";
+  const raw = getRequestHeader("Origin") ?? getRequestHeader("Referer") ?? "";
+  if (!raw) return "";
+  try {
+    return new URL(raw).origin;
+  } catch {
+    return raw.replace(/\/$/, "");
+  }
 }
 
 export async function getAuthedUser(): Promise<{ user: User; client: SupabaseClient; authHeader: string } | null> {
