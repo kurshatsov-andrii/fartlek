@@ -46,15 +46,15 @@ export const getEventSeo = createServerFn({ method: "GET" })
       const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(data.id);
       const { data: ev } = await supabase
         .from("events")
-        .select("id,slug,title,city,location,start_date,description,cover_image_url,organizer_name")
+        .select("id,slug,title,location,event_date,description,image_url,organizer_name")
         .eq(isUuid ? "id" : "slug", data.id)
         .maybeSingle();
       if (!ev) return null;
 
       const row = ev as Record<string, any>;
-      const city = (row.city ?? row.location ?? "") as string;
-      const date = row.start_date
-        ? new Date(row.start_date).toLocaleDateString("uk-UA", {
+      const city = (row.location ?? "") as string;
+      const date = row.event_date
+        ? new Date(row.event_date).toLocaleDateString("uk-UA", {
             day: "numeric",
             month: "long",
             year: "numeric",
@@ -68,8 +68,8 @@ export const getEventSeo = createServerFn({ method: "GET" })
           : `${row.title}${city ? ` — ${city}` : ""}${date ? `, ${date}` : ""}. Онлайн-реєстрація на Fartlek Events.`;
 
       const image =
-        typeof row.cover_image_url === "string" && row.cover_image_url.startsWith("http")
-          ? row.cover_image_url
+        typeof row.image_url === "string" && row.image_url.startsWith("http")
+          ? row.image_url
           : null;
 
       return {
