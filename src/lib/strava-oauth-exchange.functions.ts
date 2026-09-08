@@ -6,7 +6,7 @@ type Input = { code: string };
 type Result = {
   success?: boolean;
   error?: string;
-  details?: unknown;
+  details?: any;
   athlete?: { id?: number; firstname?: string; lastname?: string; profile?: string };
 };
 
