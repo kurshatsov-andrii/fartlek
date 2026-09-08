@@ -5,8 +5,9 @@ import {
   Trophy, Bell, UserCircle, Edit3, Smile, Reply, AtSign, Image as ImageIcon,
   CalendarPlus, FileSpreadsheet, CreditCard, Globe, Clock, MapPin, Sparkles,
   Megaphone, Building2, CheckCircle2, ArrowDown, Truck, Repeat, Send, XCircle,
-  History, Lock, Activity, Settings, KeyRound, Upload,
+  History, Lock, Activity, Settings, KeyRound, Upload, Map, Award, Wallet,
   Shirt, Hash, ClipboardCheck, ShieldCheck, Filter, FileDown, RefreshCw
+
 } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
@@ -66,6 +67,8 @@ const Features = () => {
         { icon: Megaphone, title: "Каталог організаторів 🆕", desc: "Окрема сторінка з усіма організаторами подій — логотип, місто, опис, соцмережі та активні події. Зручно знайти перевіреного організатора або зв'язатися напряму." },
         { icon: Send, title: "Старти з Telegram-каналу 🆕", desc: "Сторінка «Старти» збирає анонси забігів із нашого Telegram-каналу: автоматична синхронізація щодня, фільтри за місяцем, містом, організатором та видом спорту, кнопка «Зареєструватися». Нові старти одразу потрапляють і в Календар." },
         { icon: Filter, title: "Розширені фільтри подій 🆕", desc: "На головній сторінці майбутні й завершені події фільтруються за містом, місяцем, форматом та типом (платні/безкоштовні) — плюс живий пошук за назвою, місцем чи організатором." },
+        { icon: Map, title: "Мапа спортивних подій України 🆕", desc: "Окрема сторінка з інтерактивною мапою: міста з кількістю подій, клік на місто — і праворуч з'являється список стартів із переходом на реєстрацію. Об'єднує події платформи, Старти з Telegram та Календар." },
+
       ],
     },
     {
@@ -79,6 +82,11 @@ const Features = () => {
         { icon: Activity, title: "Автозалік результату через Strava 🆕", desc: "Для віртуальних гонок: підключіть Strava у профілі — ми самі знайдемо вашу активність у вікні дат із потрібною дистанцією, зарахуємо час і поставимо позначку «підтверджено». У квитку буде пряме посилання на активність." },
         { icon: ImageIcon, title: "Світлини з події", desc: "Організатор додає посилання на фотоальбом — переглядайте світлини прямо з картки завершеної події." },
         { icon: RefreshCw, title: "Автооновлення статусу оплати 🆕", desc: "Сплатили зі сторінки квитка? Вона сама перевіряє оплату кожні кілька секунд та щоразу, коли ви повертаєтесь на вкладку, — зелена галочка «Сплачено» з'являється без ручного оновлення." },
+        { icon: Wallet, title: "Оплата прямо в «Мої події» 🆕", desc: "У картці кожної реєстрації видно бейдж «Очікує оплати», «Оплачено» або «Безкоштовно» та кнопку «Сплатити» — платити можна не заходячи у квиток." },
+        { icon: FileDown, title: "PDF стартового квитка 🆕", desc: "Завантажте квиток у PDF: ім'я, номер, дистанція, дата народження, місто, статус оплати та QR-код — усе чітко видно й придатне для друку." },
+        { icon: Trophy, title: "Офіційні результати з фільтрами 🆕", desc: "Таблиця результатів події: пошук за іменем чи номером, фільтри за дистанцією, статтю та віковою групою, медалі за 1–3 місце (в тому числі всередині категорії), а також позначки DNS/DNF для тих, хто не стартував або не фінішував." },
+        { icon: Award, title: "Сертифікат фінішера 🆕", desc: "Після фінішу згенеруйте персональний диплом із вашим часом, дистанцією та місцем — вертикальний або горизонтальний, завантаження у PNG чи PDF." },
+
       ],
     },
     {
@@ -125,6 +133,8 @@ const Features = () => {
         { icon: Megaphone, title: "Organizers catalog 🆕", desc: "A dedicated page with all event organizers — logo, city, description, social links and active events. Easily find a trusted organizer or contact them directly." },
         { icon: Send, title: "Starts from our Telegram channel 🆕", desc: "The «Starts» page collects race announcements from our Telegram channel: automatic daily sync, filters by month, city, organizer and sport, plus a «Register» button. New starts also land in the Calendar automatically." },
         { icon: Filter, title: "Advanced event filters 🆕", desc: "On the home page, upcoming and completed events filter by city, month, format and type (paid/free) — plus live search by name, location or organizer." },
+        { icon: Map, title: "Map of sports events in Ukraine 🆕", desc: "A dedicated page with an interactive map: cities with event counts, click a city and a side panel lists its races with links to registration. Combines platform events, Telegram starts and the calendar." },
+
       ],
     },
     {
@@ -138,6 +148,11 @@ const Features = () => {
         { icon: Activity, title: "Auto-verify results via Strava 🆕", desc: "For virtual races: connect Strava in your profile — we automatically pick the matching activity within the date window and distance tolerance, count your time and mark it as «verified». Your ticket gets a direct link to the activity." },
         { icon: ImageIcon, title: "Event photos", desc: "Organizers attach a photo album link — open it right from the completed event card." },
         { icon: RefreshCw, title: "Auto payment status refresh 🆕", desc: "Paid from the ticket page? It re-checks the payment every few seconds and whenever you return to the tab — the green «Paid» check appears without a manual reload." },
+        { icon: Wallet, title: "Pay right from «My events» 🆕", desc: "Every registration card shows a «Pending payment», «Paid» or «Free» badge and a «Pay» button — no need to open the ticket." },
+        { icon: FileDown, title: "Ticket as PDF 🆕", desc: "Download your ticket as a PDF: name, bib, distance, birth date, city, payment status and QR code — crisp and print-ready." },
+        { icon: Trophy, title: "Official results with filters 🆕", desc: "Event results table: search by name or bib, filters by distance, gender and age group, medals for top 3 (including within a category), plus DNS/DNF marks for those who didn't start or finish." },
+        { icon: Award, title: "Finisher certificate 🆕", desc: "After the finish, generate a personal diploma with your time, distance and placing — portrait or landscape, downloadable as PNG or PDF." },
+
       ],
     },
     {
@@ -207,6 +222,8 @@ const Features = () => {
         { icon: FileDown, title: "Експорт «Хронометраж» та «Стартовий протокол» 🆕", desc: "Окремі кнопки вивантаження учасників у CSV у форматі для служби хронометражу: ID, BIB, ім'я, стать, дата народження, дистанція, місто, клуб." },
         { icon: ClipboardCheck, title: "Контроль підписаних згод 🆕", desc: "Колонка «Згода» у списку учасників — одразу видно, хто підписав згоду на участь, а хто ще ні." },
         { icon: Hash, title: "Нумерація BIB без пропусків 🆕", desc: "Якщо учасника видалено, його номер не губиться: наступна реєстрація автоматично отримує найменший вільний номер у послідовності." },
+        { icon: Award, title: "Позначки DNS / DNF 🆕", desc: "Порівнюйте список зареєстрованих із фінішним протоколом: система показує, хто не стартував (DNS) і хто не фінішував (DNF), а ви можете виставити ці статуси вручну." },
+
       ],
     },
     {
@@ -265,6 +282,8 @@ const Features = () => {
         { icon: FileDown, title: "«Timing» & «Start list» exports 🆕", desc: "Dedicated one-click CSV exports in the timing-company format: ID, BIB, name, gender, birth date, distance, city, club." },
         { icon: ClipboardCheck, title: "Consent tracking 🆕", desc: "A «Consent» column in the participants list instantly shows who has signed the participation waiver and who hasn't." },
         { icon: Hash, title: "Gap-free BIB numbering 🆕", desc: "If a participant is removed, their number isn't lost: the next registration automatically gets the lowest free number in the sequence." },
+        { icon: Award, title: "DNS / DNF marks 🆕", desc: "Compare the registration list with the finish protocol: the system highlights who didn't start (DNS) and who didn't finish (DNF), and you can set these statuses manually." },
+
       ],
     },
     {
