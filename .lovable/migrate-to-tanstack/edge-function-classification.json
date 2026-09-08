@@ -1,28 +1,148 @@
 {
   "functions": [
-    { "name": "admin-delete-user", "classification": "internal-only", "signal": "called from src/pages/Admin.tsx", "outcome": "migrated" },
-    { "name": "secure-signup", "classification": "internal-only", "signal": "called from src/pages/Auth.tsx", "outcome": "migrated" },
-    { "name": "strava-oauth-exchange", "classification": "internal-only", "signal": "called from src/pages/StravaCallback.tsx", "outcome": "migrated" },
-    { "name": "payment-confirm", "classification": "internal-only", "signal": "called from src/pages/PaymentSuccess.tsx", "outcome": "migrated" },
-    { "name": "nova-poshta", "classification": "internal-only", "signal": "called from Nova Poshta components and Participants page", "outcome": "migrated" },
-    { "name": "strava-sync-activities", "classification": "internal-only", "signal": "called from VirtualResultPanel and Participants", "outcome": "migrated" },
-    { "name": "liqpay-create", "classification": "internal-only", "signal": "called from src/lib/liqpay.ts; callback URL stays on Supabase liqpay-callback", "outcome": "migrated" },
-    { "name": "wayforpay-create", "classification": "internal-only", "signal": "called from src/lib/wayforpay.ts; callback URL stays on Supabase wayforpay-callback", "outcome": "migrated" },
-    { "name": "send-marketing-campaign", "classification": "internal-only", "signal": "shares templates and suppression logic with edge email stack (process-email-queue, preview-transactional-email)", "outcome": "left" },
-    { "name": "send-transactional-email", "classification": "internal-only", "signal": "shares template code with edge email stack; also used by queued/SQL-triggered flows", "outcome": "left" },
-    { "name": "auth-email-hook", "classification": "webhook receiver", "signal": "Supabase Auth email hook endpoint", "outcome": "left" },
-    { "name": "handle-email-suppression", "classification": "webhook receiver", "signal": "email provider webhook", "outcome": "left" },
-    { "name": "handle-email-unsubscribe", "classification": "webhook receiver", "signal": "RFC 8058 one-click unsubscribe URL embedded in sent emails", "outcome": "left" },
-    { "name": "liqpay-callback", "classification": "webhook receiver", "signal": "external payment provider callback URL", "outcome": "left" },
-    { "name": "wayforpay-callback", "classification": "webhook receiver", "signal": "external payment provider callback URL", "outcome": "left" },
-    { "name": "preview-transactional-email", "classification": "internal-only", "signal": "shares template code with edge email stack", "outcome": "left" },
-    { "name": "process-email-queue", "classification": "cron target", "signal": "cron-invoked email queue processor", "outcome": "left" },
-    { "name": "results-ingest", "classification": "custom response", "signal": "external timing-provider endpoint with fixed URL", "outcome": "left" },
-    { "name": "telegram-notify-cancellation", "classification": "cron target", "signal": "invoked from SQL triggers via net.http_post", "outcome": "left" },
-    { "name": "telegram-notify-registration", "classification": "cron target", "signal": "invoked from SQL triggers via net.http_post", "outcome": "left" },
-    { "name": "telegram-notify-signup", "classification": "cron target", "signal": "invoked from SQL triggers via net.http_post", "outcome": "left" },
-    { "name": "telegram-starts-webhook", "classification": "webhook receiver", "signal": "Telegram webhook plus daily cron sync", "outcome": "left" },
-    { "name": "sync-telegram-starts", "classification": "cron target", "signal": "cron-invoked daily sync", "outcome": "left" },
-    { "name": "verify-turnstile", "classification": "unknown", "signal": "no direct src/ call sites confirmed; default to external", "outcome": "left" }
+    {
+      "name": "admin-delete-user",
+      "classification": "internal-only",
+      "signal": "called from src/pages/Admin.tsx",
+      "outcome": "migrated"
+    },
+    {
+      "name": "secure-signup",
+      "classification": "internal-only",
+      "signal": "called from src/pages/Auth.tsx",
+      "outcome": "migrated"
+    },
+    {
+      "name": "strava-oauth-exchange",
+      "classification": "internal-only",
+      "signal": "called from src/pages/StravaCallback.tsx",
+      "outcome": "migrated"
+    },
+    {
+      "name": "payment-confirm",
+      "classification": "internal-only",
+      "signal": "called from src/pages/PaymentSuccess.tsx",
+      "outcome": "migrated"
+    },
+    {
+      "name": "nova-poshta",
+      "classification": "internal-only",
+      "signal": "called from Nova Poshta components and Participants page",
+      "outcome": "migrated"
+    },
+    {
+      "name": "strava-sync-activities",
+      "classification": "internal-only",
+      "signal": "called from VirtualResultPanel and Participants",
+      "outcome": "migrated"
+    },
+    {
+      "name": "liqpay-create",
+      "classification": "internal-only",
+      "signal": "called from src/lib/liqpay.ts; callback URL stays on Supabase liqpay-callback",
+      "outcome": "migrated"
+    },
+    {
+      "name": "wayforpay-create",
+      "classification": "internal-only",
+      "signal": "called from src/lib/wayforpay.ts; callback URL stays on Supabase wayforpay-callback",
+      "outcome": "migrated"
+    },
+    {
+      "name": "send-marketing-campaign",
+      "classification": "internal-only",
+      "signal": "shares templates and suppression logic with edge email stack (process-email-queue, preview-transactional-email)",
+      "outcome": "migrated"
+    },
+    {
+      "name": "send-transactional-email",
+      "classification": "internal-only",
+      "signal": "shares template code with edge email stack; also used by queued/SQL-triggered flows",
+      "outcome": "migrated"
+    },
+    {
+      "name": "auth-email-hook",
+      "classification": "webhook receiver",
+      "signal": "Supabase Auth email hook endpoint",
+      "outcome": "left"
+    },
+    {
+      "name": "handle-email-suppression",
+      "classification": "webhook receiver",
+      "signal": "email provider webhook",
+      "outcome": "left"
+    },
+    {
+      "name": "handle-email-unsubscribe",
+      "classification": "webhook receiver",
+      "signal": "RFC 8058 one-click unsubscribe URL embedded in sent emails",
+      "outcome": "left"
+    },
+    {
+      "name": "liqpay-callback",
+      "classification": "webhook receiver",
+      "signal": "external payment provider callback URL",
+      "outcome": "left"
+    },
+    {
+      "name": "wayforpay-callback",
+      "classification": "webhook receiver",
+      "signal": "external payment provider callback URL",
+      "outcome": "left"
+    },
+    {
+      "name": "preview-transactional-email",
+      "classification": "internal-only",
+      "signal": "shares template code with edge email stack",
+      "outcome": "left"
+    },
+    {
+      "name": "process-email-queue",
+      "classification": "cron target",
+      "signal": "cron-invoked email queue processor",
+      "outcome": "left"
+    },
+    {
+      "name": "results-ingest",
+      "classification": "custom response",
+      "signal": "external timing-provider endpoint with fixed URL",
+      "outcome": "left"
+    },
+    {
+      "name": "telegram-notify-cancellation",
+      "classification": "cron target",
+      "signal": "invoked from SQL triggers via net.http_post",
+      "outcome": "left"
+    },
+    {
+      "name": "telegram-notify-registration",
+      "classification": "cron target",
+      "signal": "invoked from SQL triggers via net.http_post",
+      "outcome": "left"
+    },
+    {
+      "name": "telegram-notify-signup",
+      "classification": "cron target",
+      "signal": "invoked from SQL triggers via net.http_post",
+      "outcome": "left"
+    },
+    {
+      "name": "telegram-starts-webhook",
+      "classification": "webhook receiver",
+      "signal": "Telegram webhook plus daily cron sync",
+      "outcome": "left"
+    },
+    {
+      "name": "sync-telegram-starts",
+      "classification": "cron target",
+      "signal": "cron-invoked daily sync",
+      "outcome": "left"
+    },
+    {
+      "name": "verify-turnstile",
+      "classification": "unknown",
+      "signal": "no direct src/ call sites confirmed; default to external",
+      "outcome": "left"
+    }
   ]
 }
