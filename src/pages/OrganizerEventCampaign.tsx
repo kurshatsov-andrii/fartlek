@@ -10,6 +10,8 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
+import { invokeCompat } from "@/lib/fn-compat";
+import { sendMarketingCampaign } from "@/lib/send-marketing-campaign.functions";
 import { toast } from "sonner";
 
 const OrganizerEventCampaign = () => {
@@ -126,9 +128,10 @@ const OrganizerEventCampaign = () => {
 
       if (mode === "test") {
         const { data, error } = await invokeCompat(sendMarketingCampaign, { campaign_id: campaignId, test_email: testEmail.trim() },
-        });
+        );
         if (error) throw new Error(error.message);
         const r = data as any;
+        if (r?.error) throw new Error(r.error);
         toast.success(`Тест надіслано: ${r.sent}/${r.total}`);
       } else {
         let offset = 0;
@@ -140,9 +143,10 @@ const OrganizerEventCampaign = () => {
         while (true) {
           batchNum++;
           const { data, error } = await invokeCompat(sendMarketingCampaign, { campaign_id: campaignId, batch_size: batchSize, batch_offset: offset },
-          });
+          );
           if (error) throw new Error(error.message);
           const r = data as any;
+          if (r?.error) throw new Error(r.error);
           totalSent += r.sent;
           totalFailed += r.failed;
           total = r.total_recipients ?? total;
@@ -198,9 +202,10 @@ const OrganizerEventCampaign = () => {
       while (true) {
         batchNum++;
         const { data, error } = await invokeCompat(sendMarketingCampaign, { campaign_id: c.id, batch_size: batchSize, batch_offset: offset },
-        });
+        );
         if (error) throw new Error(error.message);
         const r = data as any;
+        if (r?.error) throw new Error(r.error);
         totalSent += r.sent;
         totalFailed += r.failed;
         sessionCount += (r.sent ?? 0) + (r.failed ?? 0);
