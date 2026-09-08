@@ -15,8 +15,6 @@ project_id = "mjkjygzxwysbhgjtvobm"
     verify_jwt = true
   [functions.results-ingest]
     verify_jwt = false
-  [functions.send-transactional-email]
-    verify_jwt = true
   [functions.telegram-notify-registration]
     verify_jwt = false
   [functions.telegram-notify-signup]
