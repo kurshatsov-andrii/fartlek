@@ -73,9 +73,10 @@ export const OtherStartsSection = () => {
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {visible.map((r) => (
           <article key={r.id} className="group flex flex-col overflow-hidden rounded-2xl bg-card shadow-card transition-bounce hover:-translate-y-1 hover:shadow-elevated">
-            <Link to={`/starts/${r.slug}`} className="relative aspect-[4/3] overflow-hidden bg-muted block" aria-label={r.title}>
+            <Link to={`/starts/${r.slug}`} className="relative aspect-video w-full overflow-hidden bg-muted block" aria-label={r.title}>
               {r.image_url ? (
-                <img src={r.image_url} alt={r.title} loading="lazy" className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                <img src={r.image_url} alt={r.title} loading="lazy" className="h-full w-full max-w-full object-contain transition-transform duration-700 group-hover:scale-105" />
+
               ) : (
                 <div className="h-full w-full bg-gradient-hero" />
               )}
