@@ -289,6 +289,8 @@ export const EventsSection = () => {
           )}
           </>
         )}
+
+        <OtherStartsSection />
       </div>
     </section>
   );
