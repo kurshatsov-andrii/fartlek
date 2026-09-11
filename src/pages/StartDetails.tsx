@@ -94,9 +94,10 @@ const StartDetails = () => {
             <CalendarIcon className="h-4 w-4" />{fmtDate(row.event_date)}
           </div>
         )}
-        <div className="flex items-center gap-2 text-muted-foreground mb-6">
+        <div className="flex items-center gap-2 text-muted-foreground mb-2">
           <MapPin className="h-4 w-4" />{row.city || "Україна та весь світ"}
         </div>
+        <PageViews pageKey={`start:${row.id}`} className="mb-6" />
 
         <div className="flex flex-wrap gap-1 mb-4">
           {Array.from(new Set((row.sport_types || []).filter((s): s is SportType => s in SPORT_LABELS))).map((s) => (

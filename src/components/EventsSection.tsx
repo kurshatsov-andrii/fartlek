@@ -122,6 +122,7 @@ export const EventsSection = () => {
           </h2>
           <div className="mt-4 flex items-center gap-2 sm:gap-4">
             <p className="text-lg text-muted-foreground">{t.events.sub}</p>
+            <PageViews pageKey="page:events" />
             <div className="shrink-0 animate-mascot-in-right pointer-events-none">
               <img
                 src={tigerLeft}

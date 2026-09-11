@@ -176,6 +176,8 @@ const Starts = () => {
           Анонси найближчих стартів з телеграм-каналу{" "}
           <a href="https://t.me/fartlekua" target="_blank" rel="noreferrer" className="underline">@fartlekua</a>.
         </p>
+        <PageViews pageKey="page:starts" className="mb-6" />
+
 
         {/* Filters */}
         <div className="rounded-lg border bg-card p-4 mb-8 space-y-3">
