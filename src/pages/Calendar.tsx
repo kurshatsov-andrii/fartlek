@@ -258,6 +258,7 @@ const CalendarPage = () => {
               {lang === "uk" ? "Календар майбутніх спортивних подій" : "Upcoming sports events calendar"}
             </h1>
             <p className="mt-3 text-muted-foreground max-w-2xl">{seoDesc}</p>
+            <PageViews pageKey="page:calendar" className="mt-3" />
           </div>
           {canManage ? (
             <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
