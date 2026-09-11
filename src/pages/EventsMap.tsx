@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { PageViews } from "@/components/PageViews";
 import { Link } from "@/lib/router-compat";
 import { MapContainer, TileLayer, Marker, useMap } from "react-leaflet";
 import L from "leaflet";

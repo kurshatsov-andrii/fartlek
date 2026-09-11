@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { PageViews } from "@/components/PageViews";
 import { Link } from "@/lib/router-compat";
 import { Calendar, MapPin, ArrowUpRight, Loader2, Search, X, Filter } from "lucide-react";
 import { Button } from "@/components/ui/button";

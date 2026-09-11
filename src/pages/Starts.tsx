@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { PageViews } from "@/components/PageViews";
 import { Link } from "@/lib/router-compat";
 import { Loader2, ExternalLink, Calendar as CalendarIcon, Search, X, Filter, MapPin } from "lucide-react";
 import { Header } from "@/components/Header";

@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { PageViews } from "@/components/PageViews";
 import { Link, useNavigate, useParams } from "@/lib/router-compat";
 import { Calendar, MapPin, Users, Loader2, ArrowLeft, UserCircle2, FileText, CalendarPlus, Calculator } from "lucide-react";
 import { PaceCalculatorDialog } from "@/components/PaceCalculatorDialog";
