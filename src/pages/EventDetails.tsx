@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { PageViews } from "@/components/PageViews";
 import { Link, useNavigate, useParams } from "@/lib/router-compat";
 import { Calendar, MapPin, Users, Loader2, ArrowLeft, UserCircle2, FileText, CalendarPlus, Calculator } from "lucide-react";
 import { PaceCalculatorDialog } from "@/components/PaceCalculatorDialog";
@@ -402,6 +403,7 @@ const EventDetails = () => {
                 <div className="flex items-center gap-2"><Calendar className="h-4 w-4 text-primary" />{fmtDate} · {event.event_time.slice(0, 5)}</div>
                 {event.location && <div className="flex items-center gap-2"><MapPin className="h-4 w-4 text-primary" />{event.location}</div>}
                 <div className="flex items-center gap-2"><Users className="h-4 w-4 text-primary" />{displayParticipantsCount} {t.events.participants.toLowerCase()}</div>
+                <PageViews pageKey={`event:${event.id}`} className="text-sm" />
                 <div className="flex items-center gap-2" title={t.events.organizer}>
                   <UserCircle2 className="h-4 w-4 text-primary" />
                   {organizerSlug ? (

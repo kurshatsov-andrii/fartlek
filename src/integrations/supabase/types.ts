@@ -1126,6 +1126,24 @@ export type Database = {
         }
         Relationships: []
       }
+      page_view_counts: {
+        Row: {
+          page_key: string
+          updated_at: string
+          views: number
+        }
+        Insert: {
+          page_key: string
+          updated_at?: string
+          views?: number
+        }
+        Update: {
+          page_key?: string
+          updated_at?: string
+          views?: number
+        }
+        Relationships: []
+      }
       participant_consents: {
         Row: {
           birth_date: string | null
@@ -2220,6 +2238,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      increment_page_view: { Args: { _page_key: string }; Returns: number }
       is_event_co_organizer: {
         Args: { _event_id: string; _user_id: string }
         Returns: boolean

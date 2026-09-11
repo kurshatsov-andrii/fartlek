@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { PageViews } from "@/components/PageViews";
 import { Link } from "@/lib/router-compat";
 import { MapContainer, TileLayer, Marker, useMap } from "react-leaflet";
 import L from "leaflet";
@@ -197,6 +198,8 @@ const EventsMap = () => {
         <p className="text-muted-foreground mb-6">
           Натисни на місто, щоб побачити старти та перейти до реєстрації. Усього {items.length} подій у {groups.length} містах.
         </p>
+        <PageViews pageKey="page:map" className="mb-6" />
+
 
         {loading ? (
           <div className="h-[60vh] flex items-center justify-center"><Loader2 className="h-6 w-6 animate-spin" /></div>
