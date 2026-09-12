@@ -121,7 +121,7 @@ const Starts = () => {
   const reset = () => { setQ(""); setMonth("all"); setCity("all"); setRegion("all"); setOrganizer("all"); setSport("all"); setDistance("all"); setPaid("all"); };
 
   const renderCard = (r: StartRow) => (
-    <Card key={r.id} className="overflow-hidden flex flex-col">
+    <Card key={r.id} className="overflow-hidden flex flex-col transition-bounce hover:-translate-y-2 hover:shadow-elevated">
       {r.image_url && (
         <Link to={`/starts/${r.slug}`} className="block aspect-video bg-muted overflow-hidden">
           <img src={r.image_url} alt={r.title} loading="lazy" className="w-full h-full object-cover" />
