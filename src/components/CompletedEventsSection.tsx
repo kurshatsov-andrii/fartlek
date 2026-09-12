@@ -217,7 +217,7 @@ export const CompletedEventsSection = () => {
                       src={ev.image_url}
                       alt={ev.title}
                       loading="lazy"
-                      className="h-full w-full object-cover grayscale-[30%] transition-all duration-500 group-hover:grayscale-0 group-hover:scale-105"
+                      className="h-full w-full object-cover grayscale-[30%] transition-[filter] duration-500 group-hover:grayscale-0"
                     />
                   ) : (
                     <div className="h-full w-full bg-gradient-hero" />

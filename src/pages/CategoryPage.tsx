@@ -104,7 +104,7 @@ const CategoryPage = () => {
                 <article key={ev.id} className="group flex flex-col overflow-hidden rounded-2xl bg-card shadow-card transition-bounce hover:-translate-y-2 hover:shadow-elevated">
                   <Link to={url} className="relative aspect-[4/3] overflow-hidden bg-muted block">
                     {ev.image_url
-                      ? <img src={ev.image_url} alt={ev.title} loading="lazy" className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                      ? <img src={ev.image_url} alt={ev.title} loading="lazy" className="h-full w-full object-cover" />
                       : <div className="h-full w-full bg-gradient-hero" />}
                     <div className="absolute top-4 left-4 flex flex-col items-start gap-1.5">
                       <span className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wider backdrop-blur ${ev.is_paid ? "bg-primary text-primary-foreground" : "bg-accent text-accent-foreground"}`}>
