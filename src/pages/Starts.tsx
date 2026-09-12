@@ -124,7 +124,7 @@ const Starts = () => {
     <Card key={r.id} className="overflow-hidden flex flex-col">
       {r.image_url && (
         <Link to={`/starts/${r.slug}`} className="block aspect-video bg-muted overflow-hidden">
-          <img src={r.image_url} alt={r.title} loading="lazy" className="w-full h-full object-cover hover:scale-105 transition-transform" />
+          <img src={r.image_url} alt={r.title} loading="lazy" className="w-full h-full object-cover" />
         </Link>
       )}
       <div className="p-4 flex flex-col gap-3 flex-1">
