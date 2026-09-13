@@ -247,7 +247,15 @@ Deno.serve(async (req) => {
     });
   }
 
+  // Only accept posts that actually announce a start (must mention distances)
+  if (!/дистанц/i.test(text)) {
+    return new Response(JSON.stringify({ ok: true, ignored: "no distances mentioned" }), {
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
+  }
+
   const parsed = parsePost(text, entities, post);
+
   // Ensure stored title has no leading zero-width chars
   parsed.title = (parsed.title || "").replace(/[\u200B-\u200F\u202A-\u202E\u2060\uFEFF]/g, "").trim();
   const cleanedDescription = cleanDescription(text);
