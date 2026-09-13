@@ -189,8 +189,20 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://fartlek.lovable.app/starts/bilocerkivs-kyy-blagodiynyy-marafon-2026-10-04</loc>
+    <lastmod>2026-09-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://fartlek.lovable.app/starts/blagodiynyy-onlayn-zabig-zabig-velykyh-serdec-2026-08-22</loc>
     <lastmod>2026-08-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fartlek.lovable.app/starts/druzi-vitaemo-vas-2027-09-12</loc>
+    <lastmod>2026-09-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -346,12 +358,6 @@
   </url>
   <url>
     <loc>https://fartlek.lovable.app/starts/vodogray-chernivtsi-infinity-run-2026-10-10</loc>
-    <lastmod>2026-09-03</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fartlek.lovable.app/starts/bilocerkivs-kyy-blagodiynyy-marafon-2026-10-04</loc>
     <lastmod>2026-09-03</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
