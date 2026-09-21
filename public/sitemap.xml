@@ -261,12 +261,6 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fartlek.lovable.app/starts/lviv-opillia-trail-2026-10-10</loc>
-    <lastmod>2026-09-16</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://fartlek.lovable.app/starts/dino-trail-2026-11-08</loc>
     <lastmod>2026-09-03</lastmod>
     <changefreq>weekly</changefreq>
@@ -287,6 +281,12 @@
   <url>
     <loc>https://fartlek.lovable.app/starts/simple-trail-2026-08-22</loc>
     <lastmod>2026-09-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fartlek.lovable.app/starts/hmel-nyc-kyy-zabig-2026-11-04</loc>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
