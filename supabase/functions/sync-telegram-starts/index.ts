@@ -18,17 +18,32 @@ Deno.serve(async (req) => {
 
   
 
-  // 1) Auto-publish ready drafts
-  const { data: pubData, error: pubErr } = await supabase
+  // 1) Auto-publish ready drafts (registration link is optional)
+  const today = new Date().toISOString().slice(0, 10);
+  const { data: candidates } = await supabase
     .from("telegram_starts")
-    .update({ status: "published", published_at: new Date().toISOString() })
+    .select("id,title,event_date,distances_km")
     .eq("status", "draft")
     .not("title", "is", null)
-    .not("register_url", "is", null)
     .not("event_date", "is", null)
-    .gte("event_date", "2026-07-01")
-    .neq("title", "")
-    .select("id");
+    .gte("event_date", today)
+    .neq("title", "");
+
+  const readyIds = (candidates ?? [])
+    .filter((r: any) => Array.isArray(r.distances_km) && r.distances_km.length > 0)
+    .map((r: any) => r.id);
+
+  let pubData: { id: string }[] = [];
+  let pubErr: { message?: string } | null = null;
+  if (readyIds.length > 0) {
+    const res = await supabase
+      .from("telegram_starts")
+      .update({ status: "published", published_at: new Date().toISOString() })
+      .in("id", readyIds)
+      .select("id");
+    pubData = res.data ?? [];
+    pubErr = res.error;
+  }
 
   // 2) Past published starts stay published — they are shown in the "Completed" section
   const hideData: { id: string }[] = [];
