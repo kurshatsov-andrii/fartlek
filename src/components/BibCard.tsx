@@ -54,6 +54,23 @@ export const BibCard = ({ eventTitle, fullName, club, bibNumber, distance, qrUrl
   const [busy, setBusy] = useState<"png" | "pdf" | null>(null);
   const [qrDataUrl, setQrDataUrl] = useState<string>("");
   const ref = useRef<HTMLDivElement>(null);
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const [scale, setScale] = useState(1);
+
+  const activeTpl = CUSTOM_BIB_TEMPLATES.find((t) => t.match.test(eventTitle));
+  const previewW = activeTpl?.width ?? 660;
+  const previewH = activeTpl?.height ?? 528;
+
+  useEffect(() => {
+    if (!open) return;
+    const update = () => {
+      const w = (wrapRef.current?.clientWidth ?? previewW) - 24;
+      setScale(Math.min(1, w / previewW));
+    };
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, [open, previewW]);
 
   const safeBib = bibNumber ?? "—";
   const fileBase = `bib-${bibNumber ?? "noncolor"}-${(fullName ?? "runner").replace(/\s+/g, "_")}`;
@@ -126,7 +143,15 @@ export const BibCard = ({ eventTitle, fullName, club, bibNumber, distance, qrUrl
           </DialogTitle>
         </DialogHeader>
 
-        <div className="overflow-auto max-h-[60vh] flex justify-center bg-muted/30 p-3 rounded-md">
+        <div ref={wrapRef} className="overflow-auto max-h-[60vh] flex justify-center bg-muted/30 p-3 rounded-md">
+          <div
+            style={{
+              width: previewW * scale,
+              height: previewH * scale,
+              flexShrink: 0,
+            }}
+          >
+          <div style={{ transform: `scale(${scale})`, transformOrigin: "top left", width: previewW, height: previewH }}>
           {(() => {
             const tpl = CUSTOM_BIB_TEMPLATES.find((t) => t.match.test(eventTitle));
             if (tpl?.variant === "kyiv") {
@@ -413,7 +438,10 @@ export const BibCard = ({ eventTitle, fullName, club, bibNumber, distance, qrUrl
           </div>
             );
           })()}
+          </div>
+          </div>
         </div>
+
 
         <div className="flex flex-col sm:flex-row gap-2 pt-2">
           <Button onClick={downloadPng} disabled={!!busy} className="flex-1">
