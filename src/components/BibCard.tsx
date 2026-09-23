@@ -13,10 +13,27 @@ import {
 } from "@/components/ui/dialog";
 import { useApp } from "@/contexts/AppContext";
 import kharkivHalfMarathonBg from "@/assets/kharkiv-half-marathon-bib-blank.png";
+import kyivNezlamnistBg from "@/assets/kyiv-nezlamnist-bib-blank.png";
 
-const CUSTOM_BIB_TEMPLATES: { match: RegExp; bg: string; width: number; height: number }[] = [
-  { match: /kharkiv\s*half\s*marathon/i, bg: kharkivHalfMarathonBg, width: 948, height: 636 },
+type BibTemplate = {
+  match: RegExp;
+  bg: string;
+  width: number;
+  height: number;
+  variant: "kharkiv" | "kyiv";
+};
+
+const CUSTOM_BIB_TEMPLATES: BibTemplate[] = [
+  { match: /kharkiv\s*half\s*marathon/i, bg: kharkivHalfMarathonBg, width: 948, height: 636, variant: "kharkiv" },
+  {
+    match: /марафон\s+незламності/i,
+    bg: kyivNezlamnistBg,
+    width: 948,
+    height: 636,
+    variant: "kyiv",
+  },
 ];
+
 
 type Props = {
   eventTitle: string;
