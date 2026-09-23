@@ -64,7 +64,7 @@ export const BibCard = ({ eventTitle, fullName, club, bibNumber, distance, qrUrl
   useEffect(() => {
     if (!open) return;
     const update = () => {
-      const w = wrapRef.current?.clientWidth ?? previewW;
+      const w = (wrapRef.current?.clientWidth ?? previewW) - 24;
       setScale(Math.min(1, w / previewW));
     };
     update();
