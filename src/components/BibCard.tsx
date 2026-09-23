@@ -438,7 +438,10 @@ export const BibCard = ({ eventTitle, fullName, club, bibNumber, distance, qrUrl
           </div>
             );
           })()}
+          </div>
+          </div>
         </div>
+
 
         <div className="flex flex-col sm:flex-row gap-2 pt-2">
           <Button onClick={downloadPng} disabled={!!busy} className="flex-1">
