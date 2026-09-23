@@ -13,10 +13,27 @@ import {
 } from "@/components/ui/dialog";
 import { useApp } from "@/contexts/AppContext";
 import kharkivHalfMarathonBg from "@/assets/kharkiv-half-marathon-bib-blank.png";
+import kyivNezlamnistBg from "@/assets/kyiv-nezlamnist-bib-blank.png";
 
-const CUSTOM_BIB_TEMPLATES: { match: RegExp; bg: string; width: number; height: number }[] = [
-  { match: /kharkiv\s*half\s*marathon/i, bg: kharkivHalfMarathonBg, width: 948, height: 636 },
+type BibTemplate = {
+  match: RegExp;
+  bg: string;
+  width: number;
+  height: number;
+  variant: "kharkiv" | "kyiv";
+};
+
+const CUSTOM_BIB_TEMPLATES: BibTemplate[] = [
+  { match: /kharkiv\s*half\s*marathon/i, bg: kharkivHalfMarathonBg, width: 948, height: 636, variant: "kharkiv" },
+  {
+    match: /марафон\s+незламності/i,
+    bg: kyivNezlamnistBg,
+    width: 948,
+    height: 636,
+    variant: "kyiv",
+  },
 ];
+
 
 type Props = {
   eventTitle: string;
@@ -112,7 +129,81 @@ export const BibCard = ({ eventTitle, fullName, club, bibNumber, distance, qrUrl
         <div className="overflow-auto max-h-[60vh] flex justify-center bg-muted/30 p-3 rounded-md">
           {(() => {
             const tpl = CUSTOM_BIB_TEMPLATES.find((t) => t.match.test(eventTitle));
+            if (tpl?.variant === "kyiv") {
+              const m = (distance ?? "").match(/(\d+(?:[.,]\d+)?)/);
+              const km = m ? m[1].replace(",", ".") : null;
+              return (
+                <div
+                  ref={ref}
+                  style={{
+                    width: tpl.width,
+                    height: tpl.height,
+                    position: "relative",
+                    backgroundImage: `url(${tpl.bg})`,
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                    backgroundRepeat: "no-repeat",
+                    flexShrink: 0,
+                    fontFamily: "Arial, Helvetica, sans-serif",
+                    boxSizing: "border-box",
+                  }}
+                >
+                  {km && (
+                    <div
+                      style={{
+                        position: "absolute",
+                        left: "8%",
+                        width: "16%",
+                        top: "51%",
+                        textAlign: "center",
+                        color: "#1B4FA0",
+                        transform: "translateY(-50%)",
+                      }}
+                    >
+                      <div style={{ fontSize: 52, fontWeight: 900, lineHeight: 1 }}>{km}</div>
+                      <div style={{ fontSize: 34, fontWeight: 900, lineHeight: 1.1 }}>КМ</div>
+                    </div>
+                  )}
+                  <div
+                    style={{
+                      position: "absolute",
+                      left: "24%",
+                      right: "24%",
+                      top: "53%",
+                      textAlign: "center",
+                      fontSize: 190,
+                      fontWeight: 900,
+                      lineHeight: 1,
+                      letterSpacing: -6,
+                      color: "#111111",
+                      transform: "translateY(-50%)",
+                    }}
+                  >
+                    {safeBib}
+                  </div>
+                  {fullName && (
+                    <div
+                      style={{
+                        position: "absolute",
+                        left: "20%",
+                        right: "20%",
+                        top: "70%",
+                        textAlign: "center",
+                        fontSize: 46,
+                        fontWeight: 800,
+                        lineHeight: 1.2,
+                        color: "#111111",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      {fullName}
+                    </div>
+                  )}
+                </div>
+              );
+            }
             if (tpl) {
+
               return (
                 <div
                   ref={ref}
