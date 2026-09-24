@@ -163,7 +163,7 @@ export const BibCard = ({ eventTitle, fullName, club, bibNumber, distance, qrUrl
       context.drawImage(canvas, offsetX, offsetY, drawWidth, drawHeight);
       if (activeTpl?.variant === "kyiv") {
         context.fillStyle = "#fee206";
-        context.fillRect(0, offsetY + drawHeight - 1, PNG_WIDTH_PX, PNG_HEIGHT_PX - offsetY - drawHeight + 1);
+        context.fillRect(0, offsetY + drawHeight - 8, PNG_WIDTH_PX, PNG_HEIGHT_PX - offsetY - drawHeight + 8);
       }
 
       const pngBlob = await new Promise<Blob | null>((resolve) => printCanvas.toBlob(resolve, "image/png"));
