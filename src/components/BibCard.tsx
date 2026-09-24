@@ -153,10 +153,18 @@ export const BibCard = ({ eventTitle, fullName, club, bibNumber, distance, qrUrl
       const offsetY = Math.round((PNG_HEIGHT_PX - drawHeight) / 2);
 
       if (activeTpl?.variant === "kyiv") {
-        context.fillStyle = "#0049a7";
-        context.fillRect(0, 0, PNG_WIDTH_PX, offsetY);
-        context.fillStyle = "#fbe209";
-        context.fillRect(0, offsetY + drawHeight, PNG_WIDTH_PX, PNG_HEIGHT_PX - offsetY - drawHeight);
+        context.drawImage(canvas, 0, 0, canvas.width, 2, offsetX, 0, drawWidth, offsetY + 1);
+        context.drawImage(
+          canvas,
+          0,
+          canvas.height - 4,
+          canvas.width,
+          4,
+          offsetX,
+          offsetY + drawHeight - 2,
+          drawWidth,
+          PNG_HEIGHT_PX - offsetY - drawHeight + 2,
+        );
       } else {
         context.fillStyle = "#ffffff";
         context.fillRect(0, 0, PNG_WIDTH_PX, PNG_HEIGHT_PX);
