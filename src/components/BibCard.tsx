@@ -146,13 +146,21 @@ export const BibCard = ({ eventTitle, fullName, club, bibNumber, distance, qrUrl
       const context = printCanvas.getContext("2d");
       if (!context) return;
 
-      context.fillStyle = "#ffffff";
-      context.fillRect(0, 0, PNG_WIDTH_PX, PNG_HEIGHT_PX);
       const fitScale = Math.min(PNG_WIDTH_PX / canvas.width, PNG_HEIGHT_PX / canvas.height);
       const drawWidth = Math.round(canvas.width * fitScale);
       const drawHeight = Math.round(canvas.height * fitScale);
       const offsetX = Math.round((PNG_WIDTH_PX - drawWidth) / 2);
       const offsetY = Math.round((PNG_HEIGHT_PX - drawHeight) / 2);
+
+      if (activeTpl?.variant === "kyiv") {
+        context.fillStyle = "#0049a7";
+        context.fillRect(0, 0, PNG_WIDTH_PX, offsetY);
+        context.fillStyle = "#fbe209";
+        context.fillRect(0, offsetY + drawHeight, PNG_WIDTH_PX, PNG_HEIGHT_PX - offsetY - drawHeight);
+      } else {
+        context.fillStyle = "#ffffff";
+        context.fillRect(0, 0, PNG_WIDTH_PX, PNG_HEIGHT_PX);
+      }
       context.drawImage(canvas, offsetX, offsetY, drawWidth, drawHeight);
 
       const pngBlob = await new Promise<Blob | null>((resolve) => printCanvas.toBlob(resolve, "image/png"));
