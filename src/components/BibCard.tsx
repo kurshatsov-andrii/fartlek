@@ -154,22 +154,17 @@ export const BibCard = ({ eventTitle, fullName, club, bibNumber, distance, qrUrl
 
       if (activeTpl?.variant === "kyiv") {
         context.drawImage(canvas, 0, 0, canvas.width, 2, offsetX, 0, drawWidth, offsetY + 1);
-        context.drawImage(
-          canvas,
-          0,
-          canvas.height - 4,
-          canvas.width,
-          4,
-          offsetX,
-          offsetY + drawHeight - 2,
-          drawWidth,
-          PNG_HEIGHT_PX - offsetY - drawHeight + 2,
-        );
+        context.fillStyle = "#fee206";
+        context.fillRect(0, offsetY + drawHeight - 2, PNG_WIDTH_PX, PNG_HEIGHT_PX - offsetY - drawHeight + 2);
       } else {
         context.fillStyle = "#ffffff";
         context.fillRect(0, 0, PNG_WIDTH_PX, PNG_HEIGHT_PX);
       }
       context.drawImage(canvas, offsetX, offsetY, drawWidth, drawHeight);
+      if (activeTpl?.variant === "kyiv") {
+        context.fillStyle = "#fee206";
+        context.fillRect(0, offsetY + drawHeight - 1, PNG_WIDTH_PX, PNG_HEIGHT_PX - offsetY - drawHeight + 1);
+      }
 
       const pngBlob = await new Promise<Blob | null>((resolve) => printCanvas.toBlob(resolve, "image/png"));
       if (!pngBlob) return;
