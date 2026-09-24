@@ -34,6 +34,49 @@ const CUSTOM_BIB_TEMPLATES: BibTemplate[] = [
   },
 ];
 
+const PNG_WIDTH_PX = 2362;
+const PNG_HEIGHT_PX = 1772;
+const PNG_PIXELS_PER_METER = 11811; // 300 DPI
+
+const crc32 = (bytes: Uint8Array) => {
+  let crc = 0xffffffff;
+  for (const byte of bytes) {
+    crc ^= byte;
+    for (let bit = 0; bit < 8; bit += 1) {
+      crc = (crc >>> 1) ^ (0xedb88320 & -(crc & 1));
+    }
+  }
+  return (crc ^ 0xffffffff) >>> 0;
+};
+
+const addPngResolution = async (blob: Blob) => {
+  const source = new Uint8Array(await blob.arrayBuffer());
+  const chunkType = new TextEncoder().encode("pHYs");
+  const chunkData = new Uint8Array(9);
+  const dataView = new DataView(chunkData.buffer);
+  dataView.setUint32(0, PNG_PIXELS_PER_METER);
+  dataView.setUint32(4, PNG_PIXELS_PER_METER);
+  chunkData[8] = 1;
+
+  const crcInput = new Uint8Array(chunkType.length + chunkData.length);
+  crcInput.set(chunkType);
+  crcInput.set(chunkData, chunkType.length);
+
+  const chunk = new Uint8Array(4 + chunkType.length + chunkData.length + 4);
+  const chunkView = new DataView(chunk.buffer);
+  chunkView.setUint32(0, chunkData.length);
+  chunk.set(chunkType, 4);
+  chunk.set(chunkData, 8);
+  chunkView.setUint32(17, crc32(crcInput));
+
+  const ihdrEnd = 33;
+  const output = new Uint8Array(source.length + chunk.length);
+  output.set(source.slice(0, ihdrEnd));
+  output.set(chunk, ihdrEnd);
+  output.set(source.slice(ihdrEnd), ihdrEnd + chunk.length);
+  return new Blob([output], { type: "image/png" });
+};
+
 
 type Props = {
   eventTitle: string;
@@ -97,10 +140,29 @@ export const BibCard = ({ eventTitle, fullName, club, bibNumber, distance, qrUrl
     try {
       const canvas = await render();
       if (!canvas) return;
+      const printCanvas = document.createElement("canvas");
+      printCanvas.width = PNG_WIDTH_PX;
+      printCanvas.height = PNG_HEIGHT_PX;
+      const context = printCanvas.getContext("2d");
+      if (!context) return;
+
+      context.fillStyle = "#ffffff";
+      context.fillRect(0, 0, PNG_WIDTH_PX, PNG_HEIGHT_PX);
+      const fitScale = Math.min(PNG_WIDTH_PX / canvas.width, PNG_HEIGHT_PX / canvas.height);
+      const drawWidth = Math.round(canvas.width * fitScale);
+      const drawHeight = Math.round(canvas.height * fitScale);
+      const offsetX = Math.round((PNG_WIDTH_PX - drawWidth) / 2);
+      const offsetY = Math.round((PNG_HEIGHT_PX - drawHeight) / 2);
+      context.drawImage(canvas, offsetX, offsetY, drawWidth, drawHeight);
+
+      const pngBlob = await new Promise<Blob | null>((resolve) => printCanvas.toBlob(resolve, "image/png"));
+      if (!pngBlob) return;
+      const printReadyBlob = await addPngResolution(pngBlob);
       const link = document.createElement("a");
-      link.href = canvas.toDataURL("image/png");
+      link.href = URL.createObjectURL(printReadyBlob);
       link.download = `${fileBase}.png`;
       link.click();
+      window.setTimeout(() => URL.revokeObjectURL(link.href), 1000);
     } finally {
       setBusy(null);
     }
