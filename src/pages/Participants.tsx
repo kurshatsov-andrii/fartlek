@@ -1145,10 +1145,11 @@ const Participants = () => {
                                   trigger={
                                     <Button
                                       size="sm"
-                                      variant="ghost"
-                                      title={lang === "uk" ? "Стартовий номер" : "Start bib"}
+                                      variant="outline"
+                                      title={lang === "uk" ? "Переглянути та завантажити стартовий номер (PNG/PDF)" : "View & download bib (PNG/PDF)"}
                                     >
                                       <Hash className="h-4 w-4" />
+                                      {lang === "uk" ? "Номер" : "Bib"}
                                     </Button>
                                   }
                                 />
