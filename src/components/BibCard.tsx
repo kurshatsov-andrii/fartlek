@@ -153,9 +153,9 @@ export const BibCard = ({ eventTitle, fullName, club, bibNumber, distance, qrUrl
       const offsetY = Math.round((PNG_HEIGHT_PX - drawHeight) / 2);
 
       if (activeTpl?.variant === "kyiv") {
-        context.fillStyle = "#0753a5";
+        context.fillStyle = "#0049a7";
         context.fillRect(0, 0, PNG_WIDTH_PX, offsetY);
-        context.fillStyle = "#ffdc00";
+        context.fillStyle = "#fbe209";
         context.fillRect(0, offsetY + drawHeight, PNG_WIDTH_PX, PNG_HEIGHT_PX - offsetY - drawHeight);
       } else {
         context.fillStyle = "#ffffff";
