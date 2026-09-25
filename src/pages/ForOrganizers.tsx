@@ -274,20 +274,23 @@ const ForOrganizers = () => {
 
         {/* Final CTA */}
         <section className="container pb-20">
-          <div className="rounded-3xl bg-gradient-hero text-primary-foreground p-8 sm:p-12 text-center">
-            <h2 className="font-display text-3xl sm:text-4xl font-bold tracking-tight">{t.finalTitle}</h2>
-            <p className="mx-auto mt-3 max-w-xl text-primary-foreground/85">{t.finalSub}</p>
-            <div className="mt-7 flex flex-wrap justify-center gap-3">
-              <Button asChild size="lg" variant="secondary" className="text-base">
-                <Link to={ctaTo}>{t.ctaPrimary} <ArrowRight className="h-4 w-4" /></Link>
-              </Button>
-              <Button asChild size="lg" variant="outline" className="bg-transparent border-primary-foreground/40 text-primary-foreground hover:bg-primary-foreground/15 hover:text-primary-foreground text-base">
-                <Link to="/contacts">{t.contactBtn}</Link>
-              </Button>
+          <div className="panel-brand relative overflow-hidden rounded-3xl p-8 sm:p-12 text-center">
+            <div className="glow-soft pointer-events-none absolute inset-0" aria-hidden />
+            <div className="relative">
+              <h2 className="font-display text-3xl sm:text-4xl font-bold tracking-tight">{t.finalTitle}</h2>
+              <p className="mx-auto mt-3 max-w-xl text-muted-foreground">{t.finalSub}</p>
+              <div className="mt-7 flex flex-wrap justify-center gap-3">
+                <Button asChild size="lg" className="text-base">
+                  <Link to={ctaTo}>{t.ctaPrimary} <ArrowRight className="h-4 w-4" /></Link>
+                </Button>
+                <Button asChild size="lg" variant="outline" className="text-base border-border bg-secondary/40 text-foreground hover:bg-secondary hover:text-secondary-foreground">
+                  <Link to="/contacts">{t.contactBtn}</Link>
+                </Button>
+              </div>
+              <p className="mt-6 text-sm text-muted-foreground">
+                info@fartlek.com.ua · +38 097 252 05 51
+              </p>
             </div>
-            <p className="mt-6 text-sm text-primary-foreground/70">
-              info@fartlek.com.ua · +38 097 252 05 51
-            </p>
           </div>
         </section>
       </main>
