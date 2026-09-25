@@ -193,7 +193,7 @@ const ForOrganizers = () => {
             <ol className="mt-10 grid gap-4 md:grid-cols-5">
               {t.steps.map((s, i) => (
                 <li key={s.title} className="relative rounded-2xl border border-border bg-card p-5">
-                  <span className="font-display text-4xl font-bold text-primary/25">{i + 1}</span>
+                  <span className="font-display text-4xl font-bold text-primary/80">{i + 1}</span>
                   <div className="mt-2 flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10">
                     <s.icon className="h-4 w-4 text-primary" />
                   </div>
@@ -209,7 +209,7 @@ const ForOrganizers = () => {
         <section className="container py-16 sm:py-20">
           <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
             <div>
-              <span className="inline-flex items-center gap-2 rounded-full bg-accent/15 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-accent-foreground">
+              <span className="inline-flex items-center gap-2 rounded-full border border-accent/25 bg-accent/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-accent">
                 <Megaphone className="h-3.5 w-3.5" /> {t.promoBadge}
               </span>
               <h2 className="mt-4 font-display text-3xl sm:text-4xl font-bold tracking-tight">{t.promoTitle}</h2>
