@@ -131,26 +131,25 @@ const ForOrganizers = () => {
       <Header />
       <main className="flex-1">
         {/* Hero */}
-        <section className="relative overflow-hidden bg-gradient-hero text-primary-foreground">
-          <div className="absolute inset-0 opacity-[0.12] pointer-events-none bg-[radial-gradient(ellipse_at_top_right,var(--color-foreground)_0%,transparent_55%)]" aria-hidden />
+        <section className="relative overflow-hidden bg-hero-soft">
           <div className="container relative py-16 sm:py-24">
-            <Link to="/" className="inline-flex items-center gap-2 text-sm text-primary-foreground/70 hover:text-primary-foreground mb-6">
+            <Link to="/" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-6">
               <ArrowLeft className="h-4 w-4" /> {t.back}
             </Link>
-            <span className="inline-flex items-center gap-2 rounded-full bg-primary-foreground/15 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider">
+            <span className="inline-flex items-center gap-2 rounded-full border border-primary/25 bg-primary/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-primary">
               <Sparkles className="h-3.5 w-3.5" /> {t.badge}
             </span>
             <h1 className="mt-5 font-display text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight max-w-3xl leading-tight">
-              {t.h1a}<br className="hidden sm:block" /> {t.h1b}
+              {t.h1a}<br className="hidden sm:block" /> <span className="text-gradient">{t.h1b}</span>
             </h1>
-            <p className="mt-5 max-w-2xl text-lg text-primary-foreground/85">{t.sub}</p>
+            <p className="mt-5 max-w-2xl text-lg text-muted-foreground">{t.sub}</p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Button asChild size="lg" className="text-base">
                 <Link to={ctaTo}>
                   {t.ctaPrimary} <ArrowRight className="h-4 w-4" />
                 </Link>
               </Button>
-              <Button asChild size="lg" variant="outline" className="text-base bg-primary-foreground/10 border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/20 hover:text-primary-foreground">
+              <Button asChild size="lg" variant="outline" className="text-base border-border bg-secondary/40 text-foreground hover:bg-secondary hover:text-secondary-foreground">
                 <Link to="/features">{t.ctaSecondary}</Link>
               </Button>
             </div>
@@ -161,8 +160,8 @@ const ForOrganizers = () => {
                 { v: t.statsUa, l: t.statsUaLabel },
               ].map((s) => (
                 <div key={s.l}>
-                  <div className="font-display text-3xl sm:text-4xl font-bold">{s.v}</div>
-                  <div className="mt-1 text-xs sm:text-sm text-primary-foreground/70">{s.l}</div>
+                  <div className="font-display text-3xl sm:text-4xl font-bold text-gradient">{s.v}</div>
+                  <div className="mt-1 text-xs sm:text-sm text-muted-foreground">{s.l}</div>
                 </div>
               ))}
             </div>
@@ -194,7 +193,7 @@ const ForOrganizers = () => {
             <ol className="mt-10 grid gap-4 md:grid-cols-5">
               {t.steps.map((s, i) => (
                 <li key={s.title} className="relative rounded-2xl border border-border bg-card p-5">
-                  <span className="font-display text-4xl font-bold text-primary/25">{i + 1}</span>
+                  <span className="font-display text-4xl font-bold text-primary/80">{i + 1}</span>
                   <div className="mt-2 flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10">
                     <s.icon className="h-4 w-4 text-primary" />
                   </div>
@@ -210,7 +209,7 @@ const ForOrganizers = () => {
         <section className="container py-16 sm:py-20">
           <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
             <div>
-              <span className="inline-flex items-center gap-2 rounded-full bg-accent/15 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-accent-foreground">
+              <span className="inline-flex items-center gap-2 rounded-full border border-accent/25 bg-accent/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-accent">
                 <Megaphone className="h-3.5 w-3.5" /> {t.promoBadge}
               </span>
               <h2 className="mt-4 font-display text-3xl sm:text-4xl font-bold tracking-tight">{t.promoTitle}</h2>
@@ -275,20 +274,23 @@ const ForOrganizers = () => {
 
         {/* Final CTA */}
         <section className="container pb-20">
-          <div className="rounded-3xl bg-gradient-hero text-primary-foreground p-8 sm:p-12 text-center">
-            <h2 className="font-display text-3xl sm:text-4xl font-bold tracking-tight">{t.finalTitle}</h2>
-            <p className="mx-auto mt-3 max-w-xl text-primary-foreground/85">{t.finalSub}</p>
-            <div className="mt-7 flex flex-wrap justify-center gap-3">
-              <Button asChild size="lg" variant="secondary" className="text-base">
-                <Link to={ctaTo}>{t.ctaPrimary} <ArrowRight className="h-4 w-4" /></Link>
-              </Button>
-              <Button asChild size="lg" variant="outline" className="bg-transparent border-primary-foreground/40 text-primary-foreground hover:bg-primary-foreground/15 hover:text-primary-foreground text-base">
-                <Link to="/contacts">{t.contactBtn}</Link>
-              </Button>
+          <div className="panel-brand relative overflow-hidden rounded-3xl p-8 sm:p-12 text-center">
+            <div className="glow-soft pointer-events-none absolute inset-0" aria-hidden />
+            <div className="relative">
+              <h2 className="font-display text-3xl sm:text-4xl font-bold tracking-tight">{t.finalTitle}</h2>
+              <p className="mx-auto mt-3 max-w-xl text-muted-foreground">{t.finalSub}</p>
+              <div className="mt-7 flex flex-wrap justify-center gap-3">
+                <Button asChild size="lg" className="text-base">
+                  <Link to={ctaTo}>{t.ctaPrimary} <ArrowRight className="h-4 w-4" /></Link>
+                </Button>
+                <Button asChild size="lg" variant="outline" className="text-base border-border bg-secondary/40 text-foreground hover:bg-secondary hover:text-secondary-foreground">
+                  <Link to="/contacts">{t.contactBtn}</Link>
+                </Button>
+              </div>
+              <p className="mt-6 text-sm text-muted-foreground">
+                info@fartlek.com.ua · +38 097 252 05 51
+              </p>
             </div>
-            <p className="mt-6 text-sm text-primary-foreground/70">
-              info@fartlek.com.ua · +38 097 252 05 51
-            </p>
           </div>
         </section>
       </main>
