@@ -133,12 +133,14 @@ const ForOrganizers = () => {
         {/* Hero */}
         <section className="relative overflow-hidden bg-hero-soft">
           <div className="container relative py-16 sm:py-24">
-            <Link to="/" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-6">
-              <ArrowLeft className="h-4 w-4" /> {t.back}
-            </Link>
-            <span className="inline-flex items-center gap-2 rounded-full border border-primary/25 bg-primary/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-primary">
-              <Sparkles className="h-3.5 w-3.5" /> {t.badge}
-            </span>
+            <div className="mb-1 flex flex-col items-start gap-3">
+              <Link to="/" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
+                <ArrowLeft className="h-4 w-4" /> {t.back}
+              </Link>
+              <span className="inline-flex items-center gap-2 rounded-full border border-primary/25 bg-primary/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-primary">
+                <Sparkles className="h-3.5 w-3.5" /> {t.badge}
+              </span>
+            </div>
             <h1 className="mt-5 font-display text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight max-w-3xl leading-tight">
               {t.h1a}<br className="hidden sm:block" /> <span className="text-gradient">{t.h1b}</span>
             </h1>
