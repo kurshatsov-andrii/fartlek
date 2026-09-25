@@ -47,6 +47,7 @@ export const Header = () => {
           <Link to="/map" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-base">Мапа</Link>
           <Link to="/clubs" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-base">Клуби</Link>
           <Link to="/organizers" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-base">Організатори</Link>
+          <Link to="/for-organizers" className="text-sm font-medium text-primary font-semibold hover:opacity-80 transition-base">Організаторам</Link>
           <Link to="/features" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-base">Можливості</Link>
           {user && (
             <>
