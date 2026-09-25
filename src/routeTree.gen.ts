@@ -14,6 +14,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as CalendarRouteImport } from './routes/calendar'
 import { Route as ContactsRouteImport } from './routes/contacts'
 import { Route as FeaturesRouteImport } from './routes/features'
+import { Route as ForOrganizersRouteImport } from './routes/for-organizers'
 import { Route as MapRouteImport } from './routes/map'
 import { Route as MyEventsRouteImport } from './routes/my-events'
 import { Route as PrivacyRouteImport } from './routes/privacy'
@@ -84,6 +85,11 @@ const ContactsRoute = ContactsRouteImport.update({
 const FeaturesRoute = FeaturesRouteImport.update({
   id: '/features',
   path: '/features',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ForOrganizersRoute = ForOrganizersRouteImport.update({
+  id: '/for-organizers',
+  path: '/for-organizers',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MapRoute = MapRouteImport.update({
@@ -328,6 +334,7 @@ export interface FileRoutesByFullPath {
   '/calendar': typeof CalendarRoute
   '/contacts': typeof ContactsRoute
   '/features': typeof FeaturesRoute
+  '/for-organizers': typeof ForOrganizersRoute
   '/map': typeof MapRoute
   '/my-events': typeof MyEventsRoute
   '/privacy': typeof PrivacyRoute
@@ -381,6 +388,7 @@ export interface FileRoutesByTo {
   '/calendar': typeof CalendarRoute
   '/contacts': typeof ContactsRoute
   '/features': typeof FeaturesRoute
+  '/for-organizers': typeof ForOrganizersRoute
   '/map': typeof MapRoute
   '/my-events': typeof MyEventsRoute
   '/privacy': typeof PrivacyRoute
@@ -435,6 +443,7 @@ export interface FileRoutesById {
   '/calendar': typeof CalendarRoute
   '/contacts': typeof ContactsRoute
   '/features': typeof FeaturesRoute
+  '/for-organizers': typeof ForOrganizersRoute
   '/map': typeof MapRoute
   '/my-events': typeof MyEventsRoute
   '/privacy': typeof PrivacyRoute
@@ -490,6 +499,7 @@ export interface FileRouteTypes {
     | '/calendar'
     | '/contacts'
     | '/features'
+    | '/for-organizers'
     | '/map'
     | '/my-events'
     | '/privacy'
@@ -543,6 +553,7 @@ export interface FileRouteTypes {
     | '/calendar'
     | '/contacts'
     | '/features'
+    | '/for-organizers'
     | '/map'
     | '/my-events'
     | '/privacy'
@@ -596,6 +607,7 @@ export interface FileRouteTypes {
     | '/calendar'
     | '/contacts'
     | '/features'
+    | '/for-organizers'
     | '/map'
     | '/my-events'
     | '/privacy'
@@ -650,6 +662,7 @@ export interface RootRouteChildren {
   CalendarRoute: typeof CalendarRoute
   ContactsRoute: typeof ContactsRoute
   FeaturesRoute: typeof FeaturesRoute
+  ForOrganizersRoute: typeof ForOrganizersRoute
   MapRoute: typeof MapRoute
   MyEventsRoute: typeof MyEventsRoute
   PrivacyRoute: typeof PrivacyRoute
@@ -733,6 +746,13 @@ declare module '@tanstack/react-router' {
       path: '/features'
       fullPath: '/features'
       preLoaderRoute: typeof FeaturesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/for-organizers': {
+      id: '/for-organizers'
+      path: '/for-organizers'
+      fullPath: '/for-organizers'
+      preLoaderRoute: typeof ForOrganizersRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/map': {
@@ -1066,6 +1086,7 @@ const rootRouteChildren: RootRouteChildren = {
   CalendarRoute: CalendarRoute,
   ContactsRoute: ContactsRoute,
   FeaturesRoute: FeaturesRoute,
+  ForOrganizersRoute: ForOrganizersRoute,
   MapRoute: MapRoute,
   MyEventsRoute: MyEventsRoute,
   PrivacyRoute: PrivacyRoute,

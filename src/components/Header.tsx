@@ -1,5 +1,5 @@
 import { Link, useLocation, useNavigate } from "@/lib/router-compat";
-import { LogOut, User, LayoutDashboard, Ticket, Shield, Mail, Users, Sparkles, Star, Menu, MapPin, Calendar as CalendarIcon } from "lucide-react";
+import { LogOut, User, LayoutDashboard, Ticket, Shield, Mail, Users, Sparkles, Star, Menu, MapPin, Calendar as CalendarIcon, Megaphone } from "lucide-react";
 import logoFartlek from "@/assets/logo-fartlek.jpg";
 import { Button } from "@/components/ui/button";
 import { useApp } from "@/contexts/AppContext";
@@ -57,7 +57,7 @@ export const Header = () => {
           {isOrganizer ? (
             <Link to="/organizer" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-base">{t.nav.dashboard}</Link>
           ) : (
-            <Link to="/auth?role=organizer" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-base">{t.nav.organizer}</Link>
+            <Link to="/for-organizers" className="text-sm font-medium text-primary font-semibold hover:opacity-80 transition-base">{t.nav.organizer}</Link>
           )}
           <Link to="/contacts" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-base">{t.nav.contacts}</Link>
         </nav>
@@ -88,6 +88,7 @@ export const Header = () => {
                 <DropdownMenuItem asChild className="lg:hidden"><Link to="/map"><MapPin className="h-4 w-4" />Мапа</Link></DropdownMenuItem>
                 <DropdownMenuItem asChild className="lg:hidden"><Link to="/clubs"><Users className="h-4 w-4" />Клуби</Link></DropdownMenuItem>
                 <DropdownMenuItem asChild className="lg:hidden"><Link to="/features"><Sparkles className="h-4 w-4" />Можливості</Link></DropdownMenuItem>
+                <DropdownMenuItem asChild className="lg:hidden"><Link to="/for-organizers"><Megaphone className="h-4 w-4" />Організаторам</Link></DropdownMenuItem>
                 <DropdownMenuItem asChild><Link to="/testimonials"><Star className="h-4 w-4" />Відгуки</Link></DropdownMenuItem>
                 <DropdownMenuItem asChild className="lg:hidden"><Link to="/contacts"><Mail className="h-4 w-4" />{t.nav.contacts}</Link></DropdownMenuItem>
                 <DropdownMenuSeparator />
