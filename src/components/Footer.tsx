@@ -1,6 +1,7 @@
 import { Link } from "@/lib/router-compat";
-import { Activity } from "lucide-react";
+import { Activity, Send, MessagesSquare } from "lucide-react";
 import { useApp } from "@/contexts/AppContext";
+import { TELEGRAM_CHANNEL_URL, TELEGRAM_CHAT_URL } from "@/components/TelegramCommunity";
 
 export const Footer = () => {
   const { t } = useApp();
@@ -20,6 +21,14 @@ export const Footer = () => {
           <div className="font-semibold">ФОП КУРШАЦОВ А. І.</div>
           <a href="tel:+380972520551" className="block hover:text-primary transition-colors">+38 097 252 05 51</a>
           <a href="mailto:info@fartlek.com.ua" className="block hover:text-primary transition-colors">info@fartlek.com.ua</a>
+          <div className="flex items-center justify-center gap-3 pt-2">
+            <a href={TELEGRAM_CHANNEL_URL} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-full border border-secondary-foreground/20 px-3 py-1.5 text-xs hover:border-primary hover:text-primary transition-colors">
+              <Send className="h-3.5 w-3.5" /> Telegram-канал
+            </a>
+            <a href={TELEGRAM_CHAT_URL} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-full border border-secondary-foreground/20 px-3 py-1.5 text-xs hover:border-primary hover:text-primary transition-colors">
+              <MessagesSquare className="h-3.5 w-3.5" /> Telegram-чат
+            </a>
+          </div>
         </div>
         <div className="text-xs text-secondary-foreground/50 flex flex-col gap-1 text-center md:text-right">
           <div>© {new Date().getFullYear()} Fartlek. {t.footer.rights}</div>

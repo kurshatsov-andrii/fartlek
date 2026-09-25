@@ -4,6 +4,7 @@ import { VideoTutorialSection } from "@/components/VideoTutorialSection";
 import { FeaturesCarousel } from "@/components/FeaturesCarousel";
 import { EventsSection } from "@/components/EventsSection";
 import { CompletedEventsSection } from "@/components/CompletedEventsSection";
+import { TelegramCommunity } from "@/components/TelegramCommunity";
 import { Footer } from "@/components/Footer";
 import { SEO } from "@/components/SEO";
 import { useApp } from "@/contexts/AppContext";
@@ -51,6 +52,7 @@ const Index = () => {
         {!user && <VideoTutorialSection />}
         {!user && <FeaturesCarousel />}
         <EventsSection />
+        <TelegramCommunity />
         <CompletedEventsSection />
       </main>
       <Footer />
