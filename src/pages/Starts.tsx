@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { PageViews } from "@/components/PageViews";
+import { TELEGRAM_CHANNEL_URL, TELEGRAM_CHAT_URL } from "@/components/TelegramCommunity";
 import { Link } from "@/lib/router-compat";
 import { Loader2, ExternalLink, Calendar as CalendarIcon, Search, X, Filter, MapPin } from "lucide-react";
 import { Header } from "@/components/Header";
@@ -177,6 +178,16 @@ const Starts = () => {
           <a href="https://t.me/fartlekua" target="_blank" rel="noreferrer" className="underline">@fartlekua</a>.
         </p>
         <PageViews pageKey="page:starts" className="mb-6" />
+
+        <div className="mb-8 flex flex-wrap items-center gap-3 rounded-lg border bg-card p-4">
+          <span className="text-sm text-muted-foreground">Бігова спільнота Харкова у Telegram:</span>
+          <Button asChild size="sm">
+            <a href={TELEGRAM_CHANNEL_URL} target="_blank" rel="noopener noreferrer">Приєднатися до каналу</a>
+          </Button>
+          <Button asChild size="sm" variant="outline">
+            <a href={TELEGRAM_CHAT_URL} target="_blank" rel="noopener noreferrer">Приєднатися до чату</a>
+          </Button>
+        </div>
 
 
         {/* Filters */}
