@@ -517,6 +517,13 @@ const EventDetails = () => {
                       <Link to={`/ticket/${registration.id}`}>{t.events.viewTicket}</Link>
                     </Button>
                   )}
+                  {user && (
+                    <Button asChild variant="outline" className="w-full">
+                      <Link to={`/events/${event.id}/participants`}>
+                        <Users className="h-4 w-4" /> {t.events.participants}
+                      </Link>
+                    </Button>
+                  )}
                 </div>
               ) : (
               <div className="relative sticky top-24 bg-card p-6 rounded-2xl shadow-card space-y-4">
