@@ -306,9 +306,12 @@ const EventDetails = () => {
   const isKharkivHalf = /kharkiv\s*half\s*marathon/i.test(event.title ?? "") || /kharkiv-half-marathon/i.test(event.slug ?? "");
   const isSarzhynYar = /саржин\s*яр/i.test(event.title ?? "") || /sarzhyn/i.test(event.slug ?? "");
   const isTraktorRun = /traktor\s*run/i.test(event.title ?? "") || /traktor-run/i.test(event.slug ?? "");
+  const isKyivNezlamnist = /марафон\s+незламності/i.test(event.title ?? "") || /nezlamnosti/i.test(event.slug ?? "");
   const displayParticipantsCount = isTraktorRun
     ? 50
-    : user
+    : isKyivNezlamnist
+      ? Math.min(participantsCount, 50)
+      : user
       ? participantsCount
       : isSarzhynYar
         ? 50
