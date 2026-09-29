@@ -91,7 +91,16 @@ type Props = {
 /**
  * Простий стартовий номер (BIB) — попередній перегляд + завантаження PNG/PDF.
  */
-export const BibCard = ({ eventTitle, fullName, club, bibNumber, distance, qrUrl, trigger }: Props) => {
+const PATRONYMIC_RE = /(ович|евич|євич|йович|ич|івна|ївна|овна|евна|ична|инична)$/i;
+const stripPatronymic = (name?: string | null) => {
+  if (!name) return name;
+  const parts = name.trim().split(/\s+/);
+  if (parts.length < 3) return parts.join(" ");
+  return parts.filter((p, i) => i === 0 || !PATRONYMIC_RE.test(p)).slice(0, 2).join(" ");
+};
+
+export const BibCard = ({ eventTitle, fullName: rawFullName, club, bibNumber, distance, qrUrl, trigger }: Props) => {
+  const fullName = stripPatronymic(rawFullName);
   const { lang } = useApp();
   const [open, setOpen] = useState(false);
   const [busy, setBusy] = useState<"png" | "pdf" | null>(null);
