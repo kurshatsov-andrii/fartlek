@@ -116,6 +116,48 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://fartlek.lovable.app/events/bigotreyl-rivne-rivne-2026</loc>
+    <lastmod>2026-10-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://fartlek.lovable.app/events/bigotreyl-zhytomyr-zhytomyr-2026</loc>
+    <lastmod>2026-10-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://fartlek.lovable.app/events/bigotreyl-chernivci-chernivci-2026</loc>
+    <lastmod>2026-10-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://fartlek.lovable.app/events/bigotreyl-l-viv-l-viv-2026</loc>
+    <lastmod>2026-10-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://fartlek.lovable.app/events/bigotreyl-vinnycya-vinnycya-2026</loc>
+    <lastmod>2026-10-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://fartlek.lovable.app/events/bigotreyl-ternopil-ternopil-2026</loc>
+    <lastmod>2026-10-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://fartlek.lovable.app/events/bigotreyl-hmel-nyc-kyy-hmel-nyc-kyy-2026</loc>
+    <lastmod>2026-10-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://fartlek.lovable.app/events/kyivs-kyy-marafon-nezlamnosti-v-harkovi-harkiv-2026</loc>
     <lastmod>2026-10-02</lastmod>
     <changefreq>weekly</changefreq>
@@ -214,6 +256,12 @@
   <url>
     <loc>https://fartlek.lovable.app/starts/blagodiynyy-onlayn-zabig-zabig-velykyh-serdec-2026-08-22</loc>
     <lastmod>2026-08-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fartlek.lovable.app/starts/final-nyy-zabig-rivne-2026-10-11</loc>
+    <lastmod>2026-10-03</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
