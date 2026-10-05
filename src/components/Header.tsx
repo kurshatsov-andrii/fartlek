@@ -1,5 +1,5 @@
 import { Link, useLocation, useNavigate } from "@/lib/router-compat";
-import { LogOut, User, LayoutDashboard, Ticket, Shield, Mail, Users, Sparkles, Star, Menu, MapPin, Calendar as CalendarIcon, Megaphone } from "lucide-react";
+import { LogOut, User, LayoutDashboard, Ticket, Shield, Mail, Users, Sparkles, Star, Menu, MapPin, Calendar as CalendarIcon, Megaphone, BookOpen } from "lucide-react";
 import logoFartlek from "@/assets/logo-fartlek.jpg";
 import { Button } from "@/components/ui/button";
 import { useApp } from "@/contexts/AppContext";
@@ -47,6 +47,7 @@ export const Header = () => {
           <Link to="/map" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-base">Мапа</Link>
           <Link to="/clubs" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-base">Клуби</Link>
           <Link to="/organizers" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-base">Організатори</Link>
+          <Link to="/blog" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-base">Блог</Link>
           <Link to="/features" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-base">Можливості</Link>
           {user && (
             <>
@@ -87,6 +88,7 @@ export const Header = () => {
                 <DropdownMenuItem asChild className="lg:hidden"><Link to="/calendar"><LayoutDashboard className="h-4 w-4" />Календар</Link></DropdownMenuItem>
                 <DropdownMenuItem asChild className="lg:hidden"><Link to="/map"><MapPin className="h-4 w-4" />Мапа</Link></DropdownMenuItem>
                 <DropdownMenuItem asChild className="lg:hidden"><Link to="/clubs"><Users className="h-4 w-4" />Клуби</Link></DropdownMenuItem>
+                <DropdownMenuItem asChild className="lg:hidden"><Link to="/blog"><BookOpen className="h-4 w-4" />Блог</Link></DropdownMenuItem>
                 <DropdownMenuItem asChild className="lg:hidden"><Link to="/features"><Sparkles className="h-4 w-4" />Можливості</Link></DropdownMenuItem>
                 {!isOrganizer && (
                   <DropdownMenuItem asChild className="lg:hidden"><Link to="/for-organizers"><Megaphone className="h-4 w-4" />{t.nav.organizer}</Link></DropdownMenuItem>
@@ -115,6 +117,7 @@ export const Header = () => {
                   <DropdownMenuItem asChild><Link to="/map"><MapPin className="h-4 w-4" />Мапа</Link></DropdownMenuItem>
                   <DropdownMenuItem asChild><Link to="/clubs"><Users className="h-4 w-4" />Клуби</Link></DropdownMenuItem>
                   <DropdownMenuItem asChild><Link to="/organizers"><Users className="h-4 w-4" />Організатори</Link></DropdownMenuItem>
+                  <DropdownMenuItem asChild><Link to="/blog"><BookOpen className="h-4 w-4" />Блог</Link></DropdownMenuItem>
                   <DropdownMenuItem asChild><Link to="/for-organizers" className="text-primary font-semibold"><Megaphone className="h-4 w-4" />{t.nav.organizer}</Link></DropdownMenuItem>
                   <DropdownMenuItem asChild><Link to="/features"><Sparkles className="h-4 w-4" />Можливості</Link></DropdownMenuItem>
                   <DropdownMenuItem asChild><Link to="/contacts"><Mail className="h-4 w-4" />{t.nav.contacts}</Link></DropdownMenuItem>
