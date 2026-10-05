@@ -5,6 +5,7 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { BlogSocialLinks } from "@/components/BlogSocialLinks";
+import { PageViews } from "@/components/PageViews";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { BlogPost, formatBlogDate } from "@/lib/blog";
@@ -28,6 +29,7 @@ const Blog = () => {
           <div>
             <h1 className="font-display text-3xl md:text-4xl font-bold">Блог Фартлек</h1>
             <p className="text-muted-foreground mt-2 max-w-2xl">Бігова команда та спільнота Харкова: фото, відео та історії з наших забігів.</p>
+            <PageViews pageKey="page:blog" className="mt-3" />
           </div>
           {isAdmin && (
             <Button asChild variant="outline"><Link to="/admin/blog"><Settings className="h-4 w-4" />Керувати блогом</Link></Button>

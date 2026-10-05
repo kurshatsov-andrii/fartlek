@@ -5,6 +5,7 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { BlogSocialLinks } from "@/components/BlogSocialLinks";
+import { PageViews } from "@/components/PageViews";
 import { supabase } from "@/integrations/supabase/client";
 import { BlogPost, formatBlogDate, youtubeEmbed } from "@/lib/blog";
 
@@ -36,6 +37,7 @@ const BlogPostPage = () => {
               <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
                 {post.event_date && <span className="flex items-center gap-1"><Calendar className="h-4 w-4" />{formatBlogDate(post.event_date)}</span>}
                 {post.location && <span className="flex items-center gap-1"><MapPin className="h-4 w-4" />{post.location}</span>}
+                <PageViews pageKey={`blog:${post.slug}`} />
               </div>
             </header>
             {post.cover_url && <img src={post.cover_url} alt={post.title} className="w-full rounded-2xl object-cover max-h-[520px]" />}
