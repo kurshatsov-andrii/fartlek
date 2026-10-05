@@ -26,6 +26,7 @@ import { Route as TestimonialsRouteImport } from './routes/testimonials'
 import { Route as UnsubscribeRouteImport } from './routes/unsubscribe'
 import { Route as UserAgreementRouteImport } from './routes/user-agreement'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
+import { Route as AdminBlogRouteImport } from './routes/admin/blog'
 import { Route as AdminCampaignsRouteImport } from './routes/admin/campaigns'
 import { Route as AdminCarouselRouteImport } from './routes/admin/carousel'
 import { Route as AdminSeoRouteImport } from './routes/admin/seo'
@@ -33,6 +34,8 @@ import { Route as AdminSessionsRouteImport } from './routes/admin/sessions'
 import { Route as AdminStartsRouteImport } from './routes/admin/starts'
 import { Route as AdminSurveyRouteImport } from './routes/admin/survey'
 import { Route as AdminUnsubscribesRouteImport } from './routes/admin/unsubscribes'
+import { Route as BlogIndexRouteImport } from './routes/blog/index'
+import { Route as BlogSlugRouteImport } from './routes/blog/$slug'
 import { Route as CategoryIndexRouteImport } from './routes/category/index'
 import { Route as CategoryCategoryRouteImport } from './routes/category/$category'
 import { Route as ClubsIndexRouteImport } from './routes/clubs/index'
@@ -147,6 +150,11 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
   path: '/admin/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminBlogRoute = AdminBlogRouteImport.update({
+  id: '/admin/blog',
+  path: '/admin/blog',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminCampaignsRoute = AdminCampaignsRouteImport.update({
   id: '/admin/campaigns',
   path: '/admin/campaigns',
@@ -180,6 +188,16 @@ const AdminSurveyRoute = AdminSurveyRouteImport.update({
 const AdminUnsubscribesRoute = AdminUnsubscribesRouteImport.update({
   id: '/admin/unsubscribes',
   path: '/admin/unsubscribes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogIndexRoute = BlogIndexRouteImport.update({
+  id: '/blog/',
+  path: '/blog/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogSlugRoute = BlogSlugRouteImport.update({
+  id: '/blog/$slug',
+  path: '/blog/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CategoryIndexRoute = CategoryIndexRouteImport.update({
@@ -345,6 +363,7 @@ export interface FileRoutesByFullPath {
   '/testimonials': typeof TestimonialsRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/user-agreement': typeof UserAgreementRoute
+  '/admin/blog': typeof AdminBlogRoute
   '/admin/campaigns': typeof AdminCampaignsRoute
   '/admin/carousel': typeof AdminCarouselRoute
   '/admin/seo': typeof AdminSeoRoute
@@ -352,6 +371,7 @@ export interface FileRoutesByFullPath {
   '/admin/starts': typeof AdminStartsRoute
   '/admin/survey': typeof AdminSurveyRoute
   '/admin/unsubscribes': typeof AdminUnsubscribesRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/category/$category': typeof CategoryCategoryRoute
   '/clubs/$slug': typeof ClubsSlugRoute
   '/clubs/edit': typeof ClubsEditRoute
@@ -364,6 +384,7 @@ export interface FileRoutesByFullPath {
   '/strava/callback': typeof StravaCallbackRoute
   '/ticket/$id': typeof TicketIdRoute
   '/admin/': typeof AdminIndexRoute
+  '/blog/': typeof BlogIndexRoute
   '/category/': typeof CategoryIndexRoute
   '/clubs/': typeof ClubsIndexRoute
   '/organizer/': typeof OrganizerIndexRoute
@@ -399,6 +420,7 @@ export interface FileRoutesByTo {
   '/testimonials': typeof TestimonialsRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/user-agreement': typeof UserAgreementRoute
+  '/admin/blog': typeof AdminBlogRoute
   '/admin/campaigns': typeof AdminCampaignsRoute
   '/admin/carousel': typeof AdminCarouselRoute
   '/admin/seo': typeof AdminSeoRoute
@@ -406,6 +428,7 @@ export interface FileRoutesByTo {
   '/admin/starts': typeof AdminStartsRoute
   '/admin/survey': typeof AdminSurveyRoute
   '/admin/unsubscribes': typeof AdminUnsubscribesRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/category/$category': typeof CategoryCategoryRoute
   '/clubs/$slug': typeof ClubsSlugRoute
   '/clubs/edit': typeof ClubsEditRoute
@@ -418,6 +441,7 @@ export interface FileRoutesByTo {
   '/strava/callback': typeof StravaCallbackRoute
   '/ticket/$id': typeof TicketIdRoute
   '/admin': typeof AdminIndexRoute
+  '/blog': typeof BlogIndexRoute
   '/category': typeof CategoryIndexRoute
   '/clubs': typeof ClubsIndexRoute
   '/organizer': typeof OrganizerIndexRoute
@@ -454,6 +478,7 @@ export interface FileRoutesById {
   '/testimonials': typeof TestimonialsRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/user-agreement': typeof UserAgreementRoute
+  '/admin/blog': typeof AdminBlogRoute
   '/admin/campaigns': typeof AdminCampaignsRoute
   '/admin/carousel': typeof AdminCarouselRoute
   '/admin/seo': typeof AdminSeoRoute
@@ -461,6 +486,7 @@ export interface FileRoutesById {
   '/admin/starts': typeof AdminStartsRoute
   '/admin/survey': typeof AdminSurveyRoute
   '/admin/unsubscribes': typeof AdminUnsubscribesRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/category/$category': typeof CategoryCategoryRoute
   '/clubs/$slug': typeof ClubsSlugRoute
   '/clubs/edit': typeof ClubsEditRoute
@@ -473,6 +499,7 @@ export interface FileRoutesById {
   '/strava/callback': typeof StravaCallbackRoute
   '/ticket/$id': typeof TicketIdRoute
   '/admin/': typeof AdminIndexRoute
+  '/blog/': typeof BlogIndexRoute
   '/category/': typeof CategoryIndexRoute
   '/clubs/': typeof ClubsIndexRoute
   '/organizer/': typeof OrganizerIndexRoute
@@ -510,6 +537,7 @@ export interface FileRouteTypes {
     | '/testimonials'
     | '/unsubscribe'
     | '/user-agreement'
+    | '/admin/blog'
     | '/admin/campaigns'
     | '/admin/carousel'
     | '/admin/seo'
@@ -517,6 +545,7 @@ export interface FileRouteTypes {
     | '/admin/starts'
     | '/admin/survey'
     | '/admin/unsubscribes'
+    | '/blog/$slug'
     | '/category/$category'
     | '/clubs/$slug'
     | '/clubs/edit'
@@ -529,6 +558,7 @@ export interface FileRouteTypes {
     | '/strava/callback'
     | '/ticket/$id'
     | '/admin/'
+    | '/blog/'
     | '/category/'
     | '/clubs/'
     | '/organizer/'
@@ -564,6 +594,7 @@ export interface FileRouteTypes {
     | '/testimonials'
     | '/unsubscribe'
     | '/user-agreement'
+    | '/admin/blog'
     | '/admin/campaigns'
     | '/admin/carousel'
     | '/admin/seo'
@@ -571,6 +602,7 @@ export interface FileRouteTypes {
     | '/admin/starts'
     | '/admin/survey'
     | '/admin/unsubscribes'
+    | '/blog/$slug'
     | '/category/$category'
     | '/clubs/$slug'
     | '/clubs/edit'
@@ -583,6 +615,7 @@ export interface FileRouteTypes {
     | '/strava/callback'
     | '/ticket/$id'
     | '/admin'
+    | '/blog'
     | '/category'
     | '/clubs'
     | '/organizer'
@@ -618,6 +651,7 @@ export interface FileRouteTypes {
     | '/testimonials'
     | '/unsubscribe'
     | '/user-agreement'
+    | '/admin/blog'
     | '/admin/campaigns'
     | '/admin/carousel'
     | '/admin/seo'
@@ -625,6 +659,7 @@ export interface FileRouteTypes {
     | '/admin/starts'
     | '/admin/survey'
     | '/admin/unsubscribes'
+    | '/blog/$slug'
     | '/category/$category'
     | '/clubs/$slug'
     | '/clubs/edit'
@@ -637,6 +672,7 @@ export interface FileRouteTypes {
     | '/strava/callback'
     | '/ticket/$id'
     | '/admin/'
+    | '/blog/'
     | '/category/'
     | '/clubs/'
     | '/organizer/'
@@ -673,6 +709,7 @@ export interface RootRouteChildren {
   TestimonialsRoute: typeof TestimonialsRoute
   UnsubscribeRoute: typeof UnsubscribeRoute
   UserAgreementRoute: typeof UserAgreementRoute
+  AdminBlogRoute: typeof AdminBlogRoute
   AdminCampaignsRoute: typeof AdminCampaignsRoute
   AdminCarouselRoute: typeof AdminCarouselRoute
   AdminSeoRoute: typeof AdminSeoRoute
@@ -680,6 +717,7 @@ export interface RootRouteChildren {
   AdminStartsRoute: typeof AdminStartsRoute
   AdminSurveyRoute: typeof AdminSurveyRoute
   AdminUnsubscribesRoute: typeof AdminUnsubscribesRoute
+  BlogSlugRoute: typeof BlogSlugRoute
   CategoryCategoryRoute: typeof CategoryCategoryRoute
   ClubsSlugRoute: typeof ClubsSlugRoute
   ClubsEditRoute: typeof ClubsEditRoute
@@ -692,6 +730,7 @@ export interface RootRouteChildren {
   StravaCallbackRoute: typeof StravaCallbackRoute
   TicketIdRoute: typeof TicketIdRoute
   AdminIndexRoute: typeof AdminIndexRoute
+  BlogIndexRoute: typeof BlogIndexRoute
   CategoryIndexRoute: typeof CategoryIndexRoute
   ClubsIndexRoute: typeof ClubsIndexRoute
   OrganizerIndexRoute: typeof OrganizerIndexRoute
@@ -832,6 +871,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/blog': {
+      id: '/admin/blog'
+      path: '/admin/blog'
+      fullPath: '/admin/blog'
+      preLoaderRoute: typeof AdminBlogRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/campaigns': {
       id: '/admin/campaigns'
       path: '/admin/campaigns'
@@ -879,6 +925,20 @@ declare module '@tanstack/react-router' {
       path: '/admin/unsubscribes'
       fullPath: '/admin/unsubscribes'
       preLoaderRoute: typeof AdminUnsubscribesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog/': {
+      id: '/blog/'
+      path: '/blog'
+      fullPath: '/blog/'
+      preLoaderRoute: typeof BlogIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog/$slug': {
+      id: '/blog/$slug'
+      path: '/blog/$slug'
+      fullPath: '/blog/$slug'
+      preLoaderRoute: typeof BlogSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/category/': {
@@ -1097,6 +1157,7 @@ const rootRouteChildren: RootRouteChildren = {
   TestimonialsRoute: TestimonialsRoute,
   UnsubscribeRoute: UnsubscribeRoute,
   UserAgreementRoute: UserAgreementRoute,
+  AdminBlogRoute: AdminBlogRoute,
   AdminCampaignsRoute: AdminCampaignsRoute,
   AdminCarouselRoute: AdminCarouselRoute,
   AdminSeoRoute: AdminSeoRoute,
@@ -1104,6 +1165,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminStartsRoute: AdminStartsRoute,
   AdminSurveyRoute: AdminSurveyRoute,
   AdminUnsubscribesRoute: AdminUnsubscribesRoute,
+  BlogSlugRoute: BlogSlugRoute,
   CategoryCategoryRoute: CategoryCategoryRoute,
   ClubsSlugRoute: ClubsSlugRoute,
   ClubsEditRoute: ClubsEditRoute,
@@ -1116,6 +1178,7 @@ const rootRouteChildren: RootRouteChildren = {
   StravaCallbackRoute: StravaCallbackRoute,
   TicketIdRoute: TicketIdRoute,
   AdminIndexRoute: AdminIndexRoute,
+  BlogIndexRoute: BlogIndexRoute,
   CategoryIndexRoute: CategoryIndexRoute,
   ClubsIndexRoute: ClubsIndexRoute,
   OrganizerIndexRoute: OrganizerIndexRoute,
