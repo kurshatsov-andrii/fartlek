@@ -248,6 +248,9 @@ const Admin = () => {
             </Button>
             <Button asChild variant="outline" size="sm">
               <Link to="/admin/carousel">🖼️ Карусель</Link>
+              </Button>
+              <Button asChild variant="outline" size="sm">
+                <Link to="/admin/blog">📝 Блог</Link>
             </Button>
             <Button asChild variant="outline" size="sm">
               <Link to="/admin/starts">🏁 Старти (Telegram)</Link>
