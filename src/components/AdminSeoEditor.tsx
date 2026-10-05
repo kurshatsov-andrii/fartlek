@@ -30,7 +30,7 @@ export const AdminSeoEditor = () => {
 
   const path = location.pathname;
   const hideOnRoutes = ["/auth", "/reset-password"];
-  if (!isAdmin || !user || hideOnRoutes.includes(path)) return null;
+  if (!isAdmin || !user || hideOnRoutes.includes(path) || path.startsWith("/admin") || path.startsWith("/organizer")) return null;
 
   const load = async () => {
     setLoading(true);
