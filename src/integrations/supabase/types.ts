@@ -61,6 +61,60 @@ export type Database = {
           },
         ]
       }
+      blog_posts: {
+        Row: {
+          content: string | null
+          cover_url: string | null
+          created_at: string
+          created_by: string | null
+          event_date: string | null
+          excerpt: string | null
+          id: string
+          is_published: boolean
+          location: string | null
+          photos: string[]
+          photos_album_url: string | null
+          slug: string
+          title: string
+          updated_at: string
+          youtube_url: string | null
+        }
+        Insert: {
+          content?: string | null
+          cover_url?: string | null
+          created_at?: string
+          created_by?: string | null
+          event_date?: string | null
+          excerpt?: string | null
+          id?: string
+          is_published?: boolean
+          location?: string | null
+          photos?: string[]
+          photos_album_url?: string | null
+          slug: string
+          title: string
+          updated_at?: string
+          youtube_url?: string | null
+        }
+        Update: {
+          content?: string | null
+          cover_url?: string | null
+          created_at?: string
+          created_by?: string | null
+          event_date?: string | null
+          excerpt?: string | null
+          id?: string
+          is_published?: boolean
+          location?: string | null
+          photos?: string[]
+          photos_album_url?: string | null
+          slug?: string
+          title?: string
+          updated_at?: string
+          youtube_url?: string | null
+        }
+        Relationships: []
+      }
       calendar_events: {
         Row: {
           category: string | null
