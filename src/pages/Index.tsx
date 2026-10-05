@@ -52,7 +52,7 @@ const Index = () => {
         {!user && <VideoTutorialSection />}
         {!user && <FeaturesCarousel />}
         <EventsSection />
-        <TelegramCommunity />
+        <TelegramCommunity showBlog />
         <CompletedEventsSection />
       </main>
       <Footer />

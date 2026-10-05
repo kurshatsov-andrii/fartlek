@@ -76,8 +76,8 @@ export const TelegramCommunity = ({ showBlog = false }: { showBlog?: boolean }) 
           {posts.length > 0 && (
             <div className="mt-10">
               <div className="flex items-center justify-between gap-3">
-                <h3 className="font-display text-xl font-bold">{T.blog}</h3>
-                <Link to="/blog" className="text-sm text-primary hover:underline">{T.allPosts} →</Link>
+                <h3 className="font-display text-xl font-bold">{L.blog}</h3>
+                <Link to="/blog" className="text-sm text-primary hover:underline">{L.allPosts} →</Link>
               </div>
               <div className="mt-4 grid gap-4 md:grid-cols-2">
                 {posts.map((p) => (
