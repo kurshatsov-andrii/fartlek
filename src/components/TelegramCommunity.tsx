@@ -1,12 +1,25 @@
-import { Send, MessagesSquare } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Send, MessagesSquare, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useApp } from "@/contexts/AppContext";
+import { Link } from "@/lib/router-compat";
+import { supabase } from "@/integrations/supabase/client";
+import { BlogPost, formatBlogDate } from "@/lib/blog";
+import logo from "@/assets/logo-fartlek.jpg";
 
 export const TELEGRAM_CHANNEL_URL = "https://t.me/+5-5XOFyn0JUxMTli";
 export const TELEGRAM_CHAT_URL = "https://t.me/+KgEHRsz677s4Zjhi";
 
-export const TelegramCommunity = () => {
+export const TelegramCommunity = ({ showBlog = false }: { showBlog?: boolean }) => {
   const { lang } = useApp();
+  const [posts, setPosts] = useState<BlogPost[]>([]);
+  useEffect(() => {
+    if (!showBlog) return;
+    supabase.from("blog_posts").select("*").eq("is_published", true)
+      .order("event_date", { ascending: false }).limit(2)
+      .then(({ data }) => setPosts((data as BlogPost[]) ?? []));
+  }, [showBlog]);
+  const L = lang === "uk" ? { blog: "Останні події з блогу", allPosts: "Усі записи" } : { blog: "Latest from the blog", allPosts: "All posts" };
   const T = lang === "uk"
     ? {
         eyebrow: "Спільнота",
@@ -59,8 +72,28 @@ export const TelegramCommunity = () => {
               </div>
             ))}
           </div>
+          </div>
+          {posts.length > 0 && (
+            <div className="mt-10">
+              <div className="flex items-center justify-between gap-3">
+                <h3 className="font-display text-xl font-bold">{L.blog}</h3>
+                <Link to="/blog" className="text-sm text-primary hover:underline">{L.allPosts} →</Link>
+              </div>
+              <div className="mt-4 grid gap-4 md:grid-cols-2">
+                {posts.map((p) => (
+                  <Link key={p.id} to={`/blog/${p.slug}`} className="group flex gap-4 rounded-2xl border border-border bg-background p-3 transition-bounce hover:-translate-y-1">
+                    <img src={p.cover_url || p.photos[0] || logo} alt={p.title} loading="lazy" className="h-24 w-32 shrink-0 rounded-xl object-cover" />
+                    <div className="min-w-0 space-y-1">
+                      {p.event_date && <div className="flex items-center gap-1 text-xs text-muted-foreground"><Calendar className="h-3.5 w-3.5" />{formatBlogDate(p.event_date)}</div>}
+                      <div className="font-semibold group-hover:text-primary transition-base">{p.title}</div>
+                      {p.excerpt && <p className="text-sm text-muted-foreground line-clamp-2">{p.excerpt}</p>}
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
-      </div>
     </section>
   );
 };

@@ -1,0 +1,1 @@
+ALTER TABLE public.seo_overrides ADD COLUMN IF NOT EXISTS h1 text, ADD COLUMN IF NOT EXISTS subtitle text;

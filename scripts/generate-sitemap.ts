@@ -87,7 +87,7 @@ function formatDate(value: unknown): string | undefined {
 }
 
 async function buildDynamicEntries(): Promise<SitemapEntry[]> {
-  const [events, starts, clubs, organizers] = await Promise.all([
+  const [events, starts, clubs, organizers, posts] = await Promise.all([
     fetchRows("events", "select=id,slug,updated_at&status=eq.published&slug=not.is.null"),
     fetchRows(
       "telegram_starts",
@@ -95,9 +95,20 @@ async function buildDynamicEntries(): Promise<SitemapEntry[]> {
     ),
     fetchRows("clubs", "select=slug,updated_at&slug=not.is.null"),
     fetchRows("organizers", "select=slug,updated_at&slug=not.is.null"),
+    fetchRows("blog_posts", "select=slug,updated_at&is_published=eq.true"),
   ]);
 
   const entries: SitemapEntry[] = [];
+
+  for (const p of posts) {
+    if (!p.slug) continue;
+    entries.push({
+      path: `/blog/${p.slug}`,
+      lastmod: formatDate(p.updated_at),
+      changefreq: "monthly",
+      priority: "0.6",
+    });
+  }
 
   for (const e of events) {
     if (!e.slug) continue;
