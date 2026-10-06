@@ -15,6 +15,13 @@
       "when": 1791198031559,
       "tag": "0001_seo_overrides_h1_subtitle",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1791269927366,
+      "tag": "0002_calendar_category_prefer_non_online",
+      "breakpoints": true
     }
   ]
 }
