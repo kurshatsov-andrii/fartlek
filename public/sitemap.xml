@@ -193,14 +193,14 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://fartlek.lovable.app/events/bigotreyl-hmel-nyc-kyy-hmel-nyc-kyy-2026</loc>
-    <lastmod>2026-10-03</lastmod>
+    <loc>https://fartlek.lovable.app/events/kyivs-kyy-marafon-nezlamnosti-v-harkovi-harkiv-2026</loc>
+    <lastmod>2026-10-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://fartlek.lovable.app/events/kyivs-kyy-marafon-nezlamnosti-v-harkovi-harkiv-2026</loc>
-    <lastmod>2026-10-04</lastmod>
+    <loc>https://fartlek.lovable.app/events/bigotreyl-hmel-nyc-kyy-hmel-nyc-kyy-2026</loc>
+    <lastmod>2026-10-03</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -217,18 +217,6 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fartlek.lovable.app/starts/kolomyys-ka-desyatka-2026-10-11</loc>
-    <lastmod>2026-09-03</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fartlek.lovable.app/starts/polis-kyy-napivmarafon-2026-10-24</loc>
-    <lastmod>2026-09-07</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://fartlek.lovable.app/starts/beskydy-trail-2026-2026-08-22</loc>
     <lastmod>2026-09-03</lastmod>
     <changefreq>weekly</changefreq>
@@ -241,8 +229,14 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://fartlek.lovable.app/starts/polis-kyy-napivmarafon-2026-10-24</loc>
+    <lastmod>2026-10-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://fartlek.lovable.app/starts/onlayn-zabig-ruhayus-dali-2026-10-25</loc>
-    <lastmod>2026-09-26</lastmod>
+    <lastmod>2026-10-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -266,13 +260,19 @@
   </url>
   <url>
     <loc>https://fartlek.lovable.app/starts/final-nyy-zabig-ternopil-2026-10-10</loc>
-    <lastmod>2026-10-01</lastmod>
+    <lastmod>2026-10-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fartlek.lovable.app/starts/6-skoda-napivmarafon-2026-10-24</loc>
-    <lastmod>2026-09-09</lastmod>
+    <loc>https://fartlek.lovable.app/starts/final-nyy-zabig-rivne-2026-10-11</loc>
+    <lastmod>2026-10-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fartlek.lovable.app/starts/west-carpathian-marathon-2026-10-18</loc>
+    <lastmod>2026-10-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -283,14 +283,14 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fartlek.lovable.app/starts/bilocerkivs-kyy-blagodiynyy-marafon-2026-10-04</loc>
-    <lastmod>2026-09-12</lastmod>
+    <loc>https://fartlek.lovable.app/starts/6-skoda-napivmarafon-2026-10-24</loc>
+    <lastmod>2026-10-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fartlek.lovable.app/starts/opishnyans-ka-desyatka-2026-2026-11-07</loc>
-    <lastmod>2026-10-02</lastmod>
+    <loc>https://fartlek.lovable.app/starts/bilocerkivs-kyy-blagodiynyy-marafon-2026-10-04</loc>
+    <lastmod>2026-09-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -301,8 +301,8 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fartlek.lovable.app/starts/final-nyy-zabig-rivne-2026-10-11</loc>
-    <lastmod>2026-10-03</lastmod>
+    <loc>https://fartlek.lovable.app/starts/opishnyans-ka-desyatka-2026-2026-11-07</loc>
+    <lastmod>2026-10-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -319,14 +319,26 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fartlek.lovable.app/starts/winter-kordon-race-kordon-trail-2026-12-12</loc>
-    <lastmod>2026-09-13</lastmod>
+    <loc>https://fartlek.lovable.app/starts/kyivs-kyy-marafon-nezlamnosti-u-hmel-nyc-kyy-2026-10-24</loc>
+    <lastmod>2026-10-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fartlek.lovable.app/starts/dino-trail-2026-11-08</loc>
+    <lastmod>2026-10-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fartlek.lovable.app/starts/christmas-run-2026-12-27</loc>
+    <lastmod>2026-10-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://fartlek.lovable.app/starts/uzhtrail-2026-11-08</loc>
-    <lastmod>2026-10-04</lastmod>
+    <lastmod>2026-10-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -337,8 +349,8 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fartlek.lovable.app/starts/west-carpathian-marathon-2026-10-18</loc>
-    <lastmod>2026-09-15</lastmod>
+    <loc>https://fartlek.lovable.app/starts/winter-kordon-race-kordon-trail-2026-12-12</loc>
+    <lastmod>2026-10-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -356,7 +368,7 @@
   </url>
   <url>
     <loc>https://fartlek.lovable.app/starts/kyivs-kyy-marafon-nezlamnosti-2026-10-10</loc>
-    <lastmod>2026-09-03</lastmod>
+    <lastmod>2026-10-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -379,8 +391,8 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fartlek.lovable.app/starts/dino-trail-2026-11-08</loc>
-    <lastmod>2026-09-03</lastmod>
+    <loc>https://fartlek.lovable.app/starts/kolomyys-ka-desyatka-2026-10-11</loc>
+    <lastmod>2026-10-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -446,7 +458,7 @@
   </url>
   <url>
     <loc>https://fartlek.lovable.app/starts/vechirni-pobigen-ky-2026-11-07</loc>
-    <lastmod>2026-09-22</lastmod>
+    <lastmod>2026-10-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -493,12 +505,6 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fartlek.lovable.app/starts/vodogray-chernivtsi-infinity-run-2026-10-10</loc>
-    <lastmod>2026-09-03</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://fartlek.lovable.app/starts/syhivs-ka-pyatirka-2026-09-26</loc>
     <lastmod>2026-09-03</lastmod>
     <changefreq>weekly</changefreq>
@@ -507,6 +513,12 @@
   <url>
     <loc>https://fartlek.lovable.app/starts/zabig-u-vyshyvankah-pam-yati-zahysnyka-ukrainy-oleksiya-chernobaya-ta-vsih-zahysnykiv-ta-zahysnyc-ukrainy-2026-08-23</loc>
     <lastmod>2026-09-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fartlek.lovable.app/starts/vodogray-chernivtsi-infinity-run-2026-10-10</loc>
+    <lastmod>2026-10-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -554,13 +566,7 @@
   </url>
   <url>
     <loc>https://fartlek.lovable.app/starts/luches-k-pivmarafon-2026-10-25</loc>
-    <lastmod>2026-09-03</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fartlek.lovable.app/starts/kyivs-kyy-marafon-nezlamnosti-u-hmel-nyc-kyy-2026-10-24</loc>
-    <lastmod>2026-09-24</lastmod>
+    <lastmod>2026-10-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
