@@ -153,7 +153,7 @@ const About = () => {
               <figure
                 key={photo.src}
                 className={`group overflow-hidden rounded-2xl border border-border bg-card shadow-card ${
-                  i < 2 ? "col-span-2 aspect-[16/9]" : "aspect-[4/3]"
+                  "aspect-[4/3]"
                 }`}
               >
                 <img
