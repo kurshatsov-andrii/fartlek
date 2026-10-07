@@ -1,5 +1,6 @@
+import { useCallback, useEffect, useState } from "react";
 import { Link } from "@/lib/router-compat";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, ChevronLeft, ChevronRight, X } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { SEO } from "@/components/SEO";
@@ -39,6 +40,32 @@ const MOTTO = [
 ];
 
 const About = () => {
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
+
+  const close = useCallback(() => setOpenIndex(null), []);
+  const prev = useCallback(() => setOpenIndex((i) => (i === null ? null : (i - 1 + PHOTOS.length) % PHOTOS.length)), []);
+  const next = useCallback(() => setOpenIndex((i) => (i === null ? null : (i + 1) % PHOTOS.length)), []);
+
+  useEffect(() => {
+    if (openIndex === null) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") close();
+      if (e.key === "ArrowLeft") prev();
+      if (e.key === "ArrowRight") next();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [openIndex, close, prev, next]);
+
+  useEffect(() => {
+    if (openIndex === null) return;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [openIndex]);
+
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <SEO
