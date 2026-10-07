@@ -148,13 +148,11 @@ const About = () => {
           <p className="mt-3 text-center text-muted-foreground">
             Спільні пробіжки, тренування та змагання — дивіться, як це виглядає наживо.
           </p>
-          <div className="mt-8 grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
-            {PHOTOS.map((photo, i) => (
+          <div className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+            {PHOTOS.map((photo) => (
               <figure
                 key={photo.src}
-                className={`group overflow-hidden rounded-2xl border border-border bg-card shadow-card ${
-                  "aspect-[4/3]"
-                }`}
+                className="group overflow-hidden rounded-2xl border border-border bg-card shadow-card aspect-[4/3]"
               >
                 <img
                   src={photo.src}
