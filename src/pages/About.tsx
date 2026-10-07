@@ -140,6 +140,32 @@ const About = () => {
             </p>
           </div>
         </section>
+
+        <section className="container pb-16 sm:pb-20 max-w-5xl">
+          <h2 className="font-display text-2xl sm:text-3xl font-bold tracking-tight text-center">
+            ФАРТЛЕК <span className="text-gradient">У РУСІ</span> 📸
+          </h2>
+          <p className="mt-3 text-center text-muted-foreground">
+            Спільні пробіжки, тренування та змагання — дивіться, як це виглядає наживо.
+          </p>
+          <div className="mt-8 grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
+            {PHOTOS.map((photo, i) => (
+              <figure
+                key={photo.src}
+                className={`group overflow-hidden rounded-2xl border border-border bg-card shadow-card ${
+                  i < 2 ? "col-span-2 aspect-[16/9]" : "aspect-[4/3]"
+                }`}
+              >
+                <img
+                  src={photo.src}
+                  alt={photo.alt}
+                  loading="lazy"
+                  className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+              </figure>
+            ))}
+          </div>
+        </section>
       </main>
       <Footer />
     </div>
