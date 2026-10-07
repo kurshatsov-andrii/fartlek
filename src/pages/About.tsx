@@ -3,6 +3,25 @@ import { ArrowLeft } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { SEO } from "@/components/SEO";
+import photo3465 from "@/assets/about/DSC_3465.JPG.asset.json";
+import photo4308 from "@/assets/about/DSC_4308.JPG.asset.json";
+import photo5718 from "@/assets/about/DSC_5718.JPG.asset.json";
+import photo7432 from "@/assets/about/DSC_7432.JPG.asset.json";
+import photo7832 from "@/assets/about/DSC_7832.JPG.asset.json";
+import photo8596 from "@/assets/about/DSC_8596.JPG.asset.json";
+import photo9832 from "@/assets/about/DSC_9832.JPG.asset.json";
+import photoRoksolana from "@/assets/about/roksolana-run-1.jpg.asset.json";
+
+const PHOTOS = [
+  { src: photo9832.url, alt: "Спільнота Фартлек з прапором перед спільною пробіжкою" },
+  { src: photo4308.url, alt: "Бігуни з медалями після змагань" },
+  { src: photo7432.url, alt: "Групове тренування Фартлек у парку" },
+  { src: photo7832.url, alt: "Бігуни біля прапора Фартлек" },
+  { src: photo8596.url, alt: "Фартлек на старті забігу в парку" },
+  { src: photo3465.url, alt: "Нагородження переможців Kharkiv Half Marathon" },
+  { src: photo5718.url, alt: "Фінішери марафонської дистанції під аркою Kharkiv Sport City" },
+  { src: photoRoksolana.url, alt: "Команда Фартлек на Roksolana Run" },
+];
 
 const VALUES = [
   { icon: "🏃", text: "Бігайте там, де вам подобається." },
