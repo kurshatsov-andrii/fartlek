@@ -1,5 +1,6 @@
+import { useCallback, useEffect, useState } from "react";
 import { Link } from "@/lib/router-compat";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, ChevronLeft, ChevronRight, X } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { SEO } from "@/components/SEO";
@@ -39,6 +40,32 @@ const MOTTO = [
 ];
 
 const About = () => {
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
+
+  const close = useCallback(() => setOpenIndex(null), []);
+  const prev = useCallback(() => setOpenIndex((i) => (i === null ? null : (i - 1 + PHOTOS.length) % PHOTOS.length)), []);
+  const next = useCallback(() => setOpenIndex((i) => (i === null ? null : (i + 1) % PHOTOS.length)), []);
+
+  useEffect(() => {
+    if (openIndex === null) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") close();
+      if (e.key === "ArrowLeft") prev();
+      if (e.key === "ArrowRight") next();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [openIndex, close, prev, next]);
+
+  useEffect(() => {
+    if (openIndex === null) return;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [openIndex]);
+
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <SEO
@@ -149,10 +176,13 @@ const About = () => {
             Спільні пробіжки, тренування та змагання — дивіться, як це виглядає наживо.
           </p>
           <div className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
-            {PHOTOS.map((photo) => (
-              <figure
+            {PHOTOS.map((photo, i) => (
+              <button
                 key={photo.src}
-                className="group overflow-hidden rounded-2xl border border-border bg-card shadow-card aspect-[4/3]"
+                type="button"
+                onClick={() => setOpenIndex(i)}
+                aria-label={photo.alt}
+                className="group block overflow-hidden rounded-2xl border border-border bg-card shadow-card aspect-[4/3] cursor-zoom-in focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
               >
                 <img
                   src={photo.src}
@@ -160,12 +190,57 @@ const About = () => {
                   loading="lazy"
                   className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
-              </figure>
+              </button>
             ))}
           </div>
         </section>
       </main>
       <Footer />
+      {openIndex !== null && (
+        <div
+          className="fixed inset-0 z-50 bg-background/95 backdrop-blur-sm flex items-center justify-center"
+          onClick={close}
+        >
+          <button
+            type="button"
+            aria-label="Закрити"
+            onClick={close}
+            className="absolute top-4 right-4 z-10 flex h-11 w-11 items-center justify-center rounded-full border border-border bg-card/80 text-foreground shadow-md transition hover:bg-card"
+          >
+            <X className="h-5 w-5" />
+          </button>
+          <button
+            type="button"
+            aria-label="Попереднє фото"
+            onClick={(e) => { e.stopPropagation(); prev(); }}
+            className="absolute left-2 sm:left-6 z-10 flex h-11 w-11 items-center justify-center rounded-full border border-border bg-card/80 text-foreground shadow-md transition hover:bg-card"
+          >
+            <ChevronLeft className="h-6 w-6" />
+          </button>
+          <button
+            type="button"
+            aria-label="Наступне фото"
+            onClick={(e) => { e.stopPropagation(); next(); }}
+            className="absolute right-2 sm:right-6 z-10 flex h-11 w-11 items-center justify-center rounded-full border border-border bg-card/80 text-foreground shadow-md transition hover:bg-card"
+          >
+            <ChevronRight className="h-6 w-6" />
+          </button>
+          <figure
+            className="flex max-h-full max-w-full flex-col items-center gap-3 p-12 sm:p-16"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <img
+              src={PHOTOS[openIndex].src}
+              alt={PHOTOS[openIndex].alt}
+              className="max-h-[78vh] max-w-full rounded-xl object-contain"
+              key={PHOTOS[openIndex].src}
+            />
+            <figcaption className="text-sm text-muted-foreground text-center">
+              {PHOTOS[openIndex].alt} · {openIndex + 1} / {PHOTOS.length}
+            </figcaption>
+          </figure>
+        </div>
+      )}
     </div>
   );
 };
