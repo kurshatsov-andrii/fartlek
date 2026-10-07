@@ -213,8 +213,10 @@ const About = () => {
       <Footer />
       {openIndex !== null && (
         <div
-          className="fixed inset-0 z-50 bg-background/95 backdrop-blur-sm flex items-center justify-center"
+          className="fixed inset-0 z-50 bg-background/95 backdrop-blur-sm flex items-center justify-center touch-pan-y"
           onClick={close}
+          onTouchStart={onTouchStart}
+          onTouchEnd={onTouchEnd}
         >
           <button
             type="button"
