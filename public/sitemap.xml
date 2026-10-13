@@ -162,6 +162,12 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://fartlek.lovable.app/blog/marafon-nezlamnosti</loc>
+    <lastmod>2026-10-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://fartlek.lovable.app/events/bigotreyl-rivne-rivne-2026</loc>
     <lastmod>2026-10-03</lastmod>
     <changefreq>weekly</changefreq>
@@ -194,12 +200,6 @@
   <url>
     <loc>https://fartlek.lovable.app/events/bigotreyl-ternopil-ternopil-2026</loc>
     <lastmod>2026-10-03</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://fartlek.lovable.app/events/kyivs-kyy-marafon-nezlamnosti-v-harkovi-harkiv-2026</loc>
-    <lastmod>2026-10-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
