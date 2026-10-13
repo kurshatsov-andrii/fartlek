@@ -1,3 +1,5 @@
+import { Link } from "@/lib/router-compat";
+import { ArrowRight } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Hero } from "@/components/Hero";
 import { VideoTutorialSection } from "@/components/VideoTutorialSection";
