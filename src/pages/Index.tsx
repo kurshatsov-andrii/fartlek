@@ -67,6 +67,22 @@ const Index = () => {
         <EventsSection />
         <TelegramCommunity showBlog />
         <CompletedEventsSection />
+        <section className="pb-16">
+          <div className="container">
+            <Link
+              to="/about"
+              className="group block rounded-3xl border border-border bg-card p-8 text-center transition-bounce hover:-translate-y-1 md:p-12"
+            >
+              <div className="text-xs uppercase tracking-wider font-semibold text-primary">{about.eyebrow}</div>
+              <h2 className="mt-2 font-display text-2xl font-bold md:text-3xl">{about.title}</h2>
+              <p className="mx-auto mt-3 max-w-2xl text-muted-foreground">{about.text}</p>
+              <span className="mt-6 inline-flex items-center gap-2 font-semibold text-primary">
+                {about.cta}
+                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+              </span>
+            </Link>
+          </div>
+        </section>
       </main>
       <Footer />
     </div>
