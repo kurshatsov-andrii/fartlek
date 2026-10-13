@@ -13,6 +13,19 @@ import { useAuth } from "@/hooks/useAuth";
 const Index = () => {
   const { lang } = useApp();
   const { user } = useAuth();
+  const about = lang === "uk"
+    ? {
+        eyebrow: "Про нас",
+        title: "ФАРТЛЕК — ЗА ОБ'ЄДНАННЯ ВСІХ БІГУНІВ!",
+        text: "Ми — бігова спільнота Фартлек: за свободу вибору бігуна, єдність бігунів Харкова та інших міст і бігову культуру без поділу на «наших» і «чужих». Більше бігу. Більше дружби. Менше поділу.",
+        cta: "Дізнатися більше про нас",
+      }
+    : {
+        eyebrow: "About us",
+        title: "FARTLEK — FOR UNITING ALL RUNNERS!",
+        text: "We are the Fartlek running community: for the runner's freedom of choice, unity of runners in Kharkiv and beyond, and running culture without division.",
+        cta: "Learn more about us",
+      };
   const seo = lang === "uk"
     ? {
         title: "Fartlek Events — реєстрація на забіги в Україні",
