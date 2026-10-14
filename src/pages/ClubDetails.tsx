@@ -15,19 +15,20 @@ const linkLabel = (url: string) => {
 
 const buildAutoDescription = (club: Club, lang: "uk" | "en"): string => {
   const types = (club.activity_types ?? []) as string[];
-  const isTrail = types.includes("trail");
+  const isRoad = (types as string[]).includes("road_run");
   const isOcr = types.includes("ocr");
   const isTri = (types as string[]).includes("triathlon");
+  const isTrailOnly = (types as string[]).includes("trail") && !isRoad;
 
   if (lang === "uk") {
-    const kind = isTrail ? "Трейловий клуб" : isOcr ? "OCR клуб" : isTri ? "Триатлон клуб" : "Біговий клуб";
+    const kind = isTrailOnly ? "Трейловий клуб" : isOcr ? "OCR клуб" : isTri ? "Триатлон клуб" : "Біговий клуб";
     const parts: string[] = [];
     parts.push(club.city ? `${kind} ${club.name} у місті ${club.city}` : `${kind} ${club.name}`);
     if (club.founded_year) parts.push(`заснований у ${club.founded_year} році`);
     if (club.members_count != null) parts.push(`кількість учасників клубу — ${club.members_count}`);
     return parts.join(", ") + ".";
   }
-  const kind = isTrail ? "Trail running club" : isOcr ? "OCR club" : isTri ? "Triathlon club" : "Running club";
+  const kind = isTrailOnly ? "Trail running club" : isOcr ? "OCR club" : isTri ? "Triathlon club" : "Running club";
   const parts: string[] = [];
   parts.push(club.city ? `${kind} ${club.name} in ${club.city}` : `${kind} ${club.name}`);
   if (club.founded_year) parts.push(`founded in ${club.founded_year}`);
@@ -72,15 +73,16 @@ const ClubDetails = () => {
     if (!club) return;
 
     const types = (club.activity_types ?? []) as string[];
-    const isTrail = types.includes("trail");
+    const isRoad = (types as string[]).includes("road_run");
     const isOcr = types.includes("ocr");
     const isTri = types.includes("triathlon");
+    const isTrailOnly = (types as string[]).includes("trail") && !isRoad;
 
-    const kindUk = isTrail ? "Трейловий клуб"
+    const kindUk = isTrailOnly ? "Трейловий клуб"
       : isOcr ? "OCR клуб"
       : isTri ? "Триатлон клуб"
       : "Біговий клуб";
-    const kindEn = isTrail ? "Trail running club"
+    const kindEn = isTrailOnly ? "Trail running club"
       : isOcr ? "OCR club"
       : isTri ? "Triathlon club"
       : "Running club";
