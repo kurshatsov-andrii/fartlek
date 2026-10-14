@@ -4,6 +4,7 @@ import { ArrowLeft, ChevronLeft, ChevronRight, X } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { SEO } from "@/components/SEO";
+import logoFartlek from "@/assets/fartlek-logo.png.asset.json";
 import photo3465 from "@/assets/about/DSC_3465.jpg.asset.json";
 import photo4308 from "@/assets/about/DSC_4308.jpg.asset.json";
 import photo5718 from "@/assets/about/DSC_5718.jpg.asset.json";
@@ -95,6 +96,13 @@ const About = () => {
             <Link to="/" className="inline-flex items-center gap-2 text-sm text-secondary-foreground/70 hover:text-secondary-foreground mb-6">
               <ArrowLeft className="h-4 w-4" /> На головну
             </Link>
+            <img
+              src={logoFartlek.url}
+              alt="Фартлек — бігова спільнота Харкова"
+              width={112}
+              height={112}
+              className="mb-6 h-28 w-28 rounded-full object-cover ring-1 ring-primary/40 shadow-glow sm:h-32 sm:w-32"
+            />
             <h1 className="font-display text-4xl sm:text-5xl font-bold leading-tight tracking-tight">
               ФАРТЛЕК — <span className="text-gradient">ЗА ОБ'ЄДНАННЯ ВСІХ БІГУНІВ!</span>
             </h1>
