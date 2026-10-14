@@ -1,6 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Link } from "@/lib/router-compat";
-import { ArrowLeft, ChevronLeft, ChevronRight, X } from "lucide-react";
+import { ArrowLeft, BookOpen, ChevronLeft, ChevronRight, Instagram, MessagesSquare, X } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { INSTAGRAM_URL, TELEGRAM_CHAT_URL } from "@/lib/blog";
+import { ABOUT_FAQ } from "@/lib/about-faq";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { SEO } from "@/components/SEO";
@@ -85,8 +88,8 @@ const About = () => {
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <SEO
-        title="Про нас — Фартлек за об'єднання всіх бігунів"
-        description="Бігова спільнота Фартлек: ми за свободу вибору бігуна, єдність бігунів Харкова та інших міст і бігову культуру без поділу на «наших» і «чужих»."
+        title="Фартлек — бігова спільнота Харкова | Про нас"
+        description="Фартлек — бігова спільнота Харкова: спільні пробіжки щонеділі, тренування й забіги. Приєднуйтеся до Telegram-чату, Instagram та читайте блог."
         canonical="/about"
       />
       <Header />
@@ -215,6 +218,27 @@ const About = () => {
                 />
               </button>
             ))}
+          </div>
+        </section>
+
+        <section className="container pb-16 sm:pb-20 max-w-3xl">
+          <h2 className="font-display text-2xl sm:text-3xl font-bold tracking-tight text-center">
+            Бігова спільнота Харкова: <span className="text-gradient">питання та відповіді</span>
+          </h2>
+          <div className="mt-8 space-y-3">
+            {ABOUT_FAQ.map((f) => (
+              <details key={f.q} className="group rounded-2xl border border-border bg-card px-5 py-4" open>
+                <summary className="cursor-pointer font-display font-bold text-lg">{f.q}</summary>
+                <p className="mt-3 text-muted-foreground leading-relaxed">{f.a}</p>
+              </details>
+            ))}
+          </div>
+          <div className="mt-8 flex flex-wrap justify-center gap-3">
+            <Button asChild><a href={TELEGRAM_CHAT_URL} target="_blank" rel="noopener noreferrer"><MessagesSquare className="h-4 w-4" />Telegram-чат Фартлек</a></Button>
+            <Button asChild variant="outline"><a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer"><Instagram className="h-4 w-4" />Instagram Фартлек</a></Button>
+            <Button asChild variant="outline"><Link to="/blog"><BookOpen className="h-4 w-4" />Блог Фартлек</Link></Button>
+            <Button asChild variant="outline"><Link to="/clubs">Бігові клуби Харкова</Link></Button>
+            <Button asChild variant="outline"><Link to="/calendar">Календар забігів</Link></Button>
           </div>
         </section>
       </main>
