@@ -564,12 +564,12 @@ const CalendarPage = () => {
 
           <Dialog open={posterOpen} onOpenChange={setPosterOpen}>
             <DialogContent
-              className="max-w-none w-[95vw] sm:w-[92vw] max-h-[95vh] p-2 sm:p-3 bg-background border-border overflow-hidden"
+              className="max-w-none w-[95vw] sm:w-[92vw] max-h-[95vh] p-2 pt-11 sm:p-3 sm:pt-12 bg-background border-border overflow-hidden"
               aria-describedby={undefined}
             >
               <div
                 title={lang === "uk" ? "Календар стартів Харкова 2027" : "Kharkiv 2027 race calendar"}
-                className="relative mx-auto max-h-[calc(95vh-1.5rem)] max-w-6xl select-none overflow-hidden rounded-xl"
+                className="relative mx-auto max-h-[calc(95vh-4rem)] max-w-6xl select-none overflow-hidden rounded-xl"
                 onContextMenu={(e) => e.preventDefault()}
                 onDragStart={(e) => e.preventDefault()}
                 onDoubleClick={(e) => e.preventDefault()}
@@ -579,7 +579,7 @@ const CalendarPage = () => {
                   alt=""
                   aria-hidden="true"
                   draggable={false}
-                  className="pointer-events-none mx-auto block max-h-[calc(95vh-1.5rem)] w-auto max-w-full"
+                  className="pointer-events-none mx-auto block max-h-[calc(95vh-4rem)] w-auto max-w-full"
                 />
               </div>
             </DialogContent>
