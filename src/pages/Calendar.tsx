@@ -258,10 +258,10 @@ const CalendarPage = () => {
   };
 
   const seoTitle = lang === "uk"
-    ? "Календар майбутніх спортивних подій — Фартлек"
+    ? "Календар забігів України 2027 і 2026 | Пробіги — Фартлек"
     : "Upcoming sports events calendar — Fartlek";
   const seoDesc = lang === "uk"
-    ? "Календар забігів, трейлів, вело, свім, триатлон стартів в Україні. Дата, місце, дистанції, організатор."
+    ? "Календар забігів і пробігів України 2027: марафони, півмарафони, трейли, триатлон. Дати, міста, дистанції та реєстрація на старт."
     : "Upcoming running, trail, cycling, swim and triathlon race calendar in Ukraine. Dates, locations, distances, organizers.";
 
   return (
@@ -272,9 +272,13 @@ const CalendarPage = () => {
         <div className="flex flex-wrap items-end justify-between gap-4 mb-8">
           <div>
             <h1 className="font-display text-3xl sm:text-5xl font-bold tracking-tight">
-              {lang === "uk" ? "Календар майбутніх спортивних подій 2026-2027" : "Upcoming sports events calendar"}
+              {lang === "uk" ? "Календар забігів України 2026–2027" : "Ukraine race calendar 2026–2027"}
             </h1>
-            <p className="mt-3 text-muted-foreground max-w-2xl">{seoDesc}</p>
+            <p className="mt-3 text-muted-foreground max-w-2xl">
+              {lang === "uk"
+                ? "Усі пробіги та забіги України 2027 і 2026 років в одному календарі: марафони, півмарафони, забіги на 5 і 10 км, трейли, триатлон, вело та плавання. Дати, міста, дистанції, організатори й реєстрація на старт."
+                : seoDesc}
+            </p>
             <PageViews pageKey="page:calendar" className="mt-3" />
           </div>
         </div>
