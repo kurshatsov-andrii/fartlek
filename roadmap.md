@@ -1,7 +1,7 @@
 # Roadmap
 
 ## Done
-- [x] SiS partner banner: calendar below filters, upcoming start/event descriptions, and homepage Partners section
+- [x] SiS partner banner: calendar above the add-event button and filters, upcoming start/event descriptions, and homepage Partners section
 - [x] Calendar location: include city, region and venue from start descriptions
 - [x] Show full event/start posters with image-derived backdrop in cards and detail pages
 - [x] Custom domain fartlek.com.ua + www connected, primary set, redirects working
