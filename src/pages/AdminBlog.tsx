@@ -26,7 +26,8 @@ const translit = (s: string) => {
   return s.toLowerCase().split("").map((c) => map[c] ?? c).join("").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 };
 
-const uploadFile = async (file: File) => {
+const uploadFile = async (original: File) => {
+  const file = await compressImage(original);
   const ext = file.name.split(".").pop() || "jpg";
   const path = `blog/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
   const { error } = await supabase.storage.from(BUCKET).upload(path, file);
