@@ -594,12 +594,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://fartlek.lovable.app/clubs/fartlek</loc>
-    <lastmod>2026-04-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://fartlek.lovable.app/clubs/meest-run-club</loc>
     <lastmod>2026-04-29</lastmod>
     <changefreq>monthly</changefreq>
@@ -626,6 +620,12 @@
   <url>
     <loc>https://fartlek.lovable.app/clubs/go-kordon-race</loc>
     <lastmod>2026-08-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://fartlek.lovable.app/clubs/fartlek</loc>
+    <lastmod>2026-10-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
