@@ -13,6 +13,8 @@
 - [x] Registration links removed from all finished events/starts (cards + detail pages)
 - [x] "Онлайн" removed from start descriptions (stored SEO text + generator)
 - [x] Kharkiv 2027 calendar poster replaced with owner's new image on /calendar
+- [x] /calendar copy optimized for "забіги/пробіги України 2027" and "календар забігів України 2027"
+- [x] Calendar page description spans full content width under the heading
 
 ## Waiting on user
 - [ ] "Біготрейл: Львів" (01.11.2026) — needs distance list, then publish
