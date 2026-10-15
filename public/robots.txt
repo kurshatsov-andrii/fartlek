@@ -13,4 +13,4 @@ Allow: /
 User-agent: *
 Allow: /
 
-Sitemap: https://fartlek.lovable.app/sitemap.xml
+Sitemap: https://fartlek.com.ua/sitemap.xml
