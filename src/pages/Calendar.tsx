@@ -84,6 +84,7 @@ const CalendarPage = () => {
   const [monthFilter, setMonthFilter] = useState<string>("all");
   const [sortBy, setSortBy] = useState<"date_asc" | "date_desc" | "title_asc" | "location_asc">("date_asc");
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [posterOpen, setPosterOpen] = useState(false);
   const [form, setForm] = useState(emptyForm);
   const [busy, setBusy] = useState(false);
 
