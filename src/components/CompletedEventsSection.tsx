@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { EventPoster } from "@/components/EventPoster";
 import { Link } from "@/lib/router-compat";
 import { Calendar, MapPin, FileText, Loader2, Search, X, Filter, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -213,21 +214,21 @@ export const CompletedEventsSection = () => {
                   className="relative aspect-[16/9] overflow-hidden bg-muted block"
                 >
                   {ev.image_url ? (
-                    <img
+                    <EventPoster
                       src={ev.image_url}
                       alt={ev.title}
                       loading="lazy"
-                      className="h-full w-full object-cover grayscale-[30%] transition-[filter] duration-500 group-hover:grayscale-0"
+                      className="grayscale-[30%] transition-[filter] duration-500 group-hover:grayscale-0"
                     />
                   ) : (
                     <div className="h-full w-full bg-gradient-hero" />
                   )}
-                  <div className="absolute top-3 left-3">
+                </Link>
+                  <div className="px-4 pt-3">
                     <span className="inline-flex items-center rounded-full bg-background/95 px-2.5 py-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground backdrop-blur">
                       {t.organizer.completed}
                     </span>
                   </div>
-                </Link>
                 <div className="flex flex-1 flex-col p-4">
                   <h3 className="font-display text-base font-bold leading-tight">
                     <Link to={`/events/${ev.slug ?? ev.id}`} className="hover:text-primary transition-base">
