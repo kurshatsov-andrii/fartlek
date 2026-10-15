@@ -6,6 +6,7 @@ import { VideoTutorialSection } from "@/components/VideoTutorialSection";
 import { FeaturesCarousel } from "@/components/FeaturesCarousel";
 import { EventsSection } from "@/components/EventsSection";
 import { CompletedEventsSection } from "@/components/CompletedEventsSection";
+import { SiSPartnerBanner } from "@/components/SiSPartnerBanner";
 import { TelegramCommunity } from "@/components/TelegramCommunity";
 import { Footer } from "@/components/Footer";
 import { SEO } from "@/components/SEO";
@@ -69,6 +70,10 @@ const Index = () => {
         <EventsSection />
         <TelegramCommunity showBlog />
         <CompletedEventsSection />
+        <section className="container py-12">
+          <h2 className="mb-6 text-center font-display text-2xl font-bold">{lang === "uk" ? "Партнери" : "Partners"}</h2>
+          <SiSPartnerBanner />
+        </section>
         <section className="pb-16">
           <div className="container">
             <Link
