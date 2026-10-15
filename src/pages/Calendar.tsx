@@ -6,6 +6,7 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { SEO } from "@/components/SEO";
 import { EventPoster } from "@/components/EventPoster";
+import { SiSPartnerBanner } from "@/components/SiSPartnerBanner";
 import kharkiv2027Poster from "@/assets/calendar-kharkiv-2027.jpg.asset.json";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -433,6 +434,10 @@ const CalendarPage = () => {
               <SelectItem value="location_asc">{lang === "uk" ? "Місце А→Я" : "Location A→Z"}</SelectItem>
             </SelectContent>
           </Select>
+        </div>
+
+        <div className="mb-6">
+          <SiSPartnerBanner />
         </div>
 
         <div className="rounded-2xl border border-border bg-card overflow-hidden">

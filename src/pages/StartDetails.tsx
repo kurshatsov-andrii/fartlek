@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { PageViews } from "@/components/PageViews";
 import { EventPoster } from "@/components/EventPoster";
+import { SiSPartnerBanner } from "@/components/SiSPartnerBanner";
 import { Link, useParams } from "@/lib/router-compat";
 import { Loader2, ExternalLink, Calendar as CalendarIcon, ArrowLeft, MapPin } from "lucide-react";
 import { Header } from "@/components/Header";
@@ -115,6 +116,10 @@ const StartDetails = () => {
         <div className="prose prose-sm max-w-none whitespace-pre-wrap break-words mb-8 text-foreground">
           {linkifyText(row.description || "")}
         </div>
+
+        {row.event_date && !isPastDate(row.event_date) && (
+          <div className="mb-8"><SiSPartnerBanner /></div>
+        )}
 
         {row.register_url && !isPastDate(row.event_date) && (
           <Button asChild size="lg" className="w-full sm:w-auto">
