@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { compressImage } from "@/lib/compress-image";
 import { Navigate, Link } from "@/lib/router-compat";
 import { Loader2, Trash2, Plus, Pencil, X, Upload } from "lucide-react";
 import { Header } from "@/components/Header";
@@ -26,7 +27,8 @@ const translit = (s: string) => {
   return s.toLowerCase().split("").map((c) => map[c] ?? c).join("").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 };
 
-const uploadFile = async (file: File) => {
+const uploadFile = async (original: File) => {
+  const file = await compressImage(original);
   const ext = file.name.split(".").pop() || "jpg";
   const path = `blog/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
   const { error } = await supabase.storage.from(BUCKET).upload(path, file);
