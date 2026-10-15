@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { PageViews } from "@/components/PageViews";
+import { EventPoster } from "@/components/EventPoster";
 import { Link, useNavigate, useParams } from "@/lib/router-compat";
 import { Calendar, MapPin, Users, Loader2, ArrowLeft, UserCircle2, FileText, CalendarPlus, Calculator } from "lucide-react";
 import { PaceCalculatorDialog } from "@/components/PaceCalculatorDialog";
@@ -384,8 +385,7 @@ const EventDetails = () => {
       <main className="flex-1">
         {event.image_url && (
           <div className="relative h-[40vh] sm:h-[50vh] overflow-hidden">
-            <img src={event.image_url} alt={event.title} className="h-full w-full object-cover" />
-            <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
+            <EventPoster src={event.image_url} alt={event.title} loading="eager" />
           </div>
         )}
         <div className="container max-w-5xl py-10">

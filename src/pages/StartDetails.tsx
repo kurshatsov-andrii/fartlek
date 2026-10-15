@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { PageViews } from "@/components/PageViews";
+import { EventPoster } from "@/components/EventPoster";
 import { Link, useParams } from "@/lib/router-compat";
 import { Loader2, ExternalLink, Calendar as CalendarIcon, ArrowLeft, MapPin } from "lucide-react";
 import { Header } from "@/components/Header";
@@ -83,8 +84,8 @@ const StartDetails = () => {
         </Link>
 
         {row.image_url && (
-          <div className="rounded-lg overflow-hidden mb-6 bg-muted">
-            <img src={row.image_url} alt={row.title} className="w-full h-auto" />
+          <div className="aspect-video rounded-lg overflow-hidden mb-6 bg-muted">
+            <EventPoster src={row.image_url} alt={row.title} loading="eager" />
           </div>
         )}
 

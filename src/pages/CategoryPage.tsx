@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { EventPoster } from "@/components/EventPoster";
 import { Link, Navigate, useParams } from "@/lib/router-compat";
 import { Calendar, MapPin, ArrowUpRight, Loader2, ArrowLeft } from "lucide-react";
 import { Header } from "@/components/Header";
@@ -103,11 +104,12 @@ const CategoryPage = () => {
               const url = `/events/${ev.slug ?? ev.id}`;
               return (
                 <article key={ev.id} className="group flex flex-col overflow-hidden rounded-2xl bg-card shadow-card transition-bounce hover:-translate-y-2 hover:shadow-elevated">
-                  <Link to={url} className="relative aspect-[4/3] overflow-hidden bg-muted block">
+                  <Link to={url} className="relative aspect-video overflow-hidden bg-muted block">
                     {ev.image_url
-                      ? <img src={ev.image_url} alt={ev.title} loading="lazy" className="h-full w-full object-cover" />
+                      ? <EventPoster src={ev.image_url} alt={ev.title} />
                       : <div className="h-full w-full bg-gradient-hero" />}
-                    <div className="absolute top-4 left-4 flex flex-col items-start gap-1.5">
+                  </Link>
+                    <div className="px-6 pt-4 flex flex-wrap items-start gap-1.5">
                       <span className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wider backdrop-blur ${ev.is_paid ? "bg-primary text-primary-foreground" : "bg-accent text-accent-foreground"}`}>
                         {ev.is_paid ? `${minPrice} ₴` : t.events.free}
                       </span>
@@ -115,7 +117,6 @@ const CategoryPage = () => {
                         {ev.format === "hybrid" ? t.format.badgeHybrid : ev.format === "online" ? t.format.badgeOnline : t.format.badgeOffline}
                       </span>
                     </div>
-                  </Link>
                   <div className="flex flex-1 flex-col p-6">
                     <h2 className="font-display text-xl font-bold leading-tight">{ev.title}</h2>
                     <div className="mt-3 flex flex-col gap-1.5 text-sm text-muted-foreground">

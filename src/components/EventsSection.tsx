@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { PageViews } from "@/components/PageViews";
+import { EventPoster } from "@/components/EventPoster";
 import { Link } from "@/lib/router-compat";
 import { Calendar, MapPin, ArrowUpRight, Loader2, Search, X, Filter } from "lucide-react";
 import { isPastDate } from "@/lib/event-date";
@@ -235,14 +236,14 @@ export const EventsSection = () => {
               const price = minPrice(ev);
               return (
                 <article key={ev.id} className="group relative flex flex-col overflow-hidden rounded-2xl bg-card shadow-card transition-bounce hover:-translate-y-2 hover:shadow-elevated animate-fade-in-up" style={{ animationDelay: `${(idx % PAGE_SIZE) * 80}ms` }}>
-                  <Link to={`/events/${ev.slug ?? ev.id}`} className="relative aspect-[4/3] overflow-hidden bg-muted block isolate" aria-label={ev.title}>
+                  <Link to={`/events/${ev.slug ?? ev.id}`} className="relative aspect-video overflow-hidden bg-muted block isolate" aria-label={ev.title}>
                     {ev.image_url ? (
-                      <img src={ev.image_url} alt={ev.title} loading="lazy" className="h-full w-full object-cover" />
+                      <EventPoster src={ev.image_url} alt={ev.title} />
                     ) : (
                       <div className="h-full w-full bg-gradient-hero" />
                     )}
-                    <div className="absolute inset-0 card-overlay" />
-                    <div className="absolute top-4 left-4 flex flex-col items-start gap-1.5">
+                  </Link>
+                    <div className="px-6 pt-4 flex flex-wrap items-start gap-1.5">
                       <span className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wider backdrop-blur ${ev.is_paid ? "bg-primary text-primary-foreground" : "bg-accent text-accent-foreground"}`}>
                         {ev.is_paid ? `${price} ₴` : t.events.free}
                       </span>
@@ -250,14 +251,13 @@ export const EventsSection = () => {
                         {ev.format === "hybrid" ? t.format.badgeHybrid : ev.format === "online" ? t.format.badgeOnline : t.format.badgeOffline}
                       </span>
                     </div>
-                    <div className="absolute bottom-4 left-4 right-4 flex flex-wrap gap-1.5">
+                    <div className="px-6 pt-2 flex flex-wrap gap-1.5">
                       {activeDistances(ev).map((d, i) => (
                         <span key={i} className="rounded-md bg-background/95 px-2 py-1 text-xs font-bold text-foreground">
                           {d.distance_km} km
                         </span>
                       ))}
                     </div>
-                  </Link>
                   <div className="flex flex-1 flex-col p-6">
                     <h3 className="font-display text-xl font-bold leading-tight">{ev.title}</h3>
                     <div className="mt-3 flex flex-col gap-1.5 text-sm text-muted-foreground">
