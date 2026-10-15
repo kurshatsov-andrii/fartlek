@@ -114,7 +114,7 @@ const StartDetails = () => {
           {linkifyText(row.description || "")}
         </div>
 
-        {row.register_url && (
+        {row.register_url && !(row.event_date && row.event_date < new Date().toISOString().slice(0, 10)) && (
           <Button asChild size="lg" className="w-full sm:w-auto">
             <a href={row.register_url} target="_blank" rel="noreferrer">
               Зареєструватися <ExternalLink className="h-4 w-4 ml-2" />
