@@ -3,7 +3,7 @@
 import { writeFileSync } from "fs";
 import { resolve } from "path";
 
-const BASE_URL = "https://fartlek.lovable.app";
+const BASE_URL = "https://fartlek.com.ua";
 const SUPABASE_URL =
   process.env.VITE_SUPABASE_URL || "https://mjkjygzxwysbhgjtvobm.supabase.co";
 const SUPABASE_KEY =
