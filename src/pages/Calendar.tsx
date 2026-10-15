@@ -23,6 +23,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { EVENT_CATEGORIES, type EventCategory } from "@/lib/i18n";
 import { toast } from "sonner";
+import { calendarLocation } from "@/lib/calendar-location";
 
 interface Row {
   id: string;
@@ -89,10 +90,10 @@ const CalendarPage = () => {
 
   const load = async () => {
     setLoading(true);
-    const [{ data: ev }, { data: cal }] = await Promise.all([
+    const [{ data: ev }, { data: cal }, { data: starts }] = await Promise.all([
       supabase
         .from("events")
-        .select("id, slug, title, event_date, location, organizer_name, category, distances(distance_km, is_active)")
+        .select("id, slug, title, event_date, location, description, organizer_name, category, distances(distance_km, is_active)")
         .eq("status", "published")
         .gte("event_date", todayIso)
         .order("event_date", { ascending: true }),
@@ -101,14 +102,21 @@ const CalendarPage = () => {
         .select("*")
         .gte("event_date", todayIso)
         .order("event_date", { ascending: true }),
+      supabase
+        .from("telegram_starts")
+        .select("id, city, region, description")
+        .eq("status", "published")
+        .gte("event_date", todayIso),
     ]);
+
+    const startsById = new Map((starts ?? []).map((start) => [start.id, start]));
 
     setPlatformRows(((ev as any[]) ?? []).map((e) => ({
       id: e.id,
       source: "platform",
       title: e.title,
       event_date: e.event_date,
-      location: e.location,
+      location: calendarLocation({ location: e.location, description: e.description }),
       distances: (e.distances ?? [])
         .filter((d: any) => d.is_active !== false)
         .map((d: any) => `${d.distance_km} км`)
@@ -123,7 +131,11 @@ const CalendarPage = () => {
       source: "calendar",
       title: c.title,
       event_date: c.event_date,
-      location: c.location,
+      location: calendarLocation({
+        location: c.location,
+        description: c.notes,
+        ...startsById.get(c.telegram_start_id),
+      }),
       distances: c.distances ?? "",
       organizer_name: c.organizer_name,
       category: c.category,
@@ -477,7 +489,7 @@ const CalendarPage = () => {
                               </div>
                             )}
                           </TableCell>
-                          <TableCell className="text-sm text-muted-foreground">{r.location || "Україна та весь світ"}</TableCell>
+                          <TableCell className="text-sm text-muted-foreground whitespace-normal min-w-40 max-w-80 break-words">{r.location || "Україна та весь світ"}</TableCell>
                           <TableCell className="text-sm">{r.distances || "Вільна дистанція"}</TableCell>
                           <TableCell className="text-sm text-muted-foreground">{r.organizer_name || "—"}</TableCell>
                           <TableCell className="text-right">
