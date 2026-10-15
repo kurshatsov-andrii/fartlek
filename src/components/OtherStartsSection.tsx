@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { EventPoster } from "@/components/EventPoster";
 import { Link } from "@/lib/router-compat";
 import { Calendar as CalendarIcon, MapPin, ExternalLink, Loader2, Search, X, Filter } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -222,21 +223,23 @@ export const OtherStartsSection = () => {
             <article key={r.id} className="group flex flex-col overflow-hidden rounded-2xl bg-card shadow-card transition-bounce hover:-translate-y-1 hover:shadow-elevated">
               <Link to={`/starts/${r.slug}`} className="relative aspect-video w-full overflow-hidden bg-muted block" aria-label={r.title}>
                 {r.image_url ? (
-                  <img src={r.image_url} alt={r.title} loading="lazy" className="h-full w-full max-w-full object-contain" />
+                  <EventPoster src={r.image_url} alt={r.title} />
                 ) : (
                   <div className="h-full w-full bg-gradient-hero" />
                 )}
-                <span className="absolute top-4 left-4 inline-flex items-center rounded-full bg-background/95 px-3 py-1 text-[10px] font-semibold uppercase tracking-wider text-foreground backdrop-blur">
+              </Link>
+              <div className="px-6 pt-4">
+                <span className="inline-flex items-center rounded-full bg-background/95 px-3 py-1 text-[10px] font-semibold uppercase tracking-wider text-foreground backdrop-blur">
                   {lang === "uk" ? "Анонс" : "Announcement"}
                 </span>
                 {(r.distances_km || []).length > 0 && (
-                  <div className="absolute bottom-4 left-4 right-4 flex flex-wrap gap-1.5">
+                  <div className="mt-2 flex flex-wrap gap-1.5">
                     {[...(r.distances_km || [])].sort((a, b) => Number(b) - Number(a)).slice(0, 4).map((d) => (
                       <span key={String(d)} className="rounded-md bg-background/95 px-2 py-1 text-xs font-bold text-foreground">{d} km</span>
                     ))}
                   </div>
                 )}
-              </Link>
+              </div>
               <div className="flex flex-1 flex-col p-6">
                 <h3 className="font-display text-xl font-bold leading-tight">
                   <Link to={`/starts/${r.slug}`} className="hover:underline">{r.title}</Link>

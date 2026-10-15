@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { PageViews } from "@/components/PageViews";
+import { EventPoster } from "@/components/EventPoster";
 import { TELEGRAM_CHANNEL_URL, TELEGRAM_CHAT_URL } from "@/components/TelegramCommunity";
 import { Link } from "@/lib/router-compat";
 import { Loader2, ExternalLink, Calendar as CalendarIcon, Search, X, Filter, MapPin } from "lucide-react";
@@ -126,7 +127,7 @@ const Starts = () => {
     <Card key={r.id} className="overflow-hidden flex flex-col transition-bounce hover:-translate-y-2 hover:shadow-elevated">
       {r.image_url && (
         <Link to={`/starts/${r.slug}`} className="block aspect-video bg-muted overflow-hidden">
-          <img src={r.image_url} alt={r.title} loading="lazy" className="w-full h-full object-cover" />
+          <EventPoster src={r.image_url} alt={r.title} />
         </Link>
       )}
       <div className="p-4 flex flex-col gap-3 flex-1">
