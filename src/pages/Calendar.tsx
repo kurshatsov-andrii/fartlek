@@ -274,7 +274,7 @@ const CalendarPage = () => {
             <h1 className="font-display text-3xl sm:text-5xl font-bold tracking-tight">
               {lang === "uk" ? "Календар забігів України 2026–2027" : "Ukraine race calendar 2026–2027"}
             </h1>
-            <p className="mt-3 text-muted-foreground max-w-2xl">
+            <p className="mt-3 text-muted-foreground">
               {lang === "uk"
                 ? "Усі пробіги та забіги України 2027 і 2026 років в одному календарі: марафони, півмарафони, забіги на 5 і 10 км, трейли, триатлон, вело та плавання. Дати, міста, дистанції, організатори й реєстрація на старт."
                 : seoDesc}
