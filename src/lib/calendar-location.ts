@@ -22,7 +22,7 @@ export function calendarLocation(input: CalendarLocation): string | null {
   const region = field("Область") || input.region || "";
   const parts = [...cityParts, ...locationParts];
   const regionPart = region || parts.find((part) => /\s(?:область|обл\.?)$/i.test(part)) || "";
-  const base = parts.filter((part) => key(part) !== key(regionPart) && (!venue || !key(venue).includes(key(part))));
+  const base = parts.filter((part) => key(part) !== key(regionPart) && (!venue || key(venue) !== key(part)));
   const result: string[] = [];
   for (const part of [...base, regionPart, venue]) {
     const value = clean(part);
