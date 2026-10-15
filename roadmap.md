@@ -1,5 +1,8 @@
 # Roadmap
 
+## In progress
+- [ ] Calendar location: include city, region and venue from start descriptions
+
 ## Done
 - [x] Show full event/start posters with image-derived backdrop in cards and detail pages
 - [x] Custom domain fartlek.com.ua + www connected, primary set, redirects working
