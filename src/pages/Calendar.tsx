@@ -6,7 +6,7 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { SEO } from "@/components/SEO";
 import { EventPoster } from "@/components/EventPoster";
-import kharkiv2027Poster from "@/assets/calendar-run-2027.jpg.asset.json";
+import kharkiv2027Poster from "@/assets/calendar-kharkiv-2027.jpg.asset.json";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -558,7 +558,7 @@ const CalendarPage = () => {
             <EventPoster
               src={kharkiv2027Poster.url}
               alt={lang === "uk" ? "Календар стартів Харкова 2027 — біг, спільнота, натхнення" : "Kharkiv 2027 race calendar"}
-              className="aspect-[16/10] rounded-2xl border border-border overflow-hidden"
+              className="aspect-[3/2] rounded-2xl border border-border overflow-hidden"
             />
           </button>
 
