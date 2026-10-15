@@ -7,7 +7,7 @@
 - [x] sitemap.xml and robots.txt rewritten to fartlek.com.ua (source)
 
 ## In progress
-- [ ] Confirm Google accepted the new sitemap submission (check sitemap status for https://fartlek.com.ua/)
+- [ ] Review unresolved security finding: blog-images bucket rule lets anyone download files (Security view)
 
 ## Waiting on user
 - [ ] "Біготрейл: Львів" (01.11.2026) — needs distance list, then publish
