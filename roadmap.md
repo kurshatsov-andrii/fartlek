@@ -6,8 +6,7 @@
 - [x] 301 redirects for old pages published on fartlek.com.ua
 - [x] sitemap.xml and robots.txt rewritten to fartlek.com.ua (source)
 
-## In progress
-- [ ] Review unresolved security finding: blog-images bucket rule lets anyone download files (Security view)
+- [x] blog-images public download — accepted by owner as intended
 
 ## Waiting on user
 - [ ] "Біготрейл: Львів" (01.11.2026) — needs distance list, then publish
