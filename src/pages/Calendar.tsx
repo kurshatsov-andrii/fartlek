@@ -5,6 +5,8 @@ import { Loader2, Plus, Pencil, Trash2, ExternalLink, ArrowUpDown } from "lucide
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { SEO } from "@/components/SEO";
+import { EventPoster } from "@/components/EventPoster";
+import kharkiv2027Poster from "@/assets/calendar-run-2027.jpg.asset.json";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -536,6 +538,22 @@ const CalendarPage = () => {
             </div>
           )}
         </div>
+
+        <section className="mt-12">
+          <h2 className="font-display text-2xl sm:text-3xl font-bold tracking-tight">
+            {lang === "uk" ? "Календар забігів Харкова 2027" : "Kharkiv Running Calendar 2027"}
+          </h2>
+          <p className="mt-3 text-muted-foreground max-w-2xl">
+            {lang === "uk"
+              ? "Список стартів Харкова на 2027 рік: бігові старти, трейли, естафети та марафони."
+              : "Kharkiv races for 2027: running events, trails, relays and marathons."}
+          </p>
+          <EventPoster
+            src={kharkiv2027Poster.url}
+            alt={lang === "uk" ? "Календар стартів Харкова 2027 — біг, спільнота, натхнення" : "Kharkiv 2027 race calendar"}
+            className="mt-6 aspect-[16/10] rounded-2xl border border-border overflow-hidden"
+          />
+        </section>
       </main>
       <Footer />
     </div>
