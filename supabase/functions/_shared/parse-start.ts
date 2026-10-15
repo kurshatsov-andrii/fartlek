@@ -135,7 +135,7 @@ export function generateStartSeo(input: {
   const where = city ? `у ${city}` : "";
   const org = input.organizer_name ? `Організатор ${input.organizer_name}.` : "";
   const seo_description = truncate(
-    [`${title}${dotDate ? " " + dotDate : ""}${where ? " " + where : ""}.`, distStr, org, "Реєстрація на старт онлайн."].filter(Boolean).join(" ").replace(/\s+/g, " ").trim(),
+    [`${title}${dotDate ? " " + dotDate : ""}${where ? " " + where : ""}.`, distStr, org, "Реєстрація на старт."].filter(Boolean).join(" ").replace(/\s+/g, " ").trim(),
     160
   );
   return { seo_title, seo_description };
