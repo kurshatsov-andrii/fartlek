@@ -9,8 +9,8 @@ export const Route = createFileRoute("/calendar")({
   loader: () => getSeoOverride({ data: { path: PATH } }),
   head: ({ loaderData }) =>
     pageHead({
-      title: 'Календар забігів в Україні 2026 | Fartlek Events',
-      description: 'Повний календар спортивних подій України: забіги, трейли, марафони, вело та триатлон. Фільтри за містом, датою і видом спорту.',
+      title: 'Календар забігів України 2027 і 2026 | Пробіги — Фартлек',
+      description: 'Календар забігів і пробігів України 2027: марафони, півмарафони, трейли, триатлон. Дати, міста, дистанції та реєстрація на старт.',
       path: PATH,
       override: loaderData ?? null,
     }),

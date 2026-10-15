@@ -1,6 +1,6 @@
 import type { SeoOverride } from "@/lib/page-seo.functions";
 
-const SITE = "https://fartlek.lovable.app";
+const SITE = "https://fartlek.com.ua";
 
 const clamp = (s: string, max: number) => (s.length <= max ? s : s.slice(0, max - 1).trimEnd() + "…");
 
