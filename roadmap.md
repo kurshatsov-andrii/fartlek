@@ -1,9 +1,7 @@
 # Roadmap
 
-## In progress
-- [ ] Calendar location: include city, region and venue from start descriptions
-
 ## Done
+- [x] Calendar location: include city, region and venue from start descriptions
 - [x] Show full event/start posters with image-derived backdrop in cards and detail pages
 - [x] Custom domain fartlek.com.ua + www connected, primary set, redirects working
 - [x] Mail on Mirohost preserved (info@fartlek.com.ua works)
