@@ -7,8 +7,7 @@
 - [x] sitemap.xml and robots.txt rewritten to fartlek.com.ua (source)
 
 ## In progress
-- [ ] Publish the sitemap/robots fix so https://fartlek.com.ua/sitemap.xml serves new URLs
-- [ ] Check Google Search Console: which property the user verified, and submit the new sitemap there (no re-verification if the domain property already exists)
+- [ ] Review unresolved security finding: blog-images bucket rule lets anyone download files (Security view)
 
 ## Waiting on user
 - [ ] "Біготрейл: Львів" (01.11.2026) — needs distance list, then publish
