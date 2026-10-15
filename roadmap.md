@@ -10,6 +10,7 @@
 
 - [x] blog-images public download — accepted by owner as intended
 - [x] Registration links removed from all finished events/starts (cards + detail pages)
+- [x] "Онлайн" removed from start descriptions (stored SEO text + generator)
 
 ## Waiting on user
 - [ ] "Біготрейл: Львів" (01.11.2026) — needs distance list, then publish
