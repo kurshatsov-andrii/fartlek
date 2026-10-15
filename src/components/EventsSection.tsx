@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { PageViews } from "@/components/PageViews";
 import { Link } from "@/lib/router-compat";
 import { Calendar, MapPin, ArrowUpRight, Loader2, Search, X, Filter } from "lucide-react";
+import { isPastDate } from "@/lib/event-date";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -265,7 +266,11 @@ export const EventsSection = () => {
                     </div>
                     
                     <div className="mt-6 flex items-center gap-2 pt-4 border-t border-border">
-                      {ev.registration_closed ? (
+                      {isPastDate(ev.event_date) ? (
+                        <Button asChild variant="secondary" className="flex-1">
+                          <Link to={`/events/${ev.slug ?? ev.id}`}>{lang === "uk" ? "Детальніше" : "Details"}</Link>
+                        </Button>
+                      ) : ev.registration_closed ? (
                         <Button asChild variant="outline" className="flex-1" disabled>
                           <Link to={`/events/${ev.slug ?? ev.id}`}>
                             {lang === "uk" ? "Реєстрація закрита" : "Registration closed"}

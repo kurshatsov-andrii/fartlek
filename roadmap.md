@@ -7,6 +7,7 @@
 - [x] sitemap.xml and robots.txt rewritten to fartlek.com.ua (source)
 
 - [x] blog-images public download — accepted by owner as intended
+- [x] Registration links removed from all finished events/starts (cards + detail pages)
 
 ## Waiting on user
 - [ ] "Біготрейл: Львів" (01.11.2026) — needs distance list, then publish

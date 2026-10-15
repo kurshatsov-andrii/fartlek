@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { linkifyText } from "@/lib/linkify";
 import { SPORT_LABELS, type SportType } from "@/lib/parseStart";
+import { isPastDate } from "@/lib/event-date";
 
 interface StartRow {
   id: string;
@@ -114,7 +115,7 @@ const StartDetails = () => {
           {linkifyText(row.description || "")}
         </div>
 
-        {row.register_url && !(row.event_date && row.event_date < new Date().toISOString().slice(0, 10)) && (
+        {row.register_url && !isPastDate(row.event_date) && (
           <Button asChild size="lg" className="w-full sm:w-auto">
             <a href={row.register_url} target="_blank" rel="noreferrer">
               Зареєструватися <ExternalLink className="h-4 w-4 ml-2" />
