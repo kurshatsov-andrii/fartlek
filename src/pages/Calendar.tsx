@@ -277,7 +277,15 @@ const CalendarPage = () => {
             <p className="mt-3 text-muted-foreground max-w-2xl">{seoDesc}</p>
             <PageViews pageKey="page:calendar" className="mt-3" />
           </div>
+        </div>
+
+        <div className="mb-6">
+          <SiSPartnerBanner />
+        </div>
+
+        <div className="flex justify-end mb-4">
           {canManage ? (
+
             <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
               <DialogTrigger asChild>
                 <Button onClick={openCreate}>
@@ -436,9 +444,6 @@ const CalendarPage = () => {
           </Select>
         </div>
 
-        <div className="mb-6">
-          <SiSPartnerBanner />
-        </div>
 
         <div className="rounded-2xl border border-border bg-card overflow-hidden">
           {loading ? (
