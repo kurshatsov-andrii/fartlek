@@ -84,6 +84,7 @@ const CalendarPage = () => {
   const [monthFilter, setMonthFilter] = useState<string>("all");
   const [sortBy, setSortBy] = useState<"date_asc" | "date_desc" | "title_asc" | "location_asc">("date_asc");
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [posterOpen, setPosterOpen] = useState(false);
   const [form, setForm] = useState(emptyForm);
   const [busy, setBusy] = useState(false);
 
@@ -545,14 +546,44 @@ const CalendarPage = () => {
           </h2>
           <p className="mt-3 text-muted-foreground max-w-2xl">
             {lang === "uk"
-              ? "Список стартів Харкова на 2027 рік: бігові старти, трейли, естафети та марафони."
-              : "Kharkiv races for 2027: running events, trails, relays and marathons."}
+              ? "Натисніть на зображення, щоб розгорнути календар на весь екран."
+              : "Click the image to expand the calendar to full screen."}
           </p>
-          <EventPoster
-            src={kharkiv2027Poster.url}
-            alt={lang === "uk" ? "Календар стартів Харкова 2027 — біг, спільнота, натхнення" : "Kharkiv 2027 race calendar"}
-            className="mt-6 aspect-[16/10] rounded-2xl border border-border overflow-hidden"
-          />
+          <button
+            type="button"
+            onClick={() => setPosterOpen(true)}
+            aria-label={lang === "uk" ? "Відкрити календар стартів Харкова 2027" : "Open Kharkiv 2027 race calendar"}
+            className="mt-6 block w-full cursor-zoom-in text-left"
+          >
+            <EventPoster
+              src={kharkiv2027Poster.url}
+              alt={lang === "uk" ? "Календар стартів Харкова 2027 — біг, спільнота, натхнення" : "Kharkiv 2027 race calendar"}
+              className="aspect-[16/10] rounded-2xl border border-border overflow-hidden"
+            />
+          </button>
+
+          <Dialog open={posterOpen} onOpenChange={setPosterOpen}>
+            <DialogContent
+              className="max-w-none w-[95vw] sm:w-[92vw] max-h-[95vh] p-2 sm:p-3 bg-background border-border overflow-hidden"
+              aria-describedby={undefined}
+            >
+              <div
+                title={lang === "uk" ? "Календар стартів Харкова 2027" : "Kharkiv 2027 race calendar"}
+                className="relative mx-auto max-h-[calc(95vh-1.5rem)] max-w-6xl select-none overflow-hidden rounded-xl"
+                onContextMenu={(e) => e.preventDefault()}
+                onDragStart={(e) => e.preventDefault()}
+                onDoubleClick={(e) => e.preventDefault()}
+              >
+                <img
+                  src={kharkiv2027Poster.url}
+                  alt=""
+                  aria-hidden="true"
+                  draggable={false}
+                  className="pointer-events-none mx-auto block max-h-[calc(95vh-1.5rem)] w-auto max-w-full"
+                />
+              </div>
+            </DialogContent>
+          </Dialog>
         </section>
       </main>
       <Footer />
