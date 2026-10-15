@@ -264,7 +264,7 @@ export function generateStartSeo(input: {
     `${title}${dotDate ? " " + dotDate : ""}${where ? " " + where : ""}.`,
     distStr ? capitalize(distStr) + "." : "",
     org,
-    "Реєстрація на старт онлайн.",
+    "Реєстрація на старт.",
   ].filter(Boolean);
   const seo_description = truncate(parts.join(" ").replace(/\s+/g, " ").trim(), 160);
 
