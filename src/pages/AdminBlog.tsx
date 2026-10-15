@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { compressImage } from "@/lib/compress-image";
 import { Navigate, Link } from "@/lib/router-compat";
 import { Loader2, Trash2, Plus, Pencil, X, Upload } from "lucide-react";
 import { Header } from "@/components/Header";
