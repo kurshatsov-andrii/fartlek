@@ -22,6 +22,7 @@ import { toast } from "sonner";
 import { startAutomatedPaymentCheckout } from "@/lib/paymentCheckout";
 import { buildEventSeo } from "@/lib/seo";
 import { linkifyText } from "@/lib/linkify";
+import { isPastDate } from "@/lib/event-date";
 import { PromoCodeInput, PromoPreview } from "@/components/PromoCodeInput";
 import { EventChat } from "@/components/EventChat";
 import { NovaPoshtaDelivery, DeliveryData, emptyDelivery, validateDelivery } from "@/components/NovaPoshtaDelivery";
@@ -509,7 +510,7 @@ const EventDetails = () => {
                     <p className="text-sm text-muted-foreground">{t.events.resultsNone}</p>
                   )}
                 </div>
-              ) : event.registration_closed ? (
+              ) : event.registration_closed || isPastDate(event.event_date) ? (
                 <div className="sticky top-24 rounded-2xl border border-border bg-card p-6 space-y-3">
                   <h3 className="font-display text-xl font-bold text-foreground">
                     {t.events.registrationClosedTitle}
