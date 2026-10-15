@@ -1,14 +1,125 @@
 // Old fartlek.com.ua URLs -> new paths. Permanent (301) redirects for Google.
-// Keys: old path without trailing slash, lowercase.
+// Keys: old path without "/ru" prefix, "/page/N" suffix and trailing slash.
+const S = (s: string) => `/starts/${s}`;
+const E = (s: string) => `/events/${s}`;
+const C = (c: string) => `/category/${c}`;
+
 export const LEGACY_REDIRECTS: Record<string, string> = {
+  // General pages
+  "/contact": "/contacts",
+  "/partnership-fartlek": "/for-organizers",
+  "/sport-events-fartlek-telegram": "/starts",
+  "/vse-o-bege": "/blog",
+  "/podcast": "/blog",
+  // Calendars
   "/sport-events-ukraine": "/calendar",
-  "/autumn-odesa-half-marathon-2026": "/starts/autumn-odesa-half-marathon-2026-11-15",
-  "/bigotrail-chernivtsi-2026": "/events/bigotreyl-chernivci-chernivci-2026",
+  "/calendar-sport-event": "/calendar",
+  "/run-ukraine": "/calendar",
+  "/run-ukraine-ua": "/calendar",
+  "/sportevent-kharkiv": "/calendar",
+  "/sportevent-kharkiv-ua": "/calendar",
+  "/sportevent-kyiv": "/calendar",
+  "/sportevent-kyiv-ua": "/calendar",
+  "/sportevent-odesa": "/calendar",
+  "/sportevent-odessa": "/calendar",
+  "/sportevent-sumy": "/calendar",
+  "/sportevent-sumy-ua": "/calendar",
+  "/sportevent-zaporozhie": "/calendar",
+  "/sportevent-zaporozhie-ua": "/calendar",
+  // Categories
+  "/run": C("run"),
+  "/run-ua": C("run"),
+  "/trail": C("trail"),
+  "/trail-ua": C("trail"),
+  "/run-online": C("online"),
+  "/run-online-ua": C("online"),
+  "/swim": C("swim"),
+  "/swim-ua": C("swim"),
+  "/bike": C("cycling"),
+  "/bike-ua": C("cycling"),
+  "/ocr": C("ocr"),
+  "/ocr-ua": C("ocr"),
+  "/triathlon": C("triathlon"),
+  "/triathlon-ua": C("triathlon"),
+  "/duathlon": C("duathlon"),
+  "/duathlon-ua": C("duathlon"),
+  "/aquathlon": C("aquathlon"),
+  "/aquathlon-ua": C("aquathlon"),
+  "/ultramarathon": C("ultra"),
+  "/ultramarathon-ua": C("ultra"),
+  // Events (registration on Fartlek)
+  "/bigotrail-chernivtsi-2026": E("bigotreyl-chernivci-chernivci-2026"),
+  "/bigotrail-vinnitsa-2026": E("bigotreyl-vinnycya-vinnycya-2026"),
+  "/bigotrail-khmelnitskiy-2026": E("bigotreyl-hmel-nyc-kyy-hmel-nyc-kyy-2026"),
+  "/bigotrail-ternopil-2026": E("bigotreyl-ternopil-ternopil-2026"),
+  "/bigotrail-lviv-2026": E("bigotreyl-l-viv-l-viv-2026"),
+  "/bigotrail-lutsk-2026": E("bigotreyl-luc-k-luc-k-2026"),
+  "/bigotrail-uzhgorod-2026": E("bigotreyl-uzhgorod-uzhgorod-2026"),
+  "/bigotrail-if-2026": E("bigotreyl-ivano-frankivs-k-ivano-frankivs-k-2026"),
+  "/kharkiv-half-marathon-2026": E("kharkiv-half-marathon-harkiv-2026"),
+  "/nagory-trail-2026": E("nagoritreyl-35-km-vid-kremenchuka-na-gori-2026"),
+  "/true-speed-run-2026": E("true-speed-kremenchuk-2026"),
+  "/plyazhna-mylya": E("zabig-po-pisku-plyazhna-mylya-kremenchuk-2026"),
+  "/valky-run": E("valky-big-2026-misto-valky-harkiv-ka-obl-2026"),
+  "/marathon-nezlamnosti-kyiv-2026": E("kyivs-kyy-marafon-nezlamnosti-v-harkovi-harkiv-2026"),
+  "/kordon-race-trail-autumn": E("kordon-race-autumn-l-vivs-ka-obl-m-pustomyty-ozernyy-kray-2026"),
+  // Starts (from Telegram)
+  "/autumn-odesa-half-marathon": S("autumn-odesa-half-marathon-2026-11-15"),
+  "/autumn-odesa-half-marathon-2026": S("autumn-odesa-half-marathon-2026-11-15"),
+  "/do-it-fast-run": S("marafon-do-it-fast-2026-11-01"),
+  "/luchesk-half-marathon": S("luches-k-pivmarafon-2026-10-25"),
+  "/dyka-gonka-lito-2026": S("dyka-gonka-lito-2026-07-11"),
+  "/beskydy-trail-2026": S("beskydy-trail-2026-2026-08-22"),
+  "/probig-run-2026": S("blagodiynyy-zabig-probig-5-rokiv-charity-run-2026-08-01"),
+  "/swim-run-cherkasy": S("swimrun-cherkasy-2026-08-30"),
+  "/varash-half-marathon": S("varas-kyy-pivmarafon-goryzont-mozhlyvostey-2026-09-19"),
+  "/mova-run-dnipro": S("mova-zabig-2026-10-04"),
+  "/syla-nezlamnykh-run": S("q-endurance-race-shlyah-nezlamnyh-2026-09-12"),
+  "/christmas-run-odesa": S("christmas-run-2026-12-27"),
+  "/dnipro-swim-marathon-2026": S("international-dnipro-swim-marathon"),
+  "/skoda-half-marathon-2026": S("6-skoda-napivmarafon-2026-10-24"),
+  "/bila-tserkva-marathon-2026": S("bilocerkivs-kyy-blagodiynyy-marafon-2026-10-04"),
+  "/big-hearts-run": S("blagodiynyy-onlayn-zabig-zabig-velykyh-serdec-2026-08-22"),
+  "/opyshnya-run": S("opishnyans-ka-desyatka-2026-2026-11-07"),
+  "/open-water-fest-2026": S("open-water-fest-2026-2026-07-11"),
+  "/dino-trail-2026": S("dino-trail-2026-11-08"),
+  "/uzhtrail-2026": S("uzhtrail-2026-11-08"),
+  "/kordon-race-trail-winter-2026": S("winter-kordon-race-kordon-trail-2026-12-12"),
+  "/volya-fest-run": S("sportyvnyy-festyval-volya-pam-yati-geroya-ukrainy-sergiya-pylyavcya-2026-08-09"),
+  "/pusk-run-lrd-2026": S("pusk-5-km-amateur-championship-2026-07-18"),
+  "/kaputsin-run": S("kapucin-run-82"),
+  "/botsad-run-lito": S("botsad-ran-lito-2026-07-18"),
+  "/kolomiya-run": S("kolomyys-ka-desyatka-2026-10-11"),
+  "/steel-run": S("v-kryvoriz-kyy-pivmarafon-steel-run-2026-10-03"),
+  "/steel-run-2026": S("v-kryvoriz-kyy-pivmarafon-steel-run-2026-10-03"),
+  "/simple-trail-lrd": S("simple-trail-2026-08-22"),
+  "/35-rokiv-stiykosty-run": S("35-rokiv-stiykosti-2026-08-24"),
+  "/bigozbir-2026": S("bigozbir-speka-2026-07-22"),
+  "/sylni-run-online": S("onlayn-zabig-syl-nishi-za-obstavyny-2026-07-27"),
+  "/vechyrni-pobigenky": S("vechirni-pobigen-ky-2026-11-07"),
+  "/zabig-u-vyshyvankah": S("13-y-zabig-u-vyshyvankah-do-35oi-richnyci-dnya-nezalezhnosti-ukrainy-2026-08-23"),
+  "/trail-modrivski-skeli-2026": S("treyl-modrivs-ki-skeli-2026-09-05"),
+  "/trail-bezdryk": S("litniy-blagodiynyy-treyl-bezdryk-2026-kremenec-2026-08-02"),
+  "/cherkasy-swim": S("cherkasy-swim-fest-2026-07-25"),
+  "/adventure-race": S("adventure-race-pivdenne-2026-10-03"),
+  "/cross-triathlon": S("kros-tryatlon-2026-08-15"),
+  "/cross-triathlon-2026": S("kros-tryatlon-2026-08-15"),
+  "/chyste-nebo-run-2026": S("blagodiynyy-zabig-chyste-nebo-2026-09-06"),
+  "/marathon-drahobych": S("diysno-rivnyy-marafon-drogobych-2026-09-20"),
+  "/synyogora-trail-2026": S("treyl-syn-ogora-2026-09-26"),
+  "/urban-track-festival-run": S("urban-track-festival-pa-ce-edition-2026-07-26"),
+  "/marathon-dnipro-2026": S("dnipro-marathon-2026-2026-09-20"),
+  "/buko-trail-2026": S("adidas-terrex-buko-trail-2026-08-07"),
+  "/marathon-cherkasy": S("mhp-run4victory-cherkasy-marafon-2026-09-19"),
+  "/ai-gurt-fartlek": "/about",
 };
 
 export function findLegacyRedirect(pathname: string): string | null {
   let p = pathname.toLowerCase();
   try { p = decodeURIComponent(p); } catch { /* keep raw */ }
   if (p.length > 1 && p.endsWith("/")) p = p.slice(0, -1);
+  if (p === "/ru") return "/";
+  if (p.startsWith("/ru/")) p = p.slice(3);
+  p = p.replace(/\/page\/\d+$/, "");
   return LEGACY_REDIRECTS[p] ?? null;
 }
