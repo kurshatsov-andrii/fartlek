@@ -1,5 +1,8 @@
 # Roadmap
 
+## In progress
+- [ ] Show full event/start posters with image-derived backdrop in cards and detail pages
+
 ## Done
 - [x] Custom domain fartlek.com.ua + www connected, primary set, redirects working
 - [x] Mail on Mirohost preserved (info@fartlek.com.ua works)
