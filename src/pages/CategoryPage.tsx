@@ -9,6 +9,7 @@ import { useApp } from "@/contexts/AppContext";
 import { supabase } from "@/integrations/supabase/client";
 import { EVENT_CATEGORIES, type EventCategory } from "@/lib/i18n";
 import { categorySeo, formatEventDate } from "@/lib/seo";
+import { isPastDate } from "@/lib/event-date";
 
 interface EventCard {
   id: string; slug: string | null; title: string; description: string | null;
@@ -122,7 +123,11 @@ const CategoryPage = () => {
                       {ev.location && <div className="flex items-center gap-2"><MapPin className="h-4 w-4 text-primary" />{ev.location}</div>}
                     </div>
                     <div className="mt-6 flex items-center gap-2 pt-4 border-t border-border">
-                      <Button asChild className="flex-1"><Link to={url}>{t.events.register}</Link></Button>
+                      {isPastDate(ev.event_date) ? (
+                        <Button asChild variant="secondary" className="flex-1"><Link to={url}>{lang === "uk" ? "Детальніше" : "Details"}</Link></Button>
+                      ) : (
+                        <Button asChild className="flex-1"><Link to={url}>{t.events.register}</Link></Button>
+                      )}
                       <Button asChild variant="outline" size="icon" aria-label={t.events.details}>
                         <Link to={url}><ArrowUpRight className="h-4 w-4" /></Link>
                       </Button>
