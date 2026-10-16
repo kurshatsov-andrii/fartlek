@@ -71,7 +71,7 @@ const CategoryPage = () => {
           <ArrowLeft className="h-4 w-4" /> {t.events.backToEvents}
         </Link>
         <h1 className="font-display text-4xl sm:text-5xl font-bold tracking-tight">{heading}</h1>
-        <p className="mt-3 text-muted-foreground max-w-2xl">{seo.description}</p>
+        <p className="mt-3 text-muted-foreground">{seo.description}</p>
 
         <div className="mt-8 mb-10 flex flex-wrap gap-2">
           {EVENT_CATEGORIES.map((c) => (
