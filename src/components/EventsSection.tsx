@@ -13,8 +13,17 @@ import { supabase } from "@/integrations/supabase/client";
 import { EVENT_CATEGORIES, type EventCategory } from "@/lib/i18n";
 import { cn, eventCity } from "@/lib/utils";
 import tigerLeft from "@/assets/tiger-left.png";
-import { OtherStartsSection } from "@/components/OtherStartsSection";
+import { OtherStartsSection, DISTANCE_BUCKET_LABELS, type SharedStartFilters } from "@/components/OtherStartsSection";
+import { useCallback } from "react";
 
+
+const DISTANCE_BUCKETS_MATCH: Record<string, (d: number) => boolean> = {
+  "до 5 км": (d) => d > 0 && d <= 5,
+  "10 км": (d) => d > 5 && d <= 12,
+  "21 км": (d) => d > 12 && d <= 25,
+  "42 км": (d) => d > 25 && d <= 45,
+  "> 50 км": (d) => d > 45,
+};
 
 interface EventCard {
   id: string; slug: string | null; title: string; description: string | null; organizer_name: string;
@@ -37,6 +46,9 @@ export const EventsSection = () => {
   const [format, setFormat] = useState<string>("all");
   const [paid, setPaid] = useState<"all" | "paid" | "free">("all");
   const [year, setYear] = useState<string>("all");
+  const [distance, setDistance] = useState<string>("all");
+  const [startFacets, setStartFacets] = useState<{ cities: string[]; months: string[] }>({ cities: [], months: [] });
+  const handleFacets = useCallback((c: string[], m: string[]) => setStartFacets({ cities: c, months: m }), []);
   const PAGE_SIZE = 9;
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 
@@ -54,14 +66,16 @@ export const EventsSection = () => {
   const cities = useMemo(() => {
     const s = new Set<string>();
     events.forEach((e) => { const c = getEventCity(e); if (c) s.add(c); });
+    startFacets.cities.forEach((c) => { if (![...s].some((x) => x.toLowerCase() === c.toLowerCase())) s.add(c); });
     return Array.from(s).sort((a, b) => a.localeCompare(b, "uk"));
-  }, [events]);
+  }, [events, startFacets]);
 
   const months = useMemo(() => {
     const s = new Set<string>();
     events.forEach((e) => { if (e.event_date) s.add(e.event_date.slice(0, 7)); });
-    return Array.from(s).sort();
-  }, [events]);
+    startFacets.months.forEach((m) => s.add(m));
+    return Array.from(s).filter((m) => year === "all" || m.startsWith(year)).sort();
+  }, [events, startFacets, year]);
 
   const monthLabel = (ym: string) => {
     const [y, m] = ym.split("-").map(Number);
@@ -73,7 +87,11 @@ export const EventsSection = () => {
     const q = search.trim().toLowerCase();
     return events.filter((e) => {
       if (activeCat !== "all" && e.category !== activeCat) return false;
-      if (city !== "all" && getEventCity(e) !== city) return false;
+      if (city !== "all" && (getEventCity(e) ?? "").toLowerCase() !== city.toLowerCase()) return false;
+      if (distance !== "all") {
+        const b = DISTANCE_BUCKETS_MATCH[distance];
+        if (b && !e.distances.some((d) => d.is_active !== false && b(Number(d.distance_km)))) return false;
+      }
       if (month !== "all" && !(e.event_date ?? "").startsWith(month)) return false;
       if (!matchesYear(e.event_date, year)) return false;
       if (format !== "all" && e.format !== format) return false;
@@ -87,15 +105,16 @@ export const EventsSection = () => {
         (e.description ?? "").toLowerCase().includes(q)
       );
     });
-  }, [events, activeCat, search, city, month, format, paid, year]);
+  }, [events, activeCat, search, city, month, format, paid, year, distance]);
 
 
-  useEffect(() => { setVisibleCount(PAGE_SIZE); }, [activeCat, search, city, month, format, paid, year]);
+  useEffect(() => { setVisibleCount(PAGE_SIZE); }, [activeCat, search, city, month, format, paid, year, distance]);
 
   const visible = filtered.slice(0, visibleCount);
 
-  const activeFilters = (search ? 1 : 0) + (city !== "all" ? 1 : 0) + (month !== "all" ? 1 : 0) + (format !== "all" ? 1 : 0) + (paid !== "all" ? 1 : 0) + (year !== "all" ? 1 : 0);
-  const resetFilters = () => { setSearch(""); setCity("all"); setMonth("all"); setFormat("all"); setPaid("all"); setYear("all"); };
+  const activeFilters = (search ? 1 : 0) + (city !== "all" ? 1 : 0) + (month !== "all" ? 1 : 0) + (format !== "all" ? 1 : 0) + (paid !== "all" ? 1 : 0) + (year !== "all" ? 1 : 0) + (distance !== "all" ? 1 : 0);
+  const sharedFilters = useMemo<SharedStartFilters>(() => ({ q: search, city, month, year, paid, distance }), [search, city, month, year, paid, distance]);
+  const resetFilters = () => { setSearch(""); setCity("all"); setMonth("all"); setFormat("all"); setPaid("all"); setYear("all"); setDistance("all"); };
 
   const fmtDate = (iso: string) =>
     new Date(iso).toLocaleDateString(lang === "uk" ? "uk-UA" : "en-US", {
@@ -151,7 +170,7 @@ export const EventsSection = () => {
               </Button>
             )}
           </div>
-          <YearFilterButtons value={year} onChange={setYear} lang={lang} />
+          <YearFilterButtons value={year} onChange={(y) => { setYear(y); if (month !== "all" && y !== "all" && !month.startsWith(y)) setMonth("all"); }} lang={lang} />
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
             <Input
@@ -173,7 +192,7 @@ export const EventsSection = () => {
               </button>
             )}
           </div>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
+          <div className="grid grid-cols-2 lg:grid-cols-5 gap-2">
             <Select value={city} onValueChange={setCity}>
               <SelectTrigger aria-label={lang === "uk" ? "Місто" : "City"}><SelectValue /></SelectTrigger>
               <SelectContent>
@@ -186,6 +205,13 @@ export const EventsSection = () => {
               <SelectContent>
                 <SelectItem value="all">{lang === "uk" ? "Усі місяці" : "All months"}</SelectItem>
                 {months.map((m) => <SelectItem key={m} value={m}>{monthLabel(m)}</SelectItem>)}
+              </SelectContent>
+            </Select>
+            <Select value={distance} onValueChange={setDistance}>
+              <SelectTrigger aria-label={lang === "uk" ? "Дистанція" : "Distance"}><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">{lang === "uk" ? "Будь-яка дистанція" : "Any distance"}</SelectItem>
+                {DISTANCE_BUCKET_LABELS.map((l) => <SelectItem key={l} value={l}>{l}</SelectItem>)}
               </SelectContent>
             </Select>
             <Select value={format} onValueChange={setFormat}>
@@ -302,7 +328,7 @@ export const EventsSection = () => {
           </>
         )}
 
-        <OtherStartsSection />
+        <OtherStartsSection shared={sharedFilters} onFacets={handleFacets} />
       </div>
     </section>
   );

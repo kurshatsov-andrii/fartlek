@@ -9,6 +9,11 @@ import { useApp } from "@/contexts/AppContext";
 import { supabase } from "@/integrations/supabase/client";
 import { SPORT_TYPES, SPORT_LABELS, MONTH_NAMES_UK, type SportType } from "@/lib/parseStart";
 import { isPastDate } from "@/lib/event-date";
+import { matchesYear } from "@/components/YearFilterButtons";
+
+export interface SharedStartFilters {
+  q: string; city: string; month: string; year: string; paid: "all" | "paid" | "free"; distance: string;
+}
 
 interface StartRow {
   id: string;
@@ -35,7 +40,9 @@ const DISTANCE_BUCKETS: { label: string; match: (d: number) => boolean }[] = [
   { label: "> 50 км", match: (d) => d > 45 },
 ];
 
-export const OtherStartsSection = () => {
+export const DISTANCE_BUCKET_LABELS = DISTANCE_BUCKETS.map((b) => b.label);
+
+export const OtherStartsSection = ({ shared, onFacets }: { shared?: SharedStartFilters; onFacets?: (cities: string[], months: string[]) => void } = {}) => {
   const { lang } = useApp();
   const [rows, setRows] = useState<StartRow[]>([]);
   const [loading, setLoading] = useState(true);
@@ -78,9 +85,29 @@ export const OtherStartsSection = () => {
   const regions = useMemo(() => Array.from(new Set(rows.map((r) => r.region).filter(Boolean) as string[])).sort(), [rows]);
   const organizers = useMemo(() => Array.from(new Set(rows.map((r) => r.organizer_name).filter(Boolean) as string[])).sort(), [rows]);
 
-  const distanceBucket = distance === "all" ? null : DISTANCE_BUCKETS.find((b) => b.label === distance);
+  useEffect(() => {
+    if (!onFacets) return;
+    const ms = Array.from(new Set(rows.map((r) => (r.event_date ?? "").slice(0, 7)).filter(Boolean))).sort();
+    onFacets(cities, ms);
+  }, [rows, cities, onFacets]);
+
+  const effDistance = shared ? shared.distance : distance;
+  const distanceBucket = effDistance === "all" ? null : DISTANCE_BUCKETS.find((b) => b.label === effDistance);
 
   const filtered = useMemo(() => {
+    if (shared) {
+      const sq = shared.q.trim().toLowerCase();
+      return rows.filter((r) => {
+        if (sq && !`${r.title} ${r.description ?? ""} ${r.city ?? ""} ${r.organizer_name ?? ""}`.toLowerCase().includes(sq)) return false;
+        if (!matchesYear(r.event_date, shared.year)) return false;
+        if (shared.month !== "all" && !(r.event_date ?? "").startsWith(shared.month)) return false;
+        if (shared.city !== "all" && baseCity(r.city).toLowerCase() !== shared.city.toLowerCase()) return false;
+        if (shared.paid === "paid" && r.is_paid !== true) return false;
+        if (shared.paid === "free" && r.is_paid !== false) return false;
+        if (distanceBucket && !(r.distances_km || []).some((d) => distanceBucket.match(Number(d)))) return false;
+        return true;
+      });
+    }
     const qLower = q.trim().toLowerCase();
     return rows.filter((r) => {
       if (qLower) {
@@ -100,9 +127,9 @@ export const OtherStartsSection = () => {
       if (paid === "free" && r.is_paid !== false) return false;
       return true;
     });
-  }, [rows, q, month, city, region, organizer, sport, distance, paid, distanceBucket]);
+  }, [rows, q, month, city, region, organizer, sport, distance, paid, distanceBucket, shared]);
 
-  useEffect(() => { setLimit(PAGE_SIZE); }, [q, month, city, region, organizer, sport, distance, paid]);
+  useEffect(() => { setLimit(PAGE_SIZE); }, [q, month, city, region, organizer, sport, distance, paid, shared]);
 
   const activeFilters =
     (q ? 1 : 0) + (month !== "all" ? 1 : 0) + (city !== "all" ? 1 : 0) + (region !== "all" ? 1 : 0) +
@@ -135,7 +162,7 @@ export const OtherStartsSection = () => {
         </p>
       </div>
 
-      <div className="mb-10 rounded-2xl border bg-card p-4 space-y-3">
+      {!shared && <div className="mb-10 rounded-2xl border bg-card p-4 space-y-3">
         <div className="flex items-center gap-2 text-sm font-medium">
           <Filter className="h-4 w-4" /> {lang === "uk" ? "Фільтри" : "Filters"}
           {activeFilters > 0 && (
@@ -211,7 +238,7 @@ export const OtherStartsSection = () => {
             </SelectContent>
           </Select>
         </div>
-      </div>
+      </div>}
 
       {filtered.length === 0 ? (
         <div className="text-center text-muted-foreground py-16">
