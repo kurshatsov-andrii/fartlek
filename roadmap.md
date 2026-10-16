@@ -16,6 +16,7 @@
 - [x] /calendar copy optimized for "забіги/пробіги України 2027" and "календар забігів України 2027"
 - [x] Calendar page description spans full content width under the heading
 - [x] Community intro (найбільша спільнота Харкова з 2026, 200+ учасників) on /about and /blog via shared CommunityIntro + FAQ first answer updated
+- [x] /blog header description spans full content width on one line
 
 ## Waiting on user
 - [ ] "Біготрейл: Львів" (01.11.2026) — needs distance list, then publish
