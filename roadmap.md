@@ -18,6 +18,7 @@
 - [x] Community intro (найбільша спільнота Харкова з 2026, 200+ учасників) on /about and /blog via shared CommunityIntro + FAQ first answer updated
 - [x] /blog header description spans full content width on one line
 - [x] Category pages (/category and every /category/<slug>) descriptions span full content width on one line
+- [x] Category pages now list telegram starts alongside platform events, with the Starts page filters (search, month, distance, city, organizer, paid/free) via shared src/lib/start-filters.ts
 
 ## Waiting on user
 - [ ] "Біготрейл: Львів" (01.11.2026) — needs distance list, then publish
