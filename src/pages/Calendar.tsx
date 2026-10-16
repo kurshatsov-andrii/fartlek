@@ -83,6 +83,7 @@ const CalendarPage = () => {
   const [search, setSearch] = useState("");
   const [catFilter, setCatFilter] = useState<string>("all");
   const [monthFilter, setMonthFilter] = useState<string>("all");
+  const [yearFilter, setYearFilter] = useState<string>("all");
   const [sortBy, setSortBy] = useState<"date_asc" | "date_desc" | "title_asc" | "location_asc">("date_asc");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [posterOpen, setPosterOpen] = useState(false);
@@ -161,10 +162,24 @@ const CalendarPage = () => {
     return Array.from(set).sort();
   }, [allRows]);
 
+  // Years shown as quick filter chips: 2026 and 2027 are always offered,
+  // plus any other year that actually appears in the data (future-proof).
+  const yearOptions = useMemo(() => {
+    const set = new Set<string>(["2026", "2027"]);
+    allRows.forEach((r) => set.add(r.event_date.slice(0, 4)));
+    return Array.from(set).sort();
+  }, [allRows]);
+
+  const monthsShown = useMemo(() => {
+    if (yearFilter === "all") return monthOptions;
+    return monthOptions.filter((m) => m.startsWith(yearFilter));
+  }, [monthOptions, yearFilter]);
+
   const filtered = useMemo(() => {
     const s = search.trim().toLowerCase();
     const list = allRows.filter((r) => {
       if (catFilter !== "all" && r.category !== catFilter) return false;
+      if (yearFilter !== "all" && !r.event_date.startsWith(yearFilter)) return false;
       if (monthFilter !== "all" && !r.event_date.startsWith(monthFilter)) return false;
       if (s && ![r.title, r.location ?? "", r.organizer_name ?? "", r.distances]
         .some((v) => v.toLowerCase().includes(s))) return false;
@@ -179,7 +194,7 @@ const CalendarPage = () => {
       }
     });
     return list;
-  }, [allRows, search, catFilter, monthFilter, sortBy, lang]);
+  }, [allRows, search, catFilter, yearFilter, monthFilter, sortBy, lang]);
 
   const grouped = useMemo(() => {
     const map = new Map<string, Row[]>();
@@ -408,6 +423,32 @@ const CalendarPage = () => {
           )}
         </div>
 
+        <div className="flex flex-wrap items-center gap-2 mb-4">
+          <span className="text-sm text-muted-foreground mr-1">
+            {lang === "uk" ? "Рік:" : "Year:"}
+          </span>
+          <Button
+            size="sm"
+            variant={yearFilter === "all" ? "default" : "outline"}
+            onClick={() => { setYearFilter("all"); }}
+          >
+            {lang === "uk" ? "Усі роки" : "All years"}
+          </Button>
+          {yearOptions.map((y) => (
+            <Button
+              key={y}
+              size="sm"
+              variant={yearFilter === y ? "default" : "outline"}
+              onClick={() => {
+                setYearFilter(y);
+                if (monthFilter !== "all" && !monthFilter.startsWith(y)) setMonthFilter("all");
+              }}
+            >
+              {y}
+            </Button>
+          ))}
+        </div>
+
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4 mb-6">
           <Input
             placeholder={lang === "uk" ? "Пошук за назвою, місцем…" : "Search by title, location…"}
@@ -427,7 +468,7 @@ const CalendarPage = () => {
             <SelectTrigger><SelectValue placeholder={lang === "uk" ? "Місяць" : "Month"} /></SelectTrigger>
             <SelectContent>
               <SelectItem value="all">{lang === "uk" ? "Усі місяці" : "All months"}</SelectItem>
-              {monthOptions.map((m) => {
+              {monthsShown.map((m) => {
                 const d = new Date(m + "-01");
                 const label = d.toLocaleDateString(lang === "uk" ? "uk-UA" : "en-US", { month: "long", year: "numeric" });
                 return <SelectItem key={m} value={m}>{label}</SelectItem>;
