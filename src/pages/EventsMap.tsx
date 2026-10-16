@@ -11,6 +11,7 @@ import { SEO } from "@/components/SEO";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { YearFilterButtons, matchesYear } from "@/components/YearFilterButtons";
 import { supabase } from "@/integrations/supabase/client";
 import { eventCity } from "@/lib/utils";
 import { findCityCoords, prettyCity } from "@/lib/uaCities";
@@ -68,6 +69,7 @@ const EventsMap = () => {
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState<string | null>(null);
   const [q, setQ] = useState("");
+  const [year, setYear] = useState<string>("all");
 
   useEffect(() => {
     (async () => {
@@ -164,7 +166,7 @@ const EventsMap = () => {
 
   const groups = useMemo<CityGroup[]>(() => {
     const map = new Map<string, CityGroup>();
-    items.forEach((i) => {
+    items.filter((i) => matchesYear(i.date, year)).forEach((i) => {
       const g = map.get(i.city) ?? { city: i.city, coords: i.coords, items: [] };
       g.items.push(i);
       map.set(i.city, g);
@@ -175,7 +177,7 @@ const EventsMap = () => {
         items: g.items.sort((a, b) => (a.date || "").localeCompare(b.date || "")),
       }))
       .sort((a, b) => b.items.length - a.items.length);
-  }, [items]);
+  }, [items, year]);
 
   const visibleGroups = useMemo(() => {
     const s = q.trim().toLowerCase();
@@ -199,6 +201,7 @@ const EventsMap = () => {
           Натисни на місто, щоб побачити старти та перейти до реєстрації. Усього {items.length} подій у {groups.length} містах.
         </p>
         <PageViews pageKey="page:map" className="mb-6" />
+        <YearFilterButtons value={year} onChange={(y) => { setYear(y); setSelected(null); }} className="mb-4" />
 
 
         {loading ? (
