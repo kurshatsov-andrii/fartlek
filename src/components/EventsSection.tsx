@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { YearFilterButtons, matchesYear } from "@/components/YearFilterButtons";
 import { PageViews } from "@/components/PageViews";
 import { EventPoster } from "@/components/EventPoster";
 import { Link } from "@/lib/router-compat";
@@ -35,6 +36,7 @@ export const EventsSection = () => {
   const [month, setMonth] = useState<string>("all");
   const [format, setFormat] = useState<string>("all");
   const [paid, setPaid] = useState<"all" | "paid" | "free">("all");
+  const [year, setYear] = useState<string>("all");
   const PAGE_SIZE = 9;
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 
@@ -73,6 +75,7 @@ export const EventsSection = () => {
       if (activeCat !== "all" && e.category !== activeCat) return false;
       if (city !== "all" && getEventCity(e) !== city) return false;
       if (month !== "all" && !(e.event_date ?? "").startsWith(month)) return false;
+      if (!matchesYear(e.event_date, year)) return false;
       if (format !== "all" && e.format !== format) return false;
       if (paid === "paid" && !e.is_paid) return false;
       if (paid === "free" && e.is_paid) return false;
@@ -84,15 +87,15 @@ export const EventsSection = () => {
         (e.description ?? "").toLowerCase().includes(q)
       );
     });
-  }, [events, activeCat, search, city, month, format, paid]);
+  }, [events, activeCat, search, city, month, format, paid, year]);
 
 
-  useEffect(() => { setVisibleCount(PAGE_SIZE); }, [activeCat, search, city, month, format, paid]);
+  useEffect(() => { setVisibleCount(PAGE_SIZE); }, [activeCat, search, city, month, format, paid, year]);
 
   const visible = filtered.slice(0, visibleCount);
 
-  const activeFilters = (search ? 1 : 0) + (city !== "all" ? 1 : 0) + (month !== "all" ? 1 : 0) + (format !== "all" ? 1 : 0) + (paid !== "all" ? 1 : 0);
-  const resetFilters = () => { setSearch(""); setCity("all"); setMonth("all"); setFormat("all"); setPaid("all"); };
+  const activeFilters = (search ? 1 : 0) + (city !== "all" ? 1 : 0) + (month !== "all" ? 1 : 0) + (format !== "all" ? 1 : 0) + (paid !== "all" ? 1 : 0) + (year !== "all" ? 1 : 0);
+  const resetFilters = () => { setSearch(""); setCity("all"); setMonth("all"); setFormat("all"); setPaid("all"); setYear("all"); };
 
   const fmtDate = (iso: string) =>
     new Date(iso).toLocaleDateString(lang === "uk" ? "uk-UA" : "en-US", {
@@ -148,6 +151,7 @@ export const EventsSection = () => {
               </Button>
             )}
           </div>
+          <YearFilterButtons value={year} onChange={setYear} lang={lang} />
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
             <Input

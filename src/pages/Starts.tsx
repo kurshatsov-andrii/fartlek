@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { YearFilterButtons, matchesYear } from "@/components/YearFilterButtons";
 import { PageViews } from "@/components/PageViews";
 import { EventPoster } from "@/components/EventPoster";
 import { TELEGRAM_CHANNEL_URL, TELEGRAM_CHAT_URL } from "@/components/TelegramCommunity";
@@ -48,6 +49,7 @@ const Starts = () => {
   const [sport, setSport] = useState<SportType | "all">("all");
   const [distance, setDistance] = useState<string>("all");
   const [paid, setPaid] = useState<"all" | "paid" | "free">("all");
+  const [year, setYear] = useState<string>("all");
 
   useEffect(() => {
     (async () => {
@@ -86,6 +88,7 @@ const Starts = () => {
         const hay = `${r.title} ${r.description} ${r.city ?? ""} ${r.organizer_name ?? ""}`.toLowerCase();
         if (!hay.includes(qLower)) return false;
       }
+      if (!matchesYear(r.event_date, year)) return false;
       if (month !== "all" && r.event_date) {
         const m = parseInt(r.event_date.split("-")[1], 10);
         if (String(m) !== month) return false;
@@ -99,7 +102,7 @@ const Starts = () => {
       if (paid === "free" && r.is_paid !== false) return false;
       return true;
     });
-  }, [rows, q, month, city, region, organizer, sport, distance, paid, distanceBucket]);
+  }, [rows, q, month, city, region, organizer, sport, distance, paid, distanceBucket, year]);
 
   const todayStr = new Date().toISOString().slice(0, 10);
   const upcomingAll = filtered
@@ -113,9 +116,9 @@ const Starts = () => {
 
   const activeFilters =
     (q ? 1 : 0) + (month !== "all" ? 1 : 0) + (city !== "all" ? 1 : 0) + (region !== "all" ? 1 : 0) +
-    (organizer !== "all" ? 1 : 0) + (sport !== "all" ? 1 : 0) + (distance !== "all" ? 1 : 0) + (paid !== "all" ? 1 : 0);
+    (organizer !== "all" ? 1 : 0) + (sport !== "all" ? 1 : 0) + (distance !== "all" ? 1 : 0) + (paid !== "all" ? 1 : 0) + (year !== "all" ? 1 : 0);
 
-  const reset = () => { setQ(""); setMonth("all"); setCity("all"); setRegion("all"); setOrganizer("all"); setSport("all"); setDistance("all"); setPaid("all"); };
+  const reset = () => { setQ(""); setMonth("all"); setCity("all"); setRegion("all"); setOrganizer("all"); setSport("all"); setDistance("all"); setPaid("all"); setYear("all"); };
 
   const renderCard = (r: StartRow) => (
     <Card key={r.id} className="overflow-hidden flex flex-col transition-bounce hover:-translate-y-2 hover:shadow-elevated">
@@ -196,6 +199,7 @@ const Starts = () => {
               </Button>
             )}
           </div>
+          <YearFilterButtons value={year} onChange={setYear} />
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
             <Input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Пошук за назвою, описом, містом…" className="pl-9" />
