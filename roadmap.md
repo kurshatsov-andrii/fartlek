@@ -15,8 +15,9 @@
 - [x] Kharkiv 2027 calendar poster replaced with owner's new image on /calendar
 - [x] /calendar copy optimized for "забіги/пробіги України 2027" and "календар забігів України 2027"
 - [x] Calendar page description spans full content width under the heading
+- [x] Community intro (найбільша спільнота Харкова з 2026, 200+ учасників) on /about and /blog via shared CommunityIntro + FAQ first answer updated
 
 ## Waiting on user
 - [ ] "Біготрейл: Львів" (01.11.2026) — needs distance list, then publish
 - [ ] Біготрейли Вінниця / Хмельницький / Тернопіль — no distances yet, unpublished
-- [ ] Verify FAQ wording on /about (participant count, weekly runs)
+- [ ] Verify FAQ wording on /about (weekly runs — participant count confirmed)
