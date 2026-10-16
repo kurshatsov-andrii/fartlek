@@ -38,7 +38,7 @@ const Blog = () => {
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
             <h1 className="font-display text-3xl md:text-4xl font-bold">{head.h1 || DEFAULT_H1}</h1>
-            <p className="text-muted-foreground mt-2 max-w-2xl whitespace-pre-line">{head.subtitle || DEFAULT_SUB}</p>
+            <p className="text-muted-foreground mt-2 whitespace-pre-line">{head.subtitle || DEFAULT_SUB}</p>
             <PageViews pageKey="page:blog" className="mt-3" />
           </div>
           {isAdmin && user && (
