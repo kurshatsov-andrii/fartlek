@@ -14,6 +14,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { supabase } from "@/integrations/supabase/client";
 import { SPORT_TYPES, SPORT_LABELS, MONTH_NAMES_UK, type SportType } from "@/lib/parseStart";
 import { isPastDate } from "@/lib/event-date";
+import { DISTANCE_BUCKETS } from "@/lib/start-filters";
 
 interface StartRow {
   id: string;
@@ -32,13 +33,6 @@ interface StartRow {
 }
 
 const PAGE_SIZE = 9;
-const DISTANCE_BUCKETS: { label: string; match: (d: number) => boolean }[] = [
-  { label: "до 5 км", match: (d) => d > 0 && d <= 5 },
-  { label: "10 км", match: (d) => d > 5 && d <= 12 },
-  { label: "21 км", match: (d) => d > 12 && d <= 25 },
-  { label: "42 км", match: (d) => d > 25 && d <= 45 },
-  { label: "> 50 км", match: (d) => d > 45 },
-];
 
 const Starts = () => {
   const [rows, setRows] = useState<StartRow[]>([]);
