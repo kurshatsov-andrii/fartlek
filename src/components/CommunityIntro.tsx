@@ -8,7 +8,7 @@ export const COMMUNITY_INTRO = {
   ],
 };
 
-const CommunityIntro = ({
+export const CommunityIntro = ({
   variant = "card",
   className = "",
 }: {
