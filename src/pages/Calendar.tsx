@@ -83,6 +83,7 @@ const CalendarPage = () => {
   const [search, setSearch] = useState("");
   const [catFilter, setCatFilter] = useState<string>("all");
   const [monthFilter, setMonthFilter] = useState<string>("all");
+  const [yearFilter, setYearFilter] = useState<string>("all");
   const [sortBy, setSortBy] = useState<"date_asc" | "date_desc" | "title_asc" | "location_asc">("date_asc");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [posterOpen, setPosterOpen] = useState(false);
@@ -160,6 +161,19 @@ const CalendarPage = () => {
     allRows.forEach((r) => set.add(r.event_date.slice(0, 7)));
     return Array.from(set).sort();
   }, [allRows]);
+
+  // Years shown as quick filter chips: 2026 and 2027 are always offered,
+  // plus any other year that actually appears in the data (future-proof).
+  const yearOptions = useMemo(() => {
+    const set = new Set<string>(["2026", "2027"]);
+    allRows.forEach((r) => set.add(r.event_date.slice(0, 4)));
+    return Array.from(set).sort();
+  }, [allRows]);
+
+  const monthsShown = useMemo(() => {
+    if (yearFilter === "all") return monthOptions;
+    return monthOptions.filter((m) => m.startsWith(yearFilter));
+  }, [monthOptions, yearFilter]);
 
   const filtered = useMemo(() => {
     const s = search.trim().toLowerCase();
