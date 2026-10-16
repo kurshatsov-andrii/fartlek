@@ -179,6 +179,7 @@ const CalendarPage = () => {
     const s = search.trim().toLowerCase();
     const list = allRows.filter((r) => {
       if (catFilter !== "all" && r.category !== catFilter) return false;
+      if (yearFilter !== "all" && !r.event_date.startsWith(yearFilter)) return false;
       if (monthFilter !== "all" && !r.event_date.startsWith(monthFilter)) return false;
       if (s && ![r.title, r.location ?? "", r.organizer_name ?? "", r.distances]
         .some((v) => v.toLowerCase().includes(s))) return false;
@@ -193,7 +194,7 @@ const CalendarPage = () => {
       }
     });
     return list;
-  }, [allRows, search, catFilter, monthFilter, sortBy, lang]);
+  }, [allRows, search, catFilter, yearFilter, monthFilter, sortBy, lang]);
 
   const grouped = useMemo(() => {
     const map = new Map<string, Row[]>();
