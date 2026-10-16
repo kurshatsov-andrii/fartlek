@@ -24,3 +24,4 @@
 - [ ] "Біготрейл: Львів" (01.11.2026) — needs distance list, then publish
 - [ ] Біготрейли Вінниця / Хмельницький / Тернопіль — no distances yet, unpublished
 - [ ] Verify FAQ wording on /about (weekly runs — participant count confirmed)
+- [x] /calendar quick year filter chips (Усі роки / 2026 / 2027) above search+filters; month dropdown narrows to chosen year
