@@ -423,6 +423,32 @@ const CalendarPage = () => {
           )}
         </div>
 
+        <div className="flex flex-wrap items-center gap-2 mb-4">
+          <span className="text-sm text-muted-foreground mr-1">
+            {lang === "uk" ? "Рік:" : "Year:"}
+          </span>
+          <Button
+            size="sm"
+            variant={yearFilter === "all" ? "default" : "outline"}
+            onClick={() => { setYearFilter("all"); }}
+          >
+            {lang === "uk" ? "Усі роки" : "All years"}
+          </Button>
+          {yearOptions.map((y) => (
+            <Button
+              key={y}
+              size="sm"
+              variant={yearFilter === y ? "default" : "outline"}
+              onClick={() => {
+                setYearFilter(y);
+                if (monthFilter !== "all" && !monthFilter.startsWith(y)) setMonthFilter("all");
+              }}
+            >
+              {y}
+            </Button>
+          ))}
+        </div>
+
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4 mb-6">
           <Input
             placeholder={lang === "uk" ? "Пошук за назвою, місцем…" : "Search by title, location…"}
