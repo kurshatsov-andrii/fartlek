@@ -468,7 +468,7 @@ const CalendarPage = () => {
             <SelectTrigger><SelectValue placeholder={lang === "uk" ? "Місяць" : "Month"} /></SelectTrigger>
             <SelectContent>
               <SelectItem value="all">{lang === "uk" ? "Усі місяці" : "All months"}</SelectItem>
-              {monthOptions.map((m) => {
+              {monthsShown.map((m) => {
                 const d = new Date(m + "-01");
                 const label = d.toLocaleDateString(lang === "uk" ? "uk-UA" : "en-US", { month: "long", year: "numeric" });
                 return <SelectItem key={m} value={m}>{label}</SelectItem>;
