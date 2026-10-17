@@ -1,5 +1,5 @@
 import { Link, useLocation, useNavigate } from "@/lib/router-compat";
-import { LogOut, User, LayoutDashboard, Ticket, Shield, Mail, Users, Sparkles, Star, Menu, MapPin, Calendar as CalendarIcon, Megaphone, BookOpen, Heart } from "lucide-react";
+import { LogOut, User, LayoutDashboard, Ticket, Shield, Mail, Users, Sparkles, Star, Menu, Megaphone, BookOpen, Heart } from "lucide-react";
 import logoFartlek from "@/assets/logo-fartlek.jpg";
 import { Button } from "@/components/ui/button";
 import { useApp } from "@/contexts/AppContext";
@@ -91,9 +91,6 @@ export const Header = () => {
                 {isAdmin && (
                   <DropdownMenuItem asChild><Link to="/admin"><Shield className="h-4 w-4" />Адмін-панель</Link></DropdownMenuItem>
                 )}
-                <DropdownMenuItem asChild className="lg:hidden"><Link to="/starts"><Ticket className="h-4 w-4" />Старти</Link></DropdownMenuItem>
-                <DropdownMenuItem asChild className="lg:hidden"><Link to="/calendar"><LayoutDashboard className="h-4 w-4" />Календар</Link></DropdownMenuItem>
-                <DropdownMenuItem asChild className="lg:hidden"><Link to="/map"><MapPin className="h-4 w-4" />Мапа</Link></DropdownMenuItem>
                 <DropdownMenuItem asChild className="lg:hidden"><Link to="/clubs"><Users className="h-4 w-4" />Клуби</Link></DropdownMenuItem>
                 <DropdownMenuItem asChild className="lg:hidden"><Link to="/blog"><BookOpen className="h-4 w-4" />Блог</Link></DropdownMenuItem>
                 <DropdownMenuItem asChild className="lg:hidden"><Link to="/features"><Sparkles className="h-4 w-4" />Можливості</Link></DropdownMenuItem>
@@ -120,9 +117,6 @@ export const Header = () => {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-52">
                   <DropdownMenuItem asChild><a href="/#events" onClick={handleEventsClick}><Ticket className="h-4 w-4" />{t.nav.events}</a></DropdownMenuItem>
-                  <DropdownMenuItem asChild><Link to="/starts"><Ticket className="h-4 w-4" />Старти</Link></DropdownMenuItem>
-                  <DropdownMenuItem asChild><Link to="/calendar"><CalendarIcon className="h-4 w-4" />Календар</Link></DropdownMenuItem>
-                  <DropdownMenuItem asChild><Link to="/map"><MapPin className="h-4 w-4" />Мапа</Link></DropdownMenuItem>
                   <DropdownMenuItem asChild><Link to="/clubs"><Users className="h-4 w-4" />Клуби</Link></DropdownMenuItem>
                   <DropdownMenuItem asChild><Link to="/organizers"><Users className="h-4 w-4" />Організатори</Link></DropdownMenuItem>
                   <DropdownMenuItem asChild><Link to="/blog"><BookOpen className="h-4 w-4" />Блог</Link></DropdownMenuItem>
