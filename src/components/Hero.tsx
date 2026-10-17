@@ -70,7 +70,7 @@ export const Hero = () => {
         <div className="absolute inset-0 bg-gradient-to-r from-secondary/90 via-transparent to-transparent" />
       </div>
 
-      <div className="container relative z-10 flex min-h-[88vh] flex-col justify-center py-20">
+      <div className="container relative z-10 flex flex-col justify-center pt-6 pb-12 lg:min-h-[88vh] lg:justify-center lg:py-20">
         <div className="max-w-3xl animate-fade-in-up">
           <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-primary backdrop-blur">
             <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
