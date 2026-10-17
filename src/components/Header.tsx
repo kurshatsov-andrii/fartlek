@@ -64,7 +64,13 @@ export const Header = () => {
           <Link to="/contacts" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-base">{t.nav.contacts}</Link>
         </nav>
 
-        <div className="flex items-center gap-1.5">
+        <nav className="flex lg:hidden min-w-0 flex-1 items-center justify-center gap-3 sm:gap-6">
+          <Link to="/starts" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-base">Старти</Link>
+          <Link to="/calendar" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-base">Календар</Link>
+          <Link to="/map" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-base">Мапа</Link>
+        </nav>
+
+        <div className="flex shrink-0 items-center gap-1.5">
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
