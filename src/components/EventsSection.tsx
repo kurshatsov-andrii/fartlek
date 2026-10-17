@@ -133,7 +133,7 @@ export const EventsSection = () => {
     ev.distances.filter((d) => d.is_active !== false).slice().sort((a, b) => b.distance_km - a.distance_km);
 
   return (
-    <section id="events" className="relative py-24 sm:py-32">
+    <section id="events" className="relative scroll-mt-16 py-24 sm:py-32">
       <div className="container">
         <div className="mb-14">
           <div className="text-xs font-semibold uppercase tracking-wider text-primary mb-3">
