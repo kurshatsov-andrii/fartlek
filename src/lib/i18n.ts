@@ -4,7 +4,7 @@ export interface Dict {
   nav: { events: string; organizer: string; login: string; signup: string; dashboard: string; profile: string; logout: string; myEvents: string; contacts: string };
   hero: {
     kicker: string; title: string; subtitle: string;
-    ctaParticipant: string; ctaOrganizer: string;
+    ctaParticipant: string; ctaOrganizer: string; ctaNearest: string;
     stats: { events: string; runners: string; cities: string; clubs: string; organizers: string; registrations: string };
   };
   events: {
@@ -130,6 +130,7 @@ export const translations: Record<Lang, Dict> = {
       subtitle: "Fartlek Events — платформа реєстрації на забіги, трейли та змагання по всій Україні. QR-стартові пакети, миттєві результати, зручні протоколи.",
       ctaParticipant: "Вхід для учасників",
       ctaOrganizer: "Вхід для організаторів",
+      ctaNearest: "Найближчі події",
       stats: { events: "Подій", runners: "СПОРТСМЕНІВ", cities: "Міст", clubs: "Клубів", organizers: "Організаторів", registrations: "Реєстрацій" },
     },
     events: {
@@ -325,6 +326,7 @@ export const translations: Record<Lang, Dict> = {
       title: "Run. Register. Conquer.",
       subtitle: "Fartlek Events — the registration platform for races, trails and competitions across Ukraine. QR start packs, instant results, clean protocols.",
       ctaParticipant: "Participant sign in", ctaOrganizer: "Organizer sign in",
+      ctaNearest: "Upcoming events",
       stats: { events: "Events", runners: "Runners", cities: "Cities", clubs: "Clubs", organizers: "Organizers", registrations: "Registrations" },
     },
     events: {

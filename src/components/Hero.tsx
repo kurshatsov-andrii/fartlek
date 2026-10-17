@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "@/lib/router-compat";
-import { ArrowRight, User, Trophy, Play, Pause, Music2 } from "lucide-react";
+import { ArrowRight, User, Trophy, Play, Pause, Music2, CalendarClock, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useApp } from "@/contexts/AppContext";
 import { useAuth } from "@/hooks/useAuth";
@@ -120,6 +120,25 @@ export const Hero = () => {
               </Button>
             </div>
           )}
+
+          <div className="mt-6 lg:hidden">
+            <Button
+              type="button"
+              variant="outline"
+              size="lg"
+              onClick={() => {
+                const el = document.getElementById("events");
+                if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+              }}
+              className="h-12 w-full justify-between border-primary/40 bg-primary/10 px-5 text-base font-semibold text-primary hover:bg-primary/20 hover:text-primary"
+            >
+              <span className="inline-flex items-center">
+                <CalendarClock className="mr-2 h-5 w-5" />
+                {t.hero.ctaNearest}
+              </span>
+              <ChevronDown className="h-5 w-5" />
+            </Button>
+          </div>
 
 
           <div className="mt-8 inline-flex max-w-full items-center gap-3 rounded-full border border-secondary-foreground/15 bg-secondary-foreground/5 py-2 pl-2 pr-4 backdrop-blur">
