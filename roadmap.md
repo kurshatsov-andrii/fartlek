@@ -19,6 +19,7 @@
 - [x] /blog header description spans full content width on one line
 - [x] Category pages (/category and every /category/<slug>) descriptions span full content width on one line
 - [x] Category pages now list telegram starts alongside platform events, with the Starts page filters (search, month, distance, city, organizer, paid/free) via shared src/lib/start-filters.ts
+- [x] "Найближчі події" button in the hero on phones/tablets (hidden from lg up) scrolls to the #events section
 
 ## Waiting on user
 - [ ] "Біготрейл: Львів" (01.11.2026) — needs distance list, then publish
