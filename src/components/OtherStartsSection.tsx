@@ -64,7 +64,7 @@ export const OtherStartsSection = ({ shared, onFacets }: { shared?: SharedStartF
     const today = new Date().toISOString().slice(0, 10);
     supabase
       .from("telegram_starts")
-      .select("id,slug,title,description,image_url,register_url,event_date,city,region,organizer_name,sport_types,distances_km,is_paid")
+      .select("id,slug,title,description,image_url,register_url,results_url,registration_status,event_date,city,region,organizer_name,sport_types,distances_km,is_paid")
       .eq("status", "published")
       .gte("event_date", today)
       .order("event_date", { ascending: true })
