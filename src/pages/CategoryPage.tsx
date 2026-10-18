@@ -33,7 +33,7 @@ interface EventCard {
 
 interface StartRow {
   id: string; slug: string; title: string; description: string | null;
-  image_url: string | null; register_url: string | null; event_date: string | null;
+  image_url: string | null; register_url: string | null; results_url: string | null; registration_status: string | null; event_date: string | null;
   city: string | null; organizer_name: string | null; sport_types: string[] | null;
   distances_km: number[] | null; is_paid: boolean | null;
 }
