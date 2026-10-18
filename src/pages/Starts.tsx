@@ -38,6 +38,7 @@ interface StartRow {
 }
 
 const PAGE_SIZE = 9;
+const todayStr = new Date().toISOString().slice(0, 10);
 
 const Starts = () => {
   const [rows, setRows] = useState<StartRow[]>([]);
