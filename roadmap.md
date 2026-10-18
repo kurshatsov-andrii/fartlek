@@ -12,10 +12,10 @@
 - [ ] Request calendar recrawls — blocked on user clicking Request indexing in Google Search Console; API only inspects indexed versions
 
 ## Saved starts, comparisons and opt-in reminders
-- [ ] Save platform events, external starts and calendar entries to a private account list
-- [ ] Compare up to three starts using current published information
-- [ ] Opt-in in-app reminders and calendar export with alarms; unknown times remain all-day dates
-- [ ] Verify signed-in saving, read-back, removal, comparisons and calendar downloads
+- [x] Save platform events, external starts and calendar entries to a private account list
+- [x] Compare up to three starts using current published information
+- [x] Opt-in in-app reminders and calendar export with alarms; unknown times remain all-day dates
+- [x] Verify signed-in saving, read-back, removal, comparisons and calendar downloads (18 tests; browser verified)
 
 ## Done
 - [x] SiS partner banner: calendar above the add-event button and filters, upcoming start/event descriptions, and homepage Partners section
