@@ -8,6 +8,7 @@
 - [x] Add linked Kharkiv calendar using real records and the existing 2027 poster
 - [x] Render calendar records and post-specific metadata for crawlers; verify sitemap and filters (123 URLs)
 - [x] Verify public flows, initial HTML and 16 tests
+- [x] /calendar/kharkiv indexed by Google (Submitted and indexed, crawled 18 Oct 2026) — no manual Request indexing needed
 - [x] Import 16 Kharkiv 2027 starts from the owner's poster; preserve unknown prices and registration links
 - [x] Verify imported starts in national and Kharkiv calendars (16 and 18 rows; 11 tests passed)
 - [x] Request publication of updated pages for fartlek.com.ua (scheduled; completion not verified)
