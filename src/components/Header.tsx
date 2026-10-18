@@ -7,7 +7,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useOptionalStartPlanner } from "@/contexts/StartPlannerContext";
 import { Bell, GitCompareArrows } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
-import { resolveStarts, reminderDue, type StartRef } from "@/lib/start-planner";
+import { resolveStarts, plannerAlerts, type StartRef } from "@/lib/start-planner";
 import { kyivToday } from "@/lib/calendar-discovery";
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger,
@@ -20,9 +20,9 @@ export const Header = () => {
   const navigate = useNavigate();
   // Navigation also renders on fallback pages and during provider refreshes.
   const planner = useOptionalStartPlanner() ?? { records: [], comparison: [] };
-  const reminderRefs: StartRef[] = planner.records.filter(r => r.reminder_days !== null).map(r => ({ source: r.source as StartRef['source'], id: r.target_id }));
-  const reminderQuery = useQuery({ queryKey: ['header-reminders', user?.id, reminderRefs, planner.records.map(r=>r.reminder_days)], enabled: !!user && reminderRefs.length > 0, queryFn: () => resolveStarts(reminderRefs) });
-  const dueCount = user && reminderRefs.length ? (reminderQuery.data ?? []).filter(i => reminderDue(i.date, planner.records.find(r=>r.source===i.source&&r.target_id===i.id)?.reminder_days ?? null, kyivToday())).length : 0;
+  const reminderRefs: StartRef[] = planner.records.filter(r => r.reminder_days !== null || r.notify_registration || r.notify_date_change).map(r => ({ source: r.source as StartRef['source'], id: r.target_id }));
+  const reminderQuery = useQuery({ queryKey: ['header-reminders', user?.id, reminderRefs, planner.records.map(r=>[r.reminder_days,r.notify_registration,r.notify_date_change,r.known_date,r.known_registration])], enabled: !!user && reminderRefs.length > 0, queryFn: () => resolveStarts(reminderRefs) });
+  const dueCount = user && reminderRefs.length ? (reminderQuery.data ?? []).filter(i => plannerAlerts(i, planner.records.find(r=>r.source===i.source&&r.target_id===i.id), kyivToday()).length > 0).length : 0;
 
   const handleEventsClick = (e: React.MouseEvent) => {
     e.preventDefault();

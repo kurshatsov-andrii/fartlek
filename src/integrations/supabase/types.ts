@@ -123,9 +123,13 @@ export type Database = {
           distances: string | null
           event_date: string
           id: string
+          info_checked_on: string | null
+          info_source_url: string | null
           location: string | null
           notes: string | null
           organizer_name: string | null
+          registration_opens_on: string | null
+          registration_status: string | null
           telegram_start_id: string | null
           title: string
           updated_at: string
@@ -138,9 +142,13 @@ export type Database = {
           distances?: string | null
           event_date: string
           id?: string
+          info_checked_on?: string | null
+          info_source_url?: string | null
           location?: string | null
           notes?: string | null
           organizer_name?: string | null
+          registration_opens_on?: string | null
+          registration_status?: string | null
           telegram_start_id?: string | null
           title: string
           updated_at?: string
@@ -153,9 +161,13 @@ export type Database = {
           distances?: string | null
           event_date?: string
           id?: string
+          info_checked_on?: string | null
+          info_source_url?: string | null
           location?: string | null
           notes?: string | null
           organizer_name?: string | null
+          registration_opens_on?: string | null
+          registration_status?: string | null
           telegram_start_id?: string | null
           title?: string
           updated_at?: string
@@ -915,6 +927,7 @@ export type Database = {
           payment_url: string | null
           photos_url: string | null
           registration_closed: boolean
+          registration_opens_on: string | null
           regulations_pdf_url: string | null
           results_pdf_url: string | null
           results_url: string | null
@@ -942,6 +955,7 @@ export type Database = {
           payment_url?: string | null
           photos_url?: string | null
           registration_closed?: boolean
+          registration_opens_on?: string | null
           regulations_pdf_url?: string | null
           results_pdf_url?: string | null
           results_url?: string | null
@@ -969,6 +983,7 @@ export type Database = {
           payment_url?: string | null
           photos_url?: string | null
           registration_closed?: boolean
+          registration_opens_on?: string | null
           regulations_pdf_url?: string | null
           results_pdf_url?: string | null
           results_url?: string | null
@@ -1696,6 +1711,10 @@ export type Database = {
         Row: {
           created_at: string
           id: string
+          known_date: string | null
+          known_registration: string | null
+          notify_date_change: boolean
+          notify_registration: boolean
           reminder_days: number | null
           source: string
           target_id: string
@@ -1704,6 +1723,10 @@ export type Database = {
         Insert: {
           created_at?: string
           id?: string
+          known_date?: string | null
+          known_registration?: string | null
+          notify_date_change?: boolean
+          notify_registration?: boolean
           reminder_days?: number | null
           source: string
           target_id: string
@@ -1712,6 +1735,10 @@ export type Database = {
         Update: {
           created_at?: string
           id?: string
+          known_date?: string | null
+          known_registration?: string | null
+          notify_date_change?: boolean
+          notify_registration?: boolean
           reminder_days?: number | null
           source?: string
           target_id?: string
@@ -1914,12 +1941,16 @@ export type Database = {
           event_date: string | null
           id: string
           image_url: string | null
+          info_checked_on: string | null
+          info_source_url: string | null
           is_paid: boolean | null
           organizer_name: string | null
           published_at: string | null
           raw_payload: Json | null
           region: string | null
           register_url: string | null
+          registration_opens_on: string | null
+          registration_status: string | null
           seo_description: string
           seo_title: string
           slug: string | null
@@ -1939,12 +1970,16 @@ export type Database = {
           event_date?: string | null
           id?: string
           image_url?: string | null
+          info_checked_on?: string | null
+          info_source_url?: string | null
           is_paid?: boolean | null
           organizer_name?: string | null
           published_at?: string | null
           raw_payload?: Json | null
           region?: string | null
           register_url?: string | null
+          registration_opens_on?: string | null
+          registration_status?: string | null
           seo_description?: string
           seo_title?: string
           slug?: string | null
@@ -1964,12 +1999,16 @@ export type Database = {
           event_date?: string | null
           id?: string
           image_url?: string | null
+          info_checked_on?: string | null
+          info_source_url?: string | null
           is_paid?: boolean | null
           organizer_name?: string | null
           published_at?: string | null
           raw_payload?: Json | null
           region?: string | null
           register_url?: string | null
+          registration_opens_on?: string | null
+          registration_status?: string | null
           seo_description?: string
           seo_title?: string
           slug?: string | null

@@ -1,3 +1,6 @@
+import { RegistrationStatus } from "@/components/RegistrationStatus";
+import { deriveRegistrationState } from "@/lib/registration-status";
+import { kyivToday } from "@/lib/calendar-discovery";
 import { useEffect, useState } from "react";
 import { PageViews } from "@/components/PageViews";
 import { EventPoster } from "@/components/EventPoster";
@@ -21,6 +24,10 @@ interface StartRow {
   description: string;
   image_url: string | null;
   register_url: string | null;
+  registration_status: string | null;
+  registration_opens_on: string | null;
+  info_source_url: string | null;
+  info_checked_on: string | null;
   event_date: string | null;
   seo_title: string | null;
   seo_description: string | null;
@@ -42,7 +49,7 @@ const StartDetails = () => {
     (async () => {
       const { data } = await supabase
         .from("telegram_starts")
-        .select("id,slug,title,description,image_url,register_url,event_date,seo_title,seo_description,city,region,sport_types,distances_km,is_paid")
+        .select("id,slug,title,description,image_url,register_url,registration_status,registration_opens_on,info_source_url,info_checked_on,event_date,seo_title,seo_description,city,region,sport_types,distances_km,is_paid")
         .eq("slug", slug)
         .maybeSingle();
       if (!data) { setNotFound(true); setLoading(false); return; }
@@ -65,6 +72,13 @@ const StartDetails = () => {
       <Footer />
     </div>
   );
+
+  const regState = deriveRegistrationState({
+    explicit: row.registration_status,
+    opensOn: row.registration_opens_on,
+    date: row.event_date,
+    today: kyivToday(),
+  });
 
   const fmtDate = (d: string | null) => {
     if (!d) return "";
@@ -102,6 +116,15 @@ const StartDetails = () => {
         <div className="flex items-center gap-2 text-muted-foreground mb-2">
           <MapPin className="h-4 w-4" />{row.city || "Україна та весь світ"}
         </div>
+        <div className="mb-4">
+          <RegistrationStatus info={{
+            state: regState,
+            opensOn: row.registration_opens_on,
+            sourceUrl: row.info_source_url ?? row.register_url,
+            sourceLabel: null,
+            checkedOn: row.info_checked_on,
+          }} />
+        </div>
         <PageViews pageKey={`start:${row.id}`} className="mb-6" />
 
         <div className="flex flex-wrap gap-1 mb-4">
@@ -123,7 +146,7 @@ const StartDetails = () => {
           <div className="mb-8"><SiSPartnerBanner /></div>
         )}
 
-        {row.register_url && !isPastDate(row.event_date) && (
+        {row.register_url && !isPastDate(row.event_date) && regState !== "cancelled" && regState !== "closed" && (
           <Button asChild size="lg" className="w-full sm:w-auto">
             <a href={row.register_url} target="_blank" rel="noreferrer">
               Зареєструватися <ExternalLink className="h-4 w-4 ml-2" />

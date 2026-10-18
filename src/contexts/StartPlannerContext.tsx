@@ -101,6 +101,28 @@ function usePlannerState() {
       days === null ? "Нагадування вимкнено" : "Нагадування увімкнено",
     );
   }
+  async function updatePrefs(
+    id: string,
+    patch: {
+      notify_registration?: boolean;
+      notify_date_change?: boolean;
+      known_date?: string | null;
+      known_registration?: string | null;
+    },
+    message?: string,
+  ) {
+    if (!user) return;
+    const { error } = await supabase
+      .from("saved_start_items")
+      .update(patch)
+      .eq("id", id);
+    if (error) {
+      toast.error("Не вдалося змінити нагадування");
+      return;
+    }
+    await qc.invalidateQueries({ queryKey: ["saved-starts", user.id] });
+    if (message) toast.success(message);
+  }
   function compare(ref: StartRef) {
     setComparison((prev) => {
       const next = toggleComparison(prev, ref);
@@ -114,6 +136,7 @@ function usePlannerState() {
     pending,
     toggleSave,
     setReminder,
+    updatePrefs,
     compare,
     clearComparison: () => setComparison([]),
     loading: !!user && saved.isLoading,

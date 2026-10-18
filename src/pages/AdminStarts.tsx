@@ -1,3 +1,4 @@
+import { RegistrationAdminFields, registrationAdminPayload } from "@/components/RegistrationAdminFields";
 import { useEffect, useState } from "react";
 import { Navigate, Link } from "@/lib/router-compat";
 import { ArrowLeft, Trash2, Loader2, Plus, ExternalLink, Eye, EyeOff, Pencil, Sparkles } from "lucide-react";
@@ -35,6 +36,10 @@ interface Row {
   sport_types: string[];
   distances_km: number[];
   is_paid: boolean | null;
+  registration_status: string | null;
+  registration_opens_on: string | null;
+  info_source_url: string | null;
+  info_checked_on: string | null;
 }
 
 const AdminStarts = () => {
@@ -86,6 +91,7 @@ const AdminStarts = () => {
       event_date: "", slug: "", seo_title: "", seo_description: "",
       status: "draft", telegram_message_id: null, created_at: new Date().toISOString(),
       city: "", region: "", organizer_name: "", sport_types: [], distances_km: [], is_paid: true,
+      registration_status: null, registration_opens_on: null, info_source_url: null, info_checked_on: null,
     });
   };
 
@@ -145,6 +151,7 @@ const AdminStarts = () => {
       sport_types: editing.sport_types || [],
       distances_km: editing.distances_km || [],
       is_paid: editing.is_paid,
+      ...registrationAdminPayload(editing),
     };
 
     if (editing.slug) payload.slug = editing.slug.trim();
@@ -338,6 +345,7 @@ const AdminStarts = () => {
                 <Label>Посилання на реєстрацію</Label>
                 <Input value={editing.register_url ?? ""} onChange={(e) => setEditing({ ...editing, register_url: e.target.value })} placeholder="https://..." />
               </div>
+              <RegistrationAdminFields value={editing} onChange={(patch) => setEditing({ ...editing, ...patch })} />
               <div>
                 <Label>Slug (URL: /starts/...)</Label>
                 <Input value={editing.slug ?? ""} onChange={(e) => setEditing({ ...editing, slug: e.target.value })} placeholder="auto" />

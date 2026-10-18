@@ -18,6 +18,8 @@ import {
   SelectItem,
 } from "@/components/ui/select";
 import { EventPoster } from "@/components/EventPoster";
+import { RegistrationStatus } from "@/components/RegistrationStatus";
+import { Checkbox } from "@/components/ui/checkbox";
 import { StartActions } from "@/components/StartActions";
 import { useStartPlanner } from "@/contexts/StartPlannerContext";
 import { useAuth } from "@/hooks/useAuth";
@@ -25,7 +27,7 @@ import { useApp } from "@/contexts/AppContext";
 import { Link } from "@/lib/router-compat";
 import {
   resolveStarts,
-  reminderDue,
+  plannerAlerts,
   startKey,
   downloadPlannedCalendar,
   type StartRef,
@@ -56,11 +58,14 @@ export default function StartPlanner({ mode }: { mode: "saved" | "compare" }) {
       ? "Порівняння стартів"
       : "Compare starts";
   const items = query.data ?? [];
-  const due = items.filter((i) => {
-    const record = planner.records.find(
-      (r) => r.source === i.source && r.target_id === i.id,
-    );
-    return reminderDue(i.date, record?.reminder_days ?? null, kyivToday());
+  const today = kyivToday();
+  const recordFor = (i: StartRef) =>
+    planner.records.find((r) => r.source === i.source && r.target_id === i.id);
+  const due = items.flatMap((i) => {
+    const record = recordFor(i);
+    return record
+      ? plannerAlerts(i, record, today).map((kind) => ({ i, record, kind }))
+      : [];
   });
   const unavailable = refs.filter(
     (r) => !items.some((i) => startKey(i) === startKey(r)),
@@ -125,16 +130,49 @@ export default function StartPlanner({ mode }: { mode: "saved" | "compare" }) {
         ) : (
           <>
             {saved && due.length > 0 && (
-              <section className="mb-8 border-l-2 border-primary pl-4">
+              <section className="mb-8 border-l-2 border-primary pl-4 space-y-2">
                 <h2 className="mb-3 flex gap-2 font-semibold">
                   <Bell className="h-5 w-5 text-primary" />
-                  {uk ? "Наближаються ваші старти" : "Your upcoming reminders"}
+                  {uk ? "Ваші нагадування" : "Your reminders"}
                 </h2>
-                {due.map((i) => (
-                  <p key={startKey(i)}>
-                    {i.title} —{" "}
-                    {i.date ? calendarDate(i.date, uk ? "uk-UA" : "en-US") : ""}
-                  </p>
+                {due.map(({ i, record, kind }) => (
+                  <div
+                    key={`${startKey(i)}-${kind}`}
+                    className="flex flex-wrap items-center gap-3"
+                  >
+                    <p>
+                      <span className="font-medium">{i.title}</span> —{" "}
+                      {kind === "registration"
+                        ? uk
+                          ? "реєстрацію відкрито"
+                          : "registration is open"
+                        : kind === "date"
+                          ? `${uk ? "дату змінено" : "date changed"}: ${
+                              record.known_date
+                                ? calendarDate(record.known_date, uk ? "uk-UA" : "en-US")
+                                : ""
+                            } → ${i.date ? calendarDate(i.date, uk ? "uk-UA" : "en-US") : ""}`
+                          : `${uk ? "старт наближається" : "start is coming"}: ${
+                              i.date ? calendarDate(i.date, uk ? "uk-UA" : "en-US") : ""
+                            }`}
+                    </p>
+                    {kind !== "start" && (
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() =>
+                          planner.updatePrefs(
+                            record.id,
+                            kind === "date"
+                              ? { known_date: i.date }
+                              : { known_registration: i.registration.state },
+                          )
+                        }
+                      >
+                        {uk ? "Зрозуміло" : "Got it"}
+                      </Button>
+                    )}
+                  </div>
                 ))}
               </section>
             )}
@@ -214,6 +252,46 @@ export default function StartPlanner({ mode }: { mode: "saved" | "compare" }) {
                                 ))}
                               </SelectContent>
                             </Select>
+                          </div>
+                        )}
+                        <RegistrationStatus info={i.registration} uk={uk} />
+                        {record && (
+                          <div className="space-y-2 text-sm">
+                            {(
+                              [
+                                [
+                                  "notify_registration",
+                                  uk ? "Повідомити про відкриття реєстрації" : "Notify when registration opens",
+                                ],
+                                [
+                                  "notify_date_change",
+                                  uk ? "Повідомити про зміну дати" : "Notify about date changes",
+                                ],
+                              ] as const
+                            ).map(([field, label]) => (
+                              <label key={field} className="flex items-center gap-2 cursor-pointer">
+                                <Checkbox
+                                  checked={record[field]}
+                                  onCheckedChange={(v) =>
+                                    planner.updatePrefs(
+                                      record.id,
+                                      {
+                                        [field]: v === true,
+                                        ...(v === true
+                                          ? field === "notify_date_change"
+                                            ? { known_date: i.date }
+                                            : { known_registration: i.registration.state }
+                                          : {}),
+                                      },
+                                      v === true
+                                        ? uk ? "Нагадування увімкнено" : "Reminder on"
+                                        : uk ? "Нагадування вимкнено" : "Reminder off",
+                                    )
+                                  }
+                                />
+                                {label}
+                              </label>
+                            ))}
                           </div>
                         )}
                         <div className="flex flex-wrap gap-2">
@@ -296,12 +374,9 @@ export default function StartPlanner({ mode }: { mode: "saved" | "compare" }) {
                       ],
                       [
                         uk ? "Реєстрація" : "Registration",
-                        (i: (typeof items)[number]) =>
-                          i.date && i.date < kyivToday()
-                            ? uk
-                              ? "Завершено"
-                              : "Completed"
-                            : i.status,
+                        (i: (typeof items)[number]) => (
+                          <RegistrationStatus info={i.registration} uk={uk} />
+                        ),
                       ],
                     ].map(([label, get]) => (
                       <tr

@@ -41,7 +41,7 @@ const EventEditor = () => {
   const [form, setForm] = useState({
     title: "", description: "", organizer_name: "",
     event_date: "", event_time: "", location: "",
-    image_url: "", is_paid: false, payment_url: "", status: "draft", registration_closed: false, changes_deadline_days: 1, max_total_participants: "" as string,
+    image_url: "", is_paid: false, payment_url: "", status: "draft", registration_closed: false, registration_opens_on: "" as string, changes_deadline_days: 1, max_total_participants: "" as string,
     category: "run" as EventCategory,
     format: "offline" as "offline" | "online" | "hybrid",
     results_pdf_url: "",
@@ -102,6 +102,7 @@ const EventEditor = () => {
           payment_url: (ev as any).payment_url ?? "",
           status: ev.status,
           registration_closed: !!(ev as any).registration_closed,
+          registration_opens_on: (ev as any).registration_opens_on ?? "",
           changes_deadline_days: (ev as any).changes_deadline_days ?? 1,
           max_total_participants: (ev as any).max_total_participants != null ? String((ev as any).max_total_participants) : "",
           category: ((ev as any).category ?? "run") as EventCategory,
@@ -251,6 +252,7 @@ const EventEditor = () => {
       results_url: form.results_url || null,
       photos_url: form.photos_url || null,
       description_image_url: form.description_image_url || null,
+      registration_opens_on: form.registration_opens_on || null,
       max_total_participants: form.max_total_participants ? parseInt(form.max_total_participants, 10) : null,
     } as any;
     let eventId = id!;
@@ -882,6 +884,21 @@ const EventEditor = () => {
                   <SelectItem value="completed">{t.organizer.completed}</SelectItem>
                 </SelectContent>
               </Select>
+            </div>
+
+            <div className="space-y-1.5">
+              <Label htmlFor="registration_opens_on">
+                {lang === "uk" ? "Дата відкриття реєстрації (необов'язково)" : "Registration opens on (optional)"}
+              </Label>
+              <Input
+                id="registration_opens_on"
+                type="date"
+                value={form.registration_opens_on}
+                onChange={(e) => setForm({ ...form, registration_opens_on: e.target.value })}
+              />
+              <p className="text-xs text-muted-foreground">
+                {lang === "uk" ? "До цієї дати учасники бачать «Реєстрація очікується»." : "Until then participants see “Registration expected”."}
+              </p>
             </div>
 
             <div className="flex items-center gap-3 rounded-xl border border-border bg-muted/30 p-3">

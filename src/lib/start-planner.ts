@@ -1,5 +1,10 @@
 import { supabase } from "@/integrations/supabase/client";
 import { buildIcs, type CalendarEvent } from "@/lib/calendar";
+import { kyivToday } from "@/lib/calendar-discovery";
+import {
+  deriveRegistrationState,
+  type RegistrationInfo,
+} from "@/lib/registration-status";
 export type StartSource = "event" | "start" | "calendar";
 export interface StartRef {
   source: StartSource;
@@ -16,7 +21,7 @@ export interface PlannedStart extends StartRef {
   organizer: string | null;
   url: string | null;
   image: string | null;
-  status: string | null;
+  registration: RegistrationInfo;
 }
 export const startKey = (r: StartRef) => `${r.source}:${r.id}`;
 export const MAX_COMPARE = 3;
@@ -39,6 +44,38 @@ export function reminderDue(
     86400000;
   return difference >= 0 && difference <= days;
 }
+export interface ReminderPrefs {
+  reminder_days: number | null;
+  notify_registration: boolean;
+  notify_date_change: boolean;
+  known_date: string | null;
+  known_registration: string | null;
+}
+export type PlannerAlertKind = "start" | "registration" | "date";
+/** In-app alerts the user explicitly opted into for one saved start. */
+export function plannerAlerts(
+  s: Pick<PlannedStart, "date" | "registration">,
+  prefs: ReminderPrefs | undefined,
+  today: string,
+): PlannerAlertKind[] {
+  if (!prefs) return [];
+  const alerts: PlannerAlertKind[] = [];
+  if (
+    prefs.notify_registration &&
+    s.registration.state === "open" &&
+    prefs.known_registration !== "open"
+  )
+    alerts.push("registration");
+  if (
+    prefs.notify_date_change &&
+    prefs.known_date &&
+    s.date &&
+    s.date !== prefs.known_date
+  )
+    alerts.push("date");
+  if (reminderDue(s.date, prefs.reminder_days, today)) alerts.push("start");
+  return alerts;
+}
 export async function resolveStarts(refs: StartRef[]): Promise<PlannedStart[]> {
   const ids = (source: StartSource) =>
     refs.filter((r) => r.source === source).map((r) => r.id);
@@ -47,7 +84,7 @@ export async function resolveStarts(refs: StartRef[]): Promise<PlannedStart[]> {
       ? supabase
           .from("events")
           .select(
-            "id,slug,title,event_date,event_time,location,image_url,is_paid,organizer_name,status,registration_closed,distances(distance_km,price,is_active)",
+            "id,slug,title,event_date,event_time,location,image_url,is_paid,organizer_name,status,registration_closed,registration_opens_on,updated_at,distances(distance_km,price,is_active)",
           )
           .in("id", ids("event"))
           .in("status", ["published", "completed"])
@@ -56,7 +93,7 @@ export async function resolveStarts(refs: StartRef[]): Promise<PlannedStart[]> {
       ? supabase
           .from("telegram_starts")
           .select(
-            "id,slug,title,event_date,city,distances_km,is_paid,organizer_name,image_url,register_url",
+            "id,slug,title,event_date,city,distances_km,is_paid,organizer_name,image_url,register_url,registration_status,registration_opens_on,info_source_url,info_checked_on",
           )
           .in("id", ids("start"))
           .eq("status", "published")
@@ -64,12 +101,13 @@ export async function resolveStarts(refs: StartRef[]): Promise<PlannedStart[]> {
     ids("calendar").length
       ? supabase
           .from("calendar_events")
-          .select("id,title,event_date,location,distances,organizer_name,url")
+          .select("id,title,event_date,location,distances,organizer_name,url,registration_status,registration_opens_on,info_source_url,info_checked_on")
           .in("id", ids("calendar"))
       : Promise.resolve({ data: [], error: null }),
   ]);
   if (events.error || starts.error || calendar.error)
     throw new Error("Не вдалося завантажити старти");
+  const today = kyivToday();
   const result: PlannedStart[] = [];
   for (const e of events.data ?? []) {
     const ds = e.distances.filter((d) => d.is_active);
@@ -86,14 +124,20 @@ export async function resolveStarts(refs: StartRef[]): Promise<PlannedStart[]> {
       organizer: e.organizer_name,
       url: `/events/${e.slug ?? e.id}`,
       image: e.image_url,
-      status:
-        e.status === "completed"
-          ? "Завершено"
-          : e.status === "cancelled"
-            ? "Скасовано"
-            : e.registration_closed
-              ? "Реєстрація закрита"
-              : "Реєстрація відкрита",
+      registration: {
+        state: deriveRegistrationState({
+          cancelled: e.status === "cancelled",
+          closed: e.registration_closed || e.status === "completed",
+          opensOn: e.registration_opens_on,
+          defaultOpen: true,
+          date: e.event_date,
+          today,
+        }),
+        opensOn: e.registration_opens_on,
+        sourceUrl: null,
+        sourceLabel: "Організатор на Фартлек",
+        checkedOn: e.updated_at.slice(0, 10),
+      },
     });
   }
   for (const s of starts.data ?? [])
@@ -110,7 +154,18 @@ export async function resolveStarts(refs: StartRef[]): Promise<PlannedStart[]> {
       organizer: s.organizer_name,
       url: `/starts/${s.slug}`,
       image: s.image_url,
-      status: s.register_url ? "Посилання на реєстрацію" : "Не зазначено",
+      registration: {
+        state: deriveRegistrationState({
+          explicit: s.registration_status,
+          opensOn: s.registration_opens_on,
+          date: s.event_date,
+          today,
+        }),
+        opensOn: s.registration_opens_on,
+        sourceUrl: s.info_source_url ?? s.register_url,
+        sourceLabel: null,
+        checkedOn: s.info_checked_on,
+      },
     });
   for (const c of calendar.data ?? [])
     result.push({
@@ -126,7 +181,18 @@ export async function resolveStarts(refs: StartRef[]): Promise<PlannedStart[]> {
       organizer: c.organizer_name,
       url: c.url,
       image: null,
-      status: null,
+      registration: {
+        state: deriveRegistrationState({
+          explicit: c.registration_status,
+          opensOn: c.registration_opens_on,
+          date: c.event_date,
+          today,
+        }),
+        opensOn: c.registration_opens_on,
+        sourceUrl: c.info_source_url ?? c.url,
+        sourceLabel: null,
+        checkedOn: c.info_checked_on,
+      },
     });
   return refs.flatMap((r) => {
     const item = result.find((i) => startKey(i) === startKey(r));
