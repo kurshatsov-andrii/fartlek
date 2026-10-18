@@ -8,11 +8,12 @@
 - [x] Add linked Kharkiv calendar using real records and the existing 2027 poster
 - [x] Render calendar records and post-specific metadata for crawlers; verify sitemap and filters (123 URLs)
 - [x] Verify public flows, initial HTML and 16 tests
+- [x] /calendar/kharkiv indexed by Google (Submitted and indexed, crawled 18 Oct 2026) — no manual Request indexing needed
 - [x] Import 16 Kharkiv 2027 starts from the owner's poster; preserve unknown prices and registration links
 - [x] Verify imported starts in national and Kharkiv calendars (16 and 18 rows; 11 tests passed)
 - [x] Request publication of updated pages for fartlek.com.ua (scheduled; completion not verified)
 - [x] Check Google calendar indexing: /calendar indexed; /calendar/kharkiv unknown to Google; submit updated live sitemap (123 URLs, HTTP 204)
-- [ ] Request calendar recrawls — blocked on user clicking Request indexing in Google Search Console; API only inspects indexed versions
+- [x] Calendar recrawls confirmed via URL Inspection: /calendar/kharkiv "Submitted and indexed" (18 Oct 2026)
 
 ## Saved starts, comparisons and opt-in reminders
 - [x] Save platform events, external starts and calendar entries to a private account list
@@ -28,6 +29,7 @@
 - [x] Mail on Mirohost preserved (info@fartlek.com.ua works)
 - [x] 301 redirects for old pages published on fartlek.com.ua
 - [x] sitemap.xml and robots.txt rewritten to fartlek.com.ua (source)
+- [x] Owner published saved starts, likes, reminders and registration statuses to fartlek.com.ua (Oct 18 2026)
 
 - [x] blog-images public download — accepted by owner as intended
 - [x] Registration links removed from all finished events/starts (cards + detail pages)
