@@ -45,10 +45,14 @@ function escapeIcsText(s: string): string {
 }
 
 export function buildIcs(ev: IcsEvent): string {
-  const dtStart = ev.allDay ? ev.date.replace(/-/g, '') : formatLocalDateTime(ev.date, ev.time);
+  const dtStart = ev.allDay
+    ? ev.date.replace(/-/g, "")
+    : formatLocalDateTime(ev.date, ev.time);
   const nextDay = new Date(`${ev.date}T12:00:00Z`);
   nextDay.setUTCDate(nextDay.getUTCDate() + 1);
-  const dtEnd = ev.allDay ? nextDay.toISOString().slice(0,10).replace(/-/g, '') : addHoursLocal(ev.date, ev.time, ev.durationHours ?? 4);
+  const dtEnd = ev.allDay
+    ? nextDay.toISOString().slice(0, 10).replace(/-/g, "")
+    : addHoursLocal(ev.date, ev.time, ev.durationHours ?? 4);
   const dtStamp = new Date()
     .toISOString()
     .replace(/[-:]/g, "")
@@ -80,20 +84,24 @@ export function buildIcs(ev: IcsEvent): string {
     "BEGIN:VEVENT",
     `UID:${ev.uid}@fartlek.com.ua`,
     `DTSTAMP:${dtStamp}`,
-    ev.allDay ? `DTSTART;VALUE=DATE:${dtStart}` : `DTSTART;TZID=Europe/Kyiv:${dtStart}`,
+    ev.allDay
+      ? `DTSTART;VALUE=DATE:${dtStart}`
+      : `DTSTART;TZID=Europe/Kyiv:${dtStart}`,
     ev.allDay ? `DTEND;VALUE=DATE:${dtEnd}` : `DTEND;TZID=Europe/Kyiv:${dtEnd}`,
     `SUMMARY:${escapeIcsText(ev.title)}`,
   ];
-  if (ev.description) lines.push(`DESCRIPTION:${escapeIcsText(ev.description)}`);
+  if (ev.description)
+    lines.push(`DESCRIPTION:${escapeIcsText(ev.description)}`);
   if (ev.location) lines.push(`LOCATION:${escapeIcsText(ev.location)}`);
   if (ev.url) lines.push(`URL:${ev.url}`);
-  if (ev.reminderDays !== null) lines.push(
-    "BEGIN:VALARM",
-    `TRIGGER:-P${ev.reminderDays ?? 1}D`,
-    "ACTION:DISPLAY",
-    `DESCRIPTION:${escapeIcsText(ev.title)}`,
-    "END:VALARM",
-  );
+  if (ev.reminderDays !== null)
+    lines.push(
+      "BEGIN:VALARM",
+      `TRIGGER:-P${ev.reminderDays ?? 1}D`,
+      "ACTION:DISPLAY",
+      `DESCRIPTION:${escapeIcsText(ev.title)}`,
+      "END:VALARM",
+    );
   lines.push("END:VEVENT", "END:VCALENDAR");
   return lines.join("\r\n");
 }
@@ -113,13 +121,23 @@ function kyivLocalToUtcZ(date: string, time: string): string {
   const dtf = new Intl.DateTimeFormat("en-US", {
     timeZone: "Europe/Kyiv",
     hour12: false,
-    year: "numeric", month: "2-digit", day: "2-digit",
-    hour: "2-digit", minute: "2-digit", second: "2-digit",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
   });
-  const parts = Object.fromEntries(dtf.formatToParts(asUtc).map((p) => [p.type, p.value]));
+  const parts = Object.fromEntries(
+    dtf.formatToParts(asUtc).map((p) => [p.type, p.value]),
+  );
   const kyivAsUtc = Date.UTC(
-    Number(parts.year), Number(parts.month) - 1, Number(parts.day),
-    Number(parts.hour) % 24, Number(parts.minute), Number(parts.second),
+    Number(parts.year),
+    Number(parts.month) - 1,
+    Number(parts.day),
+    Number(parts.hour) % 24,
+    Number(parts.minute),
+    Number(parts.second),
   );
   const offsetMs = kyivAsUtc - asUtc.getTime(); // Kyiv offset from UTC
   const utcMs = asUtc.getTime() - offsetMs;
@@ -185,7 +203,9 @@ export function downloadIcs(ev: IcsEvent, filename?: string): void {
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
-  const safe = (filename || ev.title).replace(/[^a-z0-9-_]+/gi, "_").slice(0, 60);
+  const safe = (filename || ev.title)
+    .replace(/[^a-z0-9-_]+/gi, "_")
+    .slice(0, 60);
   a.download = `${safe}.ics`;
   document.body.appendChild(a);
   a.click();
