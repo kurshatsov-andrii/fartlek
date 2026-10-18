@@ -55,6 +55,7 @@ interface CatItem {
   isPaid: boolean | null;
   badges: string[];
   registerUrl: string | null;
+  resultsUrl: string | null;
 }
 
 const PAGE_SIZE = 9;
