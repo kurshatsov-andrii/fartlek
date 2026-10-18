@@ -6,7 +6,7 @@ import { PageViews } from "@/components/PageViews";
 import { EventPoster } from "@/components/EventPoster";
 import { SiSPartnerBanner } from "@/components/SiSPartnerBanner";
 import { Link, useParams } from "@/lib/router-compat";
-import { Loader2, ExternalLink, Calendar as CalendarIcon, ArrowLeft, MapPin } from "lucide-react";
+import { Loader2, ExternalLink, Calendar as CalendarIcon, ArrowLeft, MapPin, FileText } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { SEO } from "@/components/SEO";
@@ -24,6 +24,7 @@ interface StartRow {
   description: string;
   image_url: string | null;
   register_url: string | null;
+  results_url: string | null;
   registration_status: string | null;
   registration_opens_on: string | null;
   info_source_url: string | null;
@@ -49,7 +50,7 @@ const StartDetails = () => {
     (async () => {
       const { data } = await supabase
         .from("telegram_starts")
-        .select("id,slug,title,description,image_url,register_url,registration_status,registration_opens_on,info_source_url,info_checked_on,event_date,seo_title,seo_description,city,region,sport_types,distances_km,is_paid")
+        .select("id,slug,title,description,image_url,register_url,results_url,registration_status,registration_opens_on,info_source_url,info_checked_on,event_date,seo_title,seo_description,city,region,sport_types,distances_km,is_paid")
         .eq("slug", slug)
         .maybeSingle();
       if (!data) { setNotFound(true); setLoading(false); return; }
@@ -146,7 +147,15 @@ const StartDetails = () => {
           <div className="mb-8"><SiSPartnerBanner /></div>
         )}
 
-        {row.register_url && !isPastDate(row.event_date) && regState !== "cancelled" && regState !== "closed" && (
+        {row.results_url && (
+          <Button asChild size="lg" className="w-full sm:w-auto">
+            <a href={row.results_url} target="_blank" rel="noreferrer">
+              Результати {row.title || ""} <FileText className="h-4 w-4 ml-2" />
+            </a>
+          </Button>
+        )}
+
+        {row.register_url && !isPastDate(row.event_date) && !row.results_url && regState !== "cancelled" && regState !== "closed" && (
           <Button asChild size="lg" className="w-full sm:w-auto">
             <a href={row.register_url} target="_blank" rel="noreferrer">
               Зареєструватися <ExternalLink className="h-4 w-4 ml-2" />

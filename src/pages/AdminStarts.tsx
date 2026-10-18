@@ -40,6 +40,7 @@ interface Row {
   registration_opens_on: string | null;
   info_source_url: string | null;
   info_checked_on: string | null;
+  results_url: string | null;
 }
 
 const AdminStarts = () => {
@@ -92,6 +93,7 @@ const AdminStarts = () => {
       status: "draft", telegram_message_id: null, created_at: new Date().toISOString(),
       city: "", region: "", organizer_name: "", sport_types: [], distances_km: [], is_paid: true,
       registration_status: null, registration_opens_on: null, info_source_url: null, info_checked_on: null,
+      results_url: null,
     });
   };
 
@@ -141,6 +143,7 @@ const AdminStarts = () => {
       description: editing.description,
       image_url: editing.image_url?.trim() || null,
       register_url: editing.register_url?.trim() || null,
+      results_url: editing.results_url?.trim() || null,
       event_date: editing.event_date || null,
       seo_title: seoTitle,
       seo_description: seoDesc,
@@ -344,6 +347,10 @@ const AdminStarts = () => {
               <div>
                 <Label>Посилання на реєстрацію</Label>
                 <Input value={editing.register_url ?? ""} onChange={(e) => setEditing({ ...editing, register_url: e.target.value })} placeholder="https://..." />
+              </div>
+              <div>
+                <Label>Посилання на результати (замінює кнопку реєстрації після старту)</Label>
+                <Input value={editing.results_url ?? ""} onChange={(e) => setEditing({ ...editing, results_url: e.target.value })} placeholder="https://..." />
               </div>
               <RegistrationAdminFields value={editing} onChange={(patch) => setEditing({ ...editing, ...patch })} />
               <div>
