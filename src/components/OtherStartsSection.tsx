@@ -23,6 +23,8 @@ interface StartRow {
   description: string | null;
   image_url: string | null;
   register_url: string | null;
+  results_url: string | null;
+  registration_status: string | null;
   event_date: string | null;
   city: string | null;
   region: string | null;
