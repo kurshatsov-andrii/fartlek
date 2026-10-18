@@ -14,7 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
 import { SPORT_TYPES, SPORT_LABELS, MONTH_NAMES_UK, type SportType } from "@/lib/parseStart";
-import { isPastDate } from "@/lib/event-date";
+import { canShowRegisterButton } from "@/lib/registration-status";
 import { DISTANCE_BUCKETS } from "@/lib/start-filters";
 import { discoverySeo } from "@/lib/discovery-seo";
 import { StartActions } from "@/components/StartActions";
