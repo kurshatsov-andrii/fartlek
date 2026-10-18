@@ -7,6 +7,7 @@ import { toast } from "sonner";
 
 // Routes the user is allowed to visit even with an incomplete profile.
 const ALLOWED_PATHS = [
+  "/",
   "/auth",
   "/reset-password",
   "/profile",
