@@ -285,7 +285,13 @@ export const OtherStartsSection = ({ shared, onFacets }: { shared?: SharedStartF
                   <Button asChild variant="secondary" className="flex-1">
                     <Link to={`/starts/${r.slug}`}>{lang === "uk" ? "Детальніше" : "Details"}</Link>
                   </Button>
-                  {r.register_url && !isPastDate(r.event_date) && (
+                  {r.results_url ? (
+                    <Button asChild variant="outline" className="flex-1">
+                      <a href={r.results_url} target="_blank" rel="noreferrer">
+                        {lang === "uk" ? "Результати" : "Results"} <FileText className="h-3.5 w-3.5 ml-1" />
+                      </a>
+                    </Button>
+                  ) : r.register_url && canShowRegisterButton({ explicit: r.registration_status, date: r.event_date, today: todayStr }) && (
                     <Button asChild variant="outline" className="flex-1">
                       <a href={r.register_url} target="_blank" rel="noreferrer">
                         {lang === "uk" ? "На сайт" : "Website"} <ExternalLink className="h-3.5 w-3.5 ml-1" />
