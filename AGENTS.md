@@ -18,6 +18,7 @@
 
 - Keep discovery-page metadata in discovery-seo and use it in both route heads and page SEO so initial HTML and hydrated metadata agree.
 - Reuse CalendarPage for national and city calendars with public-calendar Query data primed by loaders so crawlers and visitors see the same real records.
+- Extend the shared calendar scope predicate for each city and reuse its public records without duplicating starts, so city pages remain current when records change.
 - City calendar scoping includes explicitly attributed local season posters through source notes, without rewriting out-of-city venues as city locations.
 - Keep calendar route variants as sibling leaf files under routes/calendar so the city calendar does not inherit a second calendar page or canonical.
 - Format calendar date-only values in an explicit Kyiv timezone so browser and crawler timezones cannot shift race dates or month headings.
