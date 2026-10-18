@@ -548,7 +548,7 @@ const EventDetails = () => {
                     {calendarDate(event.registration_opens_on, lang === "uk" ? "uk-UA" : "en-US")}
                   </p>
                 </div>
-              ) : event.registration_closed || isPastDate(event.event_date) ? (
+              ) : event.registration_closed || isCompletedDate(event.event_date) ? (
                 <div className="sticky top-24 rounded-2xl border border-border bg-card p-6 space-y-3">
                   <h3 className="font-display text-xl font-bold text-foreground">
                     {t.events.registrationClosedTitle}
