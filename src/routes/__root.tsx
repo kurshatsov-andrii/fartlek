@@ -28,12 +28,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1.0" },
       { name: "color-scheme", content: "dark" },
-      { title: "Fartlek Events. Реєстрація на спортивні події в Україні" },
-      {
-        name: "description",
-        content:
-          "Реєструйся на забіги, трейли та спортивні події по всій Україні. QR-стартові пакети, миттєві результати, зручні протоколи.",
-      },
       { name: "author", content: "Fartlek Events" },
       {
         name: "google-site-verification",
@@ -41,17 +35,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       { property: "og:type", content: "website" },
       { property: "og:site_name", content: "Fartlek Events" },
-      {
-        property: "og:image",
-        content:
-          "https://storage.googleapis.com/gpt-engineer-file-uploads/fhzHLE2HiFZe0qgeuSJhU49nthl2/social-images/social-1776777612035-fartlek_events.webp",
-      },
       { name: "twitter:card", content: "summary_large_image" },
-      {
-        name: "twitter:image",
-        content:
-          "https://storage.googleapis.com/gpt-engineer-file-uploads/fhzHLE2HiFZe0qgeuSJhU49nthl2/social-images/social-1776777612035-fartlek_events.webp",
-      },
     ],
     links: [
       { rel: "stylesheet", href: appCss },

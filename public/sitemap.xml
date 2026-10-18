@@ -11,6 +11,11 @@
     <priority>0.9</priority>
   </url>
   <url>
+    <loc>https://fartlek.com.ua/calendar/kharkiv</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://fartlek.com.ua/starts</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
@@ -81,7 +86,22 @@
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://fartlek.com.ua/category/road_run</loc>
+    <loc>https://fartlek.com.ua/category/run</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fartlek.com.ua/category/half_marathon</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fartlek.com.ua/category/marathon</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fartlek.com.ua/category/ultra</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -116,7 +136,17 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fartlek.com.ua/category/swimming</loc>
+    <loc>https://fartlek.com.ua/category/swim</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fartlek.com.ua/category/online</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fartlek.com.ua/category/jumps</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>

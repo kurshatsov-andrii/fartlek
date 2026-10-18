@@ -1,3 +1,4 @@
+import { discoverySeo } from "@/lib/discovery-seo";
 import { lazy, Suspense } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { ClientOnly } from "@tanstack/react-router";
@@ -19,9 +20,7 @@ export const Route = createFileRoute("/map")({
   loader: () => getSeoOverride({ data: { path: "/map" } }),
   head: ({ loaderData }) =>
     pageHead({
-      title: "Мапа спортивних подій України | Fartlek Events",
-      description:
-        "Інтерактивна мапа забігів, трейлів і стартів по містах України. Обери місто — дивись найближчі події та реєструйся онлайн.",
+      ...discoverySeo("/map"),
       path: "/map",
       override: loaderData ?? null,
     }),

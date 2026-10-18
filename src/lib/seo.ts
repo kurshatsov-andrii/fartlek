@@ -4,14 +4,16 @@ const truncate = (s: string, max: number) =>
   s.length <= max ? s : s.slice(0, max - 1).trimEnd() + "…";
 
 export const formatEventDate = (iso: string, lang: Lang) =>
-  new Date(iso).toLocaleDateString(lang === "uk" ? "uk-UA" : "en-US", {
+  new Date(iso + "T12:00:00Z").toLocaleDateString(lang === "uk" ? "uk-UA" : "en-US", {
+    timeZone: "Europe/Kyiv",
     day: "numeric",
     month: "long",
     year: "numeric",
   });
 
 const shortDate = (iso: string, lang: Lang) =>
-  new Date(iso).toLocaleDateString(lang === "uk" ? "uk-UA" : "en-US", {
+  new Date(iso + "T12:00:00Z").toLocaleDateString(lang === "uk" ? "uk-UA" : "en-US", {
+    timeZone: "Europe/Kyiv",
     day: "numeric",
     month: "short",
     year: "numeric",
@@ -117,6 +119,6 @@ const CAT_DESCS: Record<Lang, Record<EventCategory, string>> = {
 };
 
 export const categorySeo = (cat: EventCategory, lang: Lang) => ({
-  title: truncate(CAT_TITLES[lang][cat], 60),
-  description: truncate(CAT_DESCS[lang][cat], 160),
+  title: truncate(CAT_TITLES[lang][cat].replace("в Україні", "України 2027").replace("in Ukraine", "in Ukraine 2027").replace("Fartlek Events", lang === "uk" ? "Фартлек" : "Fartlek"), 60),
+  description: truncate(CAT_DESCS[lang][cat].replace("в Україні", "в Україні 2027 року").replace("України.", "України 2027 року.").replace("in Ukraine", "in Ukraine in 2027"), 160),
 });

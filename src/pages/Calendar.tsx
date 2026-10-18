@@ -1,6 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
 import { PageViews } from "@/components/PageViews";
 import { Link } from "@/lib/router-compat";
+import { useSearch, useNavigate } from "@tanstack/react-router";
+import { useSuspenseQuery, useQueryClient } from "@tanstack/react-query";
+import { calendarQueryOptions } from "@/lib/calendar-query";
+import { calendarDate, matchesCalendarScope, type CalendarRow, type CalendarScope } from "@/lib/calendar-discovery";
+import { discoverySeo } from "@/lib/discovery-seo";
 import { Loader2, Plus, Pencil, Trash2, ExternalLink, ArrowUpDown } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
@@ -28,19 +33,7 @@ import { EVENT_CATEGORIES, type EventCategory } from "@/lib/i18n";
 import { toast } from "sonner";
 import { calendarLocation } from "@/lib/calendar-location";
 
-interface Row {
-  id: string;
-  source: "platform" | "calendar";
-  title: string;
-  event_date: string;
-  location: string | null;
-  distances: string;
-  organizer_name: string | null;
-  category: string | null;
-  url: string | null;
-  notes?: string | null;
-  created_by?: string | null;
-}
+type Row = CalendarRow;
 
 // Returns internal path if the URL points to this same site, otherwise null
 const internalPath = (url: string): string | null => {
@@ -49,8 +42,8 @@ const internalPath = (url: string): string | null => {
     if (url.startsWith("/")) return url;
     const u = new URL(url);
     const host = u.hostname.replace(/^www\./, "");
-    const current = window.location.hostname.replace(/^www\./, "");
-    const known = ["fartlek.lovable.app", current];
+    const current = typeof window === "undefined" ? "fartlek.com.ua" : window.location.hostname.replace(/^www\./, "");
+    const known = ["fartlek.com.ua", "fartlek.lovable.app", current];
     if (known.includes(host) || host.endsWith("--b87e16a4-d487-48fd-8f66-fbbf2b0ac3dd.lovable.app")) {
       return `${u.pathname}${u.search}${u.hash}` || "/";
     }
@@ -73,88 +66,29 @@ const emptyForm = {
   notes: "",
 };
 
-const CalendarPage = () => {
+const CalendarPage = ({ scope = "ukraine" }: { scope?: CalendarScope }) => {
+  const path = scope === "kharkiv" ? "/calendar/kharkiv" : "/calendar";
+  const { data: rows } = useSuspenseQuery(calendarQueryOptions);
+  const queryClient = useQueryClient();
+  const params = useSearch({ strict: false }) as { year?: string };
+  const navigate = useNavigate();
   const { lang, t } = useApp();
   const { isAdmin, isOrganizer, user } = useAuth();
   const canManage = isAdmin || isOrganizer;
-  const [loading, setLoading] = useState(true);
-  const [platformRows, setPlatformRows] = useState<Row[]>([]);
-  const [calendarRows, setCalendarRows] = useState<Row[]>([]);
+  const loading = false;
   const [search, setSearch] = useState("");
   const [catFilter, setCatFilter] = useState<string>("all");
   const [monthFilter, setMonthFilter] = useState<string>("all");
-  const [yearFilter, setYearFilter] = useState<string>("all");
+  const yearFilter = params.year ?? (scope === "kharkiv" ? "2027" : "all");
+  const setYearFilter = (year: string) => navigate({ to: path, search: { year } });
   const [sortBy, setSortBy] = useState<"date_asc" | "date_desc" | "title_asc" | "location_asc">("date_asc");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [posterOpen, setPosterOpen] = useState(false);
   const [form, setForm] = useState(emptyForm);
   const [busy, setBusy] = useState(false);
 
-  const today = new Date(); today.setHours(0, 0, 0, 0);
-  const todayIso = today.toISOString().slice(0, 10);
-
-  const load = async () => {
-    setLoading(true);
-    const [{ data: ev }, { data: cal }, { data: starts }] = await Promise.all([
-      supabase
-        .from("events")
-        .select("id, slug, title, event_date, location, description, organizer_name, category, distances(distance_km, is_active)")
-        .eq("status", "published")
-        .gte("event_date", todayIso)
-        .order("event_date", { ascending: true }),
-      supabase
-        .from("calendar_events" as any)
-        .select("*")
-        .gte("event_date", todayIso)
-        .order("event_date", { ascending: true }),
-      supabase
-        .from("telegram_starts")
-        .select("id, city, region, description")
-        .eq("status", "published")
-        .gte("event_date", todayIso),
-    ]);
-
-    const startsById = new Map((starts ?? []).map((start) => [start.id, start]));
-
-    setPlatformRows(((ev as any[]) ?? []).map((e) => ({
-      id: e.id,
-      source: "platform",
-      title: e.title,
-      event_date: e.event_date,
-      location: calendarLocation({ location: e.location, description: e.description }),
-      distances: (e.distances ?? [])
-        .filter((d: any) => d.is_active !== false)
-        .map((d: any) => `${d.distance_km} км`)
-        .join(", "),
-      organizer_name: e.organizer_name,
-      category: e.category,
-      url: `/events/${e.slug ?? e.id}`,
-    })));
-
-    setCalendarRows(((cal as any[]) ?? []).map((c) => ({
-      id: c.id,
-      source: "calendar",
-      title: c.title,
-      event_date: c.event_date,
-      location: calendarLocation({
-        location: c.location,
-        description: c.notes,
-        ...startsById.get(c.telegram_start_id),
-      }),
-      distances: c.distances ?? "",
-      organizer_name: c.organizer_name,
-      category: c.category,
-      url: c.url,
-      notes: c.notes,
-      created_by: c.created_by,
-    })));
-
-    setLoading(false);
-  };
-
-  useEffect(() => { load(); /* eslint-disable-next-line */ }, []);
-
-  const allRows = useMemo(() => [...platformRows, ...calendarRows], [platformRows, calendarRows]);
+  const load = () => queryClient.invalidateQueries({ queryKey: calendarQueryOptions.queryKey });
+  const allRows = useMemo(() => rows.filter((r) => matchesCalendarScope(r.location, scope)), [rows, scope]);
 
   const monthOptions = useMemo(() => {
     const set = new Set<string>();
@@ -200,27 +134,20 @@ const CalendarPage = () => {
     const map = new Map<string, Row[]>();
     filtered.forEach((r) => {
       const key = r.event_date.slice(0, 7);
-      if (!map.has(key)) map.set(key, []);
-      map.get(key)!.push(r);
+      const group = map.get(key) ?? [];
+      group.push(r);
+      map.set(key, group);
     });
     const keys = Array.from(map.keys()).sort((a, b) =>
       sortBy === "date_desc" ? b.localeCompare(a) : a.localeCompare(b)
     );
     return keys.map((k) => {
-      const d = new Date(k + "-01");
-      const label = d.toLocaleDateString(lang === "uk" ? "uk-UA" : "en-US", {
-        month: "long", year: "numeric",
-      });
-      return { key: k, label: label.charAt(0).toUpperCase() + label.slice(1), rows: map.get(k)! };
+      const label = calendarDate(k, lang === "uk" ? "uk-UA" : "en-US", true);
+      return { key: k, label: label.charAt(0).toUpperCase() + label.slice(1), rows: map.get(k) ?? [] };
     });
   }, [filtered, sortBy, lang]);
 
-  const fmtDate = (iso: string) => {
-    const d = new Date(iso);
-    return d.toLocaleDateString(lang === "uk" ? "uk-UA" : "en-US", {
-      day: "2-digit", month: "long", year: "numeric", weekday: "short",
-    });
-  };
+  const fmtDate = (iso: string) => calendarDate(iso, lang === "uk" ? "uk-UA" : "en-US");
 
   const openCreate = () => { setForm(emptyForm); setDialogOpen(true); };
   const openEdit = (r: Row) => {
@@ -272,32 +199,33 @@ const CalendarPage = () => {
     load();
   };
 
-  const seoTitle = lang === "uk"
-    ? "Календар забігів України 2027 і 2026 | Пробіги — Фартлек"
-    : "Upcoming sports events calendar — Fartlek";
-  const seoDesc = lang === "uk"
-    ? "Календар забігів і пробігів України 2027: марафони, півмарафони, трейли, триатлон. Дати, міста, дистанції та реєстрація на старт."
-    : "Upcoming running, trail, cycling, swim and triathlon race calendar in Ukraine. Dates, locations, distances, organizers.";
+  const seo = discoverySeo(path, lang);
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
-      <SEO title={seoTitle} description={seoDesc} canonical="/calendar" />
+      <SEO title={seo.title} description={seo.description} canonical={path} />
       <Header />
       <main className="flex-1 container py-10 sm:py-14">
         <div className="flex flex-wrap items-end justify-between gap-4 mb-8">
           <div>
             <h1 className="font-display text-3xl sm:text-5xl font-bold tracking-tight">
-              {lang === "uk" ? "Календар забігів України 2026–2027" : "Ukraine race calendar 2026–2027"}
+              {scope === "kharkiv"
+                ? (lang === "uk" ? "Календар забігів Харкова 2027" : "Kharkiv running calendar 2027")
+                : (lang === "uk" ? "Календар забігів України 2027" : "Ukraine running calendar 2027")}
             </h1>
             <p className="mt-3 text-muted-foreground">
-              {lang === "uk"
-                ? "Усі пробіги та забіги України 2027 і 2026 років в одному календарі: марафони, півмарафони, забіги на 5 і 10 км, трейли, триатлон, вело та плавання. Дати, міста, дистанції, організатори й реєстрація на старт."
-                : seoDesc}
+              {scope === "kharkiv"
+                ? (lang === "uk" ? "Забіги та пробіги Харкова 2027: афіша сезону, опубліковані дати, місця проведення, дистанції й організатори. Умови та реєстрацію уточнюйте на сторінці відповідного старту." : seo.description)
+                : (lang === "uk" ? "Забіги та пробіги України 2027: марафони, півмарафони, трейли й інші спортивні старти. Дати, міста, дистанції та організатори. Найближчі старти 2026 року також залишаються в календарі." : seo.description)}
             </p>
-            <PageViews pageKey="page:calendar" className="mt-3" />
+            <PageViews pageKey={`page:${path.slice(1)}`} className="mt-3" />
           </div>
         </div>
 
+        <nav aria-label={lang === "uk" ? "Календарі забігів" : "Race calendars"} className="mb-6 flex flex-wrap gap-3">
+          <Button asChild size="sm" variant="outline"><Link to="/calendar?year=2027">{lang === "uk" ? "Забіги України 2027" : "Ukraine races 2027"}</Link></Button>
+          <Button asChild size="sm" variant="outline"><Link to="/calendar/kharkiv">{lang === "uk" ? "Забіги Харкова 2027" : "Kharkiv races 2027"}</Link></Button>
+        </nav>
         <div className="mb-6">
           <SiSPartnerBanner />
         </div>
@@ -469,8 +397,7 @@ const CalendarPage = () => {
             <SelectContent>
               <SelectItem value="all">{lang === "uk" ? "Усі місяці" : "All months"}</SelectItem>
               {monthsShown.map((m) => {
-                const d = new Date(m + "-01");
-                const label = d.toLocaleDateString(lang === "uk" ? "uk-UA" : "en-US", { month: "long", year: "numeric" });
+                const label = calendarDate(m, lang === "uk" ? "uk-UA" : "en-US", true);
                 return <SelectItem key={m} value={m}>{label}</SelectItem>;
               })}
             </SelectContent>
@@ -495,7 +422,7 @@ const CalendarPage = () => {
             <div className="flex justify-center py-20"><Loader2 className="h-6 w-6 animate-spin" /></div>
           ) : filtered.length === 0 ? (
             <div className="text-center py-16 text-muted-foreground">
-              {lang === "uk" ? "Подій не знайдено" : "No events found"}
+              {scope === "kharkiv" && yearFilter === "2027" ? (lang === "uk" ? "Окремі старти Харкова 2027 ще не додані. Афіша сезону — нижче." : "Individual Kharkiv races for 2027 have not been added yet. See the season poster below.") : (lang === "uk" ? "Подій не знайдено" : "No events found")}
             </div>
           ) : (
             <div className="divide-y divide-border">
@@ -534,7 +461,7 @@ const CalendarPage = () => {
                               <Link to={r.url ?? "#"} className="hover:text-primary">{r.title}</Link>
                             ) : r.url ? (
                               internalPath(r.url) ? (
-                                <Link to={internalPath(r.url)!} className="hover:text-primary">{r.title}</Link>
+                                <Link to={internalPath(r.url) ?? r.url} className="hover:text-primary">{r.title}</Link>
                               ) : (
                                 <a href={r.url} target="_blank" rel="noreferrer" className="hover:text-primary inline-flex items-center gap-1">
                                   {r.title}<ExternalLink className="h-3 w-3" />
@@ -560,7 +487,7 @@ const CalendarPage = () => {
                                 {r.url && (
                                   internalPath(r.url) ? (
                                     <Button asChild size="sm" variant="outline">
-                                      <Link to={internalPath(r.url)!}>{lang === "uk" ? "Деталі" : "Details"}</Link>
+                                      <Link to={internalPath(r.url) ?? r.url}>{lang === "uk" ? "Деталі" : "Details"}</Link>
                                     </Button>
                                   ) : (
                                     <Button asChild size="sm" variant="secondary" className="hover:bg-primary hover:text-primary-foreground transition-colors">

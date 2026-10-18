@@ -12,7 +12,6 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as AuthRouteImport } from './routes/auth'
-import { Route as CalendarRouteImport } from './routes/calendar'
 import { Route as ContactsRouteImport } from './routes/contacts'
 import { Route as FeaturesRouteImport } from './routes/features'
 import { Route as ForOrganizersRouteImport } from './routes/for-organizers'
@@ -37,6 +36,8 @@ import { Route as AdminSurveyRouteImport } from './routes/admin/survey'
 import { Route as AdminUnsubscribesRouteImport } from './routes/admin/unsubscribes'
 import { Route as BlogIndexRouteImport } from './routes/blog/index'
 import { Route as BlogSlugRouteImport } from './routes/blog/$slug'
+import { Route as CalendarIndexRouteImport } from './routes/calendar/index'
+import { Route as CalendarKharkivRouteImport } from './routes/calendar/kharkiv'
 import { Route as CategoryIndexRouteImport } from './routes/category/index'
 import { Route as CategoryCategoryRouteImport } from './routes/category/$category'
 import { Route as ClubsIndexRouteImport } from './routes/clubs/index'
@@ -79,11 +80,6 @@ const AboutRoute = AboutRouteImport.update({
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CalendarRoute = CalendarRouteImport.update({
-  id: '/calendar',
-  path: '/calendar',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContactsRoute = ContactsRouteImport.update({
@@ -204,6 +200,16 @@ const BlogIndexRoute = BlogIndexRouteImport.update({
 const BlogSlugRoute = BlogSlugRouteImport.update({
   id: '/blog/$slug',
   path: '/blog/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CalendarIndexRoute = CalendarIndexRouteImport.update({
+  id: '/calendar/',
+  path: '/calendar/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CalendarKharkivRoute = CalendarKharkivRouteImport.update({
+  id: '/calendar/kharkiv',
+  path: '/calendar/kharkiv',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CategoryIndexRoute = CategoryIndexRouteImport.update({
@@ -356,7 +362,6 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/auth': typeof AuthRoute
-  '/calendar': typeof CalendarRoute
   '/contacts': typeof ContactsRoute
   '/features': typeof FeaturesRoute
   '/for-organizers': typeof ForOrganizersRoute
@@ -379,6 +384,7 @@ export interface FileRoutesByFullPath {
   '/admin/survey': typeof AdminSurveyRoute
   '/admin/unsubscribes': typeof AdminUnsubscribesRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/calendar/kharkiv': typeof CalendarKharkivRoute
   '/category/$category': typeof CategoryCategoryRoute
   '/clubs/$slug': typeof ClubsSlugRoute
   '/clubs/edit': typeof ClubsEditRoute
@@ -392,6 +398,7 @@ export interface FileRoutesByFullPath {
   '/ticket/$id': typeof TicketIdRoute
   '/admin/': typeof AdminIndexRoute
   '/blog/': typeof BlogIndexRoute
+  '/calendar/': typeof CalendarIndexRoute
   '/category/': typeof CategoryIndexRoute
   '/clubs/': typeof ClubsIndexRoute
   '/organizer/': typeof OrganizerIndexRoute
@@ -414,7 +421,6 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/auth': typeof AuthRoute
-  '/calendar': typeof CalendarRoute
   '/contacts': typeof ContactsRoute
   '/features': typeof FeaturesRoute
   '/for-organizers': typeof ForOrganizersRoute
@@ -437,6 +443,7 @@ export interface FileRoutesByTo {
   '/admin/survey': typeof AdminSurveyRoute
   '/admin/unsubscribes': typeof AdminUnsubscribesRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/calendar/kharkiv': typeof CalendarKharkivRoute
   '/category/$category': typeof CategoryCategoryRoute
   '/clubs/$slug': typeof ClubsSlugRoute
   '/clubs/edit': typeof ClubsEditRoute
@@ -450,6 +457,7 @@ export interface FileRoutesByTo {
   '/ticket/$id': typeof TicketIdRoute
   '/admin': typeof AdminIndexRoute
   '/blog': typeof BlogIndexRoute
+  '/calendar': typeof CalendarIndexRoute
   '/category': typeof CategoryIndexRoute
   '/clubs': typeof ClubsIndexRoute
   '/organizer': typeof OrganizerIndexRoute
@@ -473,7 +481,6 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/auth': typeof AuthRoute
-  '/calendar': typeof CalendarRoute
   '/contacts': typeof ContactsRoute
   '/features': typeof FeaturesRoute
   '/for-organizers': typeof ForOrganizersRoute
@@ -496,6 +503,7 @@ export interface FileRoutesById {
   '/admin/survey': typeof AdminSurveyRoute
   '/admin/unsubscribes': typeof AdminUnsubscribesRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/calendar/kharkiv': typeof CalendarKharkivRoute
   '/category/$category': typeof CategoryCategoryRoute
   '/clubs/$slug': typeof ClubsSlugRoute
   '/clubs/edit': typeof ClubsEditRoute
@@ -509,6 +517,7 @@ export interface FileRoutesById {
   '/ticket/$id': typeof TicketIdRoute
   '/admin/': typeof AdminIndexRoute
   '/blog/': typeof BlogIndexRoute
+  '/calendar/': typeof CalendarIndexRoute
   '/category/': typeof CategoryIndexRoute
   '/clubs/': typeof ClubsIndexRoute
   '/organizer/': typeof OrganizerIndexRoute
@@ -533,7 +542,6 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/auth'
-    | '/calendar'
     | '/contacts'
     | '/features'
     | '/for-organizers'
@@ -556,6 +564,7 @@ export interface FileRouteTypes {
     | '/admin/survey'
     | '/admin/unsubscribes'
     | '/blog/$slug'
+    | '/calendar/kharkiv'
     | '/category/$category'
     | '/clubs/$slug'
     | '/clubs/edit'
@@ -569,6 +578,7 @@ export interface FileRouteTypes {
     | '/ticket/$id'
     | '/admin/'
     | '/blog/'
+    | '/calendar/'
     | '/category/'
     | '/clubs/'
     | '/organizer/'
@@ -591,7 +601,6 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/auth'
-    | '/calendar'
     | '/contacts'
     | '/features'
     | '/for-organizers'
@@ -614,6 +623,7 @@ export interface FileRouteTypes {
     | '/admin/survey'
     | '/admin/unsubscribes'
     | '/blog/$slug'
+    | '/calendar/kharkiv'
     | '/category/$category'
     | '/clubs/$slug'
     | '/clubs/edit'
@@ -627,6 +637,7 @@ export interface FileRouteTypes {
     | '/ticket/$id'
     | '/admin'
     | '/blog'
+    | '/calendar'
     | '/category'
     | '/clubs'
     | '/organizer'
@@ -649,7 +660,6 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/auth'
-    | '/calendar'
     | '/contacts'
     | '/features'
     | '/for-organizers'
@@ -672,6 +682,7 @@ export interface FileRouteTypes {
     | '/admin/survey'
     | '/admin/unsubscribes'
     | '/blog/$slug'
+    | '/calendar/kharkiv'
     | '/category/$category'
     | '/clubs/$slug'
     | '/clubs/edit'
@@ -685,6 +696,7 @@ export interface FileRouteTypes {
     | '/ticket/$id'
     | '/admin/'
     | '/blog/'
+    | '/calendar/'
     | '/category/'
     | '/clubs/'
     | '/organizer/'
@@ -708,7 +720,6 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
   AuthRoute: typeof AuthRoute
-  CalendarRoute: typeof CalendarRoute
   ContactsRoute: typeof ContactsRoute
   FeaturesRoute: typeof FeaturesRoute
   ForOrganizersRoute: typeof ForOrganizersRoute
@@ -731,6 +742,7 @@ export interface RootRouteChildren {
   AdminSurveyRoute: typeof AdminSurveyRoute
   AdminUnsubscribesRoute: typeof AdminUnsubscribesRoute
   BlogSlugRoute: typeof BlogSlugRoute
+  CalendarKharkivRoute: typeof CalendarKharkivRoute
   CategoryCategoryRoute: typeof CategoryCategoryRoute
   ClubsSlugRoute: typeof ClubsSlugRoute
   ClubsEditRoute: typeof ClubsEditRoute
@@ -744,6 +756,7 @@ export interface RootRouteChildren {
   TicketIdRoute: typeof TicketIdRoute
   AdminIndexRoute: typeof AdminIndexRoute
   BlogIndexRoute: typeof BlogIndexRoute
+  CalendarIndexRoute: typeof CalendarIndexRoute
   CategoryIndexRoute: typeof CategoryIndexRoute
   ClubsIndexRoute: typeof ClubsIndexRoute
   OrganizerIndexRoute: typeof OrganizerIndexRoute
@@ -784,13 +797,6 @@ declare module '@tanstack/react-router' {
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/calendar': {
-      id: '/calendar'
-      path: '/calendar'
-      fullPath: '/calendar'
-      preLoaderRoute: typeof CalendarRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contacts': {
@@ -959,6 +965,20 @@ declare module '@tanstack/react-router' {
       path: '/blog/$slug'
       fullPath: '/blog/$slug'
       preLoaderRoute: typeof BlogSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/calendar/': {
+      id: '/calendar/'
+      path: '/calendar'
+      fullPath: '/calendar/'
+      preLoaderRoute: typeof CalendarIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/calendar/kharkiv': {
+      id: '/calendar/kharkiv'
+      path: '/calendar/kharkiv'
+      fullPath: '/calendar/kharkiv'
+      preLoaderRoute: typeof CalendarKharkivRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/category/': {
@@ -1164,7 +1184,6 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   AuthRoute: AuthRoute,
-  CalendarRoute: CalendarRoute,
   ContactsRoute: ContactsRoute,
   FeaturesRoute: FeaturesRoute,
   ForOrganizersRoute: ForOrganizersRoute,
@@ -1187,6 +1206,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminSurveyRoute: AdminSurveyRoute,
   AdminUnsubscribesRoute: AdminUnsubscribesRoute,
   BlogSlugRoute: BlogSlugRoute,
+  CalendarKharkivRoute: CalendarKharkivRoute,
   CategoryCategoryRoute: CategoryCategoryRoute,
   ClubsSlugRoute: ClubsSlugRoute,
   ClubsEditRoute: ClubsEditRoute,
@@ -1200,6 +1220,7 @@ const rootRouteChildren: RootRouteChildren = {
   TicketIdRoute: TicketIdRoute,
   AdminIndexRoute: AdminIndexRoute,
   BlogIndexRoute: BlogIndexRoute,
+  CalendarIndexRoute: CalendarIndexRoute,
   CategoryIndexRoute: CategoryIndexRoute,
   ClubsIndexRoute: ClubsIndexRoute,
   OrganizerIndexRoute: OrganizerIndexRoute,

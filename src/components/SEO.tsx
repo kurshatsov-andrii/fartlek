@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "@/lib/router-compat";
 import { supabase } from "@/integrations/supabase/client";
+import { SITE_URL, clampSeo } from "@/lib/discovery-seo";
 
 interface SEOProps {
   title: string;
@@ -38,14 +39,14 @@ const overrideCache = new Map<string, { title: string | null; description: strin
 export const SEO = ({ title, description, canonical, image, jsonLd, path }: SEOProps) => {
   const location = useLocation();
   const key = path ?? location.pathname;
-  const [override, setOverride] = useState<{ title: string | null; description: string | null } | null>(
-    overrideCache.get(key) ?? null,
-  );
+  const [overrideEntry, setOverrideEntry] = useState<{ key: string; value: { title: string | null; description: string | null } } | null>(null);
+  const override = overrideEntry?.key === key ? overrideEntry.value : null;
 
   useEffect(() => {
     let cancelled = false;
-    if (overrideCache.has(key)) {
-      setOverride(overrideCache.get(key)!);
+    const cached = overrideCache.get(key);
+    if (cached) {
+      setOverrideEntry({ key, value: cached });
       return;
     }
     supabase
@@ -56,7 +57,7 @@ export const SEO = ({ title, description, canonical, image, jsonLd, path }: SEOP
       .then(({ data }) => {
         const value = { title: data?.title ?? null, description: data?.description ?? null };
         overrideCache.set(key, value);
-        if (!cancelled) setOverride(value);
+        if (!cancelled) setOverrideEntry({ key, value });
       });
     return () => {
       cancelled = true;
@@ -66,8 +67,8 @@ export const SEO = ({ title, description, canonical, image, jsonLd, path }: SEOP
   useEffect(() => {
     const finalTitle = override?.title?.trim() ? override.title : title;
     const finalDesc = override?.description?.trim() ? override.description : description;
-    const t = finalTitle.length > 60 ? finalTitle.slice(0, 57) + "…" : finalTitle;
-    const d = finalDesc.length > 160 ? finalDesc.slice(0, 157) + "…" : finalDesc;
+    const t = clampSeo(finalTitle, 60);
+    const d = clampSeo(finalDesc, 160);
     document.title = t;
 
     setMeta('meta[name="description"]', "name", "description", d);
@@ -78,14 +79,14 @@ export const SEO = ({ title, description, canonical, image, jsonLd, path }: SEOP
     setMeta('meta[name="twitter:description"]', "name", "twitter:description", d);
     setMeta('meta[name="twitter:card"]', "name", "twitter:card", "summary_large_image");
 
-    if (image) {
+    if (image?.startsWith("https://")) {
       setMeta('meta[property="og:image"]', "property", "og:image", image);
       setMeta('meta[name="twitter:image"]', "name", "twitter:image", image);
     }
 
     const url = canonical
-      ? (canonical.startsWith("http") ? canonical : `${window.location.origin}${canonical}`)
-      : window.location.href;
+      ? (canonical.startsWith("http") ? canonical : `${SITE_URL}${canonical}`)
+      : `${SITE_URL}${location.pathname}`;
     setLink("canonical", url);
     setMeta('meta[property="og:url"]', "property", "og:url", url);
 
