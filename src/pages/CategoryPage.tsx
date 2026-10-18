@@ -59,11 +59,11 @@ interface CatItem {
 }
 
 const PAGE_SIZE = 9;
-const todayStr = new Date().toISOString().slice(0, 10);
 
 const CategoryPage = () => {
   const { category } = useParams<{ category: string }>();
   const { t, lang } = useApp();
+  const todayStr = new Date().toISOString().slice(0, 10);
   const [events, setEvents] = useState<EventCard[]>([]);
   const [starts, setStarts] = useState<StartRow[]>([]);
   const [loading, setLoading] = useState(true);
@@ -156,7 +156,7 @@ const CategoryPage = () => {
     }));
 
     return [...fromEvents, ...fromStarts];
-  }, [events, starts, t]);
+  }, [events, starts, t, todayStr]);
 
   const cities = useMemo(
     () => Array.from(new Set(items.map((i) => i.city).filter(Boolean) as string[])).sort(),
@@ -188,7 +188,6 @@ const CategoryPage = () => {
     });
   }, [items, q, month, city, organizer, distanceBucket, paid]);
 
-  const todayStr = new Date().toISOString().slice(0, 10);
   // Owner rule: a start counts as finished from the day before its date.
   const upcomingAll = filtered
     .filter((i) => !i.date || !isCompletedDate(i.date, todayStr))
