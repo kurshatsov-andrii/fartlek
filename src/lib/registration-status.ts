@@ -58,8 +58,13 @@ export function sourceHost(url: string | null): string | null {
   }
 }
 
-/** Listing cards must not offer registration once it is closed or cancelled; a past event date counts as closed. */
+import { isCompletedDate } from "./event-date";
+
+/** Listing cards must not offer registration once it is closed or cancelled; a past event date counts as closed,
+ *  and per the owner rule a start is already finished the day before its date. */
 export function canShowRegisterButton(input: RegistrationInput): boolean {
   const state = deriveRegistrationState(input);
-  return state !== "closed" && state !== "cancelled";
+  if (state === "closed" || state === "cancelled") return false;
+  if (input.date && isCompletedDate(input.date, input.today)) return false;
+  return true;
 }
