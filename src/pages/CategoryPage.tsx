@@ -283,7 +283,13 @@ const CategoryPage = () => {
             </div>
           )}
           <div className="mt-6 flex items-center gap-2 pt-4 border-t border-border">
-            {past ? (
+            {i.kind === "start" && i.resultsUrl ? (
+              <Button asChild variant="secondary" className="flex-1">
+                <a href={i.resultsUrl} target="_blank" rel="noreferrer">
+                  {T.results} <ExternalLink className="h-3.5 w-3.5 ml-1" />
+                </a>
+              </Button>
+            ) : past ? (
               <Button asChild variant="secondary" className="flex-1"><Link to={i.url}>{T.details}</Link></Button>
             ) : i.kind === "start" && i.registerUrl ? (
               <Button asChild className="flex-1">
