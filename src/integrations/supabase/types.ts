@@ -1782,6 +1782,30 @@ export type Database = {
         }
         Relationships: []
       }
+      start_likes: {
+        Row: {
+          created_at: string
+          id: string
+          source: string
+          target_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          source: string
+          target_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          source?: string
+          target_id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       strava_connections: {
         Row: {
           access_token: string
@@ -2317,6 +2341,13 @@ export type Database = {
           organizers_count: number
           registrations_count: number
           runners_count: number
+        }[]
+      }
+      get_start_like_counts: {
+        Args: { _ids: string[]; _source: string }
+        Returns: {
+          likes: number
+          target_id: string
         }[]
       }
       get_unsubscribe_stats: {
