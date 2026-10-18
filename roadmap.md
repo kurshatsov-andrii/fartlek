@@ -1,5 +1,9 @@
 # Roadmap
 
+## Vinnytsia calendar 2027
+- [x] Add /calendar/vinnytsia using existing published starts, city filtering, metadata and sitemap
+- [x] Verify VINNYTSIA RUN on May 23 and September 5, 2027 in the page and initial HTML (13 tests; desktop/mobile navigation checked)
+
 ## Visitor likes
 - [x] Allow guests to like/unlike starts, persist browser identity, and verify shared counts and reloads (guest browser flow and identity test passed)
 

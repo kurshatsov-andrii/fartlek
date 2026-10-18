@@ -17,6 +17,10 @@ const discovery = {
     uk: { title: "Календар забігів Харкова 2027 — старти | Фартлек", description: "Забіги Харкова 2027: календар стартів, дати, місця проведення та дистанції. Афіша сезону й опубліковані події на Фартлек." },
     en: { title: "Kharkiv running calendar 2027 | Fartlek", description: "Kharkiv races 2027: dates, venues and distances. View the season poster and published events on Fartlek." },
   },
+  "/calendar/vinnytsia": {
+    uk: { title: "Календар забігів Вінниці 2027 — VINNYTSIA RUN | Фартлек", description: "Забіги Вінниці 2027: VINNYTSIA RUN 23 травня та 5 вересня. Календар стартів, дати, місця проведення й опубліковані дистанції на Фартлек." },
+    en: { title: "Vinnytsia running calendar 2027 — VINNYTSIA RUN | Fartlek", description: "Vinnytsia races 2027: VINNYTSIA RUN on May 23 and September 5. Race calendar, dates, venues and published distances on Fartlek." },
+  },
   "/starts": {
     uk: { title: "Забіги та спортивні старти України 2027 | Фартлек", description: "Анонси забігів і спортивних стартів України 2027. Дати, міста, дистанції, організатори та посилання на реєстрацію. Знайдіть свій наступний старт." },
     en: { title: "Ukraine races and sports events 2027 | Fartlek", description: "Ukraine race announcements for 2027: dates, cities, distances, organizers and registration links. Find your next race." },
