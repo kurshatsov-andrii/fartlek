@@ -8,6 +8,7 @@ import { Loader2, MapPin, Calendar as CalendarIcon, ExternalLink, X, Search } fr
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { SEO } from "@/components/SEO";
+import { discoverySeo } from "@/lib/discovery-seo";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -190,13 +191,12 @@ const EventsMap = () => {
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <SEO
-        title="Мапа спортивних подій України — Fartlek"
-        description="Інтерактивна карта забігів, трейлів і стартів по містах України. Обери місто на карті та переходь до реєстрації."
+        {...discoverySeo("/map")}
         canonical="/map"
       />
       <Header />
       <main className="flex-1 container py-8">
-        <h1 className="font-display text-3xl md:text-4xl font-bold mb-2">Мапа спортивних подій України</h1>
+        <h1 className="font-display text-3xl md:text-4xl font-bold mb-2">Забіги України 2027 на мапі</h1>
         <p className="text-muted-foreground mb-6">
           Натисни на місто, щоб побачити старти та перейти до реєстрації. Усього {items.length} подій у {groups.length} містах.
         </p>

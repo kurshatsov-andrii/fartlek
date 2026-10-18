@@ -1,20 +1,27 @@
 import { createServerFn } from "@tanstack/react-start";
 import { createClient } from "@supabase/supabase-js";
+import { optionalMetadata } from "@/lib/optional-metadata";
 
-const SITE = "https://fartlek.lovable.app";
+const SITE = "https://fartlek.com.ua";
 
 function publicClient() {
-  const url = (process.env["SUPABASE_URL"] ?? process.env["VITE_SUPABASE_URL"])!;
+  const url = process.env["SUPABASE_URL"] ?? process.env["VITE_SUPABASE_URL"];
   const key = (process.env["SUPABASE_ANON_KEY"] ??
     process.env["SUPABASE_PUBLISHABLE_KEY"] ??
-    process.env["VITE_SUPABASE_PUBLISHABLE_KEY"])!;
-  return createClient(url, key, { auth: { persistSession: false, autoRefreshToken: false } });
+    process.env["VITE_SUPABASE_PUBLISHABLE_KEY"]);
+  if (!url || !key) throw new Error("Public content unavailable");
+  return createClient(url, key, { auth: { persistSession: false, autoRefreshToken: false }, global: { fetch: (input, init) => {
+    const headers = new Headers(init?.headers);
+    if (key.startsWith("sb_") && headers.get("Authorization") === `Bearer ${key}`) headers.delete("Authorization");
+    headers.set("apikey", key);
+    return fetch(input, { ...init, headers });
+  } } });
 }
 
 export type SeoOverride = { title: string | null; description: string | null } | null;
 
 /** Admin-managed per-path title/description override (used during SSR). */
-export const getSeoOverride = createServerFn({ method: "GET" })
+const getSeoOverrideRpc = createServerFn({ method: "GET" })
   .inputValidator((data: { path: string }) => data)
   .handler(async ({ data }): Promise<SeoOverride> => {
     try {
@@ -38,7 +45,7 @@ export type EventSeo = {
 } | null;
 
 /** Server-rendered metadata for an event page (by uuid or slug). */
-export const getEventSeo = createServerFn({ method: "GET" })
+const getEventSeoRpc = createServerFn({ method: "GET" })
   .inputValidator((data: { id: string }) => data)
   .handler(async ({ data }): Promise<EventSeo> => {
     try {
@@ -97,7 +104,7 @@ async function fetchBySlug(table: string, slug: string) {
 }
 
 /** Server-rendered metadata for a club page. */
-export const getClubSeo = createServerFn({ method: "GET" })
+const getClubSeoRpc = createServerFn({ method: "GET" })
   .inputValidator((data: { slug: string }) => data)
   .handler(async ({ data }): Promise<EntitySeo> => {
     try {
@@ -119,7 +126,7 @@ export const getClubSeo = createServerFn({ method: "GET" })
   });
 
 /** Server-rendered metadata for an organizer page. */
-export const getOrganizerSeo = createServerFn({ method: "GET" })
+const getOrganizerSeoRpc = createServerFn({ method: "GET" })
   .inputValidator((data: { slug: string }) => data)
   .handler(async ({ data }): Promise<EntitySeo> => {
     try {
@@ -138,7 +145,7 @@ export const getOrganizerSeo = createServerFn({ method: "GET" })
   });
 
 /** Server-rendered metadata for a Telegram start page. */
-export const getStartSeo = createServerFn({ method: "GET" })
+const getStartSeoRpc = createServerFn({ method: "GET" })
   .inputValidator((data: { slug: string }) => data)
   .handler(async ({ data }): Promise<EntitySeo> => {
     try {
@@ -158,3 +165,21 @@ export const getStartSeo = createServerFn({ method: "GET" })
       };
     } catch { return null; }
   });
+
+/** Only published blog content contributes to public metadata. */
+const getBlogSeoRpc = createServerFn({ method: "GET" })
+  .inputValidator((data: { slug: string }) => data)
+  .handler(async ({ data }): Promise<EntitySeo> => {
+    const { data: post } = await publicClient().from("blog_posts")
+      .select("slug,title,excerpt,content,cover_url").eq("slug", data.slug).eq("is_published", true).maybeSingle();
+    if (!post) return null;
+    const raw = (post.excerpt || post.content || "").replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
+    return { title: cut(`${post.title} | Фартлек`, 60), description: cut(raw || `${post.title}. Історія, фото та відео бігової спільноти Фартлек.`, 160), image: post.cover_url?.startsWith("https://") ? post.cover_url : null, path: `/blog/${post.slug}` };
+  });
+
+export const getSeoOverride = (input: { data: { path: string } }) => optionalMetadata(() => getSeoOverrideRpc(input));
+export const getEventSeo = (input: { data: { id: string } }) => optionalMetadata(() => getEventSeoRpc(input));
+export const getClubSeo = (input: { data: { slug: string } }) => optionalMetadata(() => getClubSeoRpc(input));
+export const getOrganizerSeo = (input: { data: { slug: string } }) => optionalMetadata(() => getOrganizerSeoRpc(input));
+export const getStartSeo = (input: { data: { slug: string } }) => optionalMetadata(() => getStartSeoRpc(input));
+export const getBlogSeo = (input: { data: { slug: string } }) => optionalMetadata(() => getBlogSeoRpc(input));

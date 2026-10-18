@@ -1,5 +1,15 @@
 # Roadmap
 
+## SEO 2027 — current phase
+- [x] Align homepage, calendar, Starts, map and category metadata for 2027; preserve historical dates and URLs
+- [x] Add linked Kharkiv calendar using real records and the existing 2027 poster (no individual Kharkiv 2027 records published yet)
+- [x] Render calendar records and post-specific metadata for crawlers; verify sitemap and filters (123 URLs)
+- [x] Verify public flows, initial HTML and 16 tests
+- [ ] Publish updated pages — waits on explicit publish request
+
+## Later phases
+Saved starts, comparisons and opt-in reminders are outside this first SEO/calendar phase.
+
 ## Done
 - [x] SiS partner banner: calendar above the add-event button and filters, upcoming start/event descriptions, and homepage Partners section
 - [x] Calendar location: include city, region and venue from start descriptions

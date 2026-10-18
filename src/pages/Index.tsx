@@ -12,6 +12,8 @@ import { Footer } from "@/components/Footer";
 import { SEO } from "@/components/SEO";
 import { useApp } from "@/contexts/AppContext";
 import { useAuth } from "@/hooks/useAuth";
+import { discoverySeo } from "@/lib/discovery-seo";
+import { Button } from "@/components/ui/button";
 
 const Index = () => {
   const { lang } = useApp();
@@ -29,34 +31,21 @@ const Index = () => {
         text: "We are the Fartlek running community: for the runner's freedom of choice, unity of runners in Kharkiv and beyond, and running culture without division.",
         cta: "Learn more about us",
       };
-  const seo = lang === "uk"
-    ? {
-        title: "Fartlek Events — реєстрація на забіги в Україні",
-        description: "Забіги, напівмарафони, марафони, ультра, трейли, OCR та онлайн-старти по всій Україні. Онлайн-реєстрація, QR-квитки, миттєві результати.",
-      }
-    : {
-        title: "Fartlek Events — race registration in Ukraine",
-        description: "Runs, half marathons, marathons, ultras, trails, OCR and online races across Ukraine. Online registration, QR tickets, instant results.",
-      };
+  const seo = discoverySeo("/", lang);
   const jsonLd = [
     {
       "@context": "https://schema.org",
       "@type": "Organization",
       name: "Fartlek Events",
-      url: "https://fartlek.lovable.app/",
-      logo: "https://fartlek.lovable.app/favicon.ico",
+      url: "https://fartlek.com.ua/",
+      logo: "https://fartlek.com.ua/favicon.png",
       sameAs: ["https://fartlek.com.ua"],
     },
     {
       "@context": "https://schema.org",
       "@type": "WebSite",
       name: "Fartlek Events",
-      url: "https://fartlek.lovable.app/",
-      potentialAction: {
-        "@type": "SearchAction",
-        target: "https://fartlek.lovable.app/calendar?q={search_term_string}",
-        "query-input": "required name=search_term_string",
-      },
+      url: "https://fartlek.com.ua/",
     },
   ];
   return (
@@ -65,6 +54,13 @@ const Index = () => {
       <Header />
       <main className="flex-1">
         <Hero />
+        <section className="container py-6 border-b border-border">
+          <h2 className="font-display text-xl font-bold">{lang === "uk" ? "Забіги України 2027" : "Ukraine races 2027"}</h2>
+          <div className="mt-3 flex flex-wrap gap-3">
+            <Button asChild variant="outline"><Link to="/calendar?year=2027">{lang === "uk" ? "Календар України 2027" : "Ukraine calendar 2027"}</Link></Button>
+            <Button asChild variant="outline"><Link to="/calendar/kharkiv">{lang === "uk" ? "Календар Харкова 2027" : "Kharkiv calendar 2027"}</Link></Button>
+          </div>
+        </section>
         {!user && <VideoTutorialSection />}
         {!user && <FeaturesCarousel />}
         <EventsSection />

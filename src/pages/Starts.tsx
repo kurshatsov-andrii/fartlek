@@ -16,6 +16,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { SPORT_TYPES, SPORT_LABELS, MONTH_NAMES_UK, type SportType } from "@/lib/parseStart";
 import { isPastDate } from "@/lib/event-date";
 import { DISTANCE_BUCKETS } from "@/lib/start-filters";
+import { discoverySeo } from "@/lib/discovery-seo";
 
 interface StartRow {
   id: string;
@@ -166,12 +167,12 @@ const Starts = () => {
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <SEO
-        title="Старти — Fartlek"
-        description="Найближчі бігові, велосипедні та триатлонні старти. Фільтр за містом, місяцем, дистанцією та видом спорту."
+        {...discoverySeo("/starts")}
+        canonical="/starts"
       />
       <Header />
       <main className="flex-1 container py-10">
-        <h1 className="font-display text-3xl md:text-4xl font-bold mb-2">Старти</h1>
+        <h1 className="font-display text-3xl md:text-4xl font-bold mb-2">Забіги та спортивні старти України 2027</h1>
         <p className="text-muted-foreground mb-6">
           Анонси найближчих стартів з телеграм-каналу{" "}
           <a href="https://t.me/fartlekua" target="_blank" rel="noreferrer" className="underline">@fartlekua</a>.

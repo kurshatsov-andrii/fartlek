@@ -1,8 +1,5 @@
 import type { SeoOverride } from "@/lib/page-seo.functions";
-
-const SITE = "https://fartlek.com.ua";
-
-const clamp = (s: string, max: number) => (s.length <= max ? s : s.slice(0, max - 1).trimEnd() + "…");
+import { SITE_URL, clampSeo } from "@/lib/discovery-seo";
 
 export type HeadInput = {
   title: string;
@@ -16,9 +13,9 @@ export type HeadInput = {
 
 /** Build SSR head() output (title/description/OG/Twitter/canonical) for a route. */
 export const pageHead = ({ title, description, path, image, type = "website", noindex, override }: HeadInput) => {
-  const t = clamp(override?.title?.trim() || title, 60);
-  const d = clamp(override?.description?.trim() || description, 160);
-  const url = `${SITE}${path}`;
+  const t = clampSeo(override?.title?.trim() || title, 60);
+  const d = clampSeo(override?.description?.trim() || description, 160);
+  const url = `${SITE_URL}${path}`;
 
   const meta: Array<Record<string, string>> = [
     { title: t },
@@ -29,8 +26,9 @@ export const pageHead = ({ title, description, path, image, type = "website", no
     { property: "og:url", content: url },
     { name: "twitter:title", content: t },
     { name: "twitter:description", content: d },
+    { name: "twitter:card", content: "summary_large_image" },
   ];
-  if (image) {
+  if (image?.startsWith("https://")) {
     meta.push({ property: "og:image", content: image });
     meta.push({ name: "twitter:image", content: image });
   }
