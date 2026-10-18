@@ -27,7 +27,7 @@ import { toast } from "sonner";
 import { startAutomatedPaymentCheckout } from "@/lib/paymentCheckout";
 import { buildEventSeo } from "@/lib/seo";
 import { linkifyText } from "@/lib/linkify";
-import { isPastDate } from "@/lib/event-date";
+import { isCompletedDate } from "@/lib/event-date";
 import { StartActions } from "@/components/StartActions";
 import { PromoCodeInput, PromoPreview } from "@/components/PromoCodeInput";
 import { EventChat } from "@/components/EventChat";
