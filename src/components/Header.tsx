@@ -50,7 +50,7 @@ export const Header = () => {
           </span>
         </Link>
 
-        <nav className="hidden lg:flex min-w-0 flex-1 items-center gap-4 overflow-x-auto whitespace-nowrap">
+        <nav className="hidden lg:flex min-w-0 flex-1 items-center justify-between gap-4 overflow-x-auto whitespace-nowrap">
           <a href="/#events" onClick={handleEventsClick} className="text-sm font-medium text-muted-foreground hover:text-foreground transition-base cursor-pointer">{t.nav.events}</a>
           <Link to="/starts" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-base">Старти</Link>
           <Link to="/calendar" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-base">Календар</Link>
