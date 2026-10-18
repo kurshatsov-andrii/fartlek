@@ -50,28 +50,22 @@ export const Header = () => {
           </span>
         </Link>
 
-        <nav className="hidden lg:flex min-w-0 flex-1 items-center justify-center gap-5 xl:gap-6 px-2 overflow-x-auto whitespace-nowrap">
-          <a href="/#events" onClick={handleEventsClick} className="text-sm font-medium text-muted-foreground hover:text-foreground transition-base cursor-pointer">{t.nav.events}</a>
-          <Link to="/starts" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-base">Старти</Link>
-          <Link to="/calendar" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-base">Календар</Link>
-          <Link to="/map" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-base">Мапа</Link>
-          <Link to="/clubs" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-base">Клуби</Link>
-          <Link to="/organizers" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-base">Організатори</Link>
-          <Link to="/blog" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-base">Блог</Link>
-          <Link to="/features" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-base">Можливості</Link>
-          <Link to="/about" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-base">Про нас</Link>
-          {user && (
-            <>
-              <Link to="/profile" className="hidden lg:inline text-sm font-medium text-muted-foreground hover:text-foreground transition-base">{t.nav.profile}</Link>
-              <Link to="/my-events" className="hidden lg:inline text-sm font-medium text-muted-foreground hover:text-foreground transition-base">{t.nav.myEvents}</Link>
-            </>
-          )}
+        <nav className="hidden lg:flex min-w-0 flex-1 items-center justify-center gap-3.5 xl:gap-5 px-2 whitespace-nowrap">
+          <a href="/#events" onClick={handleEventsClick} className="text-[13px] xl:text-sm font-medium text-muted-foreground hover:text-foreground transition-base cursor-pointer">{t.nav.events}</a>
+          <Link to="/starts" className="text-[13px] xl:text-sm font-medium text-muted-foreground hover:text-foreground transition-base">Старти</Link>
+          <Link to="/calendar" className="text-[13px] xl:text-sm font-medium text-muted-foreground hover:text-foreground transition-base">Календар</Link>
+          <Link to="/map" className="text-[13px] xl:text-sm font-medium text-muted-foreground hover:text-foreground transition-base">Мапа</Link>
+          <Link to="/clubs" className="text-[13px] xl:text-sm font-medium text-muted-foreground hover:text-foreground transition-base">Клуби</Link>
+          <Link to="/organizers" className="text-[13px] xl:text-sm font-medium text-muted-foreground hover:text-foreground transition-base">Організатори</Link>
+          <Link to="/blog" className="text-[13px] xl:text-sm font-medium text-muted-foreground hover:text-foreground transition-base">Блог</Link>
+          <Link to="/features" className="text-[13px] xl:text-sm font-medium text-muted-foreground hover:text-foreground transition-base">Можливості</Link>
+          <Link to="/about" className="text-[13px] xl:text-sm font-medium text-muted-foreground hover:text-foreground transition-base">Про нас</Link>
           {isOrganizer ? (
-            <Link to="/organizer" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-base">{t.nav.dashboard}</Link>
+            <Link to="/organizer" className="text-[13px] xl:text-sm font-medium text-muted-foreground hover:text-foreground transition-base">{t.nav.dashboard}</Link>
           ) : (
-            <Link to="/for-organizers" className="text-sm font-medium text-primary font-semibold hover:opacity-80 transition-base">{t.nav.organizer}</Link>
+            <Link to="/for-organizers" className="text-[13px] xl:text-sm font-medium text-primary font-semibold hover:opacity-80 transition-base">{t.nav.organizer}</Link>
           )}
-          <Link to="/contacts" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-base">{t.nav.contacts}</Link>
+          <Link to="/contacts" className="text-[13px] xl:text-sm font-medium text-muted-foreground hover:text-foreground transition-base">{t.nav.contacts}</Link>
         </nav>
 
         <nav className="flex lg:hidden min-w-0 flex-1 items-center justify-center gap-2 sm:gap-6">
