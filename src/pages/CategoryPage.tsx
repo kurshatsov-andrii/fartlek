@@ -149,7 +149,8 @@ const CategoryPage = () => {
       badges: Array.from(new Set((s.sport_types ?? []).filter((x) => x in t.categories)))
         .slice(0, 2)
         .map((x) => t.categories[x as EventCategory]),
-      registerUrl: s.register_url,
+      resultsUrl: s.results_url,
+      registerUrl: canShowRegisterButton({ explicit: s.registration_status, date: s.event_date, today: todayStr }) ? s.register_url : null,
     }));
 
     return [...fromEvents, ...fromStarts];
