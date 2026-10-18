@@ -50,6 +50,13 @@
       "when": 1792322025636,
       "tag": "0006_start_likes",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1792322280604,
+      "tag": "0007_guest_start_likes",
+      "breakpoints": true
     }
   ]
 }

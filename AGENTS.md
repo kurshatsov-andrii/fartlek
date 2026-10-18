@@ -1,5 +1,7 @@
 # Architecture rules
 
+- Keep guest likes separate from account likes, accessible only through token-scoped RPCs; aggregate both for public counts without exposing visitor identities.
+
 - Persist saved start references and reminder opt-ins in user-owned rows with RLS; resolve current public data rather than storing snapshots so date edits remain current.
 - Share start planner controls across listings and details; keep comparison selection session-local, and derive in-app reminders from Kyiv dates without polling jobs.
 - Keep the planner context identity in a non-component module for React Refresh, and let shared navigation render without planner state on fallback pages.
