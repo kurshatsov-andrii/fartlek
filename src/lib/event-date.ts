@@ -4,3 +4,12 @@ export function isPastDate(dateStr: string | null | undefined, today: string = n
   if (!dateStr) return false;
   return dateStr < today;
 }
+
+// Owner rule: a start counts as finished from the day before its date —
+// the card moves to "Завершені" and registration UI disappears one day early.
+export function isCompletedDate(dateStr: string | null | undefined, today: string = new Date().toISOString().slice(0, 10)): boolean {
+  if (!dateStr) return false;
+  const cutoff = new Date(`${today}T00:00:00Z`);
+  cutoff.setUTCDate(cutoff.getUTCDate() + 1);
+  return dateStr <= cutoff.toISOString().slice(0, 10);
+}

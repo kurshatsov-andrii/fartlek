@@ -15,6 +15,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { supabase } from "@/integrations/supabase/client";
 import { SPORT_TYPES, SPORT_LABELS, MONTH_NAMES_UK, type SportType } from "@/lib/parseStart";
 import { canShowRegisterButton } from "@/lib/registration-status";
+import { isCompletedDate } from "@/lib/event-date";
 import { DISTANCE_BUCKETS } from "@/lib/start-filters";
 import { discoverySeo } from "@/lib/discovery-seo";
 import { StartActions } from "@/components/StartActions";
@@ -110,11 +111,12 @@ const Starts = () => {
   }, [rows, q, month, city, region, organizer, sport, distance, paid, distanceBucket, year]);
 
   const todayStr = new Date().toISOString().slice(0, 10);
+  // Owner rule: a start counts as finished from the day before its date.
   const upcomingAll = filtered
-    .filter((r) => !r.event_date || r.event_date >= todayStr)
+    .filter((r) => !r.event_date || !isCompletedDate(r.event_date, todayStr))
     .sort((a, b) => (a.event_date || "").localeCompare(b.event_date || ""));
   const completedAll = filtered
-    .filter((r) => r.event_date && r.event_date < todayStr)
+    .filter((r) => !!r.event_date && isCompletedDate(r.event_date, todayStr))
     .sort((a, b) => (b.event_date || "").localeCompare(a.event_date || ""));
   const upcoming = upcomingAll.slice(0, upcomingLimit);
   const completed = completedAll.slice(0, completedLimit);
@@ -152,7 +154,6 @@ const Starts = () => {
           )}
           {r.is_paid === false && <span className="text-[10px] px-1.5 py-0.5 rounded bg-accent text-accent-foreground">Безкоштовно</span>}
         </div>
-        <p className="text-sm text-muted-foreground line-clamp-3 flex-1">{r.description}</p>
         <div className="flex gap-2 pt-1">
           <Button asChild size="sm" variant="secondary" className="flex-1">
             <Link to={`/starts/${r.slug}`}>Детальніше</Link>
