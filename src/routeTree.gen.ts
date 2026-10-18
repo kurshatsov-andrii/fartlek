@@ -40,6 +40,7 @@ import { Route as BlogIndexRouteImport } from './routes/blog/index'
 import { Route as BlogSlugRouteImport } from './routes/blog/$slug'
 import { Route as CalendarIndexRouteImport } from './routes/calendar/index'
 import { Route as CalendarKharkivRouteImport } from './routes/calendar/kharkiv'
+import { Route as CalendarVinnytsiaRouteImport } from './routes/calendar/vinnytsia'
 import { Route as CategoryIndexRouteImport } from './routes/category/index'
 import { Route as CategoryCategoryRouteImport } from './routes/category/$category'
 import { Route as ClubsIndexRouteImport } from './routes/clubs/index'
@@ -224,6 +225,11 @@ const CalendarKharkivRoute = CalendarKharkivRouteImport.update({
   path: '/calendar/kharkiv',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CalendarVinnytsiaRoute = CalendarVinnytsiaRouteImport.update({
+  id: '/calendar/vinnytsia',
+  path: '/calendar/vinnytsia',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CategoryIndexRoute = CategoryIndexRouteImport.update({
   id: '/category/',
   path: '/category/',
@@ -399,6 +405,7 @@ export interface FileRoutesByFullPath {
   '/admin/unsubscribes': typeof AdminUnsubscribesRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/calendar/kharkiv': typeof CalendarKharkivRoute
+  '/calendar/vinnytsia': typeof CalendarVinnytsiaRoute
   '/category/$category': typeof CategoryCategoryRoute
   '/clubs/$slug': typeof ClubsSlugRoute
   '/clubs/edit': typeof ClubsEditRoute
@@ -460,6 +467,7 @@ export interface FileRoutesByTo {
   '/admin/unsubscribes': typeof AdminUnsubscribesRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/calendar/kharkiv': typeof CalendarKharkivRoute
+  '/calendar/vinnytsia': typeof CalendarVinnytsiaRoute
   '/category/$category': typeof CategoryCategoryRoute
   '/clubs/$slug': typeof ClubsSlugRoute
   '/clubs/edit': typeof ClubsEditRoute
@@ -522,6 +530,7 @@ export interface FileRoutesById {
   '/admin/unsubscribes': typeof AdminUnsubscribesRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/calendar/kharkiv': typeof CalendarKharkivRoute
+  '/calendar/vinnytsia': typeof CalendarVinnytsiaRoute
   '/category/$category': typeof CategoryCategoryRoute
   '/clubs/$slug': typeof ClubsSlugRoute
   '/clubs/edit': typeof ClubsEditRoute
@@ -585,6 +594,7 @@ export interface FileRouteTypes {
     | '/admin/unsubscribes'
     | '/blog/$slug'
     | '/calendar/kharkiv'
+    | '/calendar/vinnytsia'
     | '/category/$category'
     | '/clubs/$slug'
     | '/clubs/edit'
@@ -646,6 +656,7 @@ export interface FileRouteTypes {
     | '/admin/unsubscribes'
     | '/blog/$slug'
     | '/calendar/kharkiv'
+    | '/calendar/vinnytsia'
     | '/category/$category'
     | '/clubs/$slug'
     | '/clubs/edit'
@@ -707,6 +718,7 @@ export interface FileRouteTypes {
     | '/admin/unsubscribes'
     | '/blog/$slug'
     | '/calendar/kharkiv'
+    | '/calendar/vinnytsia'
     | '/category/$category'
     | '/clubs/$slug'
     | '/clubs/edit'
@@ -769,6 +781,7 @@ export interface RootRouteChildren {
   AdminUnsubscribesRoute: typeof AdminUnsubscribesRoute
   BlogSlugRoute: typeof BlogSlugRoute
   CalendarKharkivRoute: typeof CalendarKharkivRoute
+  CalendarVinnytsiaRoute: typeof CalendarVinnytsiaRoute
   CategoryCategoryRoute: typeof CategoryCategoryRoute
   ClubsSlugRoute: typeof ClubsSlugRoute
   ClubsEditRoute: typeof ClubsEditRoute
@@ -1021,6 +1034,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CalendarKharkivRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/calendar/vinnytsia': {
+      id: '/calendar/vinnytsia'
+      path: '/calendar/vinnytsia'
+      fullPath: '/calendar/vinnytsia'
+      preLoaderRoute: typeof CalendarVinnytsiaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/category/': {
       id: '/category/'
       path: '/category'
@@ -1249,6 +1269,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminUnsubscribesRoute: AdminUnsubscribesRoute,
   BlogSlugRoute: BlogSlugRoute,
   CalendarKharkivRoute: CalendarKharkivRoute,
+  CalendarVinnytsiaRoute: CalendarVinnytsiaRoute,
   CategoryCategoryRoute: CategoryCategoryRoute,
   ClubsSlugRoute: ClubsSlugRoute,
   ClubsEditRoute: ClubsEditRoute,
