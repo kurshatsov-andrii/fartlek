@@ -130,6 +130,7 @@ const CategoryPage = () => {
         isPaid: ev.is_paid,
         badges: [ev.format === "hybrid" ? t.format.badgeHybrid : ev.format === "online" ? t.format.badgeOnline : t.format.badgeOffline],
         registerUrl: null,
+        resultsUrl: null,
       };
     });
 
