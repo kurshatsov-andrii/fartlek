@@ -15,6 +15,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { EVENT_CATEGORIES, type EventCategory } from "@/lib/i18n";
 import { categorySeo, formatEventDate } from "@/lib/seo";
 import { isPastDate } from "@/lib/event-date";
+import { canShowRegisterButton } from "@/lib/registration-status";
 import { StartActions } from "@/components/StartActions";
 import { MONTH_NAMES_UK, type SportType } from "@/lib/parseStart";
 import {
