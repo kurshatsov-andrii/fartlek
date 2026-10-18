@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { EventPoster } from "@/components/EventPoster";
 import { Link } from "@/lib/router-compat";
-import { Calendar as CalendarIcon, MapPin, ExternalLink, Loader2, Search, X, Filter } from "lucide-react";
+import { Calendar as CalendarIcon, MapPin, ExternalLink, Loader2, Search, X, Filter, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
