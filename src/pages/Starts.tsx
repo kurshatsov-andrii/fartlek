@@ -17,6 +17,7 @@ import { SPORT_TYPES, SPORT_LABELS, MONTH_NAMES_UK, type SportType } from "@/lib
 import { isPastDate } from "@/lib/event-date";
 import { DISTANCE_BUCKETS } from "@/lib/start-filters";
 import { discoverySeo } from "@/lib/discovery-seo";
+import { StartActions } from "@/components/StartActions";
 
 interface StartRow {
   id: string;
@@ -136,6 +137,7 @@ const Starts = () => {
         <h2 className="font-semibold text-lg leading-snug">
           <Link to={`/starts/${r.slug}`} className="hover:underline">{r.title || "Без назви"}</Link>
         </h2>
+        <StartActions source="start" id={r.id} />
         <div className="flex flex-wrap gap-1">
           {Array.from(new Set((r.sport_types || []).filter((s): s is SportType => s in SPORT_LABELS))).slice(0, 3).map((s) => (
             <span key={s} className="text-[10px] px-1.5 py-0.5 rounded bg-muted">{SPORT_LABELS[s]}</span>

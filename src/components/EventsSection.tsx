@@ -5,6 +5,7 @@ import { EventPoster } from "@/components/EventPoster";
 import { Link } from "@/lib/router-compat";
 import { Calendar, MapPin, ArrowUpRight, Loader2, Search, X, Filter } from "lucide-react";
 import { isPastDate } from "@/lib/event-date";
+import { StartActions } from "@/components/StartActions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -290,6 +291,7 @@ export const EventsSection = () => {
                     </div>
                   <div className="flex flex-1 flex-col p-6">
                     <h3 className="font-display text-xl font-bold leading-tight">{ev.title}</h3>
+                    <StartActions source="event" id={ev.id} />
                     <div className="mt-3 flex flex-col gap-1.5 text-sm text-muted-foreground">
                       <div className="flex items-center gap-2"><Calendar className="h-4 w-4 text-primary" />{fmtDate(ev.event_date)}</div>
                       {ev.location && <div className="flex items-center gap-2"><MapPin className="h-4 w-4 text-primary" />{ev.location}</div>}

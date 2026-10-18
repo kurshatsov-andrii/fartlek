@@ -4,6 +4,11 @@ import logoFartlek from "@/assets/logo-fartlek.jpg";
 import { Button } from "@/components/ui/button";
 import { useApp } from "@/contexts/AppContext";
 import { useAuth } from "@/hooks/useAuth";
+import { useStartPlanner } from "@/contexts/StartPlannerContext";
+import { Bell, GitCompareArrows } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { resolveStarts, reminderDue, type StartRef } from "@/lib/start-planner";
+import { kyivToday } from "@/lib/calendar-discovery";
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
@@ -13,6 +18,10 @@ export const Header = () => {
   const { user, isOrganizer, isAdmin, signOut } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
+  const planner = useStartPlanner();
+  const reminderRefs: StartRef[] = planner.records.filter(r => r.reminder_days !== null).map(r => ({ source: r.source as StartRef['source'], id: r.target_id }));
+  const reminderQuery = useQuery({ queryKey: ['header-reminders', user?.id, reminderRefs, planner.records.map(r=>r.reminder_days)], enabled: !!user && reminderRefs.length > 0, queryFn: () => resolveStarts(reminderRefs) });
+  const dueCount = user && reminderRefs.length ? (reminderQuery.data ?? []).filter(i => reminderDue(i.date, planner.records.find(r=>r.source===i.source&&r.target_id===i.id)?.reminder_days ?? null, kyivToday())).length : 0;
 
   const handleEventsClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -71,6 +80,10 @@ export const Header = () => {
         </nav>
 
         <div className="flex shrink-0 items-center gap-1.5">
+          <Button asChild variant="ghost" size="icon" aria-label="Збережені старти" title="Збережені старти" className="relative h-9 w-9">
+            <Link to="/saved">{dueCount > 0 ? <Bell className="h-4 w-4 text-primary" /> : <Heart className="h-4 w-4" />}{dueCount > 0 && <span className="absolute -right-1 -top-1 rounded-full bg-primary px-1 text-[10px] text-primary-foreground">{dueCount}</span>}</Link>
+          </Button>
+          {planner.comparison.length > 0 && <Button asChild variant="outline" size="sm" aria-label="Порівняння стартів"><Link to="/compare"><GitCompareArrows className="h-4 w-4" />{planner.comparison.length}</Link></Button>}
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -79,6 +92,8 @@ export const Header = () => {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-52">
+                <DropdownMenuItem asChild><Link to="/saved"><Heart className="h-4 w-4" />Збережені старти</Link></DropdownMenuItem>
+                <DropdownMenuItem asChild><Link to="/compare"><GitCompareArrows className="h-4 w-4" />Порівняння стартів</Link></DropdownMenuItem>
                 <DropdownMenuItem asChild><Link to="/profile"><User className="h-4 w-4" />{t.nav.profile}</Link></DropdownMenuItem>
                 <DropdownMenuItem asChild><Link to="/my-events"><Ticket className="h-4 w-4" />{t.nav.myEvents}</Link></DropdownMenuItem>
                 {isOrganizer && (

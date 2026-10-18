@@ -14,6 +14,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AppProvider } from "@/contexts/AppContext";
 import { AuthProvider } from "@/hooks/useAuth";
+import { StartPlannerProvider } from "@/contexts/StartPlannerContext";
 import { ProfileCompletionGate } from "@/components/ProfileCompletionGate";
 import { AdminOnlinePresence } from "@/components/AdminOnlinePresence";
 import { SessionTracker } from "@/components/SessionTracker";
@@ -77,6 +78,7 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       <AppProvider>
         <AuthProvider>
+          <StartPlannerProvider>
           <TooltipProvider>
             <Toaster />
             <Sonner />
@@ -86,6 +88,7 @@ function RootComponent() {
             <AdminSeoEditor />
             <Outlet />
           </TooltipProvider>
+          </StartPlannerProvider>
         </AuthProvider>
       </AppProvider>
     </QueryClientProvider>

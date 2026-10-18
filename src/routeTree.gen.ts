@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as CompareRouteImport } from './routes/compare'
 import { Route as ContactsRouteImport } from './routes/contacts'
 import { Route as FeaturesRouteImport } from './routes/features'
 import { Route as ForOrganizersRouteImport } from './routes/for-organizers'
@@ -21,6 +22,7 @@ import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as PublicOfferRouteImport } from './routes/public-offer'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as SavedRouteImport } from './routes/saved'
 import { Route as SurveyRouteImport } from './routes/survey'
 import { Route as TestimonialsRouteImport } from './routes/testimonials'
 import { Route as UnsubscribeRouteImport } from './routes/unsubscribe'
@@ -82,6 +84,11 @@ const AuthRoute = AuthRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CompareRoute = CompareRouteImport.update({
+  id: '/compare',
+  path: '/compare',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ContactsRoute = ContactsRouteImport.update({
   id: '/contacts',
   path: '/contacts',
@@ -125,6 +132,11 @@ const PublicOfferRoute = PublicOfferRouteImport.update({
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
   id: '/reset-password',
   path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SavedRoute = SavedRouteImport.update({
+  id: '/saved',
+  path: '/saved',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SurveyRoute = SurveyRouteImport.update({
@@ -362,6 +374,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/auth': typeof AuthRoute
+  '/compare': typeof CompareRoute
   '/contacts': typeof ContactsRoute
   '/features': typeof FeaturesRoute
   '/for-organizers': typeof ForOrganizersRoute
@@ -371,6 +384,7 @@ export interface FileRoutesByFullPath {
   '/profile': typeof ProfileRoute
   '/public-offer': typeof PublicOfferRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/saved': typeof SavedRoute
   '/survey': typeof SurveyRoute
   '/testimonials': typeof TestimonialsRoute
   '/unsubscribe': typeof UnsubscribeRoute
@@ -421,6 +435,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/auth': typeof AuthRoute
+  '/compare': typeof CompareRoute
   '/contacts': typeof ContactsRoute
   '/features': typeof FeaturesRoute
   '/for-organizers': typeof ForOrganizersRoute
@@ -430,6 +445,7 @@ export interface FileRoutesByTo {
   '/profile': typeof ProfileRoute
   '/public-offer': typeof PublicOfferRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/saved': typeof SavedRoute
   '/survey': typeof SurveyRoute
   '/testimonials': typeof TestimonialsRoute
   '/unsubscribe': typeof UnsubscribeRoute
@@ -481,6 +497,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/auth': typeof AuthRoute
+  '/compare': typeof CompareRoute
   '/contacts': typeof ContactsRoute
   '/features': typeof FeaturesRoute
   '/for-organizers': typeof ForOrganizersRoute
@@ -490,6 +507,7 @@ export interface FileRoutesById {
   '/profile': typeof ProfileRoute
   '/public-offer': typeof PublicOfferRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/saved': typeof SavedRoute
   '/survey': typeof SurveyRoute
   '/testimonials': typeof TestimonialsRoute
   '/unsubscribe': typeof UnsubscribeRoute
@@ -542,6 +560,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/auth'
+    | '/compare'
     | '/contacts'
     | '/features'
     | '/for-organizers'
@@ -551,6 +570,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/public-offer'
     | '/reset-password'
+    | '/saved'
     | '/survey'
     | '/testimonials'
     | '/unsubscribe'
@@ -601,6 +621,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/auth'
+    | '/compare'
     | '/contacts'
     | '/features'
     | '/for-organizers'
@@ -610,6 +631,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/public-offer'
     | '/reset-password'
+    | '/saved'
     | '/survey'
     | '/testimonials'
     | '/unsubscribe'
@@ -660,6 +682,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/auth'
+    | '/compare'
     | '/contacts'
     | '/features'
     | '/for-organizers'
@@ -669,6 +692,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/public-offer'
     | '/reset-password'
+    | '/saved'
     | '/survey'
     | '/testimonials'
     | '/unsubscribe'
@@ -720,6 +744,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
   AuthRoute: typeof AuthRoute
+  CompareRoute: typeof CompareRoute
   ContactsRoute: typeof ContactsRoute
   FeaturesRoute: typeof FeaturesRoute
   ForOrganizersRoute: typeof ForOrganizersRoute
@@ -729,6 +754,7 @@ export interface RootRouteChildren {
   ProfileRoute: typeof ProfileRoute
   PublicOfferRoute: typeof PublicOfferRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
+  SavedRoute: typeof SavedRoute
   SurveyRoute: typeof SurveyRoute
   TestimonialsRoute: typeof TestimonialsRoute
   UnsubscribeRoute: typeof UnsubscribeRoute
@@ -799,6 +825,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/compare': {
+      id: '/compare'
+      path: '/compare'
+      fullPath: '/compare'
+      preLoaderRoute: typeof CompareRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/contacts': {
       id: '/contacts'
       path: '/contacts'
@@ -860,6 +893,13 @@ declare module '@tanstack/react-router' {
       path: '/reset-password'
       fullPath: '/reset-password'
       preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/saved': {
+      id: '/saved'
+      path: '/saved'
+      fullPath: '/saved'
+      preLoaderRoute: typeof SavedRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/survey': {
@@ -1184,6 +1224,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   AuthRoute: AuthRoute,
+  CompareRoute: CompareRoute,
   ContactsRoute: ContactsRoute,
   FeaturesRoute: FeaturesRoute,
   ForOrganizersRoute: ForOrganizersRoute,
@@ -1193,6 +1234,7 @@ const rootRouteChildren: RootRouteChildren = {
   ProfileRoute: ProfileRoute,
   PublicOfferRoute: PublicOfferRoute,
   ResetPasswordRoute: ResetPasswordRoute,
+  SavedRoute: SavedRoute,
   SurveyRoute: SurveyRoute,
   TestimonialsRoute: TestimonialsRoute,
   UnsubscribeRoute: UnsubscribeRoute,

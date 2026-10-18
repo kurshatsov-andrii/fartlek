@@ -10,6 +10,8 @@ interface IcsEvent {
   date: string;
   /** HH:MM:SS or HH:MM */
   time: string;
+  allDay?: boolean;
+  reminderDays?: number | null;
   /** Duration in hours (default 4) */
   durationHours?: number;
   url?: string;
@@ -43,8 +45,10 @@ function escapeIcsText(s: string): string {
 }
 
 export function buildIcs(ev: IcsEvent): string {
-  const dtStart = formatLocalDateTime(ev.date, ev.time);
-  const dtEnd = addHoursLocal(ev.date, ev.time, ev.durationHours ?? 4);
+  const dtStart = ev.allDay ? ev.date.replace(/-/g, '') : formatLocalDateTime(ev.date, ev.time);
+  const nextDay = new Date(`${ev.date}T12:00:00Z`);
+  nextDay.setUTCDate(nextDay.getUTCDate() + 1);
+  const dtEnd = ev.allDay ? nextDay.toISOString().slice(0,10).replace(/-/g, '') : addHoursLocal(ev.date, ev.time, ev.durationHours ?? 4);
   const dtStamp = new Date()
     .toISOString()
     .replace(/[-:]/g, "")
@@ -76,22 +80,21 @@ export function buildIcs(ev: IcsEvent): string {
     "BEGIN:VEVENT",
     `UID:${ev.uid}@fartlek.com.ua`,
     `DTSTAMP:${dtStamp}`,
-    `DTSTART;TZID=Europe/Kyiv:${dtStart}`,
-    `DTEND;TZID=Europe/Kyiv:${dtEnd}`,
+    ev.allDay ? `DTSTART;VALUE=DATE:${dtStart}` : `DTSTART;TZID=Europe/Kyiv:${dtStart}`,
+    ev.allDay ? `DTEND;VALUE=DATE:${dtEnd}` : `DTEND;TZID=Europe/Kyiv:${dtEnd}`,
     `SUMMARY:${escapeIcsText(ev.title)}`,
   ];
   if (ev.description) lines.push(`DESCRIPTION:${escapeIcsText(ev.description)}`);
   if (ev.location) lines.push(`LOCATION:${escapeIcsText(ev.location)}`);
   if (ev.url) lines.push(`URL:${ev.url}`);
-  lines.push(
+  if (ev.reminderDays !== null) lines.push(
     "BEGIN:VALARM",
-    "TRIGGER:-PT1D",
+    `TRIGGER:-P${ev.reminderDays ?? 1}D`,
     "ACTION:DISPLAY",
     `DESCRIPTION:${escapeIcsText(ev.title)}`,
     "END:VALARM",
-    "END:VEVENT",
-    "END:VCALENDAR",
   );
+  lines.push("END:VEVENT", "END:VCALENDAR");
   return lines.join("\r\n");
 }
 

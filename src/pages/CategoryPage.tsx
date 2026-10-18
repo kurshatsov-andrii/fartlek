@@ -15,6 +15,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { EVENT_CATEGORIES, type EventCategory } from "@/lib/i18n";
 import { categorySeo, formatEventDate } from "@/lib/seo";
 import { isPastDate } from "@/lib/event-date";
+import { StartActions } from "@/components/StartActions";
 import { MONTH_NAMES_UK, type SportType } from "@/lib/parseStart";
 import {
   DISTANCE_BUCKETS, baseCity, categorySport, detectCity, matchesDistance, monthOf,
@@ -261,6 +262,7 @@ const CategoryPage = () => {
         </div>
         <div className="flex flex-1 flex-col p-6">
           <h2 className="font-display text-xl font-bold leading-tight">{i.title}</h2>
+          <StartActions source={i.kind} id={i.id} />
           <div className="mt-3 flex flex-col gap-1.5 text-sm text-muted-foreground">
             {i.date && (
               <div className="flex items-center gap-2"><Calendar className="h-4 w-4 text-primary" />{formatEventDate(i.date, lang)}</div>
