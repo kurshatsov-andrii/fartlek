@@ -1692,6 +1692,33 @@ export type Database = {
           },
         ]
       }
+      saved_start_items: {
+        Row: {
+          created_at: string
+          id: string
+          reminder_days: number | null
+          source: string
+          target_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          reminder_days?: number | null
+          source: string
+          target_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          reminder_days?: number | null
+          source?: string
+          target_id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       seo_overrides: {
         Row: {
           created_at: string
