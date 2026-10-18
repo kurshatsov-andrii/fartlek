@@ -156,7 +156,13 @@ const Starts = () => {
           <Button asChild size="sm" variant="secondary" className="flex-1">
             <Link to={`/starts/${r.slug}`}>Детальніше</Link>
           </Button>
-          {r.register_url && !isPastDate(r.event_date) && (
+          {r.results_url ? (
+            <Button asChild size="sm" variant="secondary" className="flex-1">
+              <a href={r.results_url} target="_blank" rel="noreferrer">
+                Результати <FileText className="h-3.5 w-3.5 ml-1" />
+              </a>
+            </Button>
+          ) : r.register_url && canShowRegisterButton({ explicit: r.registration_status, date: r.event_date, today: todayStr }) && (
             <Button asChild size="sm" className="flex-1">
               <a href={r.register_url} target="_blank" rel="noreferrer">
                 Зареєструватися <ExternalLink className="h-3.5 w-3.5 ml-1" />
