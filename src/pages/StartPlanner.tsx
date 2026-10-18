@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import {
-  Heart,
+  Bookmark,
   GitCompareArrows,
   Bell,
   Download,
@@ -82,7 +82,7 @@ export default function StartPlanner({ mode }: { mode: "saved" | "compare" }) {
                 {saved ? (
                   <GitCompareArrows className="h-4 w-4" />
                 ) : (
-                  <Heart className="h-4 w-4" />
+                  <Bookmark className="h-4 w-4" />
                 )}
                 {saved
                   ? uk

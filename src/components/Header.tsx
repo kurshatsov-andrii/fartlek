@@ -1,5 +1,5 @@
 import { Link, useLocation, useNavigate } from "@/lib/router-compat";
-import { LogOut, User, LayoutDashboard, Ticket, Shield, Mail, Users, Sparkles, Star, Menu, Megaphone, BookOpen, Heart } from "lucide-react";
+import { LogOut, User, LayoutDashboard, Ticket, Shield, Mail, Users, Sparkles, Star, Menu, Megaphone, BookOpen, Heart, Bookmark } from "lucide-react";
 import logoFartlek from "@/assets/logo-fartlek.jpg";
 import { Button } from "@/components/ui/button";
 import { useApp } from "@/contexts/AppContext";
@@ -82,7 +82,7 @@ export const Header = () => {
 
         <div className="flex shrink-0 items-center gap-1.5">
           <Button asChild variant="ghost" size="icon" aria-label="Збережені старти" title="Збережені старти" className={`relative h-9 w-9 ${planner.comparison.length > 0 ? 'hidden sm:inline-flex' : ''}`}>
-            <Link to="/saved">{dueCount > 0 ? <Bell className="h-4 w-4 text-primary" /> : <Heart className="h-4 w-4" />}{dueCount > 0 && <span className="absolute -right-1 -top-1 rounded-full bg-primary px-1 text-[10px] text-primary-foreground">{dueCount}</span>}</Link>
+            <Link to="/saved">{dueCount > 0 ? <Bell className="h-4 w-4 text-primary" /> : <Bookmark className="h-4 w-4" />}{dueCount > 0 && <span className="absolute -right-1 -top-1 rounded-full bg-primary px-1 text-[10px] text-primary-foreground">{dueCount}</span>}</Link>
           </Button>
           {planner.comparison.length > 0 && <Button asChild variant="outline" size="sm" aria-label="Порівняння стартів"><Link to="/compare"><GitCompareArrows className="h-4 w-4" />{planner.comparison.length}</Link></Button>}
           {user ? (
@@ -93,7 +93,7 @@ export const Header = () => {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-52">
-                <DropdownMenuItem asChild><Link to="/saved"><Heart className="h-4 w-4" />Збережені старти</Link></DropdownMenuItem>
+                <DropdownMenuItem asChild><Link to="/saved"><Bookmark className="h-4 w-4" />Збережені старти</Link></DropdownMenuItem>
                 <DropdownMenuItem asChild><Link to="/compare"><GitCompareArrows className="h-4 w-4" />Порівняння стартів</Link></DropdownMenuItem>
                 <DropdownMenuItem asChild><Link to="/profile"><User className="h-4 w-4" />{t.nav.profile}</Link></DropdownMenuItem>
                 <DropdownMenuItem asChild><Link to="/my-events"><Ticket className="h-4 w-4" />{t.nav.myEvents}</Link></DropdownMenuItem>
