@@ -994,6 +994,30 @@ export type Database = {
         }
         Relationships: []
       }
+      guest_start_likes: {
+        Row: {
+          created_at: string
+          id: string
+          source: string
+          target_id: string
+          visitor_token: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          source: string
+          target_id: string
+          visitor_token: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          source?: string
+          target_id?: string
+          visitor_token?: string
+        }
+        Relationships: []
+      }
       home_carousel_slides: {
         Row: {
           created_at: string
@@ -2324,6 +2348,10 @@ export type Database = {
         Args: { _event_id: string }
         Returns: string
       }
+      get_guest_start_like: {
+        Args: { _id: string; _source: string; _token: string }
+        Returns: boolean
+      }
       get_managed_events_unread_chat: {
         Args: never
         Returns: {
@@ -2451,6 +2479,10 @@ export type Database = {
           msg_id: number
           read_ct: number
         }[]
+      }
+      set_guest_start_like: {
+        Args: { _id: string; _liked: boolean; _source: string; _token: string }
+        Returns: boolean
       }
       slugify: { Args: { _input: string }; Returns: string }
       validate_promo_code: {

@@ -1,5 +1,8 @@
 # Roadmap
 
+## Visitor likes
+- [ ] Allow guests to like/unlike starts, persist browser identity, and verify shared counts and reloads
+
 ## SEO 2027 — current phase
 - [x] Align homepage, calendar, Starts, map and category metadata for 2027; preserve historical dates and URLs
 - [x] Add linked Kharkiv calendar using real records and the existing 2027 poster
