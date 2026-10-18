@@ -2,13 +2,17 @@
 
 ## SEO 2027 — current phase
 - [x] Align homepage, calendar, Starts, map and category metadata for 2027; preserve historical dates and URLs
-- [x] Add linked Kharkiv calendar using real records and the existing 2027 poster (no individual Kharkiv 2027 records published yet)
+- [x] Add linked Kharkiv calendar using real records and the existing 2027 poster
 - [x] Render calendar records and post-specific metadata for crawlers; verify sitemap and filters (123 URLs)
 - [x] Verify public flows, initial HTML and 16 tests
-- [ ] Publish updated pages — waits on explicit publish request
+- [x] Import 16 Kharkiv 2027 starts from the owner's poster; preserve unknown prices and registration links
+- [x] Verify imported starts in national and Kharkiv calendars (16 and 18 rows; 11 tests passed)
+- [x] Request publication of updated pages for fartlek.com.ua (scheduled; completion not verified)
+- [x] Check Google calendar indexing: /calendar indexed; /calendar/kharkiv unknown to Google; submit updated live sitemap (123 URLs, HTTP 204)
+- [ ] Request calendar recrawls — blocked on user clicking Request indexing in Google Search Console; API only inspects indexed versions
 
 ## Later phases
-Saved starts, comparisons and opt-in reminders are outside this first SEO/calendar phase.
+- [ ] Saved starts, comparisons and opt-in reminders — waits on the preceding manual indexing requests, as requested
 
 ## Done
 - [x] SiS partner banner: calendar above the add-event button and filters, upcoming start/event descriptions, and homepage Partners section

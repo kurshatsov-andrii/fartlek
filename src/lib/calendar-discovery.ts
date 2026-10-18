@@ -6,7 +6,11 @@ export interface CalendarRow {
   location: string | null; distances: string; organizer_name: string | null;
   category: string | null; url: string | null; notes?: string | null; created_by?: string | null;
 }
-export const matchesCalendarScope = (location: string | null, scope: CalendarScope) => scope === "ukraine" || detectCity(location) === "Харків";
+export const matchesCalendarScope = (location: string | null, scope: CalendarScope, notes?: string | null) =>
+  scope === "ukraine" || detectCity(location) === "Харків" ||
+  Boolean(notes?.startsWith('Джерело: афіша «Календар стартів Харкова 2027»'));
+export const calendarDistance = (distance: string | null | undefined, locale: string) =>
+  distance?.trim() || (locale === "uk" ? "Не зазначено" : "Not specified");
 export const calendarDate = (iso: string, locale: string, monthOnly = false) =>
   new Date(`${iso.slice(0, monthOnly ? 7 : 10)}${monthOnly ? "-01" : ""}T12:00:00Z`).toLocaleDateString(locale, {
     timeZone: "Europe/Kyiv", month: "long", year: "numeric", ...(monthOnly ? {} : { day: "2-digit", weekday: "short" }),

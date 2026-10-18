@@ -4,7 +4,7 @@ import { Link } from "@/lib/router-compat";
 import { useSearch, useNavigate } from "@tanstack/react-router";
 import { useSuspenseQuery, useQueryClient } from "@tanstack/react-query";
 import { calendarQueryOptions } from "@/lib/calendar-query";
-import { calendarDate, matchesCalendarScope, type CalendarRow, type CalendarScope } from "@/lib/calendar-discovery";
+import { calendarDate, calendarDistance, matchesCalendarScope, type CalendarRow, type CalendarScope } from "@/lib/calendar-discovery";
 import { discoverySeo } from "@/lib/discovery-seo";
 import { Loader2, Plus, Pencil, Trash2, ExternalLink, ArrowUpDown } from "lucide-react";
 import { Header } from "@/components/Header";
@@ -88,7 +88,7 @@ const CalendarPage = ({ scope = "ukraine" }: { scope?: CalendarScope }) => {
   const [busy, setBusy] = useState(false);
 
   const load = () => queryClient.invalidateQueries({ queryKey: calendarQueryOptions.queryKey });
-  const allRows = useMemo(() => rows.filter((r) => matchesCalendarScope(r.location, scope)), [rows, scope]);
+  const allRows = useMemo(() => rows.filter((r) => matchesCalendarScope(r.location, scope, r.notes)), [rows, scope]);
 
   const monthOptions = useMemo(() => {
     const set = new Set<string>();
@@ -475,7 +475,7 @@ const CalendarPage = ({ scope = "ukraine" }: { scope?: CalendarScope }) => {
                             )}
                           </TableCell>
                           <TableCell className="text-sm text-muted-foreground whitespace-normal min-w-40 max-w-80 break-words">{r.location || "Україна та весь світ"}</TableCell>
-                          <TableCell className="text-sm">{r.distances || "Вільна дистанція"}</TableCell>
+                          <TableCell className="text-sm">{calendarDistance(r.distances, lang)}</TableCell>
                           <TableCell className="text-sm text-muted-foreground">{r.organizer_name || "—"}</TableCell>
                           <TableCell className="text-right">
                             {r.source === "platform" ? (
