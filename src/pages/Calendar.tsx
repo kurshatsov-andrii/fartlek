@@ -1,3 +1,4 @@
+import { RegistrationAdminFields, registrationAdminPayload } from "@/components/RegistrationAdminFields";
 import { useEffect, useMemo, useState } from "react";
 import { PageViews } from "@/components/PageViews";
 import { Link } from "@/lib/router-compat";
@@ -65,6 +66,10 @@ const emptyForm = {
   category: "" as string,
   url: "",
   notes: "",
+  registration_status: null as string | null,
+  registration_opens_on: null as string | null,
+  info_source_url: null as string | null,
+  info_checked_on: null as string | null,
 };
 
 const CalendarPage = ({ scope = "ukraine" }: { scope?: CalendarScope }) => {
@@ -162,6 +167,10 @@ const CalendarPage = ({ scope = "ukraine" }: { scope?: CalendarScope }) => {
       category: r.category ?? "",
       url: r.url ?? "",
       notes: r.notes ?? "",
+      registration_status: r.registration_status ?? null,
+      registration_opens_on: r.registration_opens_on ?? null,
+      info_source_url: r.info_source_url ?? null,
+      info_checked_on: r.info_checked_on ?? null,
     });
     setDialogOpen(true);
   };
@@ -181,6 +190,7 @@ const CalendarPage = ({ scope = "ukraine" }: { scope?: CalendarScope }) => {
       category: form.category || null,
       url: form.url || null,
       notes: form.notes || null,
+      ...registrationAdminPayload(form),
     };
     const { error } = form.id
       ? await supabase.from("calendar_events" as any).update(payload).eq("id", form.id)
@@ -319,6 +329,7 @@ const CalendarPage = ({ scope = "ukraine" }: { scope?: CalendarScope }) => {
                     <Label>{lang === "uk" ? "Нотатки" : "Notes"}</Label>
                     <Textarea rows={2} value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} />
                   </div>
+                  <RegistrationAdminFields value={form} onChange={(patch) => setForm({ ...form, ...patch })} />
                 </div>
                 <DialogFooter>
                   <Button variant="outline" onClick={() => setDialogOpen(false)}>

@@ -16,7 +16,7 @@ export const getPublicCalendar = createServerFn({ method: "GET" }).handler(async
   const today = kyivToday();
   const [events, calendar, starts] = await Promise.all([
     sb.from("events").select("id,slug,title,event_date,location,description,organizer_name,category,distances(distance_km,is_active)").eq("status", "published").gte("event_date", today).order("event_date").limit(1000),
-    sb.from("calendar_events").select("id,title,event_date,location,distances,organizer_name,category,url,notes,created_by,telegram_start_id").gte("event_date", today).order("event_date").limit(1000),
+    sb.from("calendar_events").select("id,title,event_date,location,distances,organizer_name,category,url,notes,created_by,telegram_start_id,registration_status,registration_opens_on,info_source_url,info_checked_on").gte("event_date", today).order("event_date").limit(1000),
     sb.from("telegram_starts").select("id,city,region,description").eq("status", "published").limit(1000),
   ]);
   if (events.error || calendar.error || starts.error) throw new Error("Calendar unavailable");
