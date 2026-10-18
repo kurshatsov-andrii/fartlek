@@ -57,3 +57,9 @@ export function sourceHost(url: string | null): string | null {
     return null;
   }
 }
+
+/** Listing cards must not offer registration once it is closed or cancelled; a past event date counts as closed. */
+export function canShowRegisterButton(input: RegistrationInput): boolean {
+  const state = deriveRegistrationState(input);
+  return state !== "closed" && state !== "cancelled";
+}

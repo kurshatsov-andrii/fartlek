@@ -15,6 +15,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { EVENT_CATEGORIES, type EventCategory } from "@/lib/i18n";
 import { categorySeo, formatEventDate } from "@/lib/seo";
 import { isPastDate } from "@/lib/event-date";
+import { canShowRegisterButton } from "@/lib/registration-status";
 import { StartActions } from "@/components/StartActions";
 import { MONTH_NAMES_UK, type SportType } from "@/lib/parseStart";
 import {
@@ -32,7 +33,7 @@ interface EventCard {
 
 interface StartRow {
   id: string; slug: string; title: string; description: string | null;
-  image_url: string | null; register_url: string | null; event_date: string | null;
+  image_url: string | null; register_url: string | null; results_url: string | null; registration_status: string | null; event_date: string | null;
   city: string | null; organizer_name: string | null; sport_types: string[] | null;
   distances_km: number[] | null; is_paid: boolean | null;
 }
@@ -54,9 +55,11 @@ interface CatItem {
   isPaid: boolean | null;
   badges: string[];
   registerUrl: string | null;
+  resultsUrl: string | null;
 }
 
 const PAGE_SIZE = 9;
+const todayStr = new Date().toISOString().slice(0, 10);
 
 const CategoryPage = () => {
   const { category } = useParams<{ category: string }>();
@@ -90,7 +93,7 @@ const CategoryPage = () => {
           .order("event_date", { ascending: true }),
         sport
           ? supabase.from("telegram_starts")
-              .select("id, slug, title, description, image_url, register_url, event_date, city, organizer_name, sport_types, distances_km, is_paid")
+              .select("id, slug, title, description, image_url, register_url, results_url, registration_status, event_date, city, organizer_name, sport_types, distances_km, is_paid")
               .eq("status", "published")
               .contains("sport_types", [sport])
               .order("event_date", { ascending: true })
@@ -127,6 +130,7 @@ const CategoryPage = () => {
         isPaid: ev.is_paid,
         badges: [ev.format === "hybrid" ? t.format.badgeHybrid : ev.format === "online" ? t.format.badgeOnline : t.format.badgeOffline],
         registerUrl: null,
+        resultsUrl: null,
       };
     });
 
@@ -147,7 +151,8 @@ const CategoryPage = () => {
       badges: Array.from(new Set((s.sport_types ?? []).filter((x) => x in t.categories)))
         .slice(0, 2)
         .map((x) => t.categories[x as EventCategory]),
-      registerUrl: s.register_url,
+      resultsUrl: s.results_url,
+      registerUrl: canShowRegisterButton({ explicit: s.registration_status, date: s.event_date, today: todayStr }) ? s.register_url : null,
     }));
 
     return [...fromEvents, ...fromStarts];
@@ -227,14 +232,14 @@ const CategoryPage = () => {
         allMonths: "Усі місяці", allCities: "Усі міста", allOrganizers: "Усі організатори",
         anyDistance: "Будь-яка дистанція", allPaid: "Платні і безкоштовні", freeOnly: "Безкоштовні", paidOnly: "Платні",
         empty: "Нічого не знайдено за обраними фільтрами.", completed: "Завершені",
-        more: "Завантажити ще", details: "Детальніше", register: "Зареєструватися", free: t.events.free,
+        more: "Завантажити ще", details: "Детальніше", register: "Зареєструватися", results: "Результати", free: t.events.free,
       }
     : {
         filters: "Filters", reset: "Reset", search: "Search by title, description, city…",
         allMonths: "All months", allCities: "All cities", allOrganizers: "All organizers",
         anyDistance: "Any distance", allPaid: "Paid and free", freeOnly: "Free", paidOnly: "Paid",
         empty: "Nothing matches the selected filters.", completed: "Completed",
-        more: "Load more", details: "Details", register: "Sign up", free: t.events.free,
+        more: "Load more", details: "Details", register: "Sign up", results: "Results", free: t.events.free,
       };
 
   const renderCard = (i: CatItem) => {
@@ -279,7 +284,13 @@ const CategoryPage = () => {
             </div>
           )}
           <div className="mt-6 flex items-center gap-2 pt-4 border-t border-border">
-            {past ? (
+            {i.kind === "start" && i.resultsUrl ? (
+              <Button asChild variant="secondary" className="flex-1">
+                <a href={i.resultsUrl} target="_blank" rel="noreferrer">
+                  {T.results} <ExternalLink className="h-3.5 w-3.5 ml-1" />
+                </a>
+              </Button>
+            ) : past ? (
               <Button asChild variant="secondary" className="flex-1"><Link to={i.url}>{T.details}</Link></Button>
             ) : i.kind === "start" && i.registerUrl ? (
               <Button asChild className="flex-1">

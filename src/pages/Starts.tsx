@@ -4,7 +4,7 @@ import { PageViews } from "@/components/PageViews";
 import { EventPoster } from "@/components/EventPoster";
 import { TELEGRAM_CHANNEL_URL, TELEGRAM_CHAT_URL } from "@/components/TelegramCommunity";
 import { Link } from "@/lib/router-compat";
-import { Loader2, ExternalLink, Calendar as CalendarIcon, Search, X, Filter, MapPin } from "lucide-react";
+import { Loader2, ExternalLink, Calendar as CalendarIcon, Search, X, Filter, MapPin, FileText } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { SEO } from "@/components/SEO";
@@ -14,7 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
 import { SPORT_TYPES, SPORT_LABELS, MONTH_NAMES_UK, type SportType } from "@/lib/parseStart";
-import { isPastDate } from "@/lib/event-date";
+import { canShowRegisterButton } from "@/lib/registration-status";
 import { DISTANCE_BUCKETS } from "@/lib/start-filters";
 import { discoverySeo } from "@/lib/discovery-seo";
 import { StartActions } from "@/components/StartActions";
@@ -26,6 +26,8 @@ interface StartRow {
   description: string;
   image_url: string | null;
   register_url: string | null;
+  results_url: string | null;
+  registration_status: string | null;
   event_date: string | null;
   city: string | null;
   region: string | null;
@@ -36,6 +38,7 @@ interface StartRow {
 }
 
 const PAGE_SIZE = 9;
+const todayStr = new Date().toISOString().slice(0, 10);
 
 const Starts = () => {
   const [rows, setRows] = useState<StartRow[]>([]);
@@ -57,7 +60,7 @@ const Starts = () => {
     (async () => {
       const { data } = await supabase
         .from("telegram_starts")
-        .select("id,slug,title,description,image_url,register_url,event_date,city,region,organizer_name,sport_types,distances_km,is_paid")
+        .select("id,slug,title,description,image_url,register_url,results_url,registration_status,event_date,city,region,organizer_name,sport_types,distances_km,is_paid")
         .eq("status", "published")
         .gte("event_date", "2026-07-01")
         .order("event_date", { ascending: true });
@@ -154,7 +157,13 @@ const Starts = () => {
           <Button asChild size="sm" variant="secondary" className="flex-1">
             <Link to={`/starts/${r.slug}`}>Детальніше</Link>
           </Button>
-          {r.register_url && !isPastDate(r.event_date) && (
+          {r.results_url ? (
+            <Button asChild size="sm" variant="secondary" className="flex-1">
+              <a href={r.results_url} target="_blank" rel="noreferrer">
+                Результати <FileText className="h-3.5 w-3.5 ml-1" />
+              </a>
+            </Button>
+          ) : r.register_url && canShowRegisterButton({ explicit: r.registration_status, date: r.event_date, today: todayStr }) && (
             <Button asChild size="sm" className="flex-1">
               <a href={r.register_url} target="_blank" rel="noreferrer">
                 Зареєструватися <ExternalLink className="h-3.5 w-3.5 ml-1" />

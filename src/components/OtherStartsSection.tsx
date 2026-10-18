@@ -1,14 +1,14 @@
 import { useEffect, useMemo, useState } from "react";
 import { EventPoster } from "@/components/EventPoster";
 import { Link } from "@/lib/router-compat";
-import { Calendar as CalendarIcon, MapPin, ExternalLink, Loader2, Search, X, Filter } from "lucide-react";
+import { Calendar as CalendarIcon, MapPin, ExternalLink, Loader2, Search, X, Filter, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useApp } from "@/contexts/AppContext";
 import { supabase } from "@/integrations/supabase/client";
 import { SPORT_TYPES, SPORT_LABELS, MONTH_NAMES_UK, type SportType } from "@/lib/parseStart";
-import { isPastDate } from "@/lib/event-date";
+import { canShowRegisterButton } from "@/lib/registration-status";
 import { matchesYear } from "@/components/YearFilterButtons";
 import { StartActions } from "@/components/StartActions";
 
@@ -23,6 +23,8 @@ interface StartRow {
   description: string | null;
   image_url: string | null;
   register_url: string | null;
+  results_url: string | null;
+  registration_status: string | null;
   event_date: string | null;
   city: string | null;
   region: string | null;
@@ -33,6 +35,7 @@ interface StartRow {
 }
 
 const PAGE_SIZE = 6;
+const todayStr = new Date().toISOString().slice(0, 10);
 const DISTANCE_BUCKETS: { label: string; match: (d: number) => boolean }[] = [
   { label: "до 5 км", match: (d) => d > 0 && d <= 5 },
   { label: "10 км", match: (d) => d > 5 && d <= 12 },
@@ -62,7 +65,7 @@ export const OtherStartsSection = ({ shared, onFacets }: { shared?: SharedStartF
     const today = new Date().toISOString().slice(0, 10);
     supabase
       .from("telegram_starts")
-      .select("id,slug,title,description,image_url,register_url,event_date,city,region,organizer_name,sport_types,distances_km,is_paid")
+      .select("id,slug,title,description,image_url,register_url,results_url,registration_status,event_date,city,region,organizer_name,sport_types,distances_km,is_paid")
       .eq("status", "published")
       .gte("event_date", today)
       .order("event_date", { ascending: true })
@@ -283,7 +286,13 @@ export const OtherStartsSection = ({ shared, onFacets }: { shared?: SharedStartF
                   <Button asChild variant="secondary" className="flex-1">
                     <Link to={`/starts/${r.slug}`}>{lang === "uk" ? "Детальніше" : "Details"}</Link>
                   </Button>
-                  {r.register_url && !isPastDate(r.event_date) && (
+                  {r.results_url ? (
+                    <Button asChild variant="outline" className="flex-1">
+                      <a href={r.results_url} target="_blank" rel="noreferrer">
+                        {lang === "uk" ? "Результати" : "Results"} <FileText className="h-3.5 w-3.5 ml-1" />
+                      </a>
+                    </Button>
+                  ) : r.register_url && canShowRegisterButton({ explicit: r.registration_status, date: r.event_date, today: todayStr }) && (
                     <Button asChild variant="outline" className="flex-1">
                       <a href={r.register_url} target="_blank" rel="noreferrer">
                         {lang === "uk" ? "На сайт" : "Website"} <ExternalLink className="h-3.5 w-3.5 ml-1" />
