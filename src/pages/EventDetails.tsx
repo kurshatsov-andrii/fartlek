@@ -25,6 +25,7 @@ import { startAutomatedPaymentCheckout } from "@/lib/paymentCheckout";
 import { buildEventSeo } from "@/lib/seo";
 import { linkifyText } from "@/lib/linkify";
 import { isPastDate } from "@/lib/event-date";
+import { StartActions } from "@/components/StartActions";
 import { PromoCodeInput, PromoPreview } from "@/components/PromoCodeInput";
 import { EventChat } from "@/components/EventChat";
 import { NovaPoshtaDelivery, DeliveryData, emptyDelivery, validateDelivery } from "@/components/NovaPoshtaDelivery";
@@ -404,6 +405,7 @@ const EventDetails = () => {
                 </span>
               </div>
               <h1 className="font-display text-4xl sm:text-5xl font-bold leading-tight">{event.title}</h1>
+              <StartActions source="event" id={event.id} />
               <div className="flex flex-wrap gap-x-6 gap-y-3 text-sm">
                 <div className="flex items-center gap-2"><Calendar className="h-4 w-4 text-primary" />{fmtDate} · {event.event_time.slice(0, 5)}</div>
                 {event.location && <div className="flex items-center gap-2"><MapPin className="h-4 w-4 text-primary" />{event.location}</div>}

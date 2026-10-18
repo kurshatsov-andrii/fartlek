@@ -12,6 +12,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { linkifyText } from "@/lib/linkify";
 import { SPORT_LABELS, type SportType } from "@/lib/parseStart";
 import { isPastDate } from "@/lib/event-date";
+import { StartActions } from "@/components/StartActions";
 
 interface StartRow {
   id: string;
@@ -91,6 +92,7 @@ const StartDetails = () => {
         )}
 
         <h1 className="font-display text-3xl md:text-4xl font-bold mb-3">{row.title || "Без назви"}</h1>
+        <StartActions source="start" id={row.id} />
 
         {row.event_date && (
           <div className="flex items-center gap-2 text-muted-foreground mb-2">

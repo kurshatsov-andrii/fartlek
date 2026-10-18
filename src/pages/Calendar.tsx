@@ -32,6 +32,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { EVENT_CATEGORIES, type EventCategory } from "@/lib/i18n";
 import { toast } from "sonner";
 import { calendarLocation } from "@/lib/calendar-location";
+import { StartActions } from "@/components/StartActions";
 
 type Row = CalendarRow;
 
@@ -478,6 +479,7 @@ const CalendarPage = ({ scope = "ukraine" }: { scope?: CalendarScope }) => {
                           <TableCell className="text-sm">{calendarDistance(r.distances, lang)}</TableCell>
                           <TableCell className="text-sm text-muted-foreground">{r.organizer_name || "—"}</TableCell>
                           <TableCell className="text-right">
+                            <StartActions source={r.source === "platform" ? "event" : "calendar"} id={r.id} />
                             {r.source === "platform" ? (
                               <Button asChild size="sm" variant="outline">
                                 <Link to={r.url ?? "#"}>{lang === "uk" ? "Деталі" : "Details"}</Link>

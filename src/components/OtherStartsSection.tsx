@@ -10,6 +10,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { SPORT_TYPES, SPORT_LABELS, MONTH_NAMES_UK, type SportType } from "@/lib/parseStart";
 import { isPastDate } from "@/lib/event-date";
 import { matchesYear } from "@/components/YearFilterButtons";
+import { StartActions } from "@/components/StartActions";
 
 export interface SharedStartFilters {
   q: string; city: string; month: string; year: string; paid: "all" | "paid" | "free"; distance: string;
@@ -271,6 +272,7 @@ export const OtherStartsSection = ({ shared, onFacets }: { shared?: SharedStartF
                 <h3 className="font-display text-xl font-bold leading-tight">
                   <Link to={`/starts/${r.slug}`} className="hover:underline">{r.title}</Link>
                 </h3>
+                <StartActions source="start" id={r.id} />
                 <div className="mt-3 flex flex-col gap-1.5 text-sm text-muted-foreground">
                   {r.event_date && (
                     <div className="flex items-center gap-2"><CalendarIcon className="h-4 w-4 text-primary" />{fmtDate(r.event_date)}</div>

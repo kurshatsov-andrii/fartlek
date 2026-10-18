@@ -11,8 +11,11 @@
 - [x] Check Google calendar indexing: /calendar indexed; /calendar/kharkiv unknown to Google; submit updated live sitemap (123 URLs, HTTP 204)
 - [ ] Request calendar recrawls — blocked on user clicking Request indexing in Google Search Console; API only inspects indexed versions
 
-## Later phases
-- [ ] Saved starts, comparisons and opt-in reminders — waits on the preceding manual indexing requests, as requested
+## Saved starts, comparisons and opt-in reminders
+- [x] Save platform events, external starts and calendar entries to a private account list
+- [x] Compare up to three starts using current published information
+- [x] Opt-in in-app reminders and calendar export with alarms; unknown times remain all-day dates
+- [x] Verify signed-in saving, read-back, removal, comparisons and calendar downloads (18 tests; browser verified)
 
 ## Done
 - [x] SiS partner banner: calendar above the add-event button and filters, upcoming start/event descriptions, and homepage Partners section

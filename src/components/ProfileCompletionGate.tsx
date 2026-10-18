@@ -7,12 +7,19 @@ import { toast } from "sonner";
 
 // Routes the user is allowed to visit even with an incomplete profile.
 const ALLOWED_PATHS = [
+  "/",
   "/auth",
   "/reset-password",
   "/profile",
   "/unsubscribe",
   "/payment/success",
   "/payment/fail",
+  "/saved",
+  "/compare",
+  "/starts",
+  "/calendar",
+  "/category",
+  "/map",
 ];
 
 const PHONE_RE = /^\+38 \(\d{3}\) \d{3}-\d{2}-\d{2}$/;

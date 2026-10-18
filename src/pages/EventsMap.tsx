@@ -16,6 +16,7 @@ import { YearFilterButtons, matchesYear } from "@/components/YearFilterButtons";
 import { supabase } from "@/integrations/supabase/client";
 import { eventCity } from "@/lib/utils";
 import { findCityCoords, prettyCity } from "@/lib/uaCities";
+import { StartActions } from "@/components/StartActions";
 
 type Source = "event" | "start" | "calendar";
 
@@ -257,6 +258,7 @@ const EventsMap = () => {
                           <span className="px-1.5 py-0.5 rounded bg-muted">{SOURCE_LABEL[i.source]}</span>
                         </div>
                         <h3 className="font-semibold leading-snug mb-1">{i.title}</h3>
+                        <StartActions source={i.source} id={i.id.slice(2)} />
                         {i.distances && <p className="text-xs text-muted-foreground mb-2">{i.distances}</p>}
                         {i.href && (
                           i.external ? (
