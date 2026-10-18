@@ -1,3 +1,6 @@
+import { RegistrationStatus } from "@/components/RegistrationStatus";
+import { deriveRegistrationState } from "@/lib/registration-status";
+import { kyivToday, calendarDate } from "@/lib/calendar-discovery";
 import { useEffect, useMemo, useState } from "react";
 import { PageViews } from "@/components/PageViews";
 import { EventPoster } from "@/components/EventPoster";
@@ -45,6 +48,8 @@ interface EventRow {
   regulations_pdf_url: string | null;
   description_image_url: string | null;
   registration_closed?: boolean;
+  registration_opens_on?: string | null;
+  updated_at?: string;
 }
 interface SegmentRow { sport: string; distance_km: number; order?: number }
 interface DistanceRow { id: string; distance_km: number; name: string | null; price: number; is_active?: boolean; is_relay?: boolean; relay_legs_count?: number | null; relay_categories?: string[] | null; relay_legs?: number[] | null; delivery_enabled?: boolean; segments?: SegmentRow[] | null; discipline?: string | null; obstacle_count?: number | null; max_participants?: number | null; }
@@ -406,6 +411,25 @@ const EventDetails = () => {
               </div>
               <h1 className="font-display text-4xl sm:text-5xl font-bold leading-tight">{event.title}</h1>
               <StartActions source="event" id={event.id} />
+              <div className="mt-3">
+                <RegistrationStatus
+                  uk={lang === "uk"}
+                  info={{
+                    state: deriveRegistrationState({
+                      cancelled: event.status === "cancelled",
+                      closed: !!event.registration_closed || event.status === "completed",
+                      opensOn: event.registration_opens_on ?? null,
+                      defaultOpen: true,
+                      date: event.event_date,
+                      today: kyivToday(),
+                    }),
+                    opensOn: event.registration_opens_on ?? null,
+                    sourceUrl: null,
+                    sourceLabel: lang === "uk" ? "Організатор на Фартлек" : "Organizer on Fartlek",
+                    checkedOn: event.updated_at?.slice(0, 10) ?? null,
+                  }}
+                />
+              </div>
               <div className="flex flex-wrap gap-x-6 gap-y-3 text-sm">
                 <div className="flex items-center gap-2"><Calendar className="h-4 w-4 text-primary" />{fmtDate} · {event.event_time.slice(0, 5)}</div>
                 {event.location && <div className="flex items-center gap-2"><MapPin className="h-4 w-4 text-primary" />{event.location}</div>}
@@ -513,6 +537,16 @@ const EventDetails = () => {
                   ) : (
                     <p className="text-sm text-muted-foreground">{t.events.resultsNone}</p>
                   )}
+                </div>
+              ) : event.registration_opens_on && event.registration_opens_on > kyivToday() && !isPastDate(event.event_date) ? (
+                <div className="sticky top-24 rounded-2xl border border-border bg-card p-6 space-y-3">
+                  <h3 className="font-display text-xl font-bold text-foreground">
+                    {lang === "uk" ? "Реєстрація очікується" : "Registration expected"}
+                  </h3>
+                  <p className="text-sm text-muted-foreground">
+                    {lang === "uk" ? "Відкриття реєстрації: " : "Opens on: "}
+                    {calendarDate(event.registration_opens_on, lang === "uk" ? "uk-UA" : "en-US")}
+                  </p>
                 </div>
               ) : event.registration_closed || isPastDate(event.event_date) ? (
                 <div className="sticky top-24 rounded-2xl border border-border bg-card p-6 space-y-3">
