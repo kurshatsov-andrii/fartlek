@@ -4,7 +4,7 @@ import logoFartlek from "@/assets/logo-fartlek.jpg";
 import { Button } from "@/components/ui/button";
 import { useApp } from "@/contexts/AppContext";
 import { useAuth } from "@/hooks/useAuth";
-import { useStartPlanner } from "@/contexts/StartPlannerContext";
+import { useOptionalStartPlanner } from "@/contexts/StartPlannerContext";
 import { Bell, GitCompareArrows } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { resolveStarts, reminderDue, type StartRef } from "@/lib/start-planner";
@@ -18,7 +18,8 @@ export const Header = () => {
   const { user, isOrganizer, isAdmin, signOut } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
-  const planner = useStartPlanner();
+  // Navigation also renders on fallback pages and during provider refreshes.
+  const planner = useOptionalStartPlanner() ?? { records: [], comparison: [] };
   const reminderRefs: StartRef[] = planner.records.filter(r => r.reminder_days !== null).map(r => ({ source: r.source as StartRef['source'], id: r.target_id }));
   const reminderQuery = useQuery({ queryKey: ['header-reminders', user?.id, reminderRefs, planner.records.map(r=>r.reminder_days)], enabled: !!user && reminderRefs.length > 0, queryFn: () => resolveStarts(reminderRefs) });
   const dueCount = user && reminderRefs.length ? (reminderQuery.data ?? []).filter(i => reminderDue(i.date, planner.records.find(r=>r.source===i.source&&r.target_id===i.id)?.reminder_days ?? null, kyivToday())).length : 0;

@@ -1,5 +1,4 @@
 import {
-  createContext,
   useContext,
   useEffect,
   useState,
@@ -10,6 +9,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { startKey, toggleComparison, type StartRef } from "@/lib/start-planner";
 import { toast } from "sonner";
+import { StartPlannerContext } from "./start-planner-context";
 function usePlannerState() {
   const { user } = useAuth();
   const qc = useQueryClient();
@@ -116,18 +116,21 @@ function usePlannerState() {
     setReminder,
     compare,
     clearComparison: () => setComparison([]),
-    loading: saved.isLoading,
+    loading: !!user && saved.isLoading,
     error: saved.error,
     retry: saved.refetch,
   };
 }
-const Context = createContext<ReturnType<typeof usePlannerState> | null>(null);
+export type StartPlannerValue = ReturnType<typeof usePlannerState>;
 export function StartPlannerProvider({ children }: { children: ReactNode }) {
   const value = usePlannerState();
-  return <Context.Provider value={value}>{children}</Context.Provider>;
+  return <StartPlannerContext.Provider value={value}>{children}</StartPlannerContext.Provider>;
+}
+export function useOptionalStartPlanner() {
+  return useContext(StartPlannerContext);
 }
 export function useStartPlanner() {
-  const value = useContext(Context);
+  const value = useOptionalStartPlanner();
   if (!value) throw new Error("Missing StartPlannerProvider");
   return value;
 }
