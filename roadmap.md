@@ -1,7 +1,7 @@
 # Roadmap
 
 ## Category page recovery
-- [ ] Fix category rendering after completed-date changes and verify every category with live records
+- [x] Fix category rendering after completed-date changes; all 14 categories and marathon search verified with real records, no browser errors; 19 date/registration tests passed
 
 ## Vinnytsia calendar 2027
 - [x] Add /calendar/vinnytsia using existing published starts, city filtering, metadata and sitemap
