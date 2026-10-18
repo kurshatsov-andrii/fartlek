@@ -231,7 +231,7 @@ const CategoryPage = () => {
         allMonths: "Усі місяці", allCities: "Усі міста", allOrganizers: "Усі організатори",
         anyDistance: "Будь-яка дистанція", allPaid: "Платні і безкоштовні", freeOnly: "Безкоштовні", paidOnly: "Платні",
         empty: "Нічого не знайдено за обраними фільтрами.", completed: "Завершені",
-        more: "Завантажити ще", details: "Детальніше", register: "Зареєструватися", free: t.events.free,
+        more: "Завантажити ще", details: "Детальніше", register: "Зареєструватися", results: "Результати", free: t.events.free,
       }
     : {
         filters: "Filters", reset: "Reset", search: "Search by title, description, city…",
