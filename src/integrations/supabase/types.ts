@@ -1999,6 +1999,7 @@ export type Database = {
           register_url: string | null
           registration_opens_on: string | null
           registration_status: string | null
+          results_url: string | null
           seo_description: string
           seo_title: string
           slug: string | null
@@ -2028,6 +2029,7 @@ export type Database = {
           register_url?: string | null
           registration_opens_on?: string | null
           registration_status?: string | null
+          results_url?: string | null
           seo_description?: string
           seo_title?: string
           slug?: string | null
@@ -2057,6 +2059,7 @@ export type Database = {
           register_url?: string | null
           registration_opens_on?: string | null
           registration_status?: string | null
+          results_url?: string | null
           seo_description?: string
           seo_title?: string
           slug?: string | null
