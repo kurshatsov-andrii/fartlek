@@ -3,6 +3,7 @@ import {
   reminderDue,
   toggleComparison,
   plannerCalendarEvent,
+  plannerAlerts,
   type PlannedStart,
   type StartRef,
 } from "./start-planner";
@@ -25,7 +26,7 @@ const race: PlannedStart = {
   organizer: null,
   url: null,
   image: null,
-  status: null,
+  registration: { state: "unknown", opensOn: null, sourceUrl: null, sourceLabel: null, checkedOn: null },
 };
 describe("start planner", () => {
   it("compares no more than three starts", () => {
@@ -67,5 +68,29 @@ describe("start planner", () => {
   });
   it("does not export a race without a date", () => {
     expect(plannerCalendarEvent({ ...race, date: null }, 1)).toBeNull();
+  });
+});
+
+const prefs = {
+  reminder_days: null,
+  notify_registration: false,
+  notify_date_change: false,
+  known_date: "2027-05-23",
+  known_registration: "expected",
+};
+describe("opt-in planner alerts", () => {
+  const open = { ...race, registration: { ...race.registration, state: "open" as const } };
+  it("stays silent without opt-in", () => {
+    expect(plannerAlerts({ ...open, date: "2027-06-01" }, prefs, "2027-01-01")).toEqual([]);
+  });
+  it("alerts once registration opens", () => {
+    expect(plannerAlerts(open, { ...prefs, notify_registration: true }, "2027-01-01")).toEqual(["registration"]);
+    expect(plannerAlerts(open, { ...prefs, notify_registration: true, known_registration: "open" }, "2027-01-01")).toEqual([]);
+  });
+  it("alerts when the date moves", () => {
+    expect(plannerAlerts({ ...race, date: "2027-06-01" }, { ...prefs, notify_date_change: true }, "2027-01-01")).toEqual(["date"]);
+  });
+  it("alerts when the start is within the chosen days", () => {
+    expect(plannerAlerts(race, { ...prefs, reminder_days: 3 }, "2027-05-21")).toEqual(["start"]);
   });
 });
