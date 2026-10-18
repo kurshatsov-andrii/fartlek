@@ -14,7 +14,7 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { linkifyText } from "@/lib/linkify";
 import { SPORT_LABELS, type SportType } from "@/lib/parseStart";
-import { isPastDate } from "@/lib/event-date";
+import { isCompletedDate } from "@/lib/event-date";
 import { StartActions } from "@/components/StartActions";
 
 interface StartRow {
@@ -143,7 +143,7 @@ const StartDetails = () => {
           {linkifyText(row.description || "")}
         </div>
 
-        {row.event_date && !isPastDate(row.event_date) && (
+        {row.event_date && !isCompletedDate(row.event_date) && (
           <div className="mb-8"><SiSPartnerBanner /></div>
         )}
 
@@ -155,7 +155,7 @@ const StartDetails = () => {
           </Button>
         )}
 
-        {row.register_url && !isPastDate(row.event_date) && !row.results_url && regState !== "cancelled" && regState !== "closed" && (
+        {row.register_url && !isCompletedDate(row.event_date) && !row.results_url && regState !== "cancelled" && regState !== "closed" && (
           <Button asChild size="lg" className="w-full sm:w-auto">
             <a href={row.register_url} target="_blank" rel="noreferrer">
               Зареєструватися <ExternalLink className="h-4 w-4 ml-2" />

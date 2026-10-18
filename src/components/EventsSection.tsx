@@ -4,7 +4,7 @@ import { PageViews } from "@/components/PageViews";
 import { EventPoster } from "@/components/EventPoster";
 import { Link } from "@/lib/router-compat";
 import { Calendar, MapPin, ArrowUpRight, Loader2, Search, X, Filter } from "lucide-react";
-import { isPastDate } from "@/lib/event-date";
+import { isCompletedDate } from "@/lib/event-date";
 import { StartActions } from "@/components/StartActions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -298,7 +298,7 @@ export const EventsSection = () => {
                     </div>
                     
                     <div className="mt-6 flex items-center gap-2 pt-4 border-t border-border">
-                      {isPastDate(ev.event_date) ? (
+                      {isCompletedDate(ev.event_date) ? (
                         <Button asChild variant="secondary" className="flex-1">
                           <Link to={`/events/${ev.slug ?? ev.id}`}>{lang === "uk" ? "Детальніше" : "Details"}</Link>
                         </Button>

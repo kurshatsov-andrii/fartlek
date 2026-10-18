@@ -14,7 +14,7 @@ import { useApp } from "@/contexts/AppContext";
 import { supabase } from "@/integrations/supabase/client";
 import { EVENT_CATEGORIES, type EventCategory } from "@/lib/i18n";
 import { categorySeo, formatEventDate } from "@/lib/seo";
-import { isPastDate } from "@/lib/event-date";
+import { isCompletedDate } from "@/lib/event-date";
 import { canShowRegisterButton } from "@/lib/registration-status";
 import { StartActions } from "@/components/StartActions";
 import { MONTH_NAMES_UK, type SportType } from "@/lib/parseStart";
@@ -189,11 +189,12 @@ const CategoryPage = () => {
   }, [items, q, month, city, organizer, distanceBucket, paid]);
 
   const todayStr = new Date().toISOString().slice(0, 10);
+  // Owner rule: a start counts as finished from the day before its date.
   const upcomingAll = filtered
-    .filter((i) => !i.date || i.date >= todayStr)
+    .filter((i) => !i.date || !isCompletedDate(i.date, todayStr))
     .sort((a, b) => (a.date || "").localeCompare(b.date || ""));
   const completedAll = filtered
-    .filter((i) => i.date && i.date < todayStr)
+    .filter((i) => !!i.date && isCompletedDate(i.date, todayStr))
     .sort((a, b) => (b.date || "").localeCompare(a.date || ""));
   const upcoming = upcomingAll.slice(0, visibleCount);
   const completed = completedAll.slice(0, completedCount);
@@ -243,7 +244,7 @@ const CategoryPage = () => {
       };
 
   const renderCard = (i: CatItem) => {
-    const past = !!i.date && isPastDate(i.date);
+    const finished = !!i.date && isCompletedDate(i.date);
     return (
       <article key={`${i.kind}-${i.id}`} className="group flex flex-col overflow-hidden rounded-2xl bg-card shadow-card transition-bounce hover:-translate-y-2 hover:shadow-elevated">
         <Link to={i.url} className="relative aspect-video overflow-hidden bg-muted block">
@@ -290,7 +291,7 @@ const CategoryPage = () => {
                   {T.results} <ExternalLink className="h-3.5 w-3.5 ml-1" />
                 </a>
               </Button>
-            ) : past ? (
+            ) : finished ? (
               <Button asChild variant="secondary" className="flex-1"><Link to={i.url}>{T.details}</Link></Button>
             ) : i.kind === "start" && i.registerUrl ? (
               <Button asChild className="flex-1">

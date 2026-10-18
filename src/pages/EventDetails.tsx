@@ -27,7 +27,7 @@ import { toast } from "sonner";
 import { startAutomatedPaymentCheckout } from "@/lib/paymentCheckout";
 import { buildEventSeo } from "@/lib/seo";
 import { linkifyText } from "@/lib/linkify";
-import { isPastDate } from "@/lib/event-date";
+import { isCompletedDate } from "@/lib/event-date";
 import { StartActions } from "@/components/StartActions";
 import { PromoCodeInput, PromoPreview } from "@/components/PromoCodeInput";
 import { EventChat } from "@/components/EventChat";
@@ -455,7 +455,7 @@ const EventDetails = () => {
                   {linkifyText(event.description)}
                 </div>
               )}
-              {event.status !== "completed" && !isPastDate(event.event_date) && <SiSPartnerBanner />}
+              {event.status !== "completed" && !isCompletedDate(event.event_date) && <SiSPartnerBanner />}
               <div className="flex flex-wrap gap-2">
                 {event.regulations_pdf_url && (
                   <Button
@@ -538,7 +538,7 @@ const EventDetails = () => {
                     <p className="text-sm text-muted-foreground">{t.events.resultsNone}</p>
                   )}
                 </div>
-              ) : event.registration_opens_on && event.registration_opens_on > kyivToday() && !isPastDate(event.event_date) ? (
+              ) : event.registration_opens_on && event.registration_opens_on > kyivToday() && !isCompletedDate(event.event_date) ? (
                 <div className="sticky top-24 rounded-2xl border border-border bg-card p-6 space-y-3">
                   <h3 className="font-display text-xl font-bold text-foreground">
                     {lang === "uk" ? "Реєстрація очікується" : "Registration expected"}
@@ -548,7 +548,7 @@ const EventDetails = () => {
                     {calendarDate(event.registration_opens_on, lang === "uk" ? "uk-UA" : "en-US")}
                   </p>
                 </div>
-              ) : event.registration_closed || isPastDate(event.event_date) ? (
+              ) : event.registration_closed || isCompletedDate(event.event_date) ? (
                 <div className="sticky top-24 rounded-2xl border border-border bg-card p-6 space-y-3">
                   <h3 className="font-display text-xl font-bold text-foreground">
                     {t.events.registrationClosedTitle}

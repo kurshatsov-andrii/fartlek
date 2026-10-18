@@ -1,22 +1,13 @@
-import { describe, expect, it } from "vitest";
-import { isPastDate } from "./event-date";
+import { describe, it, expect } from "vitest";
+import { isCompletedDate } from "./event-date";
 
-describe("isPastDate", () => {
-  it("hides registration for a race that already ran", () => {
-    expect(isPastDate("2026-10-11", "2026-10-15")).toBe(true);
-  });
-
-  it("keeps registration open on race day", () => {
-    expect(isPastDate("2026-10-15", "2026-10-15")).toBe(false);
-  });
-
-  it("keeps registration open for a future race", () => {
-    expect(isPastDate("2026-11-21", "2026-10-15")).toBe(false);
-  });
-
-  it("treats a missing date as not past", () => {
-    expect(isPastDate(null, "2026-10-15")).toBe(false);
-    expect(isPastDate(undefined, "2026-10-15")).toBe(false);
-    expect(isPastDate("", "2026-10-15")).toBe(false);
-  });
+// Owner rule: a start counts as finished from the day before its date.
+describe("isCompletedDate", () => {
+  const today = "2027-01-10";
+  it("start day counts as finished", () => expect(isCompletedDate("2027-01-10", today)).toBe(true));
+  it("day before the start counts as finished", () => expect(isCompletedDate("2027-01-11", today)).toBe(true));
+  it("two days before the start is still upcoming", () => expect(isCompletedDate("2027-01-12", today)).toBe(false));
+  it("past dates count as finished", () => expect(isCompletedDate("2027-01-01", today)).toBe(true));
+  it("cutoff crosses month boundary", () => expect(isCompletedDate("2027-02-01", "2027-01-31")).toBe(true));
+  it("missing date is never finished", () => expect(isCompletedDate(null, today)).toBe(false));
 });
