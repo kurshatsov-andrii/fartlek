@@ -59,6 +59,7 @@ interface CatItem {
 }
 
 const PAGE_SIZE = 9;
+const todayStr = new Date().toISOString().slice(0, 10);
 
 const CategoryPage = () => {
   const { category } = useParams<{ category: string }>();
