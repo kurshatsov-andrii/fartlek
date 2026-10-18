@@ -540,7 +540,7 @@ const CalendarPage = ({ scope = "ukraine" }: { scope?: CalendarScope }) => {
           )}
         </div>
 
-        <section className="mt-12">
+        {scope !== "vinnytsia" && <section className="mt-12">
           <h2 className="font-display text-2xl sm:text-3xl font-bold tracking-tight">
             {lang === "uk" ? "Календар забігів Харкова 2027" : "Kharkiv Running Calendar 2027"}
           </h2>
@@ -584,7 +584,7 @@ const CalendarPage = ({ scope = "ukraine" }: { scope?: CalendarScope }) => {
               </div>
             </DialogContent>
           </Dialog>
-        </section>
+        </section>}
       </main>
       <Footer />
     </div>
