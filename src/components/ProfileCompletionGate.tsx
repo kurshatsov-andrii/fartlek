@@ -13,6 +13,12 @@ const ALLOWED_PATHS = [
   "/unsubscribe",
   "/payment/success",
   "/payment/fail",
+  "/saved",
+  "/compare",
+  "/starts",
+  "/calendar",
+  "/category",
+  "/map",
 ];
 
 const PHONE_RE = /^\+38 \(\d{3}\) \d{3}-\d{2}-\d{2}$/;

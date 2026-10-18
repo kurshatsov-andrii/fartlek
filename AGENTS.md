@@ -3,6 +3,7 @@
 - Persist saved start references and reminder opt-ins in user-owned rows with RLS; resolve current public data rather than storing snapshots so date edits remain current.
 - Share start planner controls across listings and details; keep comparison selection session-local, and derive in-app reminders from Kyiv dates without polling jobs.
 - Export unknown start times as all-day calendar entries and only add alarms on explicit reminder opt-in so calendar exports never invent start times.
+- Let signed-in users browse start discovery and planner pages without completing registration profile fields; those fields remain required by the existing registration flow.
 
 - Enrich calendar locations in the shared calendar-location formatter using linked published start descriptions; keep stored records unchanged so edits and synchronization remain independent of display.
 

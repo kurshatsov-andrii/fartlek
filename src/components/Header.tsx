@@ -49,7 +49,7 @@ export const Header = () => {
           </span>
         </Link>
 
-        <nav className="hidden lg:flex items-center gap-8">
+        <nav className="hidden lg:flex min-w-0 flex-1 items-center gap-4 overflow-x-auto whitespace-nowrap">
           <a href="/#events" onClick={handleEventsClick} className="text-sm font-medium text-muted-foreground hover:text-foreground transition-base cursor-pointer">{t.nav.events}</a>
           <Link to="/starts" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-base">Старти</Link>
           <Link to="/calendar" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-base">Календар</Link>
@@ -73,14 +73,14 @@ export const Header = () => {
           <Link to="/contacts" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-base">{t.nav.contacts}</Link>
         </nav>
 
-        <nav className="flex lg:hidden min-w-0 flex-1 items-center justify-center gap-3 sm:gap-6">
+        <nav className="flex lg:hidden min-w-0 flex-1 items-center justify-center gap-2 sm:gap-6">
           <Link to="/starts" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-base">Старти</Link>
           <Link to="/calendar" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-base">Календар</Link>
           <Link to="/map" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-base">Мапа</Link>
         </nav>
 
         <div className="flex shrink-0 items-center gap-1.5">
-          <Button asChild variant="ghost" size="icon" aria-label="Збережені старти" title="Збережені старти" className="relative h-9 w-9">
+          <Button asChild variant="ghost" size="icon" aria-label="Збережені старти" title="Збережені старти" className={`relative h-9 w-9 ${planner.comparison.length > 0 ? 'hidden sm:inline-flex' : ''}`}>
             <Link to="/saved">{dueCount > 0 ? <Bell className="h-4 w-4 text-primary" /> : <Heart className="h-4 w-4" />}{dueCount > 0 && <span className="absolute -right-1 -top-1 rounded-full bg-primary px-1 text-[10px] text-primary-foreground">{dueCount}</span>}</Link>
           </Button>
           {planner.comparison.length > 0 && <Button asChild variant="outline" size="sm" aria-label="Порівняння стартів"><Link to="/compare"><GitCompareArrows className="h-4 w-4" />{planner.comparison.length}</Link></Button>}
