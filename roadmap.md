@@ -28,6 +28,7 @@
 - [x] Mail on Mirohost preserved (info@fartlek.com.ua works)
 - [x] 301 redirects for old pages published on fartlek.com.ua
 - [x] sitemap.xml and robots.txt rewritten to fartlek.com.ua (source)
+- [x] Owner published saved starts, likes, reminders and registration statuses to fartlek.com.ua (Oct 18 2026)
 
 - [x] blog-images public download — accepted by owner as intended
 - [x] Registration links removed from all finished events/starts (cards + detail pages)
