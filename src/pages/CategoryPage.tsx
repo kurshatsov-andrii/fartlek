@@ -238,7 +238,7 @@ const CategoryPage = () => {
         allMonths: "All months", allCities: "All cities", allOrganizers: "All organizers",
         anyDistance: "Any distance", allPaid: "Paid and free", freeOnly: "Free", paidOnly: "Paid",
         empty: "Nothing matches the selected filters.", completed: "Completed",
-        more: "Load more", details: "Details", register: "Sign up", free: t.events.free,
+        more: "Load more", details: "Details", register: "Sign up", results: "Results", free: t.events.free,
       };
 
   const renderCard = (i: CatItem) => {
