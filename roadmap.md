@@ -1,5 +1,8 @@
 # Roadmap
 
+## Category page recovery
+- [x] Fix category rendering after completed-date changes; all 14 categories and marathon search verified with real records, no browser errors; 19 date/registration tests passed
+
 ## Vinnytsia calendar 2027
 - [x] Add /calendar/vinnytsia using existing published starts, city filtering, metadata and sitemap
 - [x] Verify VINNYTSIA RUN on May 23 and September 5, 2027 in the page and initial HTML (13 tests; desktop/mobile navigation checked)
