@@ -1,4 +1,5 @@
-import { Heart, GitCompareArrows } from "lucide-react";
+import { Bookmark, GitCompareArrows } from "lucide-react";
+import { StartLikeButton } from "@/components/StartLikeButton";
 import { Link } from "@/lib/router-compat";
 import { Button } from "@/components/ui/button";
 import {
@@ -45,6 +46,7 @@ export function StartActions({
         : "Compare start";
   return (
     <div className="flex items-center gap-1 py-2">
+      <StartLikeButton source={source} id={id} />
       <Tooltip>
         <TooltipTrigger asChild>
           {user ? (
@@ -60,7 +62,7 @@ export function StartActions({
               }
               onClick={() => planner.toggleSave(ref)}
             >
-              <Heart
+              <Bookmark
                 className={
                   saved ? "h-4 w-4 fill-current text-primary" : "h-4 w-4"
                 }
@@ -76,7 +78,7 @@ export function StartActions({
               }
             >
               <Link to="/auth">
-                <Heart className="h-4 w-4" />
+                <Bookmark className="h-4 w-4" />
               </Link>
             </Button>
           )}
