@@ -35,6 +35,7 @@ interface StartRow {
 }
 
 const PAGE_SIZE = 6;
+const todayStr = new Date().toISOString().slice(0, 10);
 const DISTANCE_BUCKETS: { label: string; match: (d: number) => boolean }[] = [
   { label: "до 5 км", match: (d) => d > 0 && d <= 5 },
   { label: "10 км", match: (d) => d > 5 && d <= 12 },
