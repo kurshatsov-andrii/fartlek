@@ -4,7 +4,7 @@ import { PageViews } from "@/components/PageViews";
 import { EventPoster } from "@/components/EventPoster";
 import { TELEGRAM_CHANNEL_URL, TELEGRAM_CHAT_URL } from "@/components/TelegramCommunity";
 import { Link } from "@/lib/router-compat";
-import { Loader2, ExternalLink, Calendar as CalendarIcon, Search, X, Filter, MapPin } from "lucide-react";
+import { Loader2, ExternalLink, Calendar as CalendarIcon, Search, X, Filter, MapPin, FileText } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { SEO } from "@/components/SEO";
