@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { deriveRegistrationState as d } from "./registration-status";
+import { deriveRegistrationState as d, canShowRegisterButton as show } from "./registration-status";
 const today = "2027-01-10";
 describe("registration state", () => {
   it("cancelled wins", () => expect(d({ cancelled: true, defaultOpen: true, date: "2027-05-01", today })).toBe("cancelled"));
