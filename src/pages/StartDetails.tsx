@@ -102,7 +102,7 @@ const StartDetails = () => {
 
         {row.image_url && (
           <div className="aspect-video rounded-lg overflow-hidden mb-6 bg-muted">
-            <EventPoster src={row.image_url} alt={row.title} loading="eager" />
+            <EventPoster src={row.image_url} alt={row.title} loading="eager" fit="cover" />
           </div>
         )}
 
