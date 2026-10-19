@@ -26,7 +26,8 @@ export function EventPoster({ src, alt, className, loading = "lazy", fit = "cont
         loading={loading}
         className={cn(
           "relative block h-full w-full",
-          fit === "cover" ? "object-cover" : "object-contain",
+          // Phones keep the edge-to-edge fill; tablets and desktops show the whole poster.
+          fit === "cover" ? "object-cover md:object-contain" : "object-contain",
         )}
       />
     </div>
