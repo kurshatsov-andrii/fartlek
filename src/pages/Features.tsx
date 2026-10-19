@@ -6,7 +6,8 @@ import {
   CalendarPlus, FileSpreadsheet, CreditCard, Globe, Clock, MapPin, Sparkles,
   Megaphone, Building2, CheckCircle2, ArrowDown, Truck, Repeat, Send, XCircle,
   History, Lock, Activity, Settings, KeyRound, Upload, Map, Award, Wallet,
-  Shirt, Hash, ClipboardCheck, ShieldCheck, Filter, FileDown, RefreshCw
+  Shirt, Hash, ClipboardCheck, ShieldCheck, Filter, FileDown, RefreshCw,
+  Bookmark, Heart, GitCompareArrows
 
 } from "lucide-react";
 import { Header } from "@/components/Header";
@@ -47,14 +48,25 @@ const Features = () => {
   const seo = isUk
     ? {
         title: "Можливості Fartlek Events — для учасників та організаторів",
-        description: "Детальний опис можливостей платформи Fartlek Events: реєстрація на забіги, QR-квитки, чат події, аналітика, промокоди, email-розсилки.",
+        description: "Збереження та порівняння стартів, нагадування, лайки, календарі забігів 2027, реєстрація, QR-квитки й інструменти організаторів Fartlek Events.",
       }
     : {
         title: "Fartlek Events Features — for participants and organizers",
-        description: "Full feature list of Fartlek Events: race registration, QR tickets, event chat, analytics, promo codes, email campaigns.",
+        description: "Save and compare races, opt-in reminders, likes, 2027 race calendars, registration, QR tickets and organizer tools on Fartlek Events.",
       };
 
   const participantGroups: Group[] = isUk ? [
+    {
+      title: "Планування стартів 🆕",
+      items: [
+        { icon: Bookmark, title: "Збережені старти", desc: "Особистий список обраних подій, анонсів і записів календаря після входу в акаунт. Збереження закладкою не є реєстрацією на забіг; у списку відображається актуальна інформація про старт." },
+        { icon: GitCompareArrows, title: "Порівняння стартів", desc: "Порівнюйте дати, місця, дистанції, вартість і стан реєстрації в одній таблиці. Якщо організатор ще не вказав певні дані, вони залишаються невідомими." },
+        { icon: Bell, title: "Нагадування за згодою", desc: "Для збережених стартів окремо обирайте нагадування про наближення дати, відкриття реєстрації та зміну дати. Сповіщення з'являються на сайті, а не електронною поштою; прочитані можна позначити як зрозумілі." },
+        { icon: Heart, title: "Лайки для всіх", desc: "Сердечка доступні навіть без реєстрації. Вподобайку можна поставити або зняти, а спільна кількість зберігається й відображається всім. Лайк і збереження в особистий список — різні дії." },
+        { icon: ClipboardCheck, title: "Стан реєстрації та джерело", desc: "Відкрита, очікується, закрита або скасована — із посиланням на джерело та датою перевірки, якщо вони додані. Для зовнішнього старту без підтвердження показуємо «Не зазначено», а не обіцяємо відкриту реєстрацію." },
+        { icon: MapPin, title: "Міські календарі 2027", desc: "Окремі календарі Харкова та Вінниці з опублікованими стартами сезону 2027. Місто, область і місце проведення показуються за наявною інформацією; оновлення старту відображаються і в міському календарі." },
+      ],
+    },
     {
       title: "Пошук та реєстрація",
       items: [
@@ -65,8 +77,8 @@ const Features = () => {
         { icon: Calendar, title: "Календар майбутніх подій", desc: "Окрема сторінка з усіма майбутніми стартами України — і платформними, і доданими адміном чи організаторами. Фільтри за категорією, місяцем, пошук та сортування." },
         { icon: Building2, title: "Каталог клубів", desc: "Усі бігові клуби України на одній сторінці — пошук за містом, видом активності, перегляд профілю клубу зі списком подій та контактами." },
         { icon: Megaphone, title: "Каталог організаторів 🆕", desc: "Окрема сторінка з усіма організаторами подій — логотип, місто, опис, соцмережі та активні події. Зручно знайти перевіреного організатора або зв'язатися напряму." },
-        { icon: Send, title: "Старти з Telegram-каналу 🆕", desc: "Сторінка «Старти» збирає анонси забігів із нашого Telegram-каналу: автоматична синхронізація щодня, фільтри за місяцем, містом, організатором та видом спорту, кнопка «Зареєструватися». Нові старти одразу потрапляють і в Календар." },
-        { icon: Filter, title: "Розширені фільтри подій 🆕", desc: "На головній сторінці майбутні й завершені події фільтруються за містом, місяцем, форматом та типом (платні/безкоштовні) — плюс живий пошук за назвою, місцем чи організатором." },
+        { icon: Send, title: "Старти з Telegram-каналу 🆕", desc: "Сторінка «Старти» збирає анонси забігів із нашого Telegram-каналу. Пошук за категорією, місяцем, містом, організатором і дистанцією; нові опубліковані старти з'являються і в календарі. Посилання на результати замінює кнопку реєстрації, якщо результати додані." },
+        { icon: Filter, title: "Спільні та розширені фільтри 🆕", desc: "На головній одні фільтри для подій платформи й інших анонсів: пошук, місто, місяць, рік, дистанція та платність. На сторінках «Старти» й категорій працюють узгоджені фільтри; на мапі також можна обрати рік." },
         { icon: Map, title: "Мапа спортивних подій України 🆕", desc: "Окрема сторінка з інтерактивною мапою: міста з кількістю подій, клік на місто — і праворуч з'являється список стартів із переходом на реєстрацію. Об'єднує події платформи, Старти з Telegram та Календар." },
 
       ],
@@ -77,7 +89,7 @@ const Features = () => {
         { icon: QrCode, title: "QR-квиток", desc: "Електронний квиток з унікальним QR-кодом — показуєте на стартовому містечку." },
         { icon: Ticket, title: "Іменний BIB-номер 🆕", desc: "У квитку відображається персональна BIB-картка з вашим номером, ім'ям, дистанцією та логотипом події — показуйте на старті або зберігайте як сувенір." },
         { icon: MapPin, title: "GPX-трек дистанції 🆕", desc: "Організатор додає GPX-файл маршруту — ви бачите трек на інтерактивній карті у деталях події та можете завантажити його для свого годинника чи Strava." },
-        { icon: CalendarPlus, title: "Додати в календар", desc: "Один клік — і подія в Google Calendar, Outlook або Apple Calendar з правильним часом." },
+        { icon: CalendarPlus, title: "Додати в календар", desc: "Додавайте старт у власний календар або завантажуйте календарний файл зі збережених стартів. Якщо час невідомий, запис буде на весь день; нагадування додається лише за вашим вибором." },
         { icon: Trophy, title: "Результати забігу", desc: "Після фінішу організатор завантажує результати — ви бачите свій час і місце." },
         { icon: Activity, title: "Автозалік результату через Strava 🆕", desc: "Для віртуальних гонок: підключіть Strava у профілі — ми самі знайдемо вашу активність у вікні дат із потрібною дистанцією, зарахуємо час і поставимо позначку «підтверджено». У квитку буде пряме посилання на активність." },
         { icon: ImageIcon, title: "Світлини з події", desc: "Організатор додає посилання на фотоальбом — переглядайте світлини прямо з картки завершеної події." },
@@ -122,6 +134,17 @@ const Features = () => {
     },
   ] : [
     {
+      title: "Race planning 🆕",
+      items: [
+        { icon: Bookmark, title: "Saved races", desc: "A private list of selected platform events, announcements and calendar entries after signing in. A bookmark is not a race registration; saved entries show current race information." },
+        { icon: GitCompareArrows, title: "Compare races", desc: "Compare dates, locations, distances, prices and registration status in one table. Information the organizer has not provided remains unknown." },
+        { icon: Bell, title: "Opt-in reminders", desc: "Choose reminders separately for an approaching saved race, registration opening and date changes. Notifications appear on the site, not by email; you can acknowledge those you have read." },
+        { icon: Heart, title: "Likes for everyone", desc: "Like or unlike races even without an account. The shared count is saved and visible to everyone. A heart and a bookmark in your private list are separate actions." },
+        { icon: ClipboardCheck, title: "Registration status and source", desc: "Open, expected, closed or cancelled — with a source link and verification date when provided. External races without a confirmed status show «Not specified», rather than an unsupported promise of open registration." },
+        { icon: MapPin, title: "2027 city calendars", desc: "Dedicated Kharkiv and Vinnytsia calendars with published races for the 2027 season. City, region and venue appear when available; race updates are also reflected in the city calendar." },
+      ],
+    },
+    {
       title: "Discover & register",
       items: [
         { icon: Calendar, title: "Race catalog", desc: "All upcoming runs in Ukraine in one place: running, half marathon, marathon, ultra, trail, OCR, online." },
@@ -131,8 +154,8 @@ const Features = () => {
         { icon: Calendar, title: "Upcoming events calendar", desc: "Dedicated page with every upcoming race in Ukraine — both from the platform and added by admins or organizers. Filters by category, month, search and sorting." },
         { icon: Building2, title: "Clubs catalog", desc: "All running clubs in Ukraine on a single page — search by city and activity, view club profile with events and contacts." },
         { icon: Megaphone, title: "Organizers catalog 🆕", desc: "A dedicated page with all event organizers — logo, city, description, social links and active events. Easily find a trusted organizer or contact them directly." },
-        { icon: Send, title: "Starts from our Telegram channel 🆕", desc: "The «Starts» page collects race announcements from our Telegram channel: automatic daily sync, filters by month, city, organizer and sport, plus a «Register» button. New starts also land in the Calendar automatically." },
-        { icon: Filter, title: "Advanced event filters 🆕", desc: "On the home page, upcoming and completed events filter by city, month, format and type (paid/free) — plus live search by name, location or organizer." },
+        { icon: Send, title: "Starts from our Telegram channel 🆕", desc: "The «Starts» page collects race announcements from our Telegram channel. Search by category, month, city, organizer and distance; newly published races also appear in the calendar. A results link replaces registration when results are provided." },
+        { icon: Filter, title: "Shared and advanced filters 🆕", desc: "The home page uses shared filters for platform events and other announcements: search, city, month, year, distance and paid/free. The Starts and category pages use consistent filters; the map also offers a year filter." },
         { icon: Map, title: "Map of sports events in Ukraine 🆕", desc: "A dedicated page with an interactive map: cities with event counts, click a city and a side panel lists its races with links to registration. Combines platform events, Telegram starts and the calendar." },
 
       ],
@@ -143,7 +166,7 @@ const Features = () => {
         { icon: QrCode, title: "QR ticket", desc: "Electronic ticket with a unique QR code — show it at the start." },
         { icon: Ticket, title: "Personalized BIB card 🆕", desc: "Your ticket shows a personal BIB card with your number, name, distance and event logo — display it at the start or keep as a memento." },
         { icon: MapPin, title: "GPX route track 🆕", desc: "Organizers upload a GPX file of the course — view the route on an interactive map in the event details and download it for your watch or Strava." },
-        { icon: CalendarPlus, title: "Add to calendar", desc: "One click to add the event to Google Calendar, Outlook or Apple Calendar." },
+        { icon: CalendarPlus, title: "Add to calendar", desc: "Add a race to your own calendar or download a calendar file from saved races. Unknown start times become all-day entries; a reminder is included only when you opt in." },
         { icon: Trophy, title: "Race results", desc: "After the finish, organizers upload results — see your time and position." },
         { icon: Activity, title: "Auto-verify results via Strava 🆕", desc: "For virtual races: connect Strava in your profile — we automatically pick the matching activity within the date window and distance tolerance, count your time and mark it as «verified». Your ticket gets a direct link to the activity." },
         { icon: ImageIcon, title: "Event photos", desc: "Organizers attach a photo album link — open it right from the completed event card." },
