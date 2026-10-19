@@ -9,8 +9,8 @@ export const Route = createFileRoute("/features")({
   loader: () => getSeoOverride({ data: { path: PATH } }),
   head: ({ loaderData }) =>
     pageHead({
-      title: 'Можливості платформи для організаторів | Fartlek Events',
-      description: 'Онлайн-реєстрація, QR-стартові пакети, промокоди, хронометраж, розсилки та аналітика для організаторів спортивних подій.',
+      title: 'Можливості Fartlek Events — для учасників та організаторів',
+      description: 'Збереження та порівняння стартів, нагадування, лайки, календарі забігів 2027, реєстрація, QR-квитки й інструменти організаторів Fartlek Events.',
       path: PATH,
       override: loaderData ?? null,
     }),
