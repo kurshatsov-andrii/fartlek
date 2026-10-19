@@ -5,10 +5,12 @@ interface EventPosterProps {
   alt: string;
   className?: string;
   loading?: "lazy" | "eager";
+  /** "contain" keeps the whole poster visible with a blurred backdrop; "cover" fills the frame edge to edge. */
+  fit?: "contain" | "cover";
 }
 
-/** Keep the original poster readable; only its decorative backdrop is cropped. */
-export function EventPoster({ src, alt, className, loading = "lazy" }: EventPosterProps) {
+/** "contain" keeps the original poster readable; "cover" fills the frame with no empty bars. */
+export function EventPoster({ src, alt, className, loading = "lazy", fit = "contain" }: EventPosterProps) {
   return (
     <div className={cn("relative isolate h-full w-full overflow-hidden bg-muted", className)}>
       <img
@@ -22,7 +24,10 @@ export function EventPoster({ src, alt, className, loading = "lazy" }: EventPost
         src={src}
         alt={alt}
         loading={loading}
-        className="relative block h-full w-full object-contain"
+        className={cn(
+          "relative block h-full w-full",
+          fit === "cover" ? "object-cover" : "object-contain",
+        )}
       />
     </div>
   );

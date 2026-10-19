@@ -392,7 +392,7 @@ const EventDetails = () => {
       <main className="flex-1">
         {event.image_url && (
           <div className="relative h-[40vh] sm:h-[50vh] overflow-hidden">
-            <EventPoster src={event.image_url} alt={event.title} loading="eager" />
+            <EventPoster src={event.image_url} alt={event.title} loading="eager" fit="cover" />
           </div>
         )}
         <div className="container max-w-5xl py-10">
