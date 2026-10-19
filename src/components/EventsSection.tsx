@@ -58,7 +58,12 @@ export const EventsSection = () => {
       .select("id, slug, title, description, organizer_name, event_date, event_time, location, image_url, is_paid, category, format, registration_closed, distances(distance_km, price, is_active)")
       .eq("status", "published")
       .order("event_date", { ascending: true })
-      .then(({ data }) => { setEvents((data as any) ?? []); setLoading(false); });
+      .then(({ data }) => {
+        // Owner request: Bilka Run goes above the same-day Bigotrail races.
+        const pinned = (e: { slug?: string | null }) => (e.slug === "bilka-run-harkiv-2026" ? 0 : 1);
+        const sorted = [...((data as any[]) ?? [])].sort((a, b) => a.event_date.localeCompare(b.event_date) || pinned(a) - pinned(b));
+        setEvents(sorted as any); setLoading(false);
+      });
   }, []);
 
   const getEventCity = (e: EventCard) => eventCity(e.location);
