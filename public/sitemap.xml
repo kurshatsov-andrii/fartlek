@@ -203,6 +203,12 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://fartlek.com.ua/blog/fartlek-run-4</loc>
+    <lastmod>2026-10-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://fartlek.com.ua/events/bigotreyl-rivne-rivne-2026</loc>
     <lastmod>2026-10-03</lastmod>
     <changefreq>weekly</changefreq>
@@ -383,14 +389,14 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fartlek.com.ua/starts/west-carpathian-marathon-2026-10-18</loc>
+    <loc>https://fartlek.com.ua/starts/international-dnipro-swim-marathon</loc>
     <lastmod>2026-10-15</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fartlek.com.ua/starts/international-dnipro-swim-marathon</loc>
-    <lastmod>2026-10-15</lastmod>
+    <loc>https://fartlek.com.ua/starts/west-carpathian-marathon-2026-10-18</loc>
+    <lastmod>2026-10-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
