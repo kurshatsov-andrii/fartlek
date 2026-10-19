@@ -1,7 +1,7 @@
 # Roadmap
 
 ## Features page refresh
-- [ ] Describe saved starts, comparisons, opt-in reminders, guest likes, registration information and city calendars in Ukrainian and English; verify the page
+- [x] Describe saved starts, comparisons, opt-in reminders, guest likes, registration information and city calendars in Ukrainian and English; Ukrainian page and both participant/organizer tabs verified without browser errors (site currently Ukrainian-only)
 
 ## Category page recovery
 - [x] Fix category rendering after completed-date changes; all 14 categories and marathon search verified with real records, no browser errors; 19 date/registration tests passed
