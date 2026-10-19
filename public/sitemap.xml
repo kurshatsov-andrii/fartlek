@@ -245,6 +245,12 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://fartlek.com.ua/events/bilka-run-harkiv-2026</loc>
+    <lastmod>2026-10-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://fartlek.com.ua/events/bigotreyl-hmel-nyc-kyy-hmel-nyc-kyy-2026</loc>
     <lastmod>2026-10-03</lastmod>
     <changefreq>weekly</changefreq>
