@@ -449,7 +449,7 @@ const Features = () => {
                     {isUk ? "Оплата участі — як це працює" : "Payments — how it works"}
                   </h3>
                 </div>
-                <p className="text-muted-foreground mb-8 max-w-3xl">
+                <p className="text-muted-foreground mb-8">
                   {isUk
                     ? "Fartlek Events не бере комісію з оплат — гроші учасників надходять напряму на ваш рахунок. Підтримуємо три сценарії: автоматичне підтвердження через WayForPay, автоматичне через LiqPay, або ручну перевірку квитанції за будь-яким посиланням."
                     : "Fartlek Events takes no payment commission — participants pay you directly. Three flows are supported: WayForPay auto-confirmation, LiqPay auto-confirmation, or manual receipt approval for any other payment link."}

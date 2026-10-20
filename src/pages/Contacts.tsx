@@ -24,7 +24,7 @@ const Contacts = () => {
         <h1 className="font-display text-4xl sm:text-5xl font-bold tracking-tight">
           {lang === "uk" ? "Контакти" : "Contacts"}
         </h1>
-        <p className="mt-3 text-muted-foreground max-w-2xl">{seo.description}</p>
+        <p className="mt-3 text-muted-foreground">{seo.description}</p>
 
         <div className="mt-10 grid gap-8 lg:grid-cols-2 lg:items-center">
           <div className="grid gap-4">

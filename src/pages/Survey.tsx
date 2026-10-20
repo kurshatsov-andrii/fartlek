@@ -189,7 +189,7 @@ const Survey = () => {
             <h1 className="font-display text-3xl md:text-5xl font-bold tracking-tight mb-4">
               Зробімо платформу кращою — разом
             </h1>
-            <p className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-base md:text-lg text-muted-foreground">
               Наша мета — створити зручну, функціональну і корисну платформу для учасників та організаторів.
               Ваші відповіді анонімні (за бажанням можна залишити email) і допомагають нам розвиватися.
             </p>

@@ -123,7 +123,7 @@ export const CompletedEventsSection = () => {
   return (
     <section id="completed-events" className="relative py-6 sm:py-8 bg-muted/30">
       <div className="container">
-        <div className="max-w-2xl mb-8">
+        <div className="mb-8">
           <div className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">
             {lang === "uk" ? "Архів" : "Archive"}
           </div>

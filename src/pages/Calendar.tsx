@@ -548,7 +548,7 @@ const CalendarPage = ({ scope = "ukraine" }: { scope?: CalendarScope }) => {
           <h2 className="font-display text-2xl sm:text-3xl font-bold tracking-tight">
             {lang === "uk" ? "Календар забігів Харкова 2027" : "Kharkiv Running Calendar 2027"}
           </h2>
-          <p className="mt-3 text-muted-foreground max-w-2xl">
+          <p className="mt-3 text-muted-foreground">
             {lang === "uk"
               ? "Натисніть на зображення, щоб розгорнути календар на весь екран."
               : "Click the image to expand the calendar to full screen."}

@@ -154,7 +154,7 @@ const ForOrganizers = () => {
             <h1 className="mt-5 font-display text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight max-w-3xl leading-tight">
               {t.h1a}<br className="hidden sm:block" /> <span className="text-gradient">{t.h1b}</span>
             </h1>
-            <p className="mt-5 max-w-2xl text-lg text-muted-foreground">{t.sub}</p>
+            <p className="mt-5 text-lg text-muted-foreground">{t.sub}</p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Button asChild size="lg" className="text-base">
                 <Link to={ctaTo}>
@@ -183,7 +183,7 @@ const ForOrganizers = () => {
         {/* Benefits */}
         <section className="container py-16 sm:py-20">
           <h2 className="font-display text-3xl sm:text-4xl font-bold tracking-tight">{t.benefitsTitle}</h2>
-          <p className="mt-2 text-muted-foreground max-w-2xl">{t.benefitsSub}</p>
+          <p className="mt-2 text-muted-foreground">{t.benefitsSub}</p>
           <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {t.benefits.map((b) => (
               <div key={b.title} className="rounded-2xl border border-border bg-card p-6 transition-bounce hover:-translate-y-1 hover:shadow-elevated">
@@ -201,7 +201,7 @@ const ForOrganizers = () => {
         <section className="bg-secondary/50 border-y border-border/60 py-16 sm:py-20">
           <div className="container">
             <h2 className="font-display text-3xl sm:text-4xl font-bold tracking-tight">{t.howTitle}</h2>
-            <p className="mt-2 text-muted-foreground max-w-2xl">{t.howSub}</p>
+            <p className="mt-2 text-muted-foreground">{t.howSub}</p>
             <ol className="mt-10 grid gap-4 md:grid-cols-5">
               {t.steps.map((s, i) => (
                 <li key={s.title} className="relative rounded-2xl border border-border bg-card p-5">
@@ -290,7 +290,7 @@ const ForOrganizers = () => {
             <div className="glow-soft pointer-events-none absolute inset-0" aria-hidden />
             <div className="relative">
               <h2 className="font-display text-3xl sm:text-4xl font-bold tracking-tight">{t.finalTitle}</h2>
-              <p className="mx-auto mt-3 max-w-xl text-muted-foreground">{t.finalSub}</p>
+              <p className="mx-auto mt-3 text-muted-foreground">{t.finalSub}</p>
               <div className="mt-7 flex flex-wrap justify-center gap-3">
                 <Button asChild size="lg" className="text-base">
                   <Link to={ctaTo}>{t.ctaPrimary} <ArrowRight className="h-4 w-4" /></Link>
