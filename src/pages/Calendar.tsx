@@ -241,15 +241,6 @@ const CalendarPage = ({ scope = "ukraine" }: { scope?: CalendarScope }) => {
           </div>
         </div>
 
-        <nav aria-label={lang === "uk" ? "Календарі забігів" : "Race calendars"} className="mb-6 flex flex-wrap gap-3">
-          <Button asChild size="sm" variant="outline"><Link to="/calendar?year=2027">{lang === "uk" ? "Забіги України 2027" : "Ukraine races 2027"}</Link></Button>
-          <Button asChild size="sm" variant="outline"><Link to="/calendar/kharkiv">{lang === "uk" ? "Забіги Харкова 2027" : "Kharkiv races 2027"}</Link></Button>
-          <Button asChild size="sm" variant="outline"><Link to="/calendar/vinnytsia">{lang === "uk" ? "Забіги Вінниці 2027" : "Vinnytsia races 2027"}</Link></Button>
-          <Button asChild size="sm" variant="outline"><Link to="/calendar/uzhhorod">{lang === "uk" ? "Забіги Ужгорода 2027" : "Uzhhorod races 2027"}</Link></Button>
-        </nav>
-        <div className="mb-6">
-          <SiSPartnerBanner />
-        </div>
 
         <div className="flex justify-end mb-4">
           {canManage ? (
