@@ -241,15 +241,6 @@ const CalendarPage = ({ scope = "ukraine" }: { scope?: CalendarScope }) => {
           </div>
         </div>
 
-        <nav aria-label={lang === "uk" ? "Календарі забігів" : "Race calendars"} className="mb-6 flex flex-wrap gap-3">
-          <Button asChild size="sm" variant="outline"><Link to="/calendar?year=2027">{lang === "uk" ? "Забіги України 2027" : "Ukraine races 2027"}</Link></Button>
-          <Button asChild size="sm" variant="outline"><Link to="/calendar/kharkiv">{lang === "uk" ? "Забіги Харкова 2027" : "Kharkiv races 2027"}</Link></Button>
-          <Button asChild size="sm" variant="outline"><Link to="/calendar/vinnytsia">{lang === "uk" ? "Забіги Вінниці 2027" : "Vinnytsia races 2027"}</Link></Button>
-          <Button asChild size="sm" variant="outline"><Link to="/calendar/uzhhorod">{lang === "uk" ? "Забіги Ужгорода 2027" : "Uzhhorod races 2027"}</Link></Button>
-        </nav>
-        <div className="mb-6">
-          <SiSPartnerBanner />
-        </div>
 
         <div className="flex justify-end mb-4">
           {canManage ? (
@@ -438,6 +429,14 @@ const CalendarPage = ({ scope = "ukraine" }: { scope?: CalendarScope }) => {
           </Select>
         </div>
 
+        <nav aria-label={lang === "uk" ? "Календарі забігів" : "Race calendars"} className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4 mb-6">
+          <Button asChild variant={scope === "ukraine" ? "default" : "outline"} className="w-full justify-center"><Link to="/calendar?year=2027">{lang === "uk" ? "Забіги України 2027" : "Ukraine races 2027"}</Link></Button>
+          <Button asChild variant={scope === "kharkiv" ? "default" : "outline"} className="w-full justify-center"><Link to="/calendar/kharkiv">{lang === "uk" ? "Забіги Харкова 2027" : "Kharkiv races 2027"}</Link></Button>
+          <Button asChild variant={scope === "vinnytsia" ? "default" : "outline"} className="w-full justify-center"><Link to="/calendar/vinnytsia">{lang === "uk" ? "Забіги Вінниці 2027" : "Vinnytsia races 2027"}</Link></Button>
+          <Button asChild variant={scope === "uzhhorod" ? "default" : "outline"} className="w-full justify-center"><Link to="/calendar/uzhhorod">{lang === "uk" ? "Забіги Ужгорода 2027" : "Uzhhorod races 2027"}</Link></Button>
+        </nav>
+
+
 
         <div className="rounded-2xl border border-border bg-card overflow-hidden">
           {loading ? (
@@ -590,7 +589,17 @@ const CalendarPage = ({ scope = "ukraine" }: { scope?: CalendarScope }) => {
             </DialogContent>
           </Dialog>
         </section>}
+
+        <section aria-label={lang === "uk" ? "Партнери" : "Partners"} className="mt-12">
+          <h2 className="font-display text-2xl sm:text-3xl font-bold tracking-tight text-center">
+            {lang === "uk" ? "Партнери" : "Partners"}
+          </h2>
+          <div className="mt-6">
+            <SiSPartnerBanner />
+          </div>
+        </section>
       </main>
+
       <Footer />
     </div>
   );
