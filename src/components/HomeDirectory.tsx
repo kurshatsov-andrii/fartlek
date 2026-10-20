@@ -50,7 +50,7 @@ export const HomeDirectory = () => {
         ))}
       </div>
       {stats.length > 0 && (
-        <dl className="mt-5 grid grid-cols-2 gap-4 sm:grid-cols-5">
+        <dl className="mt-5 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
           {stats.map((x) => (
             <div key={x.l} className="text-center">
               <dt className="font-display text-2xl font-bold text-primary">{x.v ?? 0}</dt>
