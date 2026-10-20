@@ -1,9 +1,7 @@
 import { Link } from "@/lib/router-compat";
-import { ArrowRight } from "lucide-react";
 import { Header } from "@/components/Header";
-import { Hero } from "@/components/Hero";
-import { VideoTutorialSection } from "@/components/VideoTutorialSection";
-import { FeaturesCarousel } from "@/components/FeaturesCarousel";
+import { HomeSearchHero } from "@/components/HomeSearchHero";
+import { HomeDirectory } from "@/components/HomeDirectory";
 import { EventsSection } from "@/components/EventsSection";
 import { CompletedEventsSection } from "@/components/CompletedEventsSection";
 import { SiSPartnerBanner } from "@/components/SiSPartnerBanner";
@@ -11,13 +9,10 @@ import { TelegramCommunity } from "@/components/TelegramCommunity";
 import { Footer } from "@/components/Footer";
 import { SEO } from "@/components/SEO";
 import { useApp } from "@/contexts/AppContext";
-import { useAuth } from "@/hooks/useAuth";
 import { discoverySeo } from "@/lib/discovery-seo";
-import { Button } from "@/components/ui/button";
 
 const Index = () => {
   const { lang } = useApp();
-  const { user } = useAuth();
   const about = lang === "uk"
     ? {
         eyebrow: "Про нас",
@@ -53,38 +48,17 @@ const Index = () => {
       <SEO title={seo.title} description={seo.description} canonical="/" jsonLd={jsonLd} />
       <Header />
       <main className="flex-1">
-        <Hero />
-        <section className="container py-6 border-b border-border">
-          <h2 className="font-display text-xl font-bold">{lang === "uk" ? "Забіги України 2027" : "Ukraine races 2027"}</h2>
-          <div className="mt-3 flex flex-wrap gap-3">
-            <Button asChild variant="outline"><Link to="/calendar?year=2027">{lang === "uk" ? "Календар України 2027" : "Ukraine calendar 2027"}</Link></Button>
-            <Button asChild variant="outline"><Link to="/calendar/kharkiv">{lang === "uk" ? "Календар Харкова 2027" : "Kharkiv calendar 2027"}</Link></Button>
-          </div>
-        </section>
-        {!user && <VideoTutorialSection />}
-        {!user && <FeaturesCarousel />}
+        <HomeSearchHero />
         <EventsSection />
-        <TelegramCommunity showBlog />
+        <HomeDirectory />
+        <TelegramCommunity />
         <CompletedEventsSection />
-        <section className="container py-12">
-          <h2 className="mb-6 text-center font-display text-2xl font-bold">{lang === "uk" ? "Партнери" : "Partners"}</h2>
+        <section className="container pb-12">
           <SiSPartnerBanner />
-        </section>
-        <section className="pb-16">
-          <div className="container">
-            <Link
-              to="/about"
-              className="group block rounded-3xl border border-border bg-card p-8 text-center transition-bounce hover:-translate-y-1 md:p-12"
-            >
-              <div className="text-xs uppercase tracking-wider font-semibold text-primary">{about.eyebrow}</div>
-              <h2 className="mt-2 font-display text-2xl font-bold md:text-3xl">{about.title}</h2>
-              <p className="mx-auto mt-3 max-w-2xl text-muted-foreground">{about.text}</p>
-              <span className="mt-6 inline-flex items-center gap-2 font-semibold text-primary">
-                {about.cta}
-                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-              </span>
-            </Link>
-          </div>
+          <p className="mt-6 text-center text-sm text-muted-foreground">
+            {about.text.split(".")[0]}.{" "}
+            <Link to="/about" className="font-semibold text-primary hover:underline">{about.cta}</Link>
+          </p>
         </section>
       </main>
       <Footer />
