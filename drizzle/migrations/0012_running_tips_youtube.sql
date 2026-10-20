@@ -1,0 +1,1 @@
+ALTER TABLE public.running_tips ADD COLUMN IF NOT EXISTS youtube_url text;
