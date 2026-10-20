@@ -57,7 +57,7 @@ export const TelegramCommunity = ({ showBlog = false }: { showBlog?: boolean }) 
     <section className="py-6 sm:py-8">
       <div className="container">
         <div>
-          <div className="max-w-2xl">
+          <div>
             <div className="text-xs uppercase tracking-wider text-primary font-semibold">{T.eyebrow}</div>
             <h2 className="mt-2 font-display text-2xl md:text-3xl font-bold">{T.title}</h2>
             <p className="mt-2 text-muted-foreground">{T.subtitle}</p>
