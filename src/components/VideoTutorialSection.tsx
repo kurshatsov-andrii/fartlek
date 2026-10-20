@@ -43,26 +43,12 @@ export const VideoTutorialSection = () => {
           {/* Text */}
           <div className="space-y-5 text-center lg:text-left order-2 lg:order-1">
             <div className="pt-2 flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
-              <Button asChild size="lg">
-                <Link to="/features">
-                  <Sparkles className="mr-2 h-4 w-4" />
-                  {copy.features}
-                </Link>
-              </Button>
               <Button asChild variant="outline" size="lg">
                 <a href={YOUTUBE_URL} target="_blank" rel="noopener noreferrer">
                   <Play className="mr-2 h-4 w-4" />
                   {copy.cta}
                 </a>
               </Button>
-            </div>
-            <div className="pt-1 text-sm text-muted-foreground flex flex-wrap gap-x-4 gap-y-1 justify-center lg:justify-start">
-              <Link to="/survey" className="text-primary font-medium hover:underline">
-                💬 {copy.survey}
-              </Link>
-              <Link to="/testimonials" className="text-primary font-medium hover:underline">
-                ⭐ {copy.testimonials}
-              </Link>
             </div>
           </div>
 
