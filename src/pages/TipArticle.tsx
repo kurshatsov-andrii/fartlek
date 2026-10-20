@@ -4,7 +4,7 @@ import { ArrowLeft, Calendar, Loader2 } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { supabase } from "@/integrations/supabase/client";
-import { formatBlogDate } from "@/lib/blog";
+import { formatBlogDate, youtubeEmbed } from "@/lib/blog";
 import { tipCategory, type RunningTip } from "@/lib/tips";
 
 const TipArticle = () => {
@@ -41,6 +41,11 @@ const TipArticle = () => {
             {tip.cover_url && <img src={tip.cover_url} alt={tip.title} className="w-full rounded-2xl object-cover max-h-[520px]" />}
             {tip.excerpt && <p className="text-lg text-muted-foreground">{tip.excerpt}</p>}
             {tip.content && <div className="whitespace-pre-line leading-relaxed text-foreground/90">{tip.content}</div>}
+            {youtubeEmbed(tip.youtube_url ?? null) && (
+              <div className="aspect-video rounded-2xl overflow-hidden border border-border">
+                <iframe src={youtubeEmbed(tip.youtube_url ?? null)!} title={tip.title} className="h-full w-full" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen />
+              </div>
+            )}
           </article>
         )}
       </main>

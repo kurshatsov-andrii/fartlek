@@ -18,7 +18,7 @@ import { toast } from "sonner";
 const BUCKET = "home-carousel";
 type Draft = Omit<RunningTip, "id"> & { id?: string };
 const today = () => new Date().toISOString().slice(0, 10);
-const empty = (): Draft => ({ slug: "", category: TIP_CATEGORIES[0].slug, title: "", excerpt: "", content: "", cover_url: null, published_on: today(), is_published: true });
+const empty = (): Draft => ({ slug: "", category: TIP_CATEGORIES[0].slug, title: "", excerpt: "", content: "", cover_url: null, youtube_url: "", published_on: today(), is_published: true });
 
 const translit = (s: string) => {
   const map: Record<string, string> = { а:"a",б:"b",в:"v",г:"h",ґ:"g",д:"d",е:"e",є:"ye",ж:"zh",з:"z",и:"y",і:"i",ї:"yi",й:"y",к:"k",л:"l",м:"m",н:"n",о:"o",п:"p",р:"r",с:"s",т:"t",у:"u",ф:"f",х:"kh",ц:"ts",ч:"ch",ш:"sh",щ:"shch",ь:"",ю:"yu",я:"ya","'":"" };
@@ -61,7 +61,7 @@ const AdminTips = () => {
     const payload = {
       slug: (edit.slug || translit(edit.title)) || `tip-${Date.now()}`,
       category: edit.category, title: edit.title.trim(), excerpt: edit.excerpt || null, content: edit.content || null,
-      cover_url: edit.cover_url, published_on: edit.published_on || today(), is_published: edit.is_published,
+      cover_url: edit.cover_url, youtube_url: edit.youtube_url?.trim() || null, published_on: edit.published_on || today(), is_published: edit.is_published,
       updated_at: new Date().toISOString(),
     };
     setBusy(true);
@@ -106,6 +106,7 @@ const AdminTips = () => {
               <div><Label>Дата публікації</Label><Input type="date" value={edit.published_on} onChange={(e) => set({ published_on: e.target.value })} /></div>
               <div className="sm:col-span-2"><Label>Адреса сторінки (необов'язково)</Label><Input placeholder="створиться з назви" value={edit.slug} onChange={(e) => set({ slug: translit(e.target.value) })} /></div>
               <div className="sm:col-span-2"><Label>Короткий анонс</Label><Textarea rows={2} value={edit.excerpt ?? ""} onChange={(e) => set({ excerpt: e.target.value })} /></div>
+              <div className="sm:col-span-2"><Label>Посилання на відео YouTube</Label><Input placeholder="https://youtube.com/..." value={edit.youtube_url ?? ""} onChange={(e) => set({ youtube_url: e.target.value })} /></div>
               <div className="sm:col-span-2"><Label>Текст статті</Label><Textarea rows={12} value={edit.content ?? ""} onChange={(e) => set({ content: e.target.value })} /></div>
             </div>
             <div className="space-y-2">
