@@ -42,9 +42,9 @@ export const Header = () => {
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-border/40 bg-background/80 backdrop-blur-lg">
-      <div className="container flex h-16 items-center justify-between gap-3">
+      <div className="container grid h-16 grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-1 px-3 sm:flex sm:justify-between sm:gap-3 sm:px-6">
         <Link to="/" className="flex items-center gap-3 group shrink-0">
-          <img src={logoFartlek} alt="Фартлек" className="h-10 w-10 rounded-full object-cover shadow-glow transition-bounce group-hover:scale-110" />
+          <img src={logoFartlek} alt="Фартлек" className="h-8 w-8 sm:h-10 sm:w-10 rounded-full object-cover shadow-glow transition-bounce group-hover:scale-110" />
           <span className="hidden sm:inline font-display text-xl font-bold tracking-tight">
             Фартлек
           </span>
@@ -68,21 +68,21 @@ export const Header = () => {
           <Link to="/contacts" className="text-[13px] xl:text-sm font-medium text-muted-foreground hover:text-foreground transition-base">{t.nav.contacts}</Link>
         </nav>
 
-        <nav className="flex lg:hidden min-w-0 flex-1 items-center justify-center gap-2 sm:gap-6">
+        <nav className="flex lg:hidden min-w-0 flex-1 items-center justify-center gap-2 text-xs sm:text-sm sm:gap-6 [&>a]:text-inherit">
           <Link to="/starts" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-base">Старти</Link>
           <Link to="/calendar" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-base">Календар</Link>
           <Link to="/map" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-base">Мапа</Link>
         </nav>
 
-        <div className="flex shrink-0 items-center gap-1.5">
-          <Button asChild variant="ghost" size="icon" aria-label="Збережені старти" title="Збережені старти" className={`relative h-9 w-9 ${planner.comparison.length > 0 ? 'hidden sm:inline-flex' : ''}`}>
+        <div className="flex shrink-0 items-center gap-0 sm:gap-1.5">
+          <Button asChild variant="ghost" size="icon" aria-label="Збережені старти" title="Збережені старти" className={`relative h-8 w-8 sm:h-9 sm:w-9 ${planner.comparison.length > 0 ? 'hidden sm:inline-flex' : ''}`}>
             <Link to="/saved">{dueCount > 0 ? <Bell className="h-4 w-4 text-primary" /> : <Bookmark className="h-4 w-4" />}{dueCount > 0 && <span className="absolute -right-1 -top-1 rounded-full bg-primary px-1 text-[10px] text-primary-foreground">{dueCount}</span>}</Link>
           </Button>
-          {planner.comparison.length > 0 && <Button asChild variant="outline" size="sm" aria-label="Порівняння стартів"><Link to="/compare"><GitCompareArrows className="h-4 w-4" />{planner.comparison.length}</Link></Button>}
+          {planner.comparison.length > 0 && <Button asChild variant="outline" size="sm" className="gap-1 px-2 sm:gap-2 sm:px-3" aria-label="Порівняння стартів"><Link to="/compare"><GitCompareArrows className="h-4 w-4" />{planner.comparison.length}</Link></Button>}
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="ml-1 h-9 w-9 rounded-full bg-primary/10">
+                <Button variant="ghost" size="icon" className="h-8 w-8 sm:ml-1 sm:h-9 sm:w-9 rounded-full bg-primary/10">
                   <User className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
@@ -121,7 +121,7 @@ export const Header = () => {
               </Button>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild className="lg:hidden">
-                  <Button variant="ghost" size="icon" className="h-9 w-9">
+                  <Button variant="ghost" size="icon" aria-label="Меню" className="h-8 w-8 sm:h-9 sm:w-9">
                     <Menu className="h-5 w-5" />
                   </Button>
                 </DropdownMenuTrigger>

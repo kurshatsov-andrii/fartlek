@@ -311,7 +311,7 @@ export const OtherStartsSection = ({ shared, onFacets }: { shared?: SharedStartF
         </div>
       )}
 
-      <div className="flex justify-center gap-3 mt-10">
+      <div className="mt-10 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center">
         {limit < filtered.length && (
           <Button variant="outline" size="lg" onClick={() => setLimit((n) => n + PAGE_SIZE)}>
             {lang === "uk" ? "Завантажити ще" : "Load more"} ({filtered.length - limit})

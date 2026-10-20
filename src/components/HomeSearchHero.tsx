@@ -33,7 +33,7 @@ export const HomeSearchHero = () => {
           {uk ? "Де і коли наступний забіг, який тобі підходить: місто, дата, дистанція." : "Where and when is your next race: city, date, distance."}
         </p>
         <form onSubmit={submit} className="mt-6 flex flex-col gap-2 sm:flex-row">
-          <div className="relative flex-1">
+          <div className="relative min-w-0 flex-1">
             <Search className="pointer-events-none absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
             <Input
               type="search"

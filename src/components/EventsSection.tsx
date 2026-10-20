@@ -208,7 +208,7 @@ export const EventsSection = () => {
               </Button>
             )}
           </div>
-          <div className="grid grid-cols-2 lg:grid-cols-5 gap-2">
+          <div className="grid min-w-0 grid-cols-1 min-[400px]:grid-cols-2 lg:grid-cols-5 gap-2 [&>button]:min-w-0 [&>button>span]:truncate">
             <Select value={city} onValueChange={setCity}>
               <SelectTrigger aria-label={lang === "uk" ? "Місто" : "City"}><SelectValue /></SelectTrigger>
               <SelectContent>
