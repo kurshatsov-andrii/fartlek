@@ -58,6 +58,7 @@ export const Header = () => {
           <Link to="/clubs" className="text-[13px] xl:text-sm font-medium text-muted-foreground hover:text-foreground transition-base">Клуби</Link>
           <Link to="/organizers" className="text-[13px] xl:text-sm font-medium text-muted-foreground hover:text-foreground transition-base">Організатори</Link>
           <Link to="/blog" className="text-[13px] xl:text-sm font-medium text-muted-foreground hover:text-foreground transition-base">Блог</Link>
+          <Link to="/tips" className="text-[13px] xl:text-sm font-medium text-muted-foreground hover:text-foreground transition-base">Поради</Link>
           <Link to="/features" className="text-[13px] xl:text-sm font-medium text-muted-foreground hover:text-foreground transition-base">Можливості</Link>
           <Link to="/about" className="text-[13px] xl:text-sm font-medium text-muted-foreground hover:text-foreground transition-base">Про нас</Link>
           {isOrganizer ? (
@@ -103,6 +104,7 @@ export const Header = () => {
                 )}
                 <DropdownMenuItem asChild className="lg:hidden"><Link to="/clubs"><Users className="h-4 w-4" />Клуби</Link></DropdownMenuItem>
                 <DropdownMenuItem asChild className="lg:hidden"><Link to="/blog"><BookOpen className="h-4 w-4" />Блог</Link></DropdownMenuItem>
+                <DropdownMenuItem asChild className="lg:hidden"><Link to="/tips"><BookOpen className="h-4 w-4" />Поради</Link></DropdownMenuItem>
                 <DropdownMenuItem asChild className="lg:hidden"><Link to="/features"><Sparkles className="h-4 w-4" />Можливості</Link></DropdownMenuItem>
                 <DropdownMenuItem asChild className="lg:hidden"><Link to="/about"><Heart className="h-4 w-4" />Про нас</Link></DropdownMenuItem>
                 {!isOrganizer && (
@@ -130,6 +132,7 @@ export const Header = () => {
                   <DropdownMenuItem asChild><Link to="/clubs"><Users className="h-4 w-4" />Клуби</Link></DropdownMenuItem>
                   <DropdownMenuItem asChild><Link to="/organizers"><Users className="h-4 w-4" />Організатори</Link></DropdownMenuItem>
                   <DropdownMenuItem asChild><Link to="/blog"><BookOpen className="h-4 w-4" />Блог</Link></DropdownMenuItem>
+                  <DropdownMenuItem asChild><Link to="/tips"><BookOpen className="h-4 w-4" />Поради</Link></DropdownMenuItem>
                   <DropdownMenuItem asChild><Link to="/for-organizers" className="text-primary font-semibold"><Megaphone className="h-4 w-4" />{t.nav.organizer}</Link></DropdownMenuItem>
                   <DropdownMenuItem asChild><Link to="/features"><Sparkles className="h-4 w-4" />Можливості</Link></DropdownMenuItem>
                   <DropdownMenuItem asChild><Link to="/about"><Heart className="h-4 w-4" />Про нас</Link></DropdownMenuItem>
