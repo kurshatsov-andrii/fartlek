@@ -9,7 +9,6 @@ import { Footer } from "@/components/Footer";
 import { SEO } from "@/components/SEO";
 import { CommunityIntro } from "@/components/CommunityIntro";
 import { AnthemPlayer } from "@/components/AnthemPlayer";
-import { VideoTutorialSection } from "@/components/VideoTutorialSection";
 import logoFartlek from "@/assets/fartlek-logo.png.asset.json";
 import photo3465 from "@/assets/about/DSC_3465.jpg.asset.json";
 import photo4308 from "@/assets/about/DSC_4308.jpg.asset.json";
@@ -205,7 +204,11 @@ const About = () => {
           </div>
         </section>
 
-        <VideoTutorialSection />
+        <section className="container pb-12 sm:pb-16 max-w-3xl text-center">
+          <Link to="/guide" className="text-primary font-medium hover:underline">
+            🎬 Гайд: як користуватися платформою
+          </Link>
+        </section>
 
         <section className="container pb-16 sm:pb-20 max-w-5xl">
           <h2 className="font-display text-2xl sm:text-3xl font-bold tracking-tight text-center">
