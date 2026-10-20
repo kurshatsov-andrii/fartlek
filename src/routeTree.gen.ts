@@ -40,6 +40,7 @@ import { Route as BlogIndexRouteImport } from './routes/blog/index'
 import { Route as BlogSlugRouteImport } from './routes/blog/$slug'
 import { Route as CalendarIndexRouteImport } from './routes/calendar/index'
 import { Route as CalendarKharkivRouteImport } from './routes/calendar/kharkiv'
+import { Route as CalendarUzhhorodRouteImport } from './routes/calendar/uzhhorod'
 import { Route as CalendarVinnytsiaRouteImport } from './routes/calendar/vinnytsia'
 import { Route as CategoryIndexRouteImport } from './routes/category/index'
 import { Route as CategoryCategoryRouteImport } from './routes/category/$category'
@@ -225,6 +226,11 @@ const CalendarKharkivRoute = CalendarKharkivRouteImport.update({
   path: '/calendar/kharkiv',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CalendarUzhhorodRoute = CalendarUzhhorodRouteImport.update({
+  id: '/calendar/uzhhorod',
+  path: '/calendar/uzhhorod',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CalendarVinnytsiaRoute = CalendarVinnytsiaRouteImport.update({
   id: '/calendar/vinnytsia',
   path: '/calendar/vinnytsia',
@@ -405,6 +411,7 @@ export interface FileRoutesByFullPath {
   '/admin/unsubscribes': typeof AdminUnsubscribesRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/calendar/kharkiv': typeof CalendarKharkivRoute
+  '/calendar/uzhhorod': typeof CalendarUzhhorodRoute
   '/calendar/vinnytsia': typeof CalendarVinnytsiaRoute
   '/category/$category': typeof CategoryCategoryRoute
   '/clubs/$slug': typeof ClubsSlugRoute
@@ -467,6 +474,7 @@ export interface FileRoutesByTo {
   '/admin/unsubscribes': typeof AdminUnsubscribesRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/calendar/kharkiv': typeof CalendarKharkivRoute
+  '/calendar/uzhhorod': typeof CalendarUzhhorodRoute
   '/calendar/vinnytsia': typeof CalendarVinnytsiaRoute
   '/category/$category': typeof CategoryCategoryRoute
   '/clubs/$slug': typeof ClubsSlugRoute
@@ -530,6 +538,7 @@ export interface FileRoutesById {
   '/admin/unsubscribes': typeof AdminUnsubscribesRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/calendar/kharkiv': typeof CalendarKharkivRoute
+  '/calendar/uzhhorod': typeof CalendarUzhhorodRoute
   '/calendar/vinnytsia': typeof CalendarVinnytsiaRoute
   '/category/$category': typeof CategoryCategoryRoute
   '/clubs/$slug': typeof ClubsSlugRoute
@@ -594,6 +603,7 @@ export interface FileRouteTypes {
     | '/admin/unsubscribes'
     | '/blog/$slug'
     | '/calendar/kharkiv'
+    | '/calendar/uzhhorod'
     | '/calendar/vinnytsia'
     | '/category/$category'
     | '/clubs/$slug'
@@ -656,6 +666,7 @@ export interface FileRouteTypes {
     | '/admin/unsubscribes'
     | '/blog/$slug'
     | '/calendar/kharkiv'
+    | '/calendar/uzhhorod'
     | '/calendar/vinnytsia'
     | '/category/$category'
     | '/clubs/$slug'
@@ -718,6 +729,7 @@ export interface FileRouteTypes {
     | '/admin/unsubscribes'
     | '/blog/$slug'
     | '/calendar/kharkiv'
+    | '/calendar/uzhhorod'
     | '/calendar/vinnytsia'
     | '/category/$category'
     | '/clubs/$slug'
@@ -781,6 +793,7 @@ export interface RootRouteChildren {
   AdminUnsubscribesRoute: typeof AdminUnsubscribesRoute
   BlogSlugRoute: typeof BlogSlugRoute
   CalendarKharkivRoute: typeof CalendarKharkivRoute
+  CalendarUzhhorodRoute: typeof CalendarUzhhorodRoute
   CalendarVinnytsiaRoute: typeof CalendarVinnytsiaRoute
   CategoryCategoryRoute: typeof CategoryCategoryRoute
   ClubsSlugRoute: typeof ClubsSlugRoute
@@ -1034,6 +1047,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CalendarKharkivRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/calendar/uzhhorod': {
+      id: '/calendar/uzhhorod'
+      path: '/calendar/uzhhorod'
+      fullPath: '/calendar/uzhhorod'
+      preLoaderRoute: typeof CalendarUzhhorodRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/calendar/vinnytsia': {
       id: '/calendar/vinnytsia'
       path: '/calendar/vinnytsia'
@@ -1269,6 +1289,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminUnsubscribesRoute: AdminUnsubscribesRoute,
   BlogSlugRoute: BlogSlugRoute,
   CalendarKharkivRoute: CalendarKharkivRoute,
+  CalendarUzhhorodRoute: CalendarUzhhorodRoute,
   CalendarVinnytsiaRoute: CalendarVinnytsiaRoute,
   CategoryCategoryRoute: CategoryCategoryRoute,
   ClubsSlugRoute: ClubsSlugRoute,
