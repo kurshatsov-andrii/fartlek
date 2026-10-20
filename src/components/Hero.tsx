@@ -1,3 +1,4 @@
+import anthemAsset from "@/assets/fartlek-anthem.mp3.asset.json";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "@/lib/router-compat";
 import { ArrowRight, User, Trophy, Play, Pause, Music2, CalendarClock, ChevronDown } from "lucide-react";
@@ -159,7 +160,7 @@ export const Hero = () => {
             </div>
             <audio
               ref={audioRef}
-              src="https://fartlek.com.ua/wp-content/uploads/2026/04/Fartlek-Events.mp3"
+              src={anthemAsset.url}
               preload="none"
               onEnded={() => setIsPlaying(false)}
               onPause={() => setIsPlaying(false)}
