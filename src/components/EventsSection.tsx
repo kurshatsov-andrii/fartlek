@@ -144,9 +144,9 @@ export const EventsSection = () => {
     ev.distances.filter((d) => d.is_active !== false).slice().sort((a, b) => b.distance_km - a.distance_km);
 
   return (
-    <section id="events" className="relative scroll-mt-16 py-24 sm:py-32">
+    <section id="events" className="relative scroll-mt-16 py-6 sm:py-8">
       <div className="container">
-        <div className="mb-14">
+        <div className="mb-6">
           <div className="text-xs font-semibold uppercase tracking-wider text-primary mb-3">
             {lang === "uk"
               ? `Сезон ${new Date().getFullYear()} — ${new Date().getFullYear() + 1}`
@@ -155,8 +155,8 @@ export const EventsSection = () => {
           <h2 className="font-display text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl">
             {t.events.heading}
           </h2>
-          <div className="mt-4 flex items-center gap-2 sm:gap-4">
-            <p className="text-lg text-muted-foreground">{t.events.sub}</p>
+          <div className="mt-3 flex flex-wrap items-center gap-2 sm:gap-4">
+            <p className="text-base text-muted-foreground sm:text-lg">{t.events.sub}</p>
             <PageViews pageKey="page:events" />
             <div className="shrink-0 animate-mascot-in-right pointer-events-none">
               <img
@@ -164,7 +164,7 @@ export const EventsSection = () => {
                 alt=""
                 aria-hidden="true"
                 loading="lazy"
-                className="w-24 sm:w-36 lg:w-44 animate-mascot-bob select-none"
+                className="w-16 sm:w-20 animate-mascot-bob select-none"
               />
             </div>
           </div>
@@ -172,7 +172,7 @@ export const EventsSection = () => {
 
 
 
-        <div className="mb-10 rounded-2xl border bg-card p-4 space-y-3">
+        <div className="mb-6 rounded-2xl border bg-card p-4 space-y-3">
           <div className="flex items-center gap-2 text-sm font-medium">
             <Filter className="h-4 w-4" /> {lang === "uk" ? "Фільтри" : "Filters"}
             {activeFilters > 0 && (
@@ -245,7 +245,7 @@ export const EventsSection = () => {
           </div>
         </div>
 
-        <div className="mb-10 flex flex-wrap gap-2">
+        <div className="mb-6 flex flex-wrap gap-2">
           {(["all", ...EVENT_CATEGORIES] as const).map((cat) => {
             const label = cat === "all" ? t.categories.all : t.categories[cat];
             const baseCls = "rounded-full border px-4 py-2 text-sm font-semibold uppercase tracking-wider transition-base border-border bg-card text-foreground hover:border-primary hover:text-primary";

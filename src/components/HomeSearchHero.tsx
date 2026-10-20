@@ -24,7 +24,7 @@ export const HomeSearchHero = () => {
 
   return (
     <section className="border-b border-border bg-secondary text-secondary-foreground">
-      <div className="container py-10 sm:py-14">
+      <div className="container py-6 sm:py-8">
         <h1 className="font-display text-3xl font-bold leading-tight sm:text-5xl">
           {uk ? "Забіги України — " : "Races in Ukraine — "}
           <span className="text-gradient">{uk ? "знайди свій старт" : "find your start"}</span>

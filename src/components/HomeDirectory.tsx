@@ -33,7 +33,7 @@ export const HomeDirectory = () => {
   ];
 
   return (
-    <section className="container py-12">
+    <section className="container py-6 sm:py-8">
       <div className="grid gap-4 md:grid-cols-2">
         {cards.map(({ to, icon: Icon, title, text }) => (
           <Link key={to} to={to} className="group flex items-start gap-4 rounded-2xl border border-border bg-card p-6 transition-base hover:border-primary">
@@ -49,7 +49,7 @@ export const HomeDirectory = () => {
         ))}
       </div>
       {stats.length > 0 && (
-        <dl className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-5">
+        <dl className="mt-5 grid grid-cols-2 gap-4 sm:grid-cols-5">
           {stats.map((x) => (
             <div key={x.l} className="text-center">
               <dt className="font-display text-2xl font-bold text-primary">{x.v ?? 0}</dt>
@@ -58,7 +58,7 @@ export const HomeDirectory = () => {
           ))}
         </dl>
       )}
-      <p className="mt-6 text-center text-sm text-muted-foreground">
+      <p className="mt-4 text-center text-sm text-muted-foreground">
         {uk ? "Проводите забіг? " : "Organizing a race? "}
         <Link to="/for-organizers" className="font-semibold text-primary hover:underline">{uk ? "Для організаторів" : "For organizers"}</Link>
         {" · "}
