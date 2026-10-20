@@ -204,12 +204,6 @@ const About = () => {
           </div>
         </section>
 
-        <section className="container pb-12 sm:pb-16 max-w-3xl text-center">
-          <Link to="/guide" className="text-primary font-medium hover:underline">
-            🎬 Гайд: як користуватися платформою
-          </Link>
-        </section>
-
         <section className="container pb-16 sm:pb-20 max-w-5xl">
           <h2 className="font-display text-2xl sm:text-3xl font-bold tracking-tight text-center">
             ФАРТЛЕК <span className="text-gradient">У РУСІ</span> 📸
