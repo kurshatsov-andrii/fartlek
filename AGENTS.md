@@ -15,6 +15,7 @@
 - Keep the SiS offer in a shared configuration and banner component so partner links and discounts stay consistent across placements.
 
 - Keep start-listing filter facets (distance buckets, city detection, month matching, category-to-sport mapping) in the shared start-filters module so the Starts page and category pages filter identically.
+- Keep homepage discovery controls above sibling event and external-start sections; derive category availability from upcoming records in both catalogs so empty categories and empty event results do not mislead visitors.
 
 - Keep discovery-page metadata in discovery-seo and use it in both route heads and page SEO so initial HTML and hydrated metadata agree.
 - Reuse CalendarPage for national and city calendars with public-calendar Query data primed by loaders so crawlers and visitors see the same real records.
