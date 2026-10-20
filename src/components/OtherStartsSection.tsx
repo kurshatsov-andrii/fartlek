@@ -11,9 +11,12 @@ import { SPORT_TYPES, SPORT_LABELS, MONTH_NAMES_UK, type SportType } from "@/lib
 import { canShowRegisterButton } from "@/lib/registration-status";
 import { matchesYear } from "@/components/YearFilterButtons";
 import { StartActions } from "@/components/StartActions";
+import type { EventCategory } from "@/lib/i18n";
+import { isCompletedDate } from "@/lib/event-date";
+import { matchesStartCategory } from "@/lib/home-starts";
 
 export interface SharedStartFilters {
-  q: string; city: string; month: string; year: string; paid: "all" | "paid" | "free"; distance: string;
+  q: string; city: string; month: string; year: string; paid: "all" | "paid" | "free"; distance: string; category: EventCategory | "all";
 }
 
 interface StartRow {
@@ -46,7 +49,7 @@ const DISTANCE_BUCKETS: { label: string; match: (d: number) => boolean }[] = [
 
 export const DISTANCE_BUCKET_LABELS = DISTANCE_BUCKETS.map((b) => b.label);
 
-export const OtherStartsSection = ({ shared, onFacets }: { shared?: SharedStartFilters; onFacets?: (cities: string[], months: string[]) => void } = {}) => {
+export const OtherStartsSection = ({ shared, onFacets }: { shared?: SharedStartFilters; onFacets?: (cities: string[], months: string[], sports: string[]) => void } = {}) => {
   const { lang } = useApp();
   const [rows, setRows] = useState<StartRow[]>([]);
   const [loading, setLoading] = useState(true);
@@ -70,7 +73,7 @@ export const OtherStartsSection = ({ shared, onFacets }: { shared?: SharedStartF
       .gte("event_date", today)
       .order("event_date", { ascending: true })
       .then(({ data }) => {
-        setRows((data as any) ?? []);
+        setRows(((data ?? []) as StartRow[]).filter((row) => !isCompletedDate(row.event_date)));
         setLoading(false);
       });
   }, []);
@@ -92,7 +95,7 @@ export const OtherStartsSection = ({ shared, onFacets }: { shared?: SharedStartF
   useEffect(() => {
     if (!onFacets) return;
     const ms = Array.from(new Set(rows.map((r) => (r.event_date ?? "").slice(0, 7)).filter(Boolean))).sort();
-    onFacets(cities, ms);
+    onFacets(cities, ms, [...new Set(rows.flatMap((row) => row.sport_types ?? []))]);
   }, [rows, cities, onFacets]);
 
   const effDistance = shared ? shared.distance : distance;
@@ -102,6 +105,7 @@ export const OtherStartsSection = ({ shared, onFacets }: { shared?: SharedStartF
     if (shared) {
       const sq = shared.q.trim().toLowerCase();
       return rows.filter((r) => {
+        if (!matchesStartCategory(r.sport_types, shared.category)) return false;
         if (sq && !`${r.title} ${r.description ?? ""} ${r.city ?? ""} ${r.organizer_name ?? ""}`.toLowerCase().includes(sq)) return false;
         if (!matchesYear(r.event_date, shared.year)) return false;
         if (shared.month !== "all" && !(r.event_date ?? "").startsWith(shared.month)) return false;
@@ -143,7 +147,7 @@ export const OtherStartsSection = ({ shared, onFacets }: { shared?: SharedStartF
 
   if (loading) {
     return (
-      <div className="flex justify-center py-16">
+      <div className="container flex justify-center py-8">
         <Loader2 className="h-6 w-6 animate-spin" />
       </div>
     );
@@ -154,9 +158,10 @@ export const OtherStartsSection = ({ shared, onFacets }: { shared?: SharedStartF
   const visible = filtered.slice(0, limit);
 
   return (
-    <section className="border-t border-border pt-14 mt-20">
-      <div className="mb-8">
-        <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl">
+    <section aria-labelledby="other-starts-heading" className="border-t border-border py-6 sm:py-8">
+      <div className="container">
+      <div className="mb-6">
+        <h2 id="other-starts-heading" className="font-display text-3xl font-bold tracking-tight sm:text-4xl">
           {lang === "uk" ? "Інші старти в Україні" : "Other races in Ukraine"}
         </h2>
         <p className="mt-3 text-muted-foreground">
@@ -315,6 +320,7 @@ export const OtherStartsSection = ({ shared, onFacets }: { shared?: SharedStartF
         <Button asChild size="lg">
           <Link to="/starts">{lang === "uk" ? "Усі старти" : "All races"}</Link>
         </Button>
+      </div>
       </div>
     </section>
   );
