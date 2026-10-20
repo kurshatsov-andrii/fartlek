@@ -1,7 +1,7 @@
 # Roadmap
 
 ## Homepage compact layout
-- [ ] Reduce oversized section spacing; move community and Partners above completed starts; show two latest blog articles with images and links; verify desktop and mobile
+- [x] Reduce oversized section spacing; move community and Partners above completed starts; show two latest blog articles with images and links; verified at 393px and 1280px, both images loaded and article link opened without page errors
 
 ## Features page refresh
 - [x] Describe saved starts, comparisons, opt-in reminders, guest likes, registration information and city calendars in Ukrainian and English; Ukrainian page and both participant/organizer tabs verified without browser errors (site currently Ukrainian-only)
