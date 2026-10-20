@@ -1,6 +1,6 @@
 import { detectCity } from "@/lib/start-filters";
 
-export type CalendarScope = "ukraine" | "kharkiv" | "vinnytsia";
+export type CalendarScope = "ukraine" | "kharkiv" | "vinnytsia" | "uzhhorod";
 export interface CalendarRow {
   id: string; source: "platform" | "calendar"; title: string; event_date: string;
   location: string | null; distances: string; organizer_name: string | null;
@@ -9,6 +9,7 @@ export interface CalendarRow {
 }
 export const matchesCalendarScope = (location: string | null, scope: CalendarScope, notes?: string | null) => {
   if (scope === "ukraine") return true;
+  if (scope === "uzhhorod") return detectCity(location) === "Ужгород";
   if (scope === "vinnytsia") return detectCity(location) === "Вінниця";
   return detectCity(location) === "Харків" ||
     Boolean(notes?.startsWith('Джерело: афіша «Календар стартів Харкова 2027»'));
