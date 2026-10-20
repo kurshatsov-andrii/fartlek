@@ -78,6 +78,13 @@
       "when": 1792501788723,
       "tag": "0010_athletes_count_accounts",
       "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1792503187781,
+      "tag": "0011_running_tips",
+      "breakpoints": true
     }
   ]
 }

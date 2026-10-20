@@ -183,3 +183,15 @@ export const getClubSeo = (input: { data: { slug: string } }) => optionalMetadat
 export const getOrganizerSeo = (input: { data: { slug: string } }) => optionalMetadata(() => getOrganizerSeoRpc(input));
 export const getStartSeo = (input: { data: { slug: string } }) => optionalMetadata(() => getStartSeoRpc(input));
 export const getBlogSeo = (input: { data: { slug: string } }) => optionalMetadata(() => getBlogSeoRpc(input));
+
+/** Only published running tips contribute to public metadata. */
+const getTipSeoRpc = createServerFn({ method: "GET" })
+  .inputValidator((data: { slug: string }) => data)
+  .handler(async ({ data }): Promise<EntitySeo> => {
+    const { data: tip } = await publicClient().from("running_tips")
+      .select("slug,category,title,excerpt,content,cover_url").eq("slug", data.slug).eq("is_published", true).maybeSingle();
+    if (!tip) return null;
+    const raw = (tip.excerpt || tip.content || "").replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
+    return { title: cut(`${tip.title} | Фартлек`, 60), description: cut(raw || `${tip.title}. Поради бігунам від Фартлек.`, 160), image: tip.cover_url?.startsWith("https://") ? tip.cover_url : null, path: `/tips/${tip.category}/${tip.slug}` };
+  });
+export const getTipSeo = (input: { data: { slug: string } }) => optionalMetadata(() => getTipSeoRpc(input));

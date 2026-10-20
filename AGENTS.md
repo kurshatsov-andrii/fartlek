@@ -27,3 +27,5 @@
 - Treat public metadata transport failures as optional fallback metadata and keep calendar data failures in a retryable page with navigation, so connectivity interruptions cannot blank public pages.- Derive registration state (open/expected/closed/cancelled/unknown) only in the shared registration-status module; external starts stay "unknown" until an admin confirms a status, so the site never claims registration is open without a source.
 - Detect date-change and registration-opened reminders by comparing current public data with the acknowledged values on the user's saved row; reminders stay opt-in and in-app.
 - A start counts as finished from the day before its start date; decide finished/upcoming splits, register-button hiding and the SiS banner with the shared isCompletedDate in src/lib/event-date, never raw date comparisons.
+
+- Keep running-tip categories in the shared tips module as fixed slugs so the /tips filter, category pages, admin form and sitemap stay aligned.

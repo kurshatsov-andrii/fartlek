@@ -52,6 +52,8 @@ const staticEntries: SitemapEntry[] = [
   { path: "/starts", changefreq: "daily", priority: "0.9" },
   { path: "/map", changefreq: "daily", priority: "0.8" },
   { path: "/blog", changefreq: "weekly", priority: "0.7" },
+  { path: "/tips", changefreq: "weekly", priority: "0.8" },
+  ...["ekipiruvannia","hodynnyky","trenuvannia","starty","kharchuvannia","vidnovlennia"].map((c) => ({ path: `/tips/${c}`, changefreq: "weekly", priority: "0.7" })),
   { path: "/clubs", changefreq: "weekly", priority: "0.9" },
   { path: "/organizers", changefreq: "weekly", priority: "0.9" },
   { path: "/category", changefreq: "weekly", priority: "0.8" },
@@ -97,7 +99,7 @@ function formatDate(value: unknown): string | undefined {
 }
 
 async function buildDynamicEntries(): Promise<SitemapEntry[]> {
-  const [events, starts, clubs, organizers, posts] = await Promise.all([
+  const [events, starts, clubs, organizers, posts, tips] = await Promise.all([
     fetchRows("events", "select=id,slug,updated_at&status=eq.published&slug=not.is.null"),
     fetchRows(
       "telegram_starts",
@@ -106,9 +108,15 @@ async function buildDynamicEntries(): Promise<SitemapEntry[]> {
     fetchRows("clubs", "select=slug,updated_at&slug=not.is.null"),
     fetchRows("organizers", "select=slug,updated_at&slug=not.is.null"),
     fetchRows("blog_posts", "select=slug,updated_at&is_published=eq.true"),
+    fetchRows("running_tips", "select=slug,category,updated_at&is_published=eq.true"),
   ]);
 
   const entries: SitemapEntry[] = [];
+
+  for (const t of tips as any[]) {
+    if (!t.slug) continue;
+    entries.push({ path: `/tips/${t.category}/${t.slug}`, lastmod: formatDate(t.updated_at), changefreq: "monthly", priority: "0.6" });
+  }
 
   for (const p of posts) {
     if (!p.slug) continue;

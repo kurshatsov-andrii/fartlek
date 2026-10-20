@@ -253,6 +253,9 @@ const Admin = () => {
                 <Link to="/admin/blog">📝 Блог</Link>
             </Button>
             <Button asChild variant="outline" size="sm">
+              <Link to="/admin/tips">💡 Поради</Link>
+            </Button>
+            <Button asChild variant="outline" size="sm">
               <Link to="/admin/starts">🏁 Старти (Telegram)</Link>
             </Button>
           </div>
