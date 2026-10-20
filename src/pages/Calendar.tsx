@@ -73,7 +73,7 @@ const emptyForm = {
 };
 
 const CalendarPage = ({ scope = "ukraine" }: { scope?: CalendarScope }) => {
-  const path = scope === "ukraine" ? "/calendar" : scope === "kharkiv" ? "/calendar/kharkiv" : `/calendar/${scope}`;
+  const path = scope === "ukraine" ? "/calendar" : scope === "kharkiv" ? "/calendar/kharkiv" : (`/calendar/${scope}` as "/calendar/vinnytsia" | "/calendar/uzhhorod");
   const { data: rows } = useSuspenseQuery(calendarQueryOptions);
   const queryClient = useQueryClient();
   const params = useSearch({ strict: false }) as { year?: string };
