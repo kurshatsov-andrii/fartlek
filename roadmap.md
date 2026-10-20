@@ -1,7 +1,7 @@
 # Roadmap
 
 ## Homepage start discovery
-- [ ] Show only populated upcoming categories; keep shared filters above separate event and other-start sections; hide empty event results; verify search and category filtering
+- [x] Show only populated upcoming categories; shared filters above sibling event and other-start sections; empty events hidden; Krayna search and marathon selection verified with real starts, 9 tests passed, desktop/mobile checked without page errors
 
 ## Starts page community block
 - [x] Move "Бігова спільнота Харкова у Telegram" bar below the catalog and directly above "Завершені"; verified block order at 1280px and 393px, no page errors
