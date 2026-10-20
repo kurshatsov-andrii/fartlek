@@ -1,7 +1,7 @@
 import { Link } from "@/lib/router-compat";
 import {
   ArrowRight, ArrowLeft, Check, CreditCard, Users, Trophy, MessageSquare, BarChart3, Megaphone,
-  ClipboardList, MapPin, CalendarDays, QrCode, Sparkles, ShieldCheck, HelpCircle,
+  ClipboardList, MapPin, CalendarDays, QrCode, Sparkles, ShieldCheck, HelpCircle, Truck, Route, BadgeCheck,
 } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
@@ -36,8 +36,10 @@ const ForOrganizers = () => {
     promoSub: "Платформа працює на вас: учасники знаходять ваші старти самі",
     promoList: [
       "Календар подій з фільтрами по містах, місяцях і видах спорту",
+      "Міські календарі (Харків 2027, Вінниця) — ваш старт бачать у своєму місті",
       "Мапа спортивних подій України",
       "Каталог організаторів з профілем вашого клубу",
+      "Учасники зберігають ваш старт, порівнюють забіги й отримують нагадування про відкриття реєстрації",
       "Старти з телеграм-каналу Фартлек — ми допомагаємо з публікацією",
       "Сторінки подій з SEO та посиланням для соцмереж",
     ],
@@ -53,6 +55,9 @@ const ForOrganizers = () => {
       { icon: Users, title: "Учасники під контролем", text: "Списки учасників, експорт у XLSX, стартові номери, згоди учасників, групи та категорії." },
       { icon: Trophy, title: "Результати та нагороди", text: "Протокол результатів, місця в категоріях, DNS/DNF, сертифікати фінішера, цифрові стартові номери." },
       { icon: MessageSquare, title: "Спілкування з учасниками", text: "Чат події, email-розсилки, нагадування про оплату, зміни та відміни — все з панелі." },
+      { icon: Truck, title: "Доставка стартових пакетів", text: "Учасники самі обирають відділення Нової пошти — ви бачите адресу доставки кожного учасника." },
+      { icon: Route, title: "Траси та GPX", text: "Завантажуйте GPX-треки й фото траси — учасники заздалегідь бачать маршрут і профіль дистанції." },
+      { icon: BadgeCheck, title: "Статус реєстрації з джерелом", text: "Позначайте, чи реєстрація відкрита, із посиланням на джерело та датою перевірки — учасники довіряють перевіреним даним." },
       { icon: BarChart3, title: "Аналітика події", text: "Перегляди сторінок, реєстрації, хто з учасників онлайн — бачите, як йде підготовка." },
       { icon: ShieldCheck, title: "Захист від ботів", text: "Cloudflare Turnstile, валідація даних і контроль тимчасових email — чистий список учасників." },
     ],
@@ -90,8 +95,10 @@ const ForOrganizers = () => {
     promoSub: "The platform works for you: participants find your races on their own",
     promoList: [
       "Event calendar with city, month and sport filters",
+      "City calendars (Kharkiv 2027, Vinnytsia) — your race shows up in its own city",
       "Map of sports events across Ukraine",
       "Organizer catalog with your club profile",
+      "Participants save your race, compare events and get registration-opening reminders",
       "Races from the Fartlek Telegram channel — we help with publishing",
       "Event pages with SEO and shareable links",
     ],
@@ -107,6 +114,9 @@ const ForOrganizers = () => {
       { icon: Users, title: "Participants under control", text: "Participant lists, XLSX export, bib numbers, participant consents, groups and categories." },
       { icon: Trophy, title: "Results & awards", text: "Results protocol, category rankings, DNS/DNF, finisher certificates, digital bib numbers." },
       { icon: MessageSquare, title: "Talk to participants", text: "Event chat, email campaigns, payment reminders, changes and cancellations — all from the dashboard." },
+      { icon: Truck, title: "Start package delivery", text: "Participants pick their own Nova Poshta branch — you see every participant's delivery address." },
+      { icon: Route, title: "Courses & GPX", text: "Upload GPX tracks and course photos — participants see the route and distance profile in advance." },
+      { icon: BadgeCheck, title: "Registration status with source", text: "Mark whether registration is open, with a source link and check date — participants trust verified data." },
       { icon: BarChart3, title: "Event analytics", text: "Page views, registrations, who is online — see how preparations are going." },
       { icon: ShieldCheck, title: "Bot protection", text: "Cloudflare Turnstile, data validation and disposable-email blocking — a clean participant list." },
     ],
