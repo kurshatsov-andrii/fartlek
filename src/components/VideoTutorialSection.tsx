@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { Link } from "@/lib/router-compat";
-import { Play, Sparkles } from "lucide-react";
+import { Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useApp } from "@/contexts/AppContext";
 
