@@ -11,8 +11,9 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useApp } from "@/contexts/AppContext";
 import { supabase } from "@/integrations/supabase/client";
-import { EVENT_CATEGORIES, type EventCategory } from "@/lib/i18n";
-import { cn, eventCity } from "@/lib/utils";
+import { type EventCategory } from "@/lib/i18n";
+import { eventCity } from "@/lib/utils";
+import { availableStartCategories, showEventResults } from "@/lib/home-starts";
 import tigerLeft from "@/assets/tiger-left.png";
 import { OtherStartsSection, DISTANCE_BUCKET_LABELS, type SharedStartFilters } from "@/components/OtherStartsSection";
 import { useCallback } from "react";
@@ -53,8 +54,8 @@ export const EventsSection = () => {
   const [paid, setPaid] = useState<"all" | "paid" | "free">("all");
   const [year, setYear] = useState<string>("all");
   const [distance, setDistance] = useState<string>("all");
-  const [startFacets, setStartFacets] = useState<{ cities: string[]; months: string[] }>({ cities: [], months: [] });
-  const handleFacets = useCallback((c: string[], m: string[]) => setStartFacets({ cities: c, months: m }), []);
+  const [startFacets, setStartFacets] = useState<{ cities: string[]; months: string[]; sports: string[] }>({ cities: [], months: [], sports: [] });
+  const handleFacets = useCallback((c: string[], m: string[], sports: string[]) => setStartFacets({ cities: c, months: m, sports }), []);
   const PAGE_SIZE = 9;
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 
@@ -67,11 +68,12 @@ export const EventsSection = () => {
         // Owner request: Bilka Run goes above the same-day Bigotrail races.
         const pinned = (e: { slug?: string | null }) => (e.slug === "bilka-run-harkiv-2026" ? 0 : 1);
         const sorted = [...((data as any[]) ?? [])].sort((a, b) => a.event_date.localeCompare(b.event_date) || pinned(a) - pinned(b));
-        setEvents(sorted as any); setLoading(false);
+        setEvents((sorted as EventCard[]).filter((event) => !isCompletedDate(event.event_date))); setLoading(false);
       });
   }, []);
 
   const getEventCity = (e: EventCard) => eventCity(e.location);
+  const categories = useMemo(() => availableStartCategories(events, startFacets.sports), [events, startFacets.sports]);
 
 
   const cities = useMemo(() => {
@@ -123,9 +125,9 @@ export const EventsSection = () => {
 
   const visible = filtered.slice(0, visibleCount);
 
-  const activeFilters = (search ? 1 : 0) + (city !== "all" ? 1 : 0) + (month !== "all" ? 1 : 0) + (format !== "all" ? 1 : 0) + (paid !== "all" ? 1 : 0) + (year !== "all" ? 1 : 0) + (distance !== "all" ? 1 : 0);
-  const sharedFilters = useMemo<SharedStartFilters>(() => ({ q: search, city, month, year, paid, distance }), [search, city, month, year, paid, distance]);
-  const resetFilters = () => { setSearch(""); setCity("all"); setMonth("all"); setFormat("all"); setPaid("all"); setYear("all"); setDistance("all"); };
+  const activeFilters = (activeCat !== "all" ? 1 : 0) + (search ? 1 : 0) + (city !== "all" ? 1 : 0) + (month !== "all" ? 1 : 0) + (format !== "all" ? 1 : 0) + (paid !== "all" ? 1 : 0) + (year !== "all" ? 1 : 0) + (distance !== "all" ? 1 : 0);
+  const sharedFilters = useMemo<SharedStartFilters>(() => ({ q: search, city, month, year, paid, distance, category: activeCat }), [search, city, month, year, paid, distance, activeCat]);
+  const resetFilters = () => { setActiveCat("all"); setSearch(""); setCity("all"); setMonth("all"); setFormat("all"); setPaid("all"); setYear("all"); setDistance("all"); };
 
   const fmtDate = (iso: string) =>
     new Date(iso).toLocaleDateString(lang === "uk" ? "uk-UA" : "en-US", {
@@ -144,6 +146,7 @@ export const EventsSection = () => {
     ev.distances.filter((d) => d.is_active !== false).slice().sort((a, b) => b.distance_km - a.distance_km);
 
   return (
+    <>
     <section id="events" className="relative scroll-mt-16 py-6 sm:py-8">
       <div className="container">
         <div className="mb-6">
@@ -153,7 +156,7 @@ export const EventsSection = () => {
               : `${new Date().getFullYear()} — ${new Date().getFullYear() + 1} season`}
           </div>
           <h2 className="font-display text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl">
-            {t.events.heading}
+            {lang === "uk" ? "Каталог стартів" : "Race catalog"}
           </h2>
           <div className="mt-3 flex flex-wrap items-center gap-2 sm:gap-4">
             <p className="text-base text-muted-foreground sm:text-lg">{t.events.sub}</p>
@@ -193,14 +196,16 @@ export const EventsSection = () => {
               aria-label={lang === "uk" ? "Пошук подій" : "Search events"}
             />
             {search && (
-              <button
+              <Button
                 type="button"
+                variant="ghost"
+                size="icon"
                 onClick={() => setSearch("")}
-                className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-muted-foreground hover:text-foreground"
+                className="absolute right-2 top-1/2 -translate-y-1/2 h-7 w-7 text-muted-foreground hover:text-foreground"
                 aria-label={lang === "uk" ? "Очистити" : "Clear"}
               >
                 <X className="h-4 w-4" />
-              </button>
+              </Button>
             )}
           </div>
           <div className="grid grid-cols-2 lg:grid-cols-5 gap-2">
@@ -245,31 +250,24 @@ export const EventsSection = () => {
           </div>
         </div>
 
-        <div className="mb-6 flex flex-wrap gap-2">
-          {(["all", ...EVENT_CATEGORIES] as const).map((cat) => {
+        <div className="flex flex-wrap gap-2" role="group" aria-label={lang === "uk" ? "Категорії стартів" : "Race categories"}>
+          {(["all", ...categories] as const).map((cat) => {
             const label = cat === "all" ? t.categories.all : t.categories[cat];
-            const baseCls = "rounded-full border px-4 py-2 text-sm font-semibold uppercase tracking-wider transition-base border-border bg-card text-foreground hover:border-primary hover:text-primary";
-            if (cat === "all") {
-              return (
-                <Link key={cat} to="/category" className={baseCls}>
-                  {label}
-                </Link>
-              );
-            }
             return (
-              <Link key={cat} to={`/category/${cat}`} className={baseCls}>
+              <Button key={cat} variant={activeCat === cat ? "default" : "outline"} onClick={() => setActiveCat(cat)} aria-pressed={activeCat === cat} className="text-sm font-semibold uppercase">
                 {label}
-              </Link>
+              </Button>
             );
           })}
         </div>
+      </div>
+    </section>
 
+    {showEventResults(filtered.length, loading) && <section aria-labelledby="home-events-heading" className="py-6 sm:py-8">
+      <div className="container">
+        <h2 id="home-events-heading" className="mb-6 font-display text-3xl font-bold sm:text-4xl">{lang === "uk" ? "Події" : "Events"}</h2>
         {loading ? (
           <div className="flex justify-center py-20"><Loader2 className="h-6 w-6 animate-spin" /></div>
-        ) : filtered.length === 0 ? (
-          <div className="text-center py-20 bg-card rounded-2xl">
-            <p className="text-muted-foreground">{t.events.empty}</p>
-          </div>
         ) : (
           <>
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -340,8 +338,9 @@ export const EventsSection = () => {
           </>
         )}
 
-        <OtherStartsSection shared={sharedFilters} onFacets={handleFacets} />
       </div>
-    </section>
+    </section>}
+    <OtherStartsSection shared={sharedFilters} onFacets={handleFacets} />
+    </>
   );
 };
