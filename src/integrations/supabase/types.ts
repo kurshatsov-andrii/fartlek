@@ -1731,6 +1731,51 @@ export type Database = {
           },
         ]
       }
+      running_tips: {
+        Row: {
+          category: string
+          content: string | null
+          cover_url: string | null
+          created_at: string
+          created_by: string | null
+          excerpt: string | null
+          id: string
+          is_published: boolean
+          published_on: string
+          slug: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          category: string
+          content?: string | null
+          cover_url?: string | null
+          created_at?: string
+          created_by?: string | null
+          excerpt?: string | null
+          id?: string
+          is_published?: boolean
+          published_on?: string
+          slug: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          content?: string | null
+          cover_url?: string | null
+          created_at?: string
+          created_by?: string | null
+          excerpt?: string | null
+          id?: string
+          is_published?: boolean
+          published_on?: string
+          slug?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       saved_start_items: {
         Row: {
           created_at: string
