@@ -191,18 +191,6 @@ const Starts = () => {
         </p>
         <PageViews pageKey="page:starts" className="mb-6" />
 
-        <div className="mb-8 flex flex-wrap items-center gap-3 rounded-lg border bg-card p-4">
-          <span className="text-sm text-muted-foreground">Бігова спільнота Харкова у Telegram:</span>
-          <Button asChild size="sm">
-            <a href={TELEGRAM_CHANNEL_URL} target="_blank" rel="noopener noreferrer">Приєднатися до каналу</a>
-          </Button>
-          <Button asChild size="sm" variant="outline">
-            <a href={TELEGRAM_CHAT_URL} target="_blank" rel="noopener noreferrer">Приєднатися до чату</a>
-          </Button>
-        </div>
-
-
-        {/* Filters */}
         <div className="rounded-lg border bg-card p-4 mb-8 space-y-3">
           <div className="flex items-center gap-2 text-sm font-medium">
             <Filter className="h-4 w-4" /> Фільтри
@@ -297,6 +285,15 @@ const Starts = () => {
                 )}
               </>
             )}
+            <div className="mt-12 flex flex-wrap items-center gap-3 rounded-lg border bg-card p-4">
+              <span className="text-sm text-muted-foreground">Бігова спільнота Харкова у Telegram:</span>
+              <Button asChild size="sm">
+                <a href={TELEGRAM_CHANNEL_URL} target="_blank" rel="noopener noreferrer">Приєднатися до каналу</a>
+              </Button>
+              <Button asChild size="sm" variant="outline">
+                <a href={TELEGRAM_CHAT_URL} target="_blank" rel="noopener noreferrer">Приєднатися до чату</a>
+              </Button>
+            </div>
             {completed.length > 0 && (
               <section className="mt-12">
                 <h2 className="font-display text-2xl font-bold mb-6">Завершені</h2>
