@@ -589,7 +589,17 @@ const CalendarPage = ({ scope = "ukraine" }: { scope?: CalendarScope }) => {
             </DialogContent>
           </Dialog>
         </section>}
+
+        <section aria-label={lang === "uk" ? "Партнери" : "Partners"} className="mt-12">
+          <h2 className="font-display text-2xl sm:text-3xl font-bold tracking-tight text-center">
+            {lang === "uk" ? "Партнери" : "Partners"}
+          </h2>
+          <div className="mt-6">
+            <SiSPartnerBanner />
+          </div>
+        </section>
       </main>
+
       <Footer />
     </div>
   );
