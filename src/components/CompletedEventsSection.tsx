@@ -110,7 +110,7 @@ export const CompletedEventsSection = () => {
 
   if (loading) {
     return (
-      <section className="py-16 sm:py-20 bg-muted/30">
+      <section className="py-6 sm:py-8 bg-muted/30">
         <div className="container flex justify-center">
           <Loader2 className="h-6 w-6 animate-spin" />
         </div>
@@ -121,7 +121,7 @@ export const CompletedEventsSection = () => {
   if (events.length === 0) return null;
 
   return (
-    <section id="completed-events" className="relative py-20 sm:py-28 bg-muted/30">
+    <section id="completed-events" className="relative py-6 sm:py-8 bg-muted/30">
       <div className="container">
         <div className="max-w-2xl mb-8">
           <div className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">

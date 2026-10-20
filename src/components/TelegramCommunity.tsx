@@ -19,11 +19,11 @@ export const TelegramCommunity = ({ showBlog = false }: { showBlog?: boolean }) 
       .order("event_date", { ascending: false }).limit(2)
       .then(({ data }) => setPosts((data as BlogPost[]) ?? []));
   }, [showBlog]);
-  const L = lang === "uk" ? { blog: "Останні події з блогу", allPosts: "Усі записи" } : { blog: "Latest from the blog", allPosts: "All posts" };
+  const L = lang === "uk" ? { blog: "Останні статті блогу", allPosts: "Усі записи" } : { blog: "Latest from the blog", allPosts: "All posts" };
   const T = lang === "uk"
     ? {
         eyebrow: "Спільнота",
-        title: "Бігова спільнота Харкова у Telegram",
+        title: "Бігова спільнота Фартлек",
         subtitle: "Анонси забігів, спільні тренування, поради та живе спілкування з бігунами.",
         channelTitle: "Телеграм-канал",
         channelText: "Анонси стартів, новини та важливі оновлення.",
@@ -34,7 +34,7 @@ export const TelegramCommunity = ({ showBlog = false }: { showBlog?: boolean }) 
       }
     : {
         eyebrow: "Community",
-        title: "Kharkiv running community on Telegram",
+        title: "Fartlek running community",
         subtitle: "Race announcements, group runs, tips and live chat with fellow runners.",
         channelTitle: "Telegram channel",
         channelText: "Race announcements, news and important updates.",
@@ -50,17 +50,17 @@ export const TelegramCommunity = ({ showBlog = false }: { showBlog?: boolean }) 
   ];
 
   return (
-    <section className="py-16">
+    <section className="py-6 sm:py-8">
       <div className="container">
-        <div className="rounded-3xl border border-border bg-card p-8 md:p-12">
+        <div>
           <div className="max-w-2xl">
             <div className="text-xs uppercase tracking-wider text-primary font-semibold">{T.eyebrow}</div>
             <h2 className="mt-2 font-display text-2xl md:text-3xl font-bold">{T.title}</h2>
             <p className="mt-2 text-muted-foreground">{T.subtitle}</p>
           </div>
-          <div className="mt-8 grid gap-4 md:grid-cols-2">
+          <div className="mt-5 grid gap-4 md:grid-cols-2">
             {cards.map((c) => (
-              <div key={c.url} className="flex flex-col gap-3 rounded-2xl border border-border bg-background p-6">
+              <div key={c.url} className="flex flex-col gap-3 rounded-lg border border-border bg-card p-4">
                 <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-hero">
                   <c.icon className="h-5 w-5 text-primary-foreground" strokeWidth={2.4} />
                 </div>
@@ -74,15 +74,15 @@ export const TelegramCommunity = ({ showBlog = false }: { showBlog?: boolean }) 
           </div>
           </div>
           {posts.length > 0 && (
-            <div className="mt-10">
+            <div className="mt-6">
               <div className="flex items-center justify-between gap-3">
                 <h3 className="font-display text-xl font-bold">{L.blog}</h3>
                 <Link to="/blog" className="text-sm text-primary hover:underline">{L.allPosts} →</Link>
               </div>
               <div className="mt-4 grid gap-4 md:grid-cols-2">
                 {posts.map((p) => (
-                  <Link key={p.id} to={`/blog/${p.slug}`} className="group flex gap-4 rounded-2xl border border-border bg-background p-3 transition-bounce hover:-translate-y-1">
-                    <img src={p.cover_url || p.photos[0] || logo} alt={p.title} loading="lazy" className="h-24 w-32 shrink-0 rounded-xl object-cover" />
+                  <Link key={p.id} to={`/blog/${p.slug}`} className="group flex gap-3 rounded-lg border border-border bg-card p-3 transition-base hover:border-primary">
+                    <img src={p.cover_url || p.photos?.[0] || logo} alt={p.title} loading="lazy" className="h-24 w-24 shrink-0 rounded-md object-cover sm:w-32" />
                     <div className="min-w-0 space-y-1">
                       {p.event_date && <div className="flex items-center gap-1 text-xs text-muted-foreground"><Calendar className="h-3.5 w-3.5" />{formatBlogDate(p.event_date)}</div>}
                       <div className="font-semibold group-hover:text-primary transition-base">{p.title}</div>

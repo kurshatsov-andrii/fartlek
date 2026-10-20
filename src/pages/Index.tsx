@@ -51,15 +51,16 @@ const Index = () => {
         <HomeSearchHero />
         <EventsSection />
         <HomeDirectory />
-        <TelegramCommunity />
-        <CompletedEventsSection />
-        <section className="container pb-12">
+        <TelegramCommunity showBlog />
+        <section className="container py-6 sm:py-8">
+          <h2 className="mb-4 font-display text-2xl font-bold sm:text-3xl">{lang === "uk" ? "ПАРТНЕРИ" : "PARTNERS"}</h2>
           <SiSPartnerBanner />
-          <p className="mt-6 text-center text-sm text-muted-foreground">
+          <p className="mt-4 text-center text-sm text-muted-foreground">
             {about.text.split(".")[0]}.{" "}
             <Link to="/about" className="font-semibold text-primary hover:underline">{about.cta}</Link>
           </p>
         </section>
+        <CompletedEventsSection />
       </main>
       <Footer />
     </div>
