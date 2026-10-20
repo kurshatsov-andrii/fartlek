@@ -13,7 +13,6 @@ import { discoverySeo } from "@/lib/discovery-seo";
 
 const Index = () => {
   const { lang } = useApp();
-  const { user } = useAuth();
   const about = lang === "uk"
     ? {
         eyebrow: "Про нас",
