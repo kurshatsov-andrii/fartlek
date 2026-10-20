@@ -2366,6 +2366,7 @@ export type Database = {
       get_public_stats: {
         Args: never
         Returns: {
+          athletes_count: number
           cities_count: number
           clubs_count: number
           events_count: number
