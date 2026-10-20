@@ -37,20 +37,11 @@ export const VideoTutorialSection = () => {
       };
 
   return (
-    <section className="py-16 md:py-24 bg-muted/30 border-y border-border">
+    <section className="py-12 md:py-20 bg-muted/30 border-y border-border">
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center max-w-6xl mx-auto">
           {/* Text */}
           <div className="space-y-5 text-center lg:text-left order-2 lg:order-1">
-            <span className="inline-block text-xs font-semibold tracking-widest uppercase text-primary">
-              {copy.eyebrow}
-            </span>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight">
-              {copy.title}
-            </h2>
-            <p className="text-base md:text-lg text-muted-foreground leading-relaxed max-w-xl mx-auto lg:mx-0">
-              {copy.description}
-            </p>
             <div className="pt-2 flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
               <Button asChild size="lg">
                 <Link to="/features">
