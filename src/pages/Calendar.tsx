@@ -73,7 +73,7 @@ const emptyForm = {
 };
 
 const CalendarPage = ({ scope = "ukraine" }: { scope?: CalendarScope }) => {
-  const path = scope === "ukraine" ? "/calendar" : scope === "kharkiv" ? "/calendar/kharkiv" : "/calendar/vinnytsia";
+  const path = scope === "ukraine" ? "/calendar" : scope === "kharkiv" ? "/calendar/kharkiv" : `/calendar/${scope}`;
   const { data: rows } = useSuspenseQuery(calendarQueryOptions);
   const queryClient = useQueryClient();
   const params = useSearch({ strict: false }) as { year?: string };
@@ -220,14 +220,18 @@ const CalendarPage = ({ scope = "ukraine" }: { scope?: CalendarScope }) => {
         <div className="flex flex-wrap items-end justify-between gap-4 mb-8">
           <div>
             <h1 className="font-display text-3xl sm:text-5xl font-bold tracking-tight">
-              {scope === "vinnytsia"
+              {scope === "uzhhorod"
+                ? (lang === "uk" ? "Календар забігів Ужгорода 2027" : "Uzhhorod running calendar 2027")
+                : scope === "vinnytsia"
                 ? (lang === "uk" ? "Календар забігів Вінниці 2027" : "Vinnytsia running calendar 2027")
                 : scope === "kharkiv"
                 ? (lang === "uk" ? "Календар забігів Харкова 2027" : "Kharkiv running calendar 2027")
                 : (lang === "uk" ? "Календар забігів України 2027" : "Ukraine running calendar 2027")}
             </h1>
             <p className="mt-3 text-muted-foreground">
-              {scope === "vinnytsia"
+              {scope === "uzhhorod"
+                ? (lang === "uk" ? "Забіги та пробіги Ужгорода 2027: Krayna Uzhhorod Marathon 9 травня — марафон, півмарафон, 10 км і естафета. Дати, місця проведення й опубліковані дистанції. Умови та реєстрацію уточнюйте на сторінці відповідного старту." : seo.description)
+                : scope === "vinnytsia"
                 ? (lang === "uk" ? "Забіги та пробіги Вінниці 2027: VINNYTSIA RUN 23 травня та 5 вересня. Дати, місця проведення й опубліковані дистанції. Умови та реєстрацію уточнюйте на сторінці відповідного старту." : seo.description)
                 : scope === "kharkiv"
                 ? (lang === "uk" ? "Забіги та пробіги Харкова 2027: афіша сезону, опубліковані дати, місця проведення, дистанції й організатори. Умови та реєстрацію уточнюйте на сторінці відповідного старту." : seo.description)
@@ -241,6 +245,7 @@ const CalendarPage = ({ scope = "ukraine" }: { scope?: CalendarScope }) => {
           <Button asChild size="sm" variant="outline"><Link to="/calendar?year=2027">{lang === "uk" ? "Забіги України 2027" : "Ukraine races 2027"}</Link></Button>
           <Button asChild size="sm" variant="outline"><Link to="/calendar/kharkiv">{lang === "uk" ? "Забіги Харкова 2027" : "Kharkiv races 2027"}</Link></Button>
           <Button asChild size="sm" variant="outline"><Link to="/calendar/vinnytsia">{lang === "uk" ? "Забіги Вінниці 2027" : "Vinnytsia races 2027"}</Link></Button>
+          <Button asChild size="sm" variant="outline"><Link to="/calendar/uzhhorod">{lang === "uk" ? "Забіги Ужгорода 2027" : "Uzhhorod races 2027"}</Link></Button>
         </nav>
         <div className="mb-6">
           <SiSPartnerBanner />
@@ -540,7 +545,7 @@ const CalendarPage = ({ scope = "ukraine" }: { scope?: CalendarScope }) => {
           )}
         </div>
 
-        {scope !== "vinnytsia" && <section className="mt-12">
+        {(scope === "ukraine" || scope === "kharkiv") && <section className="mt-12">
           <h2 className="font-display text-2xl sm:text-3xl font-bold tracking-tight">
             {lang === "uk" ? "Календар забігів Харкова 2027" : "Kharkiv Running Calendar 2027"}
           </h2>
