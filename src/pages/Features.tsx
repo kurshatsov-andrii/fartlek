@@ -621,6 +621,15 @@ const Features = () => {
           <p className="text-center text-xs text-muted-foreground mt-12 italic">
             {t.updated}
           </p>
+
+          <div className="mt-6 text-center">
+            <Link
+              to="/guide"
+              className="inline-flex items-center gap-2 rounded-full border border-primary/40 bg-primary/10 px-5 py-2.5 font-medium text-primary transition-all hover:bg-primary hover:text-primary-foreground"
+            >
+              🎬 {isUk ? "Гайд: як користуватися платформою" : "Guide: how to use the platform"}
+            </Link>
+          </div>
         </section>
 
         {/* CTA */}

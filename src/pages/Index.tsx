@@ -1,4 +1,3 @@
-import { Link } from "@/lib/router-compat";
 import { Header } from "@/components/Header";
 import { HomeSearchHero } from "@/components/HomeSearchHero";
 import { HomeDirectory } from "@/components/HomeDirectory";
@@ -13,19 +12,6 @@ import { discoverySeo } from "@/lib/discovery-seo";
 
 const Index = () => {
   const { lang } = useApp();
-  const about = lang === "uk"
-    ? {
-        eyebrow: "Про нас",
-        title: "ФАРТЛЕК — ЗА ОБ'ЄДНАННЯ ВСІХ БІГУНІВ!",
-        text: "Ми — бігова спільнота Фартлек: за свободу вибору бігуна, єдність бігунів Харкова та інших міст і бігову культуру без поділу на «наших» і «чужих». Більше бігу. Більше дружби. Менше поділу.",
-        cta: "Дізнатися більше про нас",
-      }
-    : {
-        eyebrow: "About us",
-        title: "FARTLEK — FOR UNITING ALL RUNNERS!",
-        text: "We are the Fartlek running community: for the runner's freedom of choice, unity of runners in Kharkiv and beyond, and running culture without division.",
-        cta: "Learn more about us",
-      };
   const seo = discoverySeo("/", lang);
   const jsonLd = [
     {
@@ -53,12 +39,8 @@ const Index = () => {
         <HomeDirectory />
         <TelegramCommunity showBlog />
         <section className="container py-6 sm:py-8">
-          <h2 className="mb-4 font-display text-2xl font-bold sm:text-3xl">{lang === "uk" ? "ПАРТНЕРИ" : "PARTNERS"}</h2>
+          <h2 className="mb-4 text-center font-display text-2xl font-bold sm:text-3xl">{lang === "uk" ? "ПАРТНЕРИ" : "PARTNERS"}</h2>
           <SiSPartnerBanner />
-          <p className="mt-4 text-center text-sm text-muted-foreground">
-            {about.text.split(".")[0]}.{" "}
-            <Link to="/about" className="font-semibold text-primary hover:underline">{about.cta}</Link>
-          </p>
         </section>
         <CompletedEventsSection />
       </main>
