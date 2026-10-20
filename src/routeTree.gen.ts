@@ -36,6 +36,7 @@ import { Route as AdminSeoRouteImport } from './routes/admin/seo'
 import { Route as AdminSessionsRouteImport } from './routes/admin/sessions'
 import { Route as AdminStartsRouteImport } from './routes/admin/starts'
 import { Route as AdminSurveyRouteImport } from './routes/admin/survey'
+import { Route as AdminTipsRouteImport } from './routes/admin/tips'
 import { Route as AdminUnsubscribesRouteImport } from './routes/admin/unsubscribes'
 import { Route as BlogIndexRouteImport } from './routes/blog/index'
 import { Route as BlogSlugRouteImport } from './routes/blog/$slug'
@@ -61,10 +62,13 @@ import { Route as StartsIndexRouteImport } from './routes/starts/index'
 import { Route as StartsSlugRouteImport } from './routes/starts/$slug'
 import { Route as StravaCallbackRouteImport } from './routes/strava/callback'
 import { Route as TicketIdRouteImport } from './routes/ticket/$id'
+import { Route as TipsIndexRouteImport } from './routes/tips/index'
 import { Route as EventsIdIndexRouteImport } from './routes/events/$id/index'
 import { Route as EventsIdParticipantsRouteImport } from './routes/events/$id/participants'
 import { Route as EventsIdResultsRouteImport } from './routes/events/$id/results'
 import { Route as OrganizerEventsNewRouteImport } from './routes/organizer/events/new'
+import { Route as TipsCategoryIndexRouteImport } from './routes/tips/$category/index'
+import { Route as TipsCategorySlugRouteImport } from './routes/tips/$category/$slug'
 import { Route as AdminEventsIdCoOrganizersRouteImport } from './routes/admin/events/$id/co-organizers'
 import { Route as OrganizerEventsIdIndexRouteImport } from './routes/organizer/events/$id/index'
 import { Route as OrganizerEventsIdAnalyticsRouteImport } from './routes/organizer/events/$id/analytics'
@@ -207,6 +211,11 @@ const AdminSurveyRoute = AdminSurveyRouteImport.update({
   path: '/admin/survey',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminTipsRoute = AdminTipsRouteImport.update({
+  id: '/admin/tips',
+  path: '/admin/tips',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminUnsubscribesRoute = AdminUnsubscribesRouteImport.update({
   id: '/admin/unsubscribes',
   path: '/admin/unsubscribes',
@@ -332,6 +341,11 @@ const TicketIdRoute = TicketIdRouteImport.update({
   path: '/ticket/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TipsIndexRoute = TipsIndexRouteImport.update({
+  id: '/tips/',
+  path: '/tips/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const EventsIdIndexRoute = EventsIdIndexRouteImport.update({
   id: '/events/$id/',
   path: '/events/$id/',
@@ -350,6 +364,16 @@ const EventsIdResultsRoute = EventsIdResultsRouteImport.update({
 const OrganizerEventsNewRoute = OrganizerEventsNewRouteImport.update({
   id: '/organizer/events/new',
   path: '/organizer/events/new',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TipsCategoryIndexRoute = TipsCategoryIndexRouteImport.update({
+  id: '/tips/$category/',
+  path: '/tips/$category/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TipsCategorySlugRoute = TipsCategorySlugRouteImport.update({
+  id: '/tips/$category/$slug',
+  path: '/tips/$category/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminEventsIdCoOrganizersRoute =
@@ -415,6 +439,7 @@ export interface FileRoutesByFullPath {
   '/admin/sessions': typeof AdminSessionsRoute
   '/admin/starts': typeof AdminStartsRoute
   '/admin/survey': typeof AdminSurveyRoute
+  '/admin/tips': typeof AdminTipsRoute
   '/admin/unsubscribes': typeof AdminUnsubscribesRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/calendar/kharkiv': typeof CalendarKharkivRoute
@@ -441,10 +466,13 @@ export interface FileRoutesByFullPath {
   '/payment-fail/': typeof PaymentFailIndexRoute
   '/payment-success/': typeof PaymentSuccessIndexRoute
   '/starts/': typeof StartsIndexRoute
+  '/tips/': typeof TipsIndexRoute
   '/events/$id/participants': typeof EventsIdParticipantsRoute
   '/events/$id/results': typeof EventsIdResultsRoute
   '/organizer/events/new': typeof OrganizerEventsNewRoute
+  '/tips/$category/$slug': typeof TipsCategorySlugRoute
   '/events/$id/': typeof EventsIdIndexRoute
+  '/tips/$category/': typeof TipsCategoryIndexRoute
   '/admin/events/$id/co-organizers': typeof AdminEventsIdCoOrganizersRoute
   '/organizer/events/$id/analytics': typeof OrganizerEventsIdAnalyticsRoute
   '/organizer/events/$id/campaign': typeof OrganizerEventsIdCampaignRoute
@@ -479,6 +507,7 @@ export interface FileRoutesByTo {
   '/admin/sessions': typeof AdminSessionsRoute
   '/admin/starts': typeof AdminStartsRoute
   '/admin/survey': typeof AdminSurveyRoute
+  '/admin/tips': typeof AdminTipsRoute
   '/admin/unsubscribes': typeof AdminUnsubscribesRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/calendar/kharkiv': typeof CalendarKharkivRoute
@@ -505,10 +534,13 @@ export interface FileRoutesByTo {
   '/payment-fail': typeof PaymentFailIndexRoute
   '/payment-success': typeof PaymentSuccessIndexRoute
   '/starts': typeof StartsIndexRoute
+  '/tips': typeof TipsIndexRoute
   '/events/$id/participants': typeof EventsIdParticipantsRoute
   '/events/$id/results': typeof EventsIdResultsRoute
   '/organizer/events/new': typeof OrganizerEventsNewRoute
+  '/tips/$category/$slug': typeof TipsCategorySlugRoute
   '/events/$id': typeof EventsIdIndexRoute
+  '/tips/$category': typeof TipsCategoryIndexRoute
   '/admin/events/$id/co-organizers': typeof AdminEventsIdCoOrganizersRoute
   '/organizer/events/$id/analytics': typeof OrganizerEventsIdAnalyticsRoute
   '/organizer/events/$id/campaign': typeof OrganizerEventsIdCampaignRoute
@@ -544,6 +576,7 @@ export interface FileRoutesById {
   '/admin/sessions': typeof AdminSessionsRoute
   '/admin/starts': typeof AdminStartsRoute
   '/admin/survey': typeof AdminSurveyRoute
+  '/admin/tips': typeof AdminTipsRoute
   '/admin/unsubscribes': typeof AdminUnsubscribesRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/calendar/kharkiv': typeof CalendarKharkivRoute
@@ -570,10 +603,13 @@ export interface FileRoutesById {
   '/payment-fail/': typeof PaymentFailIndexRoute
   '/payment-success/': typeof PaymentSuccessIndexRoute
   '/starts/': typeof StartsIndexRoute
+  '/tips/': typeof TipsIndexRoute
   '/events/$id/participants': typeof EventsIdParticipantsRoute
   '/events/$id/results': typeof EventsIdResultsRoute
   '/organizer/events/new': typeof OrganizerEventsNewRoute
+  '/tips/$category/$slug': typeof TipsCategorySlugRoute
   '/events/$id/': typeof EventsIdIndexRoute
+  '/tips/$category/': typeof TipsCategoryIndexRoute
   '/admin/events/$id/co-organizers': typeof AdminEventsIdCoOrganizersRoute
   '/organizer/events/$id/analytics': typeof OrganizerEventsIdAnalyticsRoute
   '/organizer/events/$id/campaign': typeof OrganizerEventsIdCampaignRoute
@@ -610,6 +646,7 @@ export interface FileRouteTypes {
     | '/admin/sessions'
     | '/admin/starts'
     | '/admin/survey'
+    | '/admin/tips'
     | '/admin/unsubscribes'
     | '/blog/$slug'
     | '/calendar/kharkiv'
@@ -636,10 +673,13 @@ export interface FileRouteTypes {
     | '/payment-fail/'
     | '/payment-success/'
     | '/starts/'
+    | '/tips/'
     | '/events/$id/participants'
     | '/events/$id/results'
     | '/organizer/events/new'
+    | '/tips/$category/$slug'
     | '/events/$id/'
+    | '/tips/$category/'
     | '/admin/events/$id/co-organizers'
     | '/organizer/events/$id/analytics'
     | '/organizer/events/$id/campaign'
@@ -674,6 +714,7 @@ export interface FileRouteTypes {
     | '/admin/sessions'
     | '/admin/starts'
     | '/admin/survey'
+    | '/admin/tips'
     | '/admin/unsubscribes'
     | '/blog/$slug'
     | '/calendar/kharkiv'
@@ -700,10 +741,13 @@ export interface FileRouteTypes {
     | '/payment-fail'
     | '/payment-success'
     | '/starts'
+    | '/tips'
     | '/events/$id/participants'
     | '/events/$id/results'
     | '/organizer/events/new'
+    | '/tips/$category/$slug'
     | '/events/$id'
+    | '/tips/$category'
     | '/admin/events/$id/co-organizers'
     | '/organizer/events/$id/analytics'
     | '/organizer/events/$id/campaign'
@@ -738,6 +782,7 @@ export interface FileRouteTypes {
     | '/admin/sessions'
     | '/admin/starts'
     | '/admin/survey'
+    | '/admin/tips'
     | '/admin/unsubscribes'
     | '/blog/$slug'
     | '/calendar/kharkiv'
@@ -764,10 +809,13 @@ export interface FileRouteTypes {
     | '/payment-fail/'
     | '/payment-success/'
     | '/starts/'
+    | '/tips/'
     | '/events/$id/participants'
     | '/events/$id/results'
     | '/organizer/events/new'
+    | '/tips/$category/$slug'
     | '/events/$id/'
+    | '/tips/$category/'
     | '/admin/events/$id/co-organizers'
     | '/organizer/events/$id/analytics'
     | '/organizer/events/$id/campaign'
@@ -803,6 +851,7 @@ export interface RootRouteChildren {
   AdminSessionsRoute: typeof AdminSessionsRoute
   AdminStartsRoute: typeof AdminStartsRoute
   AdminSurveyRoute: typeof AdminSurveyRoute
+  AdminTipsRoute: typeof AdminTipsRoute
   AdminUnsubscribesRoute: typeof AdminUnsubscribesRoute
   BlogSlugRoute: typeof BlogSlugRoute
   CalendarKharkivRoute: typeof CalendarKharkivRoute
@@ -829,10 +878,13 @@ export interface RootRouteChildren {
   PaymentFailIndexRoute: typeof PaymentFailIndexRoute
   PaymentSuccessIndexRoute: typeof PaymentSuccessIndexRoute
   StartsIndexRoute: typeof StartsIndexRoute
+  TipsIndexRoute: typeof TipsIndexRoute
   EventsIdParticipantsRoute: typeof EventsIdParticipantsRoute
   EventsIdResultsRoute: typeof EventsIdResultsRoute
   OrganizerEventsNewRoute: typeof OrganizerEventsNewRoute
+  TipsCategorySlugRoute: typeof TipsCategorySlugRoute
   EventsIdIndexRoute: typeof EventsIdIndexRoute
+  TipsCategoryIndexRoute: typeof TipsCategoryIndexRoute
   AdminEventsIdCoOrganizersRoute: typeof AdminEventsIdCoOrganizersRoute
   OrganizerEventsIdAnalyticsRoute: typeof OrganizerEventsIdAnalyticsRoute
   OrganizerEventsIdCampaignRoute: typeof OrganizerEventsIdCampaignRoute
@@ -1032,6 +1084,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminSurveyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/tips': {
+      id: '/admin/tips'
+      path: '/admin/tips'
+      fullPath: '/admin/tips'
+      preLoaderRoute: typeof AdminTipsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/unsubscribes': {
       id: '/admin/unsubscribes'
       path: '/admin/unsubscribes'
@@ -1207,6 +1266,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TicketIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/tips/': {
+      id: '/tips/'
+      path: '/tips'
+      fullPath: '/tips/'
+      preLoaderRoute: typeof TipsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/events/$id/': {
       id: '/events/$id/'
       path: '/events/$id'
@@ -1233,6 +1299,20 @@ declare module '@tanstack/react-router' {
       path: '/organizer/events/new'
       fullPath: '/organizer/events/new'
       preLoaderRoute: typeof OrganizerEventsNewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tips/$category/': {
+      id: '/tips/$category/'
+      path: '/tips/$category'
+      fullPath: '/tips/$category/'
+      preLoaderRoute: typeof TipsCategoryIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tips/$category/$slug': {
+      id: '/tips/$category/$slug'
+      path: '/tips/$category/$slug'
+      fullPath: '/tips/$category/$slug'
+      preLoaderRoute: typeof TipsCategorySlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/events/$id/co-organizers': {
@@ -1307,6 +1387,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminSessionsRoute: AdminSessionsRoute,
   AdminStartsRoute: AdminStartsRoute,
   AdminSurveyRoute: AdminSurveyRoute,
+  AdminTipsRoute: AdminTipsRoute,
   AdminUnsubscribesRoute: AdminUnsubscribesRoute,
   BlogSlugRoute: BlogSlugRoute,
   CalendarKharkivRoute: CalendarKharkivRoute,
@@ -1333,10 +1414,13 @@ const rootRouteChildren: RootRouteChildren = {
   PaymentFailIndexRoute: PaymentFailIndexRoute,
   PaymentSuccessIndexRoute: PaymentSuccessIndexRoute,
   StartsIndexRoute: StartsIndexRoute,
+  TipsIndexRoute: TipsIndexRoute,
   EventsIdParticipantsRoute: EventsIdParticipantsRoute,
   EventsIdResultsRoute: EventsIdResultsRoute,
   OrganizerEventsNewRoute: OrganizerEventsNewRoute,
+  TipsCategorySlugRoute: TipsCategorySlugRoute,
   EventsIdIndexRoute: EventsIdIndexRoute,
+  TipsCategoryIndexRoute: TipsCategoryIndexRoute,
   AdminEventsIdCoOrganizersRoute: AdminEventsIdCoOrganizersRoute,
   OrganizerEventsIdAnalyticsRoute: OrganizerEventsIdAnalyticsRoute,
   OrganizerEventsIdCampaignRoute: OrganizerEventsIdCampaignRoute,
