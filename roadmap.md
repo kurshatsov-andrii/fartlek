@@ -1,5 +1,8 @@
 # Roadmap
 
+## Starts page community block
+- [x] Move "Бігова спільнота Харкова у Telegram" bar below the catalog and directly above "Завершені"; verified block order at 1280px and 393px, no page errors
+
 ## Homepage compact layout
 - [x] Reduce oversized section spacing; move community and Partners above completed starts; show two latest blog articles with images and links; verified at 393px and 1280px, both images loaded and article link opened without page errors
 
