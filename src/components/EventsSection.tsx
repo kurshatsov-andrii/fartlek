@@ -42,6 +42,11 @@ export const EventsSection = () => {
   const [loading, setLoading] = useState(true);
   const [activeCat, setActiveCat] = useState<EventCategory | "all">("all");
   const [search, setSearch] = useState("");
+  useEffect(() => {
+    const onSearch = (e: Event) => setSearch(String((e as CustomEvent).detail ?? ""));
+    window.addEventListener("fartlek:search", onSearch);
+    return () => window.removeEventListener("fartlek:search", onSearch);
+  }, []);
   const [city, setCity] = useState<string>("all");
   const [month, setMonth] = useState<string>("all");
   const [format, setFormat] = useState<string>("all");
