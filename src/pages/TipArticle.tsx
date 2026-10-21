@@ -7,14 +7,28 @@ import { supabase } from "@/integrations/supabase/client";
 import { formatBlogDate, youtubeEmbed } from "@/lib/blog";
 import { tipCategory, type RunningTip } from "@/lib/tips";
 
-const TipArticle = () => {
+const Video = ({ url, title, fallback }: { url?: string | null; title?: string | null; fallback: string }) => {
+  const src = youtubeEmbed(url ?? null);
+  if (!src) return null;
+  return (
+    <section className="space-y-3">
+      {title && <h2 className="font-display text-2xl font-bold">{title}</h2>}
+      <div className="aspect-video rounded-2xl overflow-hidden border border-border">
+        <iframe src={src} title={title || fallback} className="h-full w-full" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen />
+      </div>
+    </section>
+  );
+};
+
+const TipArticle = ({ initial }: { initial?: RunningTip | null }) => {
   const { slug } = useParams() as { slug: string };
-  const [tip, setTip] = useState<RunningTip | null | undefined>(undefined);
+  const [tip, setTip] = useState<RunningTip | null | undefined>(initial && initial.slug === slug ? initial : undefined);
 
   useEffect(() => {
+    if (initial && initial.slug === slug) { setTip(initial); return; }
     supabase.from("running_tips").select("*").eq("slug", slug).maybeSingle()
       .then(({ data }) => setTip((data as RunningTip) ?? null));
-  }, [slug]);
+  }, [slug, initial]);
 
   const cat = tip ? tipCategory(tip.category) : undefined;
 
@@ -41,11 +55,8 @@ const TipArticle = () => {
             {tip.cover_url && <img src={tip.cover_url} alt={tip.title} className="w-full rounded-2xl object-cover max-h-[520px]" />}
             {tip.excerpt && <p className="text-lg text-muted-foreground">{tip.excerpt}</p>}
             {tip.content && <div className="whitespace-pre-line leading-relaxed text-foreground/90">{tip.content}</div>}
-            {youtubeEmbed(tip.youtube_url ?? null) && (
-              <div className="aspect-video rounded-2xl overflow-hidden border border-border">
-                <iframe src={youtubeEmbed(tip.youtube_url ?? null)!} title={tip.title} className="h-full w-full" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen />
-              </div>
-            )}
+            <Video url={tip.youtube_url} title={tip.youtube_title} fallback={tip.title} />
+            <Video url={tip.youtube_url_2} title={tip.youtube_title_2} fallback={tip.title} />
           </article>
         )}
       </main>

@@ -20,6 +20,9 @@ export type RunningTip = {
   content: string | null;
   cover_url: string | null;
   youtube_url?: string | null;
+  youtube_title?: string | null;
+  youtube_url_2?: string | null;
+  youtube_title_2?: string | null;
   published_on: string;
   is_published: boolean;
 };

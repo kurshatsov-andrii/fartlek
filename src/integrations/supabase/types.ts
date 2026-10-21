@@ -1745,7 +1745,10 @@ export type Database = {
           slug: string
           title: string
           updated_at: string
+          youtube_title: string | null
+          youtube_title_2: string | null
           youtube_url: string | null
+          youtube_url_2: string | null
         }
         Insert: {
           category: string
@@ -1760,7 +1763,10 @@ export type Database = {
           slug: string
           title: string
           updated_at?: string
+          youtube_title?: string | null
+          youtube_title_2?: string | null
           youtube_url?: string | null
+          youtube_url_2?: string | null
         }
         Update: {
           category?: string
@@ -1775,7 +1781,10 @@ export type Database = {
           slug?: string
           title?: string
           updated_at?: string
+          youtube_title?: string | null
+          youtube_title_2?: string | null
           youtube_url?: string | null
+          youtube_url_2?: string | null
         }
         Relationships: []
       }
