@@ -42,7 +42,7 @@ export const Header = () => {
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-border/40 bg-background/80 backdrop-blur-lg">
-      <div className="container grid h-16 grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-1 px-3 sm:flex sm:justify-between sm:gap-3 sm:px-6">
+      <div className="container grid min-h-16 grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-1 px-3 sm:flex sm:justify-between sm:gap-3 sm:px-6 sm:py-1.5 xl:h-16 xl:py-0">
         <Link to="/" className="flex items-center gap-3 group shrink-0">
           <img src={logoFartlek} alt="Фартлек" className="h-8 w-8 sm:h-10 sm:w-10 rounded-full object-cover shadow-glow transition-bounce group-hover:scale-110" />
           <span className="hidden sm:inline font-display text-xl font-bold tracking-tight">
@@ -50,7 +50,7 @@ export const Header = () => {
           </span>
         </Link>
 
-        <nav className="hidden lg:flex min-w-0 flex-1 items-center justify-center gap-3.5 xl:gap-5 px-2 whitespace-nowrap">
+        <nav className="hidden min-w-0 flex-1 flex-wrap items-center justify-center gap-x-3.5 gap-y-1 px-2 whitespace-nowrap lg:flex xl:flex-nowrap xl:gap-4">
           <a href="/#events" onClick={handleEventsClick} className="text-[13px] xl:text-sm font-medium text-muted-foreground hover:text-foreground transition-base cursor-pointer">{t.nav.events}</a>
           <Link to="/starts" className="text-[13px] xl:text-sm font-medium text-muted-foreground hover:text-foreground transition-base">Старти</Link>
           <Link to="/calendar" className="text-[13px] xl:text-sm font-medium text-muted-foreground hover:text-foreground transition-base">Календар</Link>
@@ -61,6 +61,8 @@ export const Header = () => {
           <Link to="/tips" className="text-[13px] xl:text-sm font-medium text-muted-foreground hover:text-foreground transition-base">Поради</Link>
           <Link to="/features" className="text-[13px] xl:text-sm font-medium text-muted-foreground hover:text-foreground transition-base">Можливості</Link>
           <Link to="/about" className="text-[13px] xl:text-sm font-medium text-muted-foreground hover:text-foreground transition-base">Про нас</Link>
+          <Link to="/testimonials" className="text-[13px] xl:text-sm font-medium text-muted-foreground hover:text-foreground transition-base">Відгуки</Link>
+
           {isOrganizer ? (
             <Link to="/organizer" className="text-[13px] xl:text-sm font-medium text-muted-foreground hover:text-foreground transition-base">{t.nav.dashboard}</Link>
           ) : (
@@ -136,6 +138,8 @@ export const Header = () => {
                   <DropdownMenuItem asChild><Link to="/for-organizers" className="text-primary font-semibold"><Megaphone className="h-4 w-4" />{t.nav.organizer}</Link></DropdownMenuItem>
                   <DropdownMenuItem asChild><Link to="/features"><Sparkles className="h-4 w-4" />Можливості</Link></DropdownMenuItem>
                   <DropdownMenuItem asChild><Link to="/about"><Heart className="h-4 w-4" />Про нас</Link></DropdownMenuItem>
+                  <DropdownMenuItem asChild><Link to="/testimonials"><Star className="h-4 w-4" />Відгуки</Link></DropdownMenuItem>
+
                   <DropdownMenuItem asChild><Link to="/contacts"><Mail className="h-4 w-4" />{t.nav.contacts}</Link></DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem asChild><Link to="/auth"><User className="h-4 w-4" />{t.nav.login}</Link></DropdownMenuItem>
