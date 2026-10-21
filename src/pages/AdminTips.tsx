@@ -61,7 +61,9 @@ const AdminTips = () => {
     const payload = {
       slug: (edit.slug || translit(edit.title)) || `tip-${Date.now()}`,
       category: edit.category, title: edit.title.trim(), excerpt: edit.excerpt || null, content: edit.content || null,
-      cover_url: edit.cover_url, youtube_url: edit.youtube_url?.trim() || null, published_on: edit.published_on || today(), is_published: edit.is_published,
+      cover_url: edit.cover_url, youtube_url: edit.youtube_url?.trim() || null, youtube_title: edit.youtube_title?.trim() || null,
+      youtube_url_2: edit.youtube_url_2?.trim() || null, youtube_title_2: edit.youtube_title_2?.trim() || null,
+      published_on: edit.published_on || today(), is_published: edit.is_published,
       updated_at: new Date().toISOString(),
     };
     setBusy(true);
