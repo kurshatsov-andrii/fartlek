@@ -41,6 +41,41 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://fartlek.com.ua/tips</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://fartlek.com.ua/tips/ekipiruvannia</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fartlek.com.ua/tips/hodynnyky</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fartlek.com.ua/tips/trenuvannia</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fartlek.com.ua/tips/starty</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fartlek.com.ua/tips/kharchuvannia</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fartlek.com.ua/tips/vidnovlennia</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://fartlek.com.ua/clubs</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
@@ -169,6 +204,12 @@
     <loc>https://fartlek.com.ua/category/cross</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fartlek.com.ua/tips/ekipiruvannia/yak-zavyazaty-shnurky-na-krosivkah</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
   </url>
   <url>
     <loc>https://fartlek.com.ua/blog/kharkiv-run-2026</loc>
