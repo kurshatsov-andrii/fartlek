@@ -61,6 +61,8 @@ export const Header = () => {
           <Link to="/tips" className="text-[13px] xl:text-sm font-medium text-muted-foreground hover:text-foreground transition-base">Поради</Link>
           <Link to="/features" className="text-[13px] xl:text-sm font-medium text-muted-foreground hover:text-foreground transition-base">Можливості</Link>
           <Link to="/about" className="text-[13px] xl:text-sm font-medium text-muted-foreground hover:text-foreground transition-base">Про нас</Link>
+          <Link to="/testimonials" className="text-[13px] xl:text-sm font-medium text-muted-foreground hover:text-foreground transition-base">Відгуки</Link>
+
           {isOrganizer ? (
             <Link to="/organizer" className="text-[13px] xl:text-sm font-medium text-muted-foreground hover:text-foreground transition-base">{t.nav.dashboard}</Link>
           ) : (
