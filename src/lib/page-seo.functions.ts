@@ -195,3 +195,10 @@ const getTipSeoRpc = createServerFn({ method: "GET" })
     return { title: cut(`${tip.title} | Фартлек`, 60), description: cut(raw || `${tip.title}. Поради бігунам від Фартлек.`, 160), image: tip.cover_url?.startsWith("https://") ? tip.cover_url : null, path: `/tips/${tip.category}/${tip.slug}` };
   });
 export const getTipSeo = (input: { data: { slug: string } }) => optionalMetadata(() => getTipSeoRpc(input));
+
+export const getTipArticle = createServerFn({ method: "GET" })
+  .inputValidator((data: { slug: string }) => data)
+  .handler(async ({ data }) => {
+    const { data: tip } = await publicClient().from("running_tips").select("*").eq("slug", data.slug).eq("is_published", true).maybeSingle();
+    return tip ?? null;
+  });

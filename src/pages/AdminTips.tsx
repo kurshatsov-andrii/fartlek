@@ -106,7 +106,10 @@ const AdminTips = () => {
               <div><Label>Дата публікації</Label><Input type="date" value={edit.published_on} onChange={(e) => set({ published_on: e.target.value })} /></div>
               <div className="sm:col-span-2"><Label>Адреса сторінки (необов'язково)</Label><Input placeholder="створиться з назви" value={edit.slug} onChange={(e) => set({ slug: translit(e.target.value) })} /></div>
               <div className="sm:col-span-2"><Label>Короткий анонс</Label><Textarea rows={2} value={edit.excerpt ?? ""} onChange={(e) => set({ excerpt: e.target.value })} /></div>
-              <div className="sm:col-span-2"><Label>Посилання на відео YouTube</Label><Input placeholder="https://youtube.com/..." value={edit.youtube_url ?? ""} onChange={(e) => set({ youtube_url: e.target.value })} /></div>
+              <div><Label>Відео 1 — заголовок (H2)</Label><Input value={edit.youtube_title ?? ""} onChange={(e) => set({ youtube_title: e.target.value })} /></div>
+              <div><Label>Відео 1 — посилання YouTube</Label><Input placeholder="https://youtube.com/..." value={edit.youtube_url ?? ""} onChange={(e) => set({ youtube_url: e.target.value })} /></div>
+              <div><Label>Відео 2 — заголовок (H2)</Label><Input value={edit.youtube_title_2 ?? ""} onChange={(e) => set({ youtube_title_2: e.target.value })} /></div>
+              <div><Label>Відео 2 — посилання YouTube</Label><Input placeholder="https://youtube.com/..." value={edit.youtube_url_2 ?? ""} onChange={(e) => set({ youtube_url_2: e.target.value })} /></div>
               <div className="sm:col-span-2"><Label>Текст статті</Label><Textarea rows={12} value={edit.content ?? ""} onChange={(e) => set({ content: e.target.value })} /></div>
             </div>
             <div className="space-y-2">

@@ -1,13 +1,18 @@
 import { createFileRoute } from "@tanstack/react-router";
 import TipArticle from "@/pages/TipArticle";
 import { pageHead } from "@/lib/route-head";
-import { getSeoOverride, getTipSeo } from "@/lib/page-seo.functions";
+import { getSeoOverride, getTipSeo, getTipArticle } from "@/lib/page-seo.functions";
+import type { RunningTip } from "@/lib/tips";
 
 export const Route = createFileRoute("/tips/$category/$slug")({
   loader: async ({ params }) => {
     const path = `/tips/${params.category}/${params.slug}`;
-    const [tip, override] = await Promise.all([getTipSeo({ data: { slug: params.slug } }), getSeoOverride({ data: { path } })]);
-    return { tip, override };
+    const [tip, override, article] = await Promise.all([
+      getTipSeo({ data: { slug: params.slug } }),
+      getSeoOverride({ data: { path } }),
+      getTipArticle({ data: { slug: params.slug } }).catch(() => undefined),
+    ]);
+    return { tip, override, article: article as RunningTip | null | undefined };
   },
   head: ({ params, loaderData }) =>
     pageHead({
@@ -18,5 +23,10 @@ export const Route = createFileRoute("/tips/$category/$slug")({
       type: "article",
       override: loaderData?.override ?? null,
     }),
-  component: TipArticle,
+  component: TipRoute,
 });
+
+function TipRoute() {
+  const { article } = Route.useLoaderData();
+  return <TipArticle initial={article} />;
+}
