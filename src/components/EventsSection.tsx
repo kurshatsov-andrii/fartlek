@@ -161,16 +161,8 @@ export const EventsSection = () => {
           <div className="mt-3 flex flex-wrap items-center gap-2 sm:gap-4">
             <p className="text-base text-muted-foreground sm:text-lg">{t.events.sub}</p>
             <PageViews pageKey="page:events" />
-            <div className="shrink-0 animate-mascot-in-right pointer-events-none">
-              <img
-                src={tigerLeft}
-                alt=""
-                aria-hidden="true"
-                loading="lazy"
-                className="w-16 sm:w-20 animate-mascot-bob select-none"
-              />
-            </div>
           </div>
+
         </div>
 
 

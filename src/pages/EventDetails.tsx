@@ -830,14 +830,6 @@ const EventDetails = () => {
                     url: `${siteOrigin}${canonical}`,
                   }}
                 />
-
-                <img
-                  src={tigerUp}
-                  alt="Тигр-бігун Фартлек показує вгору на кнопки реєстрації"
-                  className="pointer-events-none absolute left-1/2 top-[calc(100%-1.25rem)] z-10 w-32 origin-top animate-mascot-out sm:w-40"
-                  loading="lazy"
-                  decoding="async"
-                />
               </div>
 
               )}
