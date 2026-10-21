@@ -97,10 +97,10 @@ export const Hero = () => {
                     <User className="mr-2 h-5 w-5" />
                     {t.hero.ctaParticipant}
                     <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
-                  </Link>
+                   </Link>
                 </Button>
-              </div>
               <Button
+
                 asChild
                 size="lg"
                 variant="outline"
