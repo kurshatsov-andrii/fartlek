@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Eye } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/useAuth";
 import { cn } from "@/lib/utils";
 
 interface PageViewsProps {
@@ -8,9 +9,14 @@ interface PageViewsProps {
   className?: string;
 }
 
-/** Eye icon with a view counter. Counts one view per browser session per page key. */
+/**
+ * Eye icon with a view counter. Counts one view per browser session per page key.
+ * Views keep counting for every visitor, but the counter is displayed to admins only.
+ */
 export const PageViews = ({ pageKey, className }: PageViewsProps) => {
+  const { isAdmin } = useAuth();
   const [views, setViews] = useState<number | null>(null);
+
 
   useEffect(() => {
     if (!pageKey) return;
@@ -51,7 +57,8 @@ export const PageViews = ({ pageKey, className }: PageViewsProps) => {
     };
   }, [pageKey]);
 
-  if (views === null) return null;
+  if (!isAdmin || views === null) return null;
+
 
   return (
     <span
