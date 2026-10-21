@@ -91,15 +91,8 @@ export const Hero = () => {
 
           {!user && (
             <div className="mt-10 flex flex-col gap-3 sm:flex-row">
-              <div className="relative">
-                <img
-                  src={tigerMascot}
-                  alt="Тигр-бігун Фартлек показує на кнопку входу для учасників"
-                  className="pointer-events-none absolute bottom-[calc(100%-0.5rem)] left-1/2 z-20 block w-36 origin-bottom animate-mascot-out sm:w-44 md:w-52 lg:w-64"
-                  loading="lazy"
-                  decoding="async"
-                />
                 <Button asChild size="lg" className="group relative z-10 h-14 w-full px-8 text-base shadow-glow">
+
                   <Link to="/auth?role=participant">
                     <User className="mr-2 h-5 w-5" />
                     {t.hero.ctaParticipant}
