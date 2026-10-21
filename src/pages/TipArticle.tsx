@@ -52,7 +52,7 @@ const TipArticle = ({ initial }: { initial?: RunningTip | null }) => {
                 <span className="flex items-center gap-1"><Calendar className="h-4 w-4" />{formatBlogDate(tip.published_on)}</span>
               </div>
             </header>
-            {tip.cover_url && <img src={tip.cover_url} alt={tip.title} className="w-full rounded-2xl object-cover max-h-[520px]" />}
+            {tip.cover_url && <img src={tip.cover_url} alt={tip.title} className="w-full h-auto rounded-2xl object-contain max-h-[520px]" />}
             {tip.excerpt && <p className="text-lg text-muted-foreground">{tip.excerpt}</p>}
             {tip.content && <div className="whitespace-pre-line leading-relaxed text-foreground/90">{tip.content}</div>}
             <Video url={tip.youtube_url} title={tip.youtube_title} fallback={tip.title} />

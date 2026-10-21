@@ -4,6 +4,7 @@ import { Calendar, Loader2, Settings } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
+import { EventPoster } from "@/components/EventPoster";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { formatBlogDate } from "@/lib/blog";
@@ -63,8 +64,8 @@ const Tips = ({ category }: { category?: string }) => {
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {tips.map((t) => (
               <Link key={t.id} to={tipPath(t)} className="group rounded-2xl overflow-hidden border border-border bg-card transition-bounce hover:-translate-y-2 hover:shadow-elevated isolate">
-                <div className="aspect-[16/10] bg-muted overflow-hidden">
-                  <img src={t.cover_url || logo} alt={t.title} loading="lazy" className="h-full w-full object-cover" />
+                <div className="aspect-video bg-muted overflow-hidden">
+                  <EventPoster src={t.cover_url || logo} alt={t.title} />
                 </div>
                 <div className="p-5 space-y-2">
                   <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
