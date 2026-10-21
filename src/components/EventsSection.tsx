@@ -14,7 +14,6 @@ import { supabase } from "@/integrations/supabase/client";
 import { type EventCategory } from "@/lib/i18n";
 import { eventCity } from "@/lib/utils";
 import { availableStartCategories, showEventResults } from "@/lib/home-starts";
-import tigerLeft from "@/assets/tiger-left.png";
 import { OtherStartsSection, DISTANCE_BUCKET_LABELS, type SharedStartFilters } from "@/components/OtherStartsSection";
 import { useCallback } from "react";
 

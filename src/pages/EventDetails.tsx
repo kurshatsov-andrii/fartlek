@@ -33,7 +33,6 @@ import { PromoCodeInput, PromoPreview } from "@/components/PromoCodeInput";
 import { EventChat } from "@/components/EventChat";
 import { NovaPoshtaDelivery, DeliveryData, emptyDelivery, validateDelivery } from "@/components/NovaPoshtaDelivery";
 import type { EventCategory } from "@/lib/i18n";
-import tigerUp from "@/assets/tiger-up.png";
 
 
 interface EventRow {
