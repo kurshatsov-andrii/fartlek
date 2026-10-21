@@ -138,6 +138,8 @@ export const Header = () => {
                   <DropdownMenuItem asChild><Link to="/for-organizers" className="text-primary font-semibold"><Megaphone className="h-4 w-4" />{t.nav.organizer}</Link></DropdownMenuItem>
                   <DropdownMenuItem asChild><Link to="/features"><Sparkles className="h-4 w-4" />Можливості</Link></DropdownMenuItem>
                   <DropdownMenuItem asChild><Link to="/about"><Heart className="h-4 w-4" />Про нас</Link></DropdownMenuItem>
+                  <DropdownMenuItem asChild><Link to="/testimonials"><Star className="h-4 w-4" />Відгуки</Link></DropdownMenuItem>
+
                   <DropdownMenuItem asChild><Link to="/contacts"><Mail className="h-4 w-4" />{t.nav.contacts}</Link></DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem asChild><Link to="/auth"><User className="h-4 w-4" />{t.nav.login}</Link></DropdownMenuItem>
