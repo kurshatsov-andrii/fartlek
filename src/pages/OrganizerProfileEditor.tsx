@@ -11,6 +11,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useApp } from "@/contexts/AppContext";
 import { useAuth } from "@/hooks/useAuth";
+import { compressImage } from "@/lib/compress-image";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { CLUB_ACTIVITY_TYPES, CLUB_ACTIVITY_LABELS, type ClubActivityType } from "@/lib/clubs";
