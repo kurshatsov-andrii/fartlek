@@ -207,7 +207,13 @@
   </url>
   <url>
     <loc>https://fartlek.com.ua/tips/ekipiruvannia/yak-zavyazaty-shnurky-na-krosivkah</loc>
-    <lastmod>2026-10-20</lastmod>
+    <lastmod>2026-10-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://fartlek.com.ua/tips/hodynnyky/amazfit-balance-3</loc>
+    <lastmod>2026-10-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -748,6 +754,12 @@
   <url>
     <loc>https://fartlek.com.ua/clubs/fartlek</loc>
     <lastmod>2026-10-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://fartlek.com.ua/clubs/left-side-runners</loc>
+    <lastmod>2026-10-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
