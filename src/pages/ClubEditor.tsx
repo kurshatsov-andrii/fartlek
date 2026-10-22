@@ -205,7 +205,9 @@ const ClubEditor = () => {
     }
     setUploading(true);
     try {
-      const ext = getImageExtension(file);
+      // Shrinks the logo to ≤512px JPEG before upload so catalog pages load fast.
+      const compressed = await compressImage(file, 512, 0.85);
+      const ext = getImageExtension(compressed);
       const { data: { user: authUser } } = await supabase.auth.getUser();
       if (!authUser) {
         toast.error(lang === "uk" ? "Сесія завершилась, увійдіть знову" : "Session expired, please sign in again");
@@ -216,9 +218,9 @@ const ClubEditor = () => {
 
       const { error } = await supabase.storage
         .from("club-logos")
-        .upload(path, file, {
+        .upload(path, compressed, {
           upsert: false,
-          contentType: getImageContentType(ext, file.type),
+          contentType: getImageContentType(ext, compressed.type),
           cacheControl: "3600",
         });
       if (error) {
