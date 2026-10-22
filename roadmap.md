@@ -1,5 +1,10 @@
 # Roadmap
 
+## Unsaved forms across tabs and windows
+- [ ] Fix background authentication refresh resetting editors
+- [ ] Audit other adding/editing forms for focus-triggered resets
+- [ ] Run regression tests and signed-in tab/window checks without saving test changes
+
 ## Homepage start discovery
 - [x] Show only populated upcoming categories; shared filters above sibling event and other-start sections; empty events hidden; Krayna search and marathon selection verified with real starts, 9 tests passed, desktop/mobile checked without page errors
 

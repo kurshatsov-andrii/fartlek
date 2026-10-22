@@ -197,7 +197,7 @@ const ClubEditor = () => {
       }
       setLoading(false);
     })();
-  }, [user, editClubId]);
+  }, [user?.id, editClubId]);
 
   const uploadLogo = async (file: File) => {
     if (!user) return;
