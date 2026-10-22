@@ -152,7 +152,7 @@ const EventEditor = () => {
       setLoadedFor(id ?? null);
       setLoading(false);
     })();
-  }, [id, isNew, user, loadedFor]);
+  }, [id, isNew, user?.id, loadedFor]);
 
   const uploadImage = async (file: File) => {
     if (!user) return;

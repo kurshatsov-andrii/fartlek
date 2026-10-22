@@ -106,7 +106,7 @@ const Profile = () => {
       await reloadAthletes(user.id);
       setLoading(false);
     })();
-  }, [user]);
+  }, [user?.id]);
 
   if (authLoading) return null;
   if (!user) return <Navigate to="/auth" replace />;

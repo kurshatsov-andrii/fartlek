@@ -1,5 +1,7 @@
 # Architecture rules
 
+- Keep background auth refresh out of initial loading and hydrate editable forms by account/record IDs, not auth object identity, so tab/window changes cannot unmount forms or overwrite unsaved input.
+
 - Keep guest likes separate from account likes, accessible only through token-scoped RPCs; aggregate both for public counts without exposing visitor identities.
 
 - Persist saved start references and reminder opt-ins in user-owned rows with RLS; resolve current public data rather than storing snapshots so date edits remain current.
