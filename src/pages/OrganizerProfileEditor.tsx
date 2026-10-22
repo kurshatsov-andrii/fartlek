@@ -11,6 +11,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useApp } from "@/contexts/AppContext";
 import { useAuth } from "@/hooks/useAuth";
+import { compressImage } from "@/lib/compress-image";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { CLUB_ACTIVITY_TYPES, CLUB_ACTIVITY_LABELS, type ClubActivityType } from "@/lib/clubs";
@@ -165,17 +166,19 @@ const OrganizerProfileEditor = () => {
     }
     setUploading(true);
     try {
-      const ext = getImageExtension(file);
+      // Shrinks the logo to ≤512px JPEG before upload so catalog pages load fast.
+      const compressed = await compressImage(file, 512, 0.85);
+      const ext = getImageExtension(compressed);
       const { data: { user: authUser } } = await supabase.auth.getUser();
       if (!authUser) {
         toast.error(lang === "uk" ? "Сесія завершилась, увійдіть знову" : "Session expired");
         setUploading(false); return;
       }
       const path = `${authUser.id}/logo-${Date.now()}.${ext}`;
-      const contentType = file.type || (ext === "svg" ? "image/svg+xml" : ext === "jpg" ? "image/jpeg" : `image/${ext}`);
+      const contentType = compressed.type || (ext === "svg" ? "image/svg+xml" : ext === "jpg" ? "image/jpeg" : `image/${ext}`);
       const { error } = await supabase.storage
         .from("organizer-logos")
-        .upload(path, file, { upsert: false, contentType, cacheControl: "3600" });
+        .upload(path, compressed, { upsert: false, contentType, cacheControl: "3600" });
       if (error) {
         console.error("organizer-logo upload error:", error);
         toast.error(error.message);
