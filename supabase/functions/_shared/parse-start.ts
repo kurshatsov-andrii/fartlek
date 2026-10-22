@@ -50,7 +50,9 @@ export function parseStartContent(text: string) {
   if (/(cycling|bicycle|велозаїзд|велогонка|велостарт|велоперегон|вело\s|gran\s?fondo|granfondo|вело-?марафон)/i.test(t)) out.add("cycling");
   if (/(aquathlon|акватлон)/i.test(t)) out.add("aquathlon");
   if (/(duathlon|дуатлон)/i.test(t)) out.add("duathlon");
-  if (/(triathlon|триатлон|ironman|iron\s?man|70\.3)/i.test(t)) out.add("triathlon");
+  // Згадка федерації триатлону серед організаторів — ще не триатлон.
+  const noFedTri = t.replace(/федераці[їяю]\s+тріатлону?|федераці[їяю]\s+триатлон[ау]?/gi, " ");
+  if (/(triathlon|триатлон|тріатлон|ironman|iron\s?man|70\.3)/i.test(noFedTri)) out.add("triathlon");
   if (/(кросс|\sкрос\s|cross-?country|кросовий)/i.test(t)) out.add("cross");
   if (/(online|онлайн|virtual)/i.test(t)) out.add("online");
   if (out.size === 0 || /(\brun\b|забіг|пробіг|біговий|fun\s?run|charity\s?run)/i.test(t)) out.add("run");
