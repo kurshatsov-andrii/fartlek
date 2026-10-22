@@ -157,7 +157,7 @@ const OrganizerProfileEditor = () => {
       }
       setLoading(false);
     })();
-  }, [user, editId]);
+  }, [user?.id, editId]);
 
   const uploadLogo = async (file: File) => {
     if (!user) return;

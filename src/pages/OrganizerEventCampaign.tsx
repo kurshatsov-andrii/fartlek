@@ -86,7 +86,7 @@ const OrganizerEventCampaign = () => {
       }
       setPageLoading(false);
     })();
-  }, [id, user]);
+  }, [id, user?.id]);
 
   // Persist draft as user types
   useEffect(() => {

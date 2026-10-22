@@ -1,5 +1,10 @@
 # Roadmap
 
+## Unsaved forms across tabs and windows
+- [x] Fix background authentication refresh resetting editors; hydrate club, organizer, profile, event and campaign forms by stable IDs
+- [x] Audit other adding/editing forms for focus-triggered resets; keep initial auth loading separate from background refresh
+- [x] Verify nine signed-in editor flows across tabs/windows and auth notifications without saving records; 23 tests passed and no browser errors
+
 ## Homepage start discovery
 - [x] Show only populated upcoming categories; shared filters above sibling event and other-start sections; empty events hidden; Krayna search and marathon selection verified with real starts, 9 tests passed, desktop/mobile checked without page errors
 

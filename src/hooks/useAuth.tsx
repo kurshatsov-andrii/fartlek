@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState, ReactNode } from "react";
+import { useContext, useEffect, useRef, useState, ReactNode } from "react";
 import { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 import { AuthContext, type AppRole } from "./auth-context";
@@ -10,37 +10,62 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [roles, setRoles] = useState<AppRole[]>([]);
   const [loading, setLoading] = useState(true);
+  const activeUserId = useRef<string | null | undefined>(undefined);
+  const roleRequest = useRef(0);
 
   const fetchRoles = async (userId: string) => {
-    const { data } = await supabase.from("user_roles").select("role").eq("user_id", userId);
-    setRoles((data ?? []).map((r) => r.role as AppRole));
+    const request = ++roleRequest.current;
+    const { data, error } = await supabase.from("user_roles").select("role").eq("user_id", userId);
+    if (activeUserId.current !== userId || request !== roleRequest.current) return;
+    // A temporary background failure must not unmount an open editor.
+    if (!error) setRoles((data ?? []).map((r) => r.role as AppRole));
   };
 
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, newSession) => {
+    let disposed = false;
+    let receivedAuthEvent = false;
+    const applySession = (newSession: Session | null) => {
+      if (disposed) return;
+      const nextUser = newSession?.user ?? null;
+      const nextId = nextUser?.id ?? null;
+      const identityChanged = activeUserId.current !== nextId;
+      activeUserId.current = nextId;
       setSession(newSession);
-      setUser(newSession?.user ?? null);
-      if (newSession?.user) {
-        // defer to avoid deadlock
-        setLoading(true);
+      // Auth emits SIGNED_IN on returning to a tab, even for the same account.
+      // Keep equivalent user objects stable so existing form effects do not reload.
+      setUser((current) => JSON.stringify(current) === JSON.stringify(nextUser) ? current : nextUser);
+      if (nextUser) {
+        if (identityChanged) {
+          setRoles([]);
+          setLoading(true);
+        }
+        // Defer queries to avoid an auth callback deadlock; background refresh
+        // never re-enters initial loading or unmounts dialogs/forms.
         setTimeout(() => {
-          fetchRoles(newSession.user.id).finally(() => setLoading(false));
+          if (disposed || activeUserId.current !== nextId) return;
+          fetchRoles(nextUser.id).finally(() => {
+            if (!disposed && activeUserId.current === nextId) setLoading(false);
+          });
         }, 0);
       } else {
+        ++roleRequest.current;
         setRoles([]);
         setLoading(false);
       }
+    };
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, newSession) => {
+      receivedAuthEvent = true;
+      applySession(newSession);
     });
 
-    supabase.auth.getSession().then(async ({ data: { session: s } }) => {
-      setSession(s);
-      setUser(s?.user ?? null);
-      if (s?.user) await fetchRoles(s.user.id);
-      else setRoles([]);
-      setLoading(false);
+    supabase.auth.getSession().then(({ data: { session: s } }) => {
+      if (!receivedAuthEvent) applySession(s);
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      disposed = true;
+      subscription.unsubscribe();
+    };
   }, []);
 
   // Realtime: refresh roles when admin grants/revokes them while user is online
