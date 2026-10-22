@@ -1,6 +1,7 @@
 # Architecture rules
 
 - Keep background auth refresh out of initial loading and hydrate editable forms by account/record IDs, not auth object identity, so tab/window changes cannot unmount forms or overwrite unsaved input.
+- Run regression tests through the standalone Vitest config with React deduplication so browser-hook tests share the renderer's React instance without application server plugins.
 
 - Keep guest likes separate from account likes, accessible only through token-scoped RPCs; aggregate both for public counts without exposing visitor identities.
 
