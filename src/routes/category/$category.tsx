@@ -3,6 +3,7 @@ import CategoryPage from "@/pages/CategoryPage";
 import { getSeoOverride } from "@/lib/page-seo.functions";
 import { pageHead } from "@/lib/route-head";
 import { categorySeo } from "@/lib/seo";
+import { breadcrumbJsonLd, jsonLdScript } from "@/lib/jsonld";
 import type { EventCategory } from "@/lib/i18n";
 
 export const Route = createFileRoute("/category/$category")({
@@ -22,12 +23,24 @@ export const Route = createFileRoute("/category/$category")({
     } catch {
       seo = fallback;
     }
-    return pageHead({
-      title: seo?.title ?? fallback.title,
-      description: seo?.description ?? fallback.description,
-      path: loaderData?.path ?? "/category",
-      override: loaderData?.override ?? null,
-    });
+    const path = loaderData?.path ?? "/category";
+    return {
+      ...pageHead({
+        title: seo?.title ?? fallback.title,
+        description: seo?.description ?? fallback.description,
+        path,
+        override: loaderData?.override ?? null,
+      }),
+      scripts: [
+        jsonLdScript(
+          breadcrumbJsonLd([
+            { name: "Головна", path: "/" },
+            { name: "Категорії", path: "/category" },
+            { name: seo?.title ?? fallback.title, path },
+          ]),
+        ),
+      ],
+    };
   },
   component: CategoryPage,
 });
