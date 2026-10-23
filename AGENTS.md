@@ -1,5 +1,7 @@
 # Architecture rules
 
+- Keep the AI-readable site overview in public/llms.txt with canonical absolute links and public-only facts; use live event pages for changing race details rather than duplicating schedules in the overview.
+
 - Render /faq as server-rendered HTML question headings and visible answers, with exact route-owned metadata and no QAPage schema, so crawlers can read the content without JavaScript.
 
 - Keep background auth refresh out of initial loading and hydrate editable forms by account/record IDs, not auth object identity, so tab/window changes cannot unmount forms or overwrite unsaved input.
