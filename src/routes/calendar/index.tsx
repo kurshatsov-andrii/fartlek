@@ -5,6 +5,7 @@ import { getSeoOverride } from "@/lib/page-seo.functions";
 import { pageHead } from "@/lib/route-head";
 import { calendarQueryOptions } from "@/lib/calendar-query";
 import { CalendarLoadError } from "@/components/CalendarLoadError";
+import { breadcrumbJsonLd, jsonLdScript } from "@/lib/jsonld";
 
 const PATH = "/calendar";
 
@@ -14,12 +15,21 @@ export const Route = createFileRoute("/calendar/")({
     const [override] = await Promise.all([getSeoOverride({ data: { path: PATH } }), context.queryClient.ensureQueryData(calendarQueryOptions)]);
     return override;
   },
-  head: ({ loaderData }) =>
-    pageHead({
+  head: ({ loaderData }) => ({
+    ...pageHead({
       ...discoverySeo("/calendar"),
       path: PATH,
       override: loaderData ?? null,
     }),
+    scripts: [
+      jsonLdScript(
+        breadcrumbJsonLd([
+          { name: "Головна", path: "/" },
+          { name: "Календар забігів", path: PATH },
+        ]),
+      ),
+    ],
+  }),
   component: CalendarPage,
   errorComponent: CalendarLoadError,
   notFoundComponent: () => <div className="container py-12">Календар не знайдено.</div>,
