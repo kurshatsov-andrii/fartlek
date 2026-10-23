@@ -14,6 +14,7 @@ import { Route as AboutRouteImport } from './routes/about'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as CompareRouteImport } from './routes/compare'
 import { Route as ContactsRouteImport } from './routes/contacts'
+import { Route as FaqRouteImport } from './routes/faq'
 import { Route as FeaturesRouteImport } from './routes/features'
 import { Route as ForOrganizersRouteImport } from './routes/for-organizers'
 import { Route as GuideRouteImport } from './routes/guide'
@@ -99,6 +100,11 @@ const CompareRoute = CompareRouteImport.update({
 const ContactsRoute = ContactsRouteImport.update({
   id: '/contacts',
   path: '/contacts',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FaqRoute = FaqRouteImport.update({
+  id: '/faq',
+  path: '/faq',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FeaturesRoute = FeaturesRouteImport.update({
@@ -418,6 +424,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/compare': typeof CompareRoute
   '/contacts': typeof ContactsRoute
+  '/faq': typeof FaqRoute
   '/features': typeof FeaturesRoute
   '/for-organizers': typeof ForOrganizersRoute
   '/guide': typeof GuideRoute
@@ -486,6 +493,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/compare': typeof CompareRoute
   '/contacts': typeof ContactsRoute
+  '/faq': typeof FaqRoute
   '/features': typeof FeaturesRoute
   '/for-organizers': typeof ForOrganizersRoute
   '/guide': typeof GuideRoute
@@ -555,6 +563,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/compare': typeof CompareRoute
   '/contacts': typeof ContactsRoute
+  '/faq': typeof FaqRoute
   '/features': typeof FeaturesRoute
   '/for-organizers': typeof ForOrganizersRoute
   '/guide': typeof GuideRoute
@@ -625,6 +634,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/compare'
     | '/contacts'
+    | '/faq'
     | '/features'
     | '/for-organizers'
     | '/guide'
@@ -693,6 +703,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/compare'
     | '/contacts'
+    | '/faq'
     | '/features'
     | '/for-organizers'
     | '/guide'
@@ -761,6 +772,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/compare'
     | '/contacts'
+    | '/faq'
     | '/features'
     | '/for-organizers'
     | '/guide'
@@ -830,6 +842,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   CompareRoute: typeof CompareRoute
   ContactsRoute: typeof ContactsRoute
+  FaqRoute: typeof FaqRoute
   FeaturesRoute: typeof FeaturesRoute
   ForOrganizersRoute: typeof ForOrganizersRoute
   GuideRoute: typeof GuideRoute
@@ -928,6 +941,13 @@ declare module '@tanstack/react-router' {
       path: '/contacts'
       fullPath: '/contacts'
       preLoaderRoute: typeof ContactsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/faq': {
+      id: '/faq'
+      path: '/faq'
+      fullPath: '/faq'
+      preLoaderRoute: typeof FaqRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/features': {
@@ -1366,6 +1386,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   CompareRoute: CompareRoute,
   ContactsRoute: ContactsRoute,
+  FaqRoute: FaqRoute,
   FeaturesRoute: FeaturesRoute,
   ForOrganizersRoute: ForOrganizersRoute,
   GuideRoute: GuideRoute,
