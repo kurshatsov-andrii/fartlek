@@ -1,5 +1,5 @@
 import { Link, useLocation, useNavigate } from "@/lib/router-compat";
-import { LogOut, User, LayoutDashboard, Ticket, Shield, Mail, Users, Sparkles, Star, Menu, Megaphone, BookOpen, Heart, Bookmark } from "lucide-react";
+import { LogOut, User, LayoutDashboard, Ticket, Shield, Mail, Users, Sparkles, Star, Menu, Megaphone, BookOpen, Heart, Bookmark, HelpCircle } from "lucide-react";
 import logoFartlek from "@/assets/logo-fartlek.jpg";
 import { Button } from "@/components/ui/button";
 import { useApp } from "@/contexts/AppContext";
@@ -62,6 +62,7 @@ export const Header = () => {
           <Link to="/features" className="text-[13px] xl:text-sm font-medium text-muted-foreground hover:text-foreground transition-base">Можливості</Link>
           <Link to="/about" className="text-[13px] xl:text-sm font-medium text-muted-foreground hover:text-foreground transition-base">Про нас</Link>
           <Link to="/testimonials" className="text-[13px] xl:text-sm font-medium text-muted-foreground hover:text-foreground transition-base">Відгуки</Link>
+          <Link to="/faq" className="text-[13px] xl:text-sm font-medium text-muted-foreground hover:text-foreground transition-base">FAQ</Link>
 
           {isOrganizer ? (
             <Link to="/organizer" className="text-[13px] xl:text-sm font-medium text-muted-foreground hover:text-foreground transition-base">{t.nav.dashboard}</Link>
@@ -113,6 +114,7 @@ export const Header = () => {
                   <DropdownMenuItem asChild className="lg:hidden"><Link to="/for-organizers"><Megaphone className="h-4 w-4" />{t.nav.organizer}</Link></DropdownMenuItem>
                 )}
                 <DropdownMenuItem asChild><Link to="/testimonials"><Star className="h-4 w-4" />Відгуки</Link></DropdownMenuItem>
+                <DropdownMenuItem asChild><Link to="/faq"><HelpCircle className="h-4 w-4" />FAQ</Link></DropdownMenuItem>
                 <DropdownMenuItem asChild className="lg:hidden"><Link to="/contacts"><Mail className="h-4 w-4" />{t.nav.contacts}</Link></DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={signOut}><LogOut className="h-4 w-4" />{t.nav.logout}</DropdownMenuItem>
@@ -139,6 +141,7 @@ export const Header = () => {
                   <DropdownMenuItem asChild><Link to="/features"><Sparkles className="h-4 w-4" />Можливості</Link></DropdownMenuItem>
                   <DropdownMenuItem asChild><Link to="/about"><Heart className="h-4 w-4" />Про нас</Link></DropdownMenuItem>
                   <DropdownMenuItem asChild><Link to="/testimonials"><Star className="h-4 w-4" />Відгуки</Link></DropdownMenuItem>
+                  <DropdownMenuItem asChild><Link to="/faq"><HelpCircle className="h-4 w-4" />FAQ</Link></DropdownMenuItem>
 
                   <DropdownMenuItem asChild><Link to="/contacts"><Mail className="h-4 w-4" />{t.nav.contacts}</Link></DropdownMenuItem>
                   <DropdownMenuSeparator />
