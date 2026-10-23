@@ -120,9 +120,43 @@ const About = () => {
           </div>
         </section>
 
+        <section className="container pt-12 sm:pt-16">
+          <div className="rounded-3xl border border-border bg-card p-6 sm:p-10 shadow-card space-y-5">
+            <h2 className="font-display text-2xl sm:text-3xl font-bold tracking-tight">
+              Фартлек — українська платформа <span className="text-gradient">спортивних подій</span> та бігова спільнота
+            </h2>
+            <div className="space-y-4 text-base sm:text-lg leading-relaxed">
+              <p>
+                Fartlek.com.ua — українська платформа, що об'єднує бігунів, бігові клуби й
+                організаторів спортивних подій.
+              </p>
+              <p>
+                На Фартлек можна знайти забіги, марафони, напівмарафони, трейли та інші спортивні
+                старти в Україні, переглянути календар і мапу подій, обрати дистанцію та
+                зареєструватися онлайн.
+              </p>
+              <p>
+                Fartlek Events допомагає організаторам створювати сторінки подій, приймати
+                реєстрації й оплати, керувати учасниками, публікувати результати та видавати
+                цифрові сертифікати.
+              </p>
+              <p>
+                Платформа розвивається разом зі спортивною спільнотою: нові інструменти допомагають
+                спортсменам знаходити старти, клубам — залучати учасників, а організаторам —
+                простіше проводити спортивні заходи.
+              </p>
+              <p className="font-semibold">
+                Місія Фартлек — зробити спортивні події в Україні доступнішими, а бігову спільноту —
+                більш об'єднаною.
+              </p>
+            </div>
+          </div>
+        </section>
+
         <section className="container pt-12 sm:pt-16 max-w-3xl">
           <CommunityIntro variant="plain" />
         </section>
+
 
         <section className="container py-12 sm:py-16 max-w-3xl">
           <div className="space-y-5 text-base sm:text-lg leading-relaxed">
