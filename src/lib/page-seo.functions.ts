@@ -42,6 +42,9 @@ export type EventSeo = {
   description: string;
   image: string | null;
   path: string;
+  startDate?: string | null;
+  location?: string | null;
+  organizerName?: string | null;
 } | null;
 
 /** Server-rendered metadata for an event page (by uuid or slug). */
@@ -84,6 +87,9 @@ const getEventSeoRpc = createServerFn({ method: "GET" })
         description: desc.length > 160 ? desc.slice(0, 157) + "…" : desc,
         image,
         path: `/events/${row.slug ?? row.id}`,
+        startDate: row.event_date ?? null,
+        location: city || null,
+        organizerName: row.organizer_name ?? null,
       };
     } catch {
       return null;
