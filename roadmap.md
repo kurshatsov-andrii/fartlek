@@ -1,7 +1,7 @@
 # Roadmap
 
 ## FAQ page
-- [ ] Add /faq with exact requested metadata and plain HTML questions/answers; link from footer and verify initial HTML and page navigation
+- [x] Add /faq with exact requested metadata and 16 plain HTML questions/answers including the supplied 12 questions; footer and catalog navigation, initial HTML, desktop/320px layout verified without browser errors; build OK
 
 ## Unsaved forms across tabs and windows
 - [x] Fix background authentication refresh resetting editors; hydrate club, organizer, profile, event and campaign forms by stable IDs
