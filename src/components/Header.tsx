@@ -42,7 +42,7 @@ export const Header = () => {
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-border/40 bg-background/80 backdrop-blur-lg">
-      <div className="container grid min-h-16 grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-1 px-3 sm:flex sm:justify-between sm:gap-3 sm:px-6 sm:py-1.5 xl:h-16 xl:py-0">
+      <div className="container grid min-h-16 grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-1 px-3 sm:flex sm:justify-between sm:gap-3 sm:px-6 sm:py-1.5 xl:min-h-16 xl:py-0">
         <Link to="/" className="flex items-center gap-3 group shrink-0">
           <img src={logoFartlek} alt="Фартлек" className="h-8 w-8 sm:h-10 sm:w-10 rounded-full object-cover shadow-glow transition-bounce group-hover:scale-110" />
           <span className="hidden sm:inline font-display text-xl font-bold tracking-tight">
