@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import EventDetails from "@/pages/EventDetails";
 import { getEventSeo, getSeoOverride } from "@/lib/page-seo.functions";
 import { pageHead } from "@/lib/route-head";
+import { breadcrumbJsonLd, jsonLdScript, sportsEventJsonLd } from "@/lib/jsonld";
 
 export const Route = createFileRoute("/events/$id/")({
   loader: async ({ params }) => {
@@ -12,8 +13,8 @@ export const Route = createFileRoute("/events/$id/")({
     ]);
     return { event, override, path };
   },
-  head: ({ loaderData }) =>
-    pageHead({
+  head: ({ loaderData }) => {
+    const h = pageHead({
       title: loaderData?.event?.title ?? "Спортивна подія | Fartlek Events",
       description:
         loaderData?.event?.description ??
@@ -22,6 +23,30 @@ export const Route = createFileRoute("/events/$id/")({
       image: loaderData?.event?.image ?? null,
       type: "article",
       override: loaderData?.override ?? null,
-    }),
+    });
+    const event = loaderData?.event;
+    if (!event) return h;
+    return {
+      ...h,
+      scripts: [
+        jsonLdScript([
+          sportsEventJsonLd({
+            name: event.title,
+            description: event.description,
+            image: event.image,
+            path: event.path,
+            startDate: event.startDate,
+            city: event.location,
+            organizer: event.organizerName,
+          }),
+          breadcrumbJsonLd([
+            { name: "Головна", path: "/" },
+            { name: "Календар", path: "/calendar" },
+            { name: event.title, path: event.path },
+          ]),
+        ]),
+      ],
+    };
+  },
   component: EventDetails,
 });

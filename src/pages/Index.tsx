@@ -13,25 +13,9 @@ import { discoverySeo } from "@/lib/discovery-seo";
 const Index = () => {
   const { lang } = useApp();
   const seo = discoverySeo("/", lang);
-  const jsonLd = [
-    {
-      "@context": "https://schema.org",
-      "@type": "Organization",
-      name: "Fartlek Events",
-      url: "https://fartlek.com.ua/",
-      logo: "https://fartlek.com.ua/favicon.png",
-      sameAs: ["https://fartlek.com.ua"],
-    },
-    {
-      "@context": "https://schema.org",
-      "@type": "WebSite",
-      name: "Fartlek Events",
-      url: "https://fartlek.com.ua/",
-    },
-  ];
   return (
     <div className="min-h-screen flex flex-col bg-background">
-      <SEO title={seo.title} description={seo.description} canonical="/" jsonLd={jsonLd} />
+      <SEO title={seo.title} description={seo.description} canonical="/" />
       <Header />
       <main className="flex-1">
         <HomeSearchHero />

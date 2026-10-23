@@ -42,6 +42,9 @@ export type EventSeo = {
   description: string;
   image: string | null;
   path: string;
+  startDate?: string | null;
+  location?: string | null;
+  organizerName?: string | null;
 } | null;
 
 /** Server-rendered metadata for an event page (by uuid or slug). */
@@ -84,6 +87,9 @@ const getEventSeoRpc = createServerFn({ method: "GET" })
         description: desc.length > 160 ? desc.slice(0, 157) + "…" : desc,
         image,
         path: `/events/${row.slug ?? row.id}`,
+        startDate: row.event_date ?? null,
+        location: city || null,
+        organizerName: row.organizer_name ?? null,
       };
     } catch {
       return null;
@@ -92,7 +98,7 @@ const getEventSeoRpc = createServerFn({ method: "GET" })
 
 export const SITE_URL = SITE;
 
-export type EntitySeo = { title: string; description: string; image: string | null; path: string } | null;
+export type EntitySeo = { title: string; description: string; image: string | null; path: string; startDate?: string | null; city?: string | null } | null;
 
 const cut = (s: string, n: number) => (s.length > n ? s.slice(0, n - 1).trimEnd() + "…" : s);
 const isUuidStr = (s: string) => /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(s);
@@ -162,6 +168,8 @@ const getStartSeoRpc = createServerFn({ method: "GET" })
         title: cut(title, 60), description: cut(desc, 160),
         image: typeof s.image_url === "string" && s.image_url.startsWith("http") ? s.image_url : null,
         path: `/starts/${s.slug}`,
+        startDate: s.event_date ?? null,
+        city: s.city ?? null,
       };
     } catch { return null; }
   });
