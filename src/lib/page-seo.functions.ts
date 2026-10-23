@@ -92,7 +92,7 @@ const getEventSeoRpc = createServerFn({ method: "GET" })
 
 export const SITE_URL = SITE;
 
-export type EntitySeo = { title: string; description: string; image: string | null; path: string } | null;
+export type EntitySeo = { title: string; description: string; image: string | null; path: string; startDate?: string | null; city?: string | null } | null;
 
 const cut = (s: string, n: number) => (s.length > n ? s.slice(0, n - 1).trimEnd() + "…" : s);
 const isUuidStr = (s: string) => /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(s);
@@ -162,6 +162,8 @@ const getStartSeoRpc = createServerFn({ method: "GET" })
         title: cut(title, 60), description: cut(desc, 160),
         image: typeof s.image_url === "string" && s.image_url.startsWith("http") ? s.image_url : null,
         path: `/starts/${s.slug}`,
+        startDate: s.event_date ?? null,
+        city: s.city ?? null,
       };
     } catch { return null; }
   });
