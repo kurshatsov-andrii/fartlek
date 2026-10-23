@@ -1,5 +1,8 @@
 # Roadmap
 
+## FAQ page
+- [ ] Add /faq with exact requested metadata and plain HTML questions/answers; link from footer and verify initial HTML and page navigation
+
 ## Unsaved forms across tabs and windows
 - [x] Fix background authentication refresh resetting editors; hydrate club, organizer, profile, event and campaign forms by stable IDs
 - [x] Audit other adding/editing forms for focus-triggered resets; keep initial auth loading separate from background refresh
