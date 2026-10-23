@@ -1,5 +1,8 @@
 # Roadmap
 
+## FAQ page
+- [x] Add /faq with exact requested metadata and 16 plain HTML questions/answers including the supplied 12 questions; footer and catalog navigation, initial HTML, desktop/320px layout verified without browser errors; build OK
+
 ## Unsaved forms across tabs and windows
 - [x] Fix background authentication refresh resetting editors; hydrate club, organizer, profile, event and campaign forms by stable IDs
 - [x] Audit other adding/editing forms for focus-triggered resets; keep initial auth loading separate from background refresh

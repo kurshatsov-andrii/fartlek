@@ -218,6 +218,12 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://fartlek.com.ua/tips/hodynnyky/amazfit-balance-3-no-gps-kharkiv</loc>
+    <lastmod>2026-10-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://fartlek.com.ua/blog/kharkiv-run-2026</loc>
     <lastmod>2026-10-05</lastmod>
     <changefreq>monthly</changefreq>
@@ -572,12 +578,6 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fartlek.com.ua/starts/luches-k-pivmarafon-2026-10-25</loc>
-    <lastmod>2026-10-21</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://fartlek.com.ua/starts/kolomyys-ka-desyatka-2026-10-11</loc>
     <lastmod>2026-10-15</lastmod>
     <changefreq>weekly</changefreq>
@@ -718,6 +718,18 @@
   <url>
     <loc>https://fartlek.com.ua/starts/oceanman-kyiv-2027-06-25</loc>
     <lastmod>2026-10-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fartlek.com.ua/starts/luches-k-pivmarafon-2026-10-25</loc>
+    <lastmod>2026-10-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fartlek.com.ua/starts/final-nyy-zabig-luc-k-2026-11-01</loc>
+    <lastmod>2026-10-23</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
