@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import EventDetails from "@/pages/EventDetails";
 import { getEventSeo, getSeoOverride } from "@/lib/page-seo.functions";
 import { pageHead } from "@/lib/route-head";
-import { breadcrumbJsonLd, jsonLdScript } from "@/lib/jsonld";
+import { breadcrumbJsonLd, jsonLdScript, sportsEventJsonLd } from "@/lib/jsonld";
 
 export const Route = createFileRoute("/events/$id/")({
   loader: async ({ params }) => {
@@ -29,13 +29,22 @@ export const Route = createFileRoute("/events/$id/")({
     return {
       ...h,
       scripts: [
-        jsonLdScript(
+        jsonLdScript([
+          sportsEventJsonLd({
+            name: event.title,
+            description: event.description,
+            image: event.image,
+            path: event.path,
+            startDate: event.startDate,
+            city: event.location,
+            organizer: event.organizerName,
+          }),
           breadcrumbJsonLd([
             { name: "Головна", path: "/" },
             { name: "Календар", path: "/calendar" },
             { name: event.title, path: event.path },
           ]),
-        ),
+        ]),
       ],
     };
   },
