@@ -1,5 +1,9 @@
 # Roadmap
 
+## Claude site discovery
+- [x] Update the public AI-readable overview with current canonical pages and factual limits; explicitly allow Claude search and user retrieval crawlers without changing authentication
+- [x] Verified all 33 canonical links return HTTP 200 in preview, exact UTF-8 overview and crawler rules, and FAQ HTML retrieval for both Claude agents; live homepage/calendar already accessible to Claude agents; build OK; publication and Claude web retrieval remain user actions, not guaranteed model knowledge
+
 ## FAQ page
 - [x] Add /faq with exact requested metadata and 16 plain HTML questions/answers including the supplied 12 questions; footer and catalog navigation, initial HTML, desktop/320px layout verified without browser errors; build OK
 
