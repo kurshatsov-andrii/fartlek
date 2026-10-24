@@ -1,5 +1,9 @@
 # Roadmap
 
+## Ticket team name
+- [x] Show the saved team name on the ticket and PDF, and use the team identity for the starting bib and QR
+- [x] Verify the real EKIDEN team ticket, PDF template and bib preview; three identity regression tests passed
+
 ## Structured data screenshot audit
 - [x] Audit the seven requested schema types across public content pages
 - [x] Add route-owned SportsClub and organizer ProfilePage, extend public breadcrumbs, use BlogPosting and sourced article dates; remove browser-only club/organizer schemas and invented event organizers/venues

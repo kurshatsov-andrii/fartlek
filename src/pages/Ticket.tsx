@@ -21,6 +21,7 @@ import { PromoCodeInput, PromoPreview } from "@/components/PromoCodeInput";
 import { NovaPoshtaDelivery, emptyDelivery, validateDelivery, type DeliveryData } from "@/components/NovaPoshtaDelivery";
 import { RegistrationSelfService } from "@/components/RegistrationSelfService";
 import { BibCard } from "@/components/BibCard";
+import { ticketBibName, ticketTeamName } from "@/lib/ticket-identity";
 
 const Ticket = () => {
   const { id } = useParams<{ id: string }>();
@@ -81,6 +82,7 @@ const Ticket = () => {
         distance_name: dist?.name,
         status: reg.payment_status,
         name: displayName,
+        team_name: ticketTeamName(reg),
         email: prof?.email,
       });
       const url = await QRCode.toDataURL(payload, { width: 600, margin: 1, color: { dark: "#0a0a0a", light: "#ffffff" } });
@@ -194,7 +196,7 @@ const Ticket = () => {
         .from("registrations")
         .update({ receipt_url: path })
         .eq("id", data.id)
-        .select(`*, events(*), distances(*)`)
+        .select(`*, events(*), distances(*), athletes(full_name, birth_date, gender, city, club)`)
         .single();
       if (updErr) throw updErr;
 
@@ -249,6 +251,8 @@ const Ticket = () => {
   const pdfStatusColor = data.payment_status === "pending" ? "#b45309" : "#15803d";
 
   const ticketName = data.athletes?.full_name ?? profileName;
+  const teamName = ticketTeamName(data);
+  const teamLabel = lang === "uk" ? "Назва команди" : "Team name";
   const ticketBirthRaw = data.athletes?.birth_date ?? profileBirth;
   const ticketBirth = ticketBirthRaw
     ? new Date(ticketBirthRaw).toLocaleDateString(lang === "uk" ? "uk-UA" : "en-US")
@@ -306,6 +310,14 @@ const Ticket = () => {
                     {birthLabel}
                   </div>
                   <div style={{ fontSize: 17, fontWeight: 700 }}>{ticketBirth}</div>
+                </div>
+              )}
+              {teamName && (
+                <div style={{ marginBottom: 12 }}>
+                  <div style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: 1.5, color: "#666" }}>
+                    {teamLabel}
+                  </div>
+                  <div style={{ fontSize: 17, fontWeight: 700, overflowWrap: "anywhere" }}>{teamName}</div>
                 </div>
               )}
               {ticketCity && (
@@ -378,6 +390,12 @@ const Ticket = () => {
                   <div className="font-bold">{ticketCity}</div>
                 </div>
               )}
+              {teamName && (
+                <div>
+                  <div className="text-xs uppercase text-muted-foreground tracking-wider">{teamLabel}</div>
+                  <div className="font-bold text-lg break-words">{teamName}</div>
+                </div>
+              )}
 
               <div>
                 <div className="text-xs uppercase text-muted-foreground tracking-wider">{t.ticket.bib}</div>
@@ -400,8 +418,8 @@ const Ticket = () => {
             </Button>
             <BibCard
               eventTitle={ev.title}
-              fullName={data.athletes?.full_name ?? profileName}
-              club={data.athletes?.club ?? profileClub}
+              fullName={ticketBibName(data, profileName)}
+              club={teamName ? null : data.athletes?.club ?? profileClub}
               bibNumber={data.bib_number}
               distance={dist ? `${dist.distance_km} km${dist.name ? ` · ${dist.name}` : ""}` : null}
               qrUrl={`${window.location.origin}/events/${ev.slug ?? ev.id}`}
