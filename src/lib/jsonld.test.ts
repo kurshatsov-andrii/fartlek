@@ -3,8 +3,17 @@ import { articleJsonLd, breadcrumbJsonLd, entityOrganizationJsonLd, organization
 
 describe("Public structured data", () => {
   it("identifies the homepage organization and website", () => {
+    const [organization, website] = organizationJsonLd();
     expect(organizationJsonLd().map((item) => item["@type"])).toEqual(["Organization", "WebSite"]);
+    expect(organization).toMatchObject({
+      email: "info@fartlek.com.ua",
+      telephone: "+380972520551",
+      address: { "@type": "PostalAddress", addressCountry: "UA" },
+    });
+    expect(organization.sameAs).toContain("https://www.instagram.com/fartlekua/");
+    expect(website).toMatchObject({ inLanguage: "uk", publisher: { "@id": "https://fartlek.com.ua/#organization" } });
   });
+
   it("uses the real race name and omits unknown organizers and venues", () => {
     const event = sportsEventJsonLd({ name: "Лучеськ півмарафон", path: "/starts/lutsk", startDate: "2026-11-08" });
     expect(event.name).toBe("Лучеськ півмарафон");
