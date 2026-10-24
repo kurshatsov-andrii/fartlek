@@ -1,9 +1,9 @@
 # Roadmap
 
 ## Structured data screenshot audit
-- [ ] Audit the seven requested schema types across public content pages
-- [ ] Add missing route-owned schemas and remove duplicate browser-only versions
-- [ ] Verify real public records in initial HTML and after navigation; run regression tests
+- [x] Audit the seven requested schema types across public content pages
+- [x] Add route-owned SportsClub and organizer ProfilePage, extend public breadcrumbs, use BlogPosting and sourced article dates; remove browser-only club/organizer schemas and invented event organizers/venues
+- [x] Verify 29 real public pages in initial HTML, club/organizer navigation without duplicate schemas or browser errors, tip publication date and 10 regression tests; build OK
 
 ## Claude site discovery
 - [x] Update the public AI-readable overview with current canonical pages and factual limits; explicitly allow Claude search and user retrieval crawlers without changing authentication
