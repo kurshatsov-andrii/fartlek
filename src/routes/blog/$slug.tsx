@@ -24,7 +24,7 @@ export const Route = createFileRoute("/blog/$slug")({
       ...h,
       scripts: [
         jsonLdScript([
-          articleJsonLd({ title: post.title, description: post.description, image: post.image, path: post.path }),
+          articleJsonLd({ title: post.name ?? post.title, datePublished: post.datePublished, dateModified: post.dateModified, type: "BlogPosting", description: post.description, image: post.image, path: post.path }),
           breadcrumbJsonLd([
             { name: "Головна", path: "/" },
             { name: "Блог", path: "/blog" },

@@ -30,7 +30,7 @@ export const Route = createFileRoute("/tips/$category/$slug")({
       ...h,
       scripts: [
         jsonLdScript([
-          articleJsonLd({ title: tip.title, description: tip.description, image: tip.image, path: tip.path }),
+          articleJsonLd({ title: tip.name ?? tip.title, datePublished: tip.datePublished, dateModified: tip.dateModified, description: tip.description, image: tip.image, path: tip.path }),
           breadcrumbJsonLd([
             { name: "Головна", path: "/" },
             { name: "Поради", path: "/tips" },

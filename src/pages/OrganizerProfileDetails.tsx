@@ -97,26 +97,6 @@ const OrganizerProfileDetails = () => {
     }
     canonical.setAttribute("href", url);
 
-    const ldId = "organizer-jsonld";
-    document.getElementById(ldId)?.remove();
-    const ld = document.createElement("script");
-    ld.type = "application/ld+json";
-    ld.id = ldId;
-    ld.text = JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "Organization",
-      name: org.name,
-      description,
-      url,
-      image: org.logo_url || undefined,
-      address: org.city ? { "@type": "PostalAddress", addressLocality: org.city } : undefined,
-      email: org.contact_email || undefined,
-      telephone: org.contact_phone || undefined,
-      foundingDate: org.founded_year ? String(org.founded_year) : undefined,
-      sameAs: [org.website_url, org.instagram_url, org.facebook_url, org.telegram_url, org.strava_url, org.youtube_url].filter(Boolean),
-    });
-    document.head.appendChild(ld);
-    return () => { document.getElementById(ldId)?.remove(); };
   }, [org, lang]);
 
   if (notFound) return <Navigate to="/organizers" replace />;

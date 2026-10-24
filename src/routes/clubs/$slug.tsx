@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import ClubDetails from "@/pages/ClubDetails";
 import { getClubSeo, getSeoOverride } from "@/lib/page-seo.functions";
 import { pageHead } from "@/lib/route-head";
-import { breadcrumbJsonLd, jsonLdScript } from "@/lib/jsonld";
+import { entityOrganizationJsonLd, breadcrumbJsonLd, jsonLdScript } from "@/lib/jsonld";
 
 export const Route = createFileRoute("/clubs/$slug")({
   loader: async ({ params }) => {
@@ -27,6 +27,7 @@ export const Route = createFileRoute("/clubs/$slug")({
     return {
       ...h,
       scripts: [
+        ...(seo.organization ? [jsonLdScript(entityOrganizationJsonLd(seo.organization, "SportsClub"))] : []),
         jsonLdScript(
           breadcrumbJsonLd([
             { name: "Головна", path: "/" },
