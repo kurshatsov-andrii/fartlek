@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import About from "@/pages/About";
 import { getSeoOverride } from "@/lib/page-seo.functions";
 import { pageHead } from "@/lib/route-head";
+import { breadcrumbJsonLd, jsonLdScript } from "@/lib/jsonld";
 import { aboutFaqJsonLd } from "@/lib/about-faq";
 
 const PATH = "/about";
@@ -19,7 +20,7 @@ export const Route = createFileRoute("/about")({
     return {
       ...h,
       meta: [...h.meta, { name: "twitter:card", content: "summary_large_image" }],
-      scripts: [{ type: "application/ld+json", children: JSON.stringify(aboutFaqJsonLd()) }],
+      scripts: [jsonLdScript(aboutFaqJsonLd()), jsonLdScript(breadcrumbJsonLd([{ name: "Головна", path: "/" }, { name: "Про нас", path: PATH }]))],
     };
   },
   component: About,

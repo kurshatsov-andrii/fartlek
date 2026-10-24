@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { breadcrumbJsonLd, jsonLdScript } from "@/lib/jsonld";
 
 const TITLE = "Часті питання про Фартлек — забіги, реєстрація, організаторам";
 const DESCRIPTION = "Відповіді на часті питання про Фартлек: календар забігів України, пошук стартів, онлайн-реєстрація, результати, бігові клуби та можливості для організаторів.";
@@ -20,6 +21,7 @@ export const Route = createFileRoute("/faq")({
       { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [{ rel: "canonical", href: "https://fartlek.com.ua/faq" }],
+    scripts: [jsonLdScript(breadcrumbJsonLd([{ name: "Головна", path: "/" }, { name: "FAQ", path: "/faq" }]))],
   }),
   component: FaqPage,
 });

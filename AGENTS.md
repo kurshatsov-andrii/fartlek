@@ -36,4 +36,4 @@
 - A start counts as finished from the day before its start date; decide finished/upcoming splits, register-button hiding and the SiS banner with the shared isCompletedDate in src/lib/event-date, never raw date comparisons.
 
 - Keep running-tip categories in the shared tips module as fixed slugs so the /tips filter, category pages, admin form and sitemap stay aligned.
-- Build JSON-LD structured data only with the shared builders in src/lib/jsonld.ts and emit it via route head() scripts (SSR), not via the client-side SEO component, so crawlers see Event/Organization/BreadcrumbList markup in the initial HTML without duplicates.
+- Build JSON-LD structured data only with the shared builders in src/lib/jsonld.ts and emit it via route head() scripts (SSR), not via the client-side SEO component, so crawlers see Event/Organization/BreadcrumbList markup in the initial HTML without duplicates. Model clubs as SportsClub (a SportsOrganization subtype), organizer profiles as ProfilePage with an Organization mainEntity, and include only sourced names, locations, organizers and publication dates.
