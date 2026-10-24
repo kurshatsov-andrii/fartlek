@@ -1,5 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { createClient } from "@supabase/supabase-js";
+import type { OrganizationInput } from "@/lib/jsonld";
 import { optionalMetadata } from "@/lib/optional-metadata";
 
 const SITE = "https://fartlek.com.ua";
@@ -45,6 +46,8 @@ export type EventSeo = {
   startDate?: string | null;
   location?: string | null;
   organizerName?: string | null;
+  name?: string;
+  cancelled?: boolean;
 } | null;
 
 /** Server-rendered metadata for an event page (by uuid or slug). */
@@ -56,7 +59,7 @@ const getEventSeoRpc = createServerFn({ method: "GET" })
       const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(data.id);
       const { data: ev } = await supabase
         .from("events")
-        .select("id,slug,title,location,event_date,description,image_url,organizer_name")
+        .select("id,slug,title,location,event_date,description,image_url,organizer_name,status")
         .eq(isUuid ? "id" : "slug", data.id)
         .maybeSingle();
       if (!ev) return null;
@@ -87,6 +90,8 @@ const getEventSeoRpc = createServerFn({ method: "GET" })
         description: desc.length > 160 ? desc.slice(0, 157) + "…" : desc,
         image,
         path: `/events/${row.slug ?? row.id}`,
+        name: row.title,
+        cancelled: row.status === "cancelled",
         startDate: row.event_date ?? null,
         location: city || null,
         organizerName: row.organizer_name ?? null,
@@ -98,7 +103,7 @@ const getEventSeoRpc = createServerFn({ method: "GET" })
 
 export const SITE_URL = SITE;
 
-export type EntitySeo = { title: string; description: string; image: string | null; path: string; startDate?: string | null; city?: string | null } | null;
+export type EntitySeo = { title: string; description: string; image: string | null; path: string; startDate?: string | null; city?: string | null; name?: string; organizerName?: string | null; cancelled?: boolean; datePublished?: string | null; dateModified?: string | null; organization?: OrganizationInput } | null;
 
 const cut = (s: string, n: number) => (s.length > n ? s.slice(0, n - 1).trimEnd() + "…" : s);
 const isUuidStr = (s: string) => /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(s);
@@ -127,6 +132,12 @@ const getClubSeoRpc = createServerFn({ method: "GET" })
         title: cut(title, 60), description: cut(desc, 160),
         image: typeof c.logo_url === "string" && c.logo_url.startsWith("http") ? c.logo_url : null,
         path: `/clubs/${c.slug ?? c.id}`,
+        name: c.name,
+        organization: { name: c.name, path: `/clubs/${c.slug ?? c.id}`, description: raw || desc,
+          image: c.logo_url, city: c.city, email: c.contact_email, telephone: c.contact_phone,
+          foundingDate: c.founded_year ? String(c.founded_year) : null,
+          sameAs: [c.website_url, c.instagram_url, c.facebook_url, c.telegram_url, c.strava_url, c.youtube_url].filter((url): url is string => typeof url === "string" && /^https?:\/\//.test(url)),
+        },
       };
     } catch { return null; }
   });
@@ -146,6 +157,12 @@ const getOrganizerSeoRpc = createServerFn({ method: "GET" })
         title: cut(title, 60), description: cut(desc, 160),
         image: typeof o.logo_url === "string" && o.logo_url.startsWith("http") ? o.logo_url : null,
         path: `/organizers/${o.slug ?? o.id}`,
+        name: o.name,
+        organization: { name: o.name, path: `/organizers/${o.slug ?? o.id}`, description: raw || desc,
+          image: o.logo_url, city: o.city, email: o.contact_email, telephone: o.contact_phone,
+          foundingDate: o.founded_year ? String(o.founded_year) : null,
+          sameAs: [o.website_url, o.instagram_url, o.facebook_url, o.telegram_url, o.strava_url, o.youtube_url].filter((url): url is string => typeof url === "string" && /^https?:\/\//.test(url)),
+        },
       };
     } catch { return null; }
   });
@@ -156,8 +173,8 @@ const getStartSeoRpc = createServerFn({ method: "GET" })
   .handler(async ({ data }): Promise<EntitySeo> => {
     try {
       const { data: r } = await publicClient().from("telegram_starts" as any)
-        .select("slug,title,description,image_url,event_date,seo_title,seo_description,city")
-        .eq("slug", data.slug).maybeSingle();
+        .select("slug,title,description,image_url,event_date,seo_title,seo_description,city,organizer_name,registration_status")
+        .eq("slug", data.slug).eq("status", "published").maybeSingle();
       const s = r as Record<string, any> | null;
       if (!s) return null;
       const date = s.event_date ? new Date(s.event_date).toLocaleDateString("uk-UA", { day: "numeric", month: "long", year: "numeric" }) : "";
@@ -168,6 +185,9 @@ const getStartSeoRpc = createServerFn({ method: "GET" })
         title: cut(title, 60), description: cut(desc, 160),
         image: typeof s.image_url === "string" && s.image_url.startsWith("http") ? s.image_url : null,
         path: `/starts/${s.slug}`,
+        name: s.title,
+        organizerName: s.organizer_name,
+        cancelled: s.registration_status === "cancelled",
         startDate: s.event_date ?? null,
         city: s.city ?? null,
       };
@@ -179,10 +199,10 @@ const getBlogSeoRpc = createServerFn({ method: "GET" })
   .inputValidator((data: { slug: string }) => data)
   .handler(async ({ data }): Promise<EntitySeo> => {
     const { data: post } = await publicClient().from("blog_posts")
-      .select("slug,title,excerpt,content,cover_url").eq("slug", data.slug).eq("is_published", true).maybeSingle();
+      .select("slug,title,excerpt,content,cover_url,updated_at").eq("slug", data.slug).eq("is_published", true).maybeSingle();
     if (!post) return null;
     const raw = (post.excerpt || post.content || "").replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
-    return { title: cut(`${post.title} | Фартлек`, 60), description: cut(raw || `${post.title}. Історія, фото та відео бігової спільноти Фартлек.`, 160), image: post.cover_url?.startsWith("https://") ? post.cover_url : null, path: `/blog/${post.slug}` };
+    return { title: cut(`${post.title} | Фартлек`, 60), description: cut(raw || `${post.title}. Історія, фото та відео бігової спільноти Фартлек.`, 160), image: post.cover_url?.startsWith("https://") ? post.cover_url : null, path: `/blog/${post.slug}`, name: post.title, dateModified: post.updated_at };
   });
 
 export const getSeoOverride = (input: { data: { path: string } }) => optionalMetadata(() => getSeoOverrideRpc(input));
@@ -197,10 +217,10 @@ const getTipSeoRpc = createServerFn({ method: "GET" })
   .inputValidator((data: { slug: string }) => data)
   .handler(async ({ data }): Promise<EntitySeo> => {
     const { data: tip } = await publicClient().from("running_tips")
-      .select("slug,category,title,excerpt,content,cover_url").eq("slug", data.slug).eq("is_published", true).maybeSingle();
+      .select("slug,category,title,excerpt,content,cover_url,published_on,updated_at").eq("slug", data.slug).eq("is_published", true).maybeSingle();
     if (!tip) return null;
     const raw = (tip.excerpt || tip.content || "").replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
-    return { title: cut(`${tip.title} | Фартлек`, 60), description: cut(raw || `${tip.title}. Поради бігунам від Фартлек.`, 160), image: tip.cover_url?.startsWith("https://") ? tip.cover_url : null, path: `/tips/${tip.category}/${tip.slug}` };
+    return { title: cut(`${tip.title} | Фартлек`, 60), description: cut(raw || `${tip.title}. Поради бігунам від Фартлек.`, 160), image: tip.cover_url?.startsWith("https://") ? tip.cover_url : null, path: `/tips/${tip.category}/${tip.slug}`, name: tip.title, datePublished: tip.published_on, dateModified: tip.updated_at };
   });
 export const getTipSeo = (input: { data: { slug: string } }) => optionalMetadata(() => getTipSeoRpc(input));
 

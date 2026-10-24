@@ -129,29 +129,6 @@ const ClubDetails = () => {
     }
     canonical.setAttribute("href", url);
 
-    const ldId = "club-jsonld";
-    document.getElementById(ldId)?.remove();
-    const ld = document.createElement("script");
-    ld.type = "application/ld+json";
-    ld.id = ldId;
-    ld.text = JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "SportsClub",
-      name: club.name,
-      description,
-      url,
-      image: club.logo_url || undefined,
-      address: club.city ? { "@type": "PostalAddress", addressLocality: club.city } : undefined,
-      email: club.contact_email || undefined,
-      telephone: club.contact_phone || undefined,
-      foundingDate: club.founded_year ? String(club.founded_year) : undefined,
-      sameAs: [club.website_url, club.instagram_url, club.facebook_url, club.telegram_url, club.strava_url, club.youtube_url].filter(Boolean),
-    });
-    document.head.appendChild(ld);
-
-    return () => {
-      document.getElementById(ldId)?.remove();
-    };
   }, [club, lang]);
 
   if (notFound) return <Navigate to="/clubs" replace />;

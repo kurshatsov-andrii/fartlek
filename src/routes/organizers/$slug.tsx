@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import OrganizerProfileDetails from "@/pages/OrganizerProfileDetails";
 import { getOrganizerSeo, getSeoOverride } from "@/lib/page-seo.functions";
 import { pageHead } from "@/lib/route-head";
-import { breadcrumbJsonLd, jsonLdScript } from "@/lib/jsonld";
+import { organizerProfileJsonLd, breadcrumbJsonLd, jsonLdScript } from "@/lib/jsonld";
 
 export const Route = createFileRoute("/organizers/$slug")({
   loader: async ({ params }) => {
@@ -27,6 +27,7 @@ export const Route = createFileRoute("/organizers/$slug")({
     return {
       ...h,
       scripts: [
+        ...(seo.organization ? [jsonLdScript(organizerProfileJsonLd(seo.organization))] : []),
         jsonLdScript(
           breadcrumbJsonLd([
             { name: "Головна", path: "/" },

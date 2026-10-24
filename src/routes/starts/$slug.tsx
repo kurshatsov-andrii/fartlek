@@ -29,17 +29,19 @@ export const Route = createFileRoute("/starts/$slug")({
       scripts: [
         jsonLdScript([
           sportsEventJsonLd({
-            name: seo.title,
+            name: seo.name ?? seo.title,
             description: seo.description,
             image: seo.image,
             path: seo.path,
             startDate: seo.startDate,
             city: seo.city,
+            organizer: seo.organizerName,
+            cancelled: seo.cancelled,
           }),
           breadcrumbJsonLd([
             { name: "Головна", path: "/" },
             { name: "Старти", path: "/starts" },
-            { name: seo.title, path: seo.path },
+            { name: seo.name ?? seo.title, path: seo.path },
           ]),
         ]),
       ],

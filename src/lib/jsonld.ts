@@ -25,6 +25,7 @@ export const sportsEventJsonLd = (e: {
   startDate?: string | null;
   city?: string | null;
   organizer?: string | null;
+  cancelled?: boolean;
 }): JsonLd => ({
   "@context": "https://schema.org",
   "@type": "SportsEvent",
@@ -33,21 +34,20 @@ export const sportsEventJsonLd = (e: {
   ...(e.image ? { image: [e.image] } : {}),
   url: abs(e.path),
   ...(e.startDate ? { startDate: e.startDate } : {}),
-  eventStatus: "https://schema.org/EventScheduled",
-  location: {
+  eventStatus: e.cancelled ? "https://schema.org/EventCancelled" : "https://schema.org/EventScheduled",
+  ...(e.city ? { location: {
     "@type": "Place",
-    name: e.city || "Україна",
+    name: e.city,
     address: {
       "@type": "PostalAddress",
       ...(e.city ? { addressLocality: e.city } : {}),
       addressCountry: "UA",
     },
-  },
-  organizer: {
+  } } : {}),
+  ...(e.organizer ? { organizer: {
     "@type": "Organization",
-    name: e.organizer || "Fartlek Events",
-    url: SITE_URL,
-  },
+    name: e.organizer,
+  } } : {}),
 });
 
 /** Article markup for blog posts and running tips. */
@@ -56,15 +56,57 @@ export const articleJsonLd = (a: {
   description?: string | null;
   image?: string | null;
   path: string;
+  datePublished?: string | null;
+  dateModified?: string | null;
+  type?: "Article" | "BlogPosting";
 }): JsonLd => ({
   "@context": "https://schema.org",
-  "@type": "Article",
+  "@type": a.type ?? "Article",
   headline: a.title,
   ...(a.description ? { description: a.description } : {}),
   ...(a.image ? { image: [a.image] } : {}),
   mainEntityOfPage: abs(a.path),
+  ...(a.datePublished ? { datePublished: a.datePublished } : {}),
+  ...(a.dateModified ? { dateModified: a.dateModified } : {}),
   author: { "@type": "Organization", name: "Fartlek Events", url: SITE_URL },
   publisher: { "@type": "Organization", name: "Fartlek Events", url: SITE_URL },
+});
+
+export type OrganizationInput = {
+  name: string;
+  path: string;
+  description?: string | null;
+  image?: string | null;
+  city?: string | null;
+  email?: string | null;
+  telephone?: string | null;
+  foundingDate?: string | null;
+  sameAs?: string[];
+};
+
+/** Public entity facts only; SportsClub is a subtype of SportsOrganization. */
+export const entityOrganizationJsonLd = (o: OrganizationInput, type: "Organization" | "SportsClub" = "Organization"): JsonLd => ({
+  "@context": "https://schema.org",
+  "@type": type,
+  "@id": `${abs(o.path)}#organization`,
+  name: o.name,
+  url: abs(o.path),
+  ...(o.description ? { description: o.description } : {}),
+  ...(o.image ? { image: o.image, logo: o.image } : {}),
+  ...(o.city ? { address: { "@type": "PostalAddress", addressLocality: o.city, addressCountry: "UA" } } : {}),
+  ...(o.email ? { email: o.email } : {}),
+  ...(o.telephone ? { telephone: o.telephone } : {}),
+  ...(o.foundingDate ? { foundingDate: o.foundingDate } : {}),
+  ...(o.sameAs?.length ? { sameAs: o.sameAs } : {}),
+});
+
+export const organizerProfileJsonLd = (o: OrganizationInput): JsonLd => ({
+  "@context": "https://schema.org",
+  "@type": "ProfilePage",
+  "@id": abs(o.path),
+  url: abs(o.path),
+  name: o.name,
+  mainEntity: entityOrganizationJsonLd(o),
 });
 
 /** Organization + WebSite markup for the homepage. */
