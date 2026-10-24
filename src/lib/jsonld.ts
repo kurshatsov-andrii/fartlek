@@ -114,18 +114,43 @@ export const organizationJsonLd = (): JsonLd[] => [
   {
     "@context": "https://schema.org",
     "@type": "Organization",
+    "@id": `${SITE_URL}/#organization`,
     name: "Fartlek Events",
+    alternateName: "Фартлек",
     url: `${SITE_URL}/`,
     logo: `${SITE_URL}/favicon.png`,
-    sameAs: [SITE_URL],
+    image: `${SITE_URL}/favicon.png`,
+    description:
+      "Fartlek.com.ua — українська платформа, що об'єднує бігунів, бігові клуби й організаторів спортивних подій.",
+    email: "info@fartlek.com.ua",
+    telephone: "+380972520551",
+    address: { "@type": "PostalAddress", addressCountry: "UA" },
+    areaServed: { "@type": "Country", name: "Ukraine" },
+    contactPoint: {
+      "@type": "ContactPoint",
+      contactType: "customer support",
+      email: "info@fartlek.com.ua",
+      telephone: "+380972520551",
+      availableLanguage: ["Ukrainian", "English"],
+    },
+    sameAs: [
+      "https://www.instagram.com/fartlekua/",
+      "https://t.me/+5-5XOFyn0JUxMTli",
+      "https://t.me/+KgEHRsz677s4Zjhi",
+    ],
   },
   {
     "@context": "https://schema.org",
     "@type": "WebSite",
+    "@id": `${SITE_URL}/#website`,
     name: "Fartlek Events",
+    alternateName: "Фартлек",
     url: `${SITE_URL}/`,
+    inLanguage: "uk",
+    publisher: { "@id": `${SITE_URL}/#organization` },
   },
 ];
+
 
 /** head() scripts entry for one or more JSON-LD blocks. */
 export const jsonLdScript = (data: JsonLd | JsonLd[]) => ({
