@@ -1,5 +1,7 @@
 # Architecture rules
 
+- Resolve ticket team identity from the saved registration through ticket-identity; reuse it for ticket/PDF, QR and bib naming so relay teams do not inherit the account holder's name.
+
 - Keep the AI-readable site overview in public/llms.txt with canonical absolute links and public-only facts; use live event pages for changing race details rather than duplicating schedules in the overview.
 
 - Render /faq as server-rendered HTML question headings and visible answers, with exact route-owned metadata and no QAPage schema, so crawlers can read the content without JavaScript.
