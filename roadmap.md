@@ -1,8 +1,8 @@
 # Roadmap
 
 ## Ticket team name
-- [ ] Show the saved team name on the ticket and PDF, and use the team identity for the starting bib and QR
-- [ ] Verify the real EKIDEN team ticket and run identity regression tests
+- [x] Show the saved team name on the ticket and PDF, and use the team identity for the starting bib and QR
+- [x] Verify the real EKIDEN team ticket, PDF template and bib preview; three identity regression tests passed
 
 ## Structured data screenshot audit
 - [x] Audit the seven requested schema types across public content pages
