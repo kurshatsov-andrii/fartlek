@@ -16,33 +16,15 @@ import { supabase } from "@/integrations/supabase/client";
 import { SPORT_TYPES, SPORT_LABELS, MONTH_NAMES_UK, type SportType } from "@/lib/parseStart";
 import { canShowRegisterButton } from "@/lib/registration-status";
 import { isCompletedDate } from "@/lib/event-date";
-import { DISTANCE_BUCKETS } from "@/lib/start-filters";
+import { DISTANCE_BUCKETS, baseCity } from "@/lib/start-filters";
+import { mergeStartsCatalog, type CatalogStart } from "@/lib/starts-catalog";
 import { discoverySeo } from "@/lib/discovery-seo";
 import { StartActions } from "@/components/StartActions";
 
-interface StartRow {
-  id: string;
-  slug: string;
-  title: string;
-  description: string;
-  image_url: string | null;
-  register_url: string | null;
-  results_url: string | null;
-  registration_status: string | null;
-  event_date: string | null;
-  city: string | null;
-  region: string | null;
-  organizer_name: string | null;
-  sport_types: string[];
-  distances_km: number[];
-  is_paid: boolean | null;
-}
-
 const PAGE_SIZE = 9;
-const todayStr = new Date().toISOString().slice(0, 10);
 
 const Starts = () => {
-  const [rows, setRows] = useState<StartRow[]>([]);
+  const [rows, setRows] = useState<CatalogStart[]>([]);
   const [loading, setLoading] = useState(true);
   const [upcomingLimit, setUpcomingLimit] = useState(PAGE_SIZE);
   const [completedLimit, setCompletedLimit] = useState(PAGE_SIZE);
@@ -59,13 +41,18 @@ const Starts = () => {
 
   useEffect(() => {
     (async () => {
-      const { data } = await supabase
+      const [starts, events] = await Promise.all([supabase
         .from("telegram_starts")
-        .select("id,slug,title,description,image_url,register_url,results_url,registration_status,event_date,city,region,organizer_name,sport_types,distances_km,is_paid")
+        .select("id,slug,title,description,image_url,register_url,results_url,registration_status,registration_opens_on,event_date,city,region,organizer_name,sport_types,distances_km,is_paid")
         .eq("status", "published")
         .gte("event_date", "2026-07-01")
-        .order("event_date", { ascending: true });
-      setRows((data ?? []) as StartRow[]);
+        .order("event_date", { ascending: true }),
+        supabase.from("events")
+          .select("id,slug,title,description,organizer_name,event_date,location,image_url,is_paid,category,registration_closed,registration_opens_on,results_url,results_pdf_url,distances(distance_km,is_active)")
+          .eq("status", "published")
+          .order("event_date", { ascending: true }),
+      ]);
+      setRows(mergeStartsCatalog(starts.data ?? [], events.data ?? []));
       setLoading(false);
     })();
   }, []);
@@ -77,7 +64,6 @@ const Starts = () => {
   };
 
   // unique facet values from data
-  const baseCity = (c: string | null) => (c ?? "").split(",")[0].trim();
   const cities = useMemo(
     () => Array.from(new Set(rows.map((r) => baseCity(r.city)).filter(Boolean))).sort(),
     [rows]
@@ -91,7 +77,7 @@ const Starts = () => {
     const qLower = q.trim().toLowerCase();
     return rows.filter((r) => {
       if (qLower) {
-        const hay = `${r.title} ${r.description} ${r.city ?? ""} ${r.organizer_name ?? ""}`.toLowerCase();
+        const hay = `${r.title} ${r.description ?? ""} ${r.location ?? ""} ${r.city ?? ""} ${r.organizer_name ?? ""}`.toLowerCase();
         if (!hay.includes(qLower)) return false;
       }
       if (!matchesYear(r.event_date, year)) return false;
@@ -127,22 +113,22 @@ const Starts = () => {
 
   const reset = () => { setQ(""); setMonth("all"); setCity("all"); setRegion("all"); setOrganizer("all"); setSport("all"); setDistance("all"); setPaid("all"); setYear("all"); };
 
-  const renderCard = (r: StartRow) => (
-    <Card key={r.id} className="overflow-hidden flex flex-col transition-bounce hover:-translate-y-2 hover:shadow-elevated">
+  const renderCard = (r: CatalogStart) => (
+    <Card key={`${r.source}:${r.id}`} className="overflow-hidden flex flex-col transition-bounce hover:-translate-y-2 hover:shadow-elevated">
       {r.image_url && (
-        <Link to={`/starts/${r.slug}`} className="block aspect-video bg-muted overflow-hidden">
+        <Link to={r.url} className="block aspect-video bg-muted overflow-hidden">
           <EventPoster src={r.image_url} alt={r.title} />
         </Link>
       )}
       <div className="p-4 flex flex-col gap-3 flex-1">
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
           {r.event_date && (<span className="inline-flex items-center gap-1"><CalendarIcon className="h-3.5 w-3.5" />{fmtDate(r.event_date)}</span>)}
-          <span className="inline-flex items-center gap-1"><MapPin className="h-3.5 w-3.5" />{r.city || "Україна та весь світ"}</span>
+          <span className="inline-flex items-center gap-1"><MapPin className="h-3.5 w-3.5" />{r.location || "Україна та весь світ"}</span>
         </div>
         <h2 className="font-semibold text-lg leading-snug">
-          <Link to={`/starts/${r.slug}`} className="hover:underline">{r.title || "Без назви"}</Link>
+          <Link to={r.url} className="hover:underline">{r.title || "Без назви"}</Link>
         </h2>
-        <StartActions source="start" id={r.id} />
+        <StartActions source={r.source} id={r.id} />
         <div className="flex flex-wrap gap-1">
           {Array.from(new Set((r.sport_types || []).filter((s): s is SportType => s in SPORT_LABELS))).slice(0, 3).map((s) => (
             <span key={s} className="text-[10px] px-1.5 py-0.5 rounded bg-muted">{SPORT_LABELS[s]}</span>
@@ -156,7 +142,7 @@ const Starts = () => {
         </div>
         <div className="flex gap-2 pt-1">
           <Button asChild size="sm" variant="secondary" className="flex-1">
-            <Link to={`/starts/${r.slug}`}>Детальніше</Link>
+            <Link to={r.url}>Детальніше</Link>
           </Button>
           {r.results_url ? (
             <Button asChild size="sm" variant="secondary" className="flex-1">
@@ -164,11 +150,11 @@ const Starts = () => {
                 Результати <FileText className="h-3.5 w-3.5 ml-1" />
               </a>
             </Button>
-          ) : r.register_url && canShowRegisterButton({ explicit: r.registration_status, date: r.event_date, today: todayStr }) && (
+          ) : r.register_url && canShowRegisterButton({ explicit: r.registration_status, opensOn: r.registration_opens_on, closed: r.registration_closed, defaultOpen: r.source === "event", date: r.event_date, today: todayStr }) && (
             <Button asChild size="sm" className="flex-1">
-              <a href={r.register_url} target="_blank" rel="noreferrer">
+              {r.source === "event" ? <Link to={r.url}>Зареєструватися</Link> : <a href={r.register_url} target="_blank" rel="noreferrer">
                 Зареєструватися <ExternalLink className="h-3.5 w-3.5 ml-1" />
-              </a>
+              </a>}
             </Button>
           )}
         </div>
@@ -186,7 +172,7 @@ const Starts = () => {
       <main className="flex-1 container py-10">
         <h1 className="font-display text-3xl md:text-4xl font-bold mb-2">Забіги та спортивні старти України 2027</h1>
         <p className="text-muted-foreground mb-6">
-          Анонси найближчих стартів з телеграм-каналу{" "}
+          Події Фартлек та анонси найближчих стартів з телеграм-каналу{" "}
           <a href="https://t.me/fartlekua" target="_blank" rel="noreferrer" className="underline">@fartlekua</a>.
         </p>
         <PageViews pageKey="page:starts" className="mb-6" />
