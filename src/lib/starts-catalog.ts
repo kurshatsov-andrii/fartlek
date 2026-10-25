@@ -24,7 +24,7 @@ export interface CatalogStart {
 }
 
 export interface ExternalCatalogStart extends Omit<CatalogStart, "source" | "url" | "location"> {
-  slug: string;
+  slug: string | null;
 }
 
 export interface CatalogEvent {
@@ -51,7 +51,7 @@ export function mergeStartsCatalog(starts: ExternalCatalogStart[], events: Catal
     ...starts.map((start): CatalogStart => ({
       ...start,
       source: "start",
-      url: `/starts/${start.slug}`,
+      url: `/starts/${start.slug ?? start.id}`,
       city: baseCity(start.city) || null,
       location: start.city,
     })),
