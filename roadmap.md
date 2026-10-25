@@ -1,5 +1,9 @@
 # Roadmap
 
+## Unified Starts catalog
+- [ ] Include public Fartlek events in the same Starts cards, filters and upcoming/completed lists with source-aware links and planner actions
+- [ ] Verify real EKIDEN and Bilka events alongside external starts, filtering and event navigation; run regression tests
+
 ## Ticket team name
 - [x] Show the saved team name on the ticket and PDF, and use the team identity for the starting bib and QR
 - [x] Verify the real EKIDEN team ticket, PDF template and bib preview; three identity regression tests passed
