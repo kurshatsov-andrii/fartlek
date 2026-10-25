@@ -64,9 +64,13 @@ export const EventsSection = () => {
       .eq("status", "published")
       .order("event_date", { ascending: true })
       .then(({ data }) => {
-        // Owner request: Bilka Run goes above the same-day Bigotrail races.
-        const pinned = (e: { slug?: string | null }) => (e.slug === "bilka-run-harkiv-2026" ? 0 : 1);
-        const sorted = [...((data as any[]) ?? [])].sort((a, b) => a.event_date.localeCompare(b.event_date) || pinned(a) - pinned(b));
+        // Owner request: Bilka Run first, then EKIDEN KHARIKOFU right after it, above all other races.
+        const pinned = (e: { slug?: string | null }) => {
+          if (e.slug === "bilka-run-harkiv-2026") return 0;
+          if (e.slug === "ekiden-kharikofu-10k-2026-harkiv-stadion-hpi-molodizhnyy-park-2026") return 1;
+          return 2;
+        };
+        const sorted = [...((data as any[]) ?? [])].sort((a, b) => pinned(a) - pinned(b) || a.event_date.localeCompare(b.event_date));
         setEvents((sorted as EventCard[]).filter((event) => !isCompletedDate(event.event_date))); setLoading(false);
       });
   }, []);
