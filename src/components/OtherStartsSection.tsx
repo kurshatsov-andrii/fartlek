@@ -169,7 +169,7 @@ export const OtherStartsSection = ({ shared, onFacets }: { shared?: SharedStartF
             ? "Анонси змагань від інших організаторів. Реєстрація відбувається на сайті організатора."
             : "Announcements from other organizers. Registration happens on the organizer's own website."}
         </p>
-      </div>
+      </div>}
 
       {!shared && <div className="mb-10 rounded-2xl border bg-card p-4 space-y-3">
         <div className="flex items-center gap-2 text-sm font-medium">
