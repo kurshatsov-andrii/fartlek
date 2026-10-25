@@ -158,9 +158,9 @@ export const OtherStartsSection = ({ shared, onFacets }: { shared?: SharedStartF
   const visible = filtered.slice(0, limit);
 
   return (
-    <section aria-labelledby="other-starts-heading" className="border-t border-border py-6 sm:py-8">
+    <section aria-labelledby={shared ? undefined : "other-starts-heading"} className={`${shared ? "" : "border-t border-border "}py-6 sm:py-8`}>
       <div className="container">
-      <div className="mb-6">
+      {!shared && <div className="mb-6">
         <h2 id="other-starts-heading" className="font-display text-3xl font-bold tracking-tight sm:text-4xl">
           {lang === "uk" ? "Інші старти в Україні" : "Other races in Ukraine"}
         </h2>
