@@ -6,6 +6,7 @@ import { Link } from "@/lib/router-compat";
 import { supabase } from "@/integrations/supabase/client";
 import { BlogPost, formatBlogDate } from "@/lib/blog";
 import logo from "@/assets/logo-fartlek.jpg";
+import { imageDeliveryUrl } from "@/lib/image-delivery";
 
 export const TELEGRAM_CHANNEL_URL = "https://t.me/+5-5XOFyn0JUxMTli";
 export const TELEGRAM_CHAT_URL = "https://t.me/+KgEHRsz677s4Zjhi";
@@ -90,7 +91,7 @@ export const TelegramCommunity = ({ showBlog = false }: { showBlog?: boolean }) 
               <div className="mt-4 grid gap-4 md:grid-cols-2">
                 {posts.map((p) => (
                   <Link key={p.id} to={`/blog/${p.slug}`} className="group flex gap-3 rounded-lg border border-border bg-card p-3 transition-base hover:border-primary">
-                    <img src={p.cover_url || p.photos?.[0] || logo} alt={p.title} loading="lazy" className="h-24 w-24 shrink-0 rounded-md object-cover sm:w-32" />
+                    <img src={imageDeliveryUrl(p.cover_url || p.photos?.[0] || logo, 256)} alt={p.title} loading="lazy" decoding="async" width={128} height={96} onError={(event) => { const original = p.cover_url || p.photos?.[0] || logo; if (event.currentTarget.getAttribute("src") !== original) event.currentTarget.src = original; }} className="h-24 w-24 shrink-0 rounded-md object-cover sm:w-32" />
                     <div className="min-w-0 space-y-1">
                       {p.event_date && <div className="flex items-center gap-1 text-xs text-muted-foreground"><Calendar className="h-3.5 w-3.5" />{formatBlogDate(p.event_date)}</div>}
                       <div className="font-semibold group-hover:text-primary transition-base">{p.title}</div>

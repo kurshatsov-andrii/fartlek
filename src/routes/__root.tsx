@@ -18,7 +18,7 @@ import { StartPlannerProvider } from "@/contexts/StartPlannerContext";
 import { ProfileCompletionGate } from "@/components/ProfileCompletionGate";
 import { AdminOnlinePresence } from "@/components/AdminOnlinePresence";
 import { SessionTracker } from "@/components/SessionTracker";
-import { AdminSeoEditor } from "@/components/AdminSeoEditor";
+import { AdminSeoLoader } from "@/components/AdminSeoLoader";
 import { reportLovableError } from "@/lib/lovable-error-reporting";
 import NotFound from "@/pages/NotFound";
 import appCss from "../styles.css?url";
@@ -88,7 +88,7 @@ function RootComponent() {
             <ProfileCompletionGate />
             <AdminOnlinePresence />
             <SessionTracker />
-            <AdminSeoEditor />
+            <AdminSeoLoader />
             <Outlet />
           </TooltipProvider>
           </StartPlannerProvider>
