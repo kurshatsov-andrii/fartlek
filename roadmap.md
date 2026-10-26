@@ -1,8 +1,8 @@
 # Roadmap
 
 ## Mobile loading performance
-- [ ] Reduce unnecessary initial downloads and image work without changing homepage content
-- [ ] Verify mobile search, posters and browser errors; report measured improvements separately from a new published Lighthouse score
+- [x] Add responsive managed poster delivery, tiny backdrops and blog thumbnails; defer administrator SEO tools for public visitors and move font loading out of the CSS import chain
+- [x] Verify real EKIDEN mobile search and detail navigation, archive poster loading and overflow without page errors; 8 tests passed, build OK; measured EKIDEN delivery 126,354 → 25,398 bytes (79.9% smaller); a new published Lighthouse score remains unmeasured
 
 ## Unified Starts catalog
 - [x] Include public Fartlek events in the same Starts cards, filters and upcoming/completed lists with source-aware links and planner actions
