@@ -1,5 +1,8 @@
 # Architecture rules
 
+- Deliver public storage posters through the managed image transformer with responsive widths and a tiny backdrop; keep original URLs unchanged and fall back to them on delivery errors so poster content remains available.
+- Load the global SEO editor only after administrator identity is established so public visitors do not download editing tools.
+
 - Normalize platform events and external starts through starts-catalog for the /starts listing; retain source IDs for planner actions and original detail links so one filterable catalog does not duplicate stored records.
 
 - Resolve ticket team identity from the saved registration through ticket-identity; reuse it for ticket/PDF, QR and bib naming so relay teams do not inherit the account holder's name.

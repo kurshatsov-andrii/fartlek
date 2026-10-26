@@ -18,7 +18,7 @@ import { StartPlannerProvider } from "@/contexts/StartPlannerContext";
 import { ProfileCompletionGate } from "@/components/ProfileCompletionGate";
 import { AdminOnlinePresence } from "@/components/AdminOnlinePresence";
 import { SessionTracker } from "@/components/SessionTracker";
-import { AdminSeoEditor } from "@/components/AdminSeoEditor";
+import { AdminSeoLoader } from "@/components/AdminSeoLoader";
 import { reportLovableError } from "@/lib/lovable-error-reporting";
 import NotFound from "@/pages/NotFound";
 import appCss from "../styles.css?url";
@@ -40,6 +40,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     ],
     links: [
       { rel: "stylesheet", href: appCss },
+      { rel: "preconnect", href: "https://fonts.googleapis.com" },
+      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
+      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" },
       { rel: "icon", href: "/favicon.png", type: "image/png" },
       { rel: "apple-touch-icon", href: "/apple-touch-icon.png", type: "image/png" },
     ],
@@ -85,7 +88,7 @@ function RootComponent() {
             <ProfileCompletionGate />
             <AdminOnlinePresence />
             <SessionTracker />
-            <AdminSeoEditor />
+            <AdminSeoLoader />
             <Outlet />
           </TooltipProvider>
           </StartPlannerProvider>
