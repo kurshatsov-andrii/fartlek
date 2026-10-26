@@ -1,5 +1,9 @@
 # Roadmap
 
+## Mobile loading performance
+- [ ] Reduce unnecessary initial downloads and image work without changing homepage content
+- [ ] Verify mobile search, posters and browser errors; report measured improvements separately from a new published Lighthouse score
+
 ## Unified Starts catalog
 - [x] Include public Fartlek events in the same Starts cards, filters and upcoming/completed lists with source-aware links and planner actions
 - [x] Verified real EKIDEN and Bilka search results alongside external starts, event navigation and mobile layout without page errors; 22 regression tests passed; build OK
