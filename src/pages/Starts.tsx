@@ -141,20 +141,14 @@ const Starts = () => {
           {r.is_paid === false && <span className="text-[10px] px-1.5 py-0.5 rounded bg-accent text-accent-foreground">Безкоштовно</span>}
         </div>
         <div className="flex gap-2 pt-1">
-          <Button asChild size="sm" variant="secondary" className="flex-1">
-            <Link to={r.url}>Детальніше</Link>
+          <Button asChild size="sm" className="flex-1">
+            <Link to={r.url}>Детальніше та реєстрація</Link>
           </Button>
-          {r.results_url ? (
+          {r.results_url && (
             <Button asChild size="sm" variant="secondary" className="flex-1">
               <a href={r.results_url} target="_blank" rel="noreferrer">
                 Результати <FileText className="h-3.5 w-3.5 ml-1" />
               </a>
-            </Button>
-          ) : r.register_url && canShowRegisterButton({ explicit: r.registration_status, opensOn: r.registration_opens_on, closed: r.registration_closed, defaultOpen: r.source === "event", date: r.event_date, today: todayStr }) && (
-            <Button asChild size="sm" className="flex-1">
-              {r.source === "event" ? <Link to={r.url}>Зареєструватися</Link> : <a href={r.register_url} target="_blank" rel="noreferrer">
-                Зареєструватися <ExternalLink className="h-3.5 w-3.5 ml-1" />
-              </a>}
             </Button>
           )}
         </div>
