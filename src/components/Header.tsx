@@ -122,7 +122,7 @@ export const Header = () => {
             </DropdownMenu>
           ) : (
             <>
-              <Button asChild size="sm" className="hidden sm:inline-flex">
+              <Button asChild size="sm" className="gap-0 px-2 text-xs sm:px-4 sm:text-sm">
                 <Link to="/auth">{t.nav.login}</Link>
               </Button>
               <DropdownMenu>
