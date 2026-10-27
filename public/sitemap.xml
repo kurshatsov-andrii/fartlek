@@ -272,6 +272,12 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://fartlek.com.ua/blog/trail-zolota-osin-kharkiv</loc>
+    <lastmod>2026-10-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://fartlek.com.ua/events/bigotreyl-rivne-rivne-2026</loc>
     <lastmod>2026-10-03</lastmod>
     <changefreq>weekly</changefreq>
@@ -308,14 +314,14 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://fartlek.com.ua/events/bilka-run-harkiv-2026</loc>
-    <lastmod>2026-10-19</lastmod>
+    <loc>https://fartlek.com.ua/events/bigotreyl-hmel-nyc-kyy-hmel-nyc-kyy-2026</loc>
+    <lastmod>2026-10-03</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://fartlek.com.ua/events/bigotreyl-hmel-nyc-kyy-hmel-nyc-kyy-2026</loc>
-    <lastmod>2026-10-03</lastmod>
+    <loc>https://fartlek.com.ua/events/bilka-run-harkiv-2026</loc>
+    <lastmod>2026-10-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -334,6 +340,12 @@
   <url>
     <loc>https://fartlek.com.ua/starts/dyka-gonka-lito-2026-07-11</loc>
     <lastmod>2026-09-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fartlek.com.ua/starts/ekiden-kharikofu-10k-2026-2026-11-15</loc>
+    <lastmod>2026-10-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -513,7 +525,7 @@
   </url>
   <url>
     <loc>https://fartlek.com.ua/starts/dino-trail-2026-11-08</loc>
-    <lastmod>2026-10-15</lastmod>
+    <lastmod>2026-10-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
