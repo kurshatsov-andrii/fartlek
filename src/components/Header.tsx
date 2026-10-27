@@ -144,8 +144,7 @@ export const Header = () => {
                   <DropdownMenuItem asChild><Link to="/faq"><HelpCircle className="h-4 w-4" />FAQ</Link></DropdownMenuItem>
 
                   <DropdownMenuItem asChild><Link to="/contacts"><Mail className="h-4 w-4" />{t.nav.contacts}</Link></DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem asChild><Link to="/auth"><User className="h-4 w-4" />{t.nav.login}</Link></DropdownMenuItem>
+
                 </DropdownMenuContent>
               </DropdownMenu>
             </>
