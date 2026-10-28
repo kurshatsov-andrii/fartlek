@@ -85,7 +85,7 @@ const CalendarPage = ({ scope = "ukraine" }: { scope?: CalendarScope }) => {
   const [search, setSearch] = useState("");
   const [catFilter, setCatFilter] = useState<string>("all");
   const [monthFilter, setMonthFilter] = useState<string>("all");
-  const yearFilter = params.year ?? (scope === "ukraine" ? "all" : "2027");
+  const yearFilter = params.year ?? "2027";
   const setYearFilter = (year: string) => navigate({ to: path, search: { year } });
   const [sortBy, setSortBy] = useState<"date_asc" | "date_desc" | "title_asc" | "location_asc">("date_asc");
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -99,7 +99,7 @@ const CalendarPage = ({ scope = "ukraine" }: { scope?: CalendarScope }) => {
   const monthOptions = useMemo(() => {
     const set = new Set<string>();
     allRows.forEach((r) => set.add(r.event_date.slice(0, 7)));
-    return Array.from(set).sort();
+    return Array.from(set).sort((a, b) => (a === "2027" ? -1 : b === "2027" ? 1 : b.localeCompare(a)));
   }, [allRows]);
 
   // Years shown as quick filter chips: 2026 and 2027 are always offered,
@@ -107,7 +107,7 @@ const CalendarPage = ({ scope = "ukraine" }: { scope?: CalendarScope }) => {
   const yearOptions = useMemo(() => {
     const set = new Set<string>(["2026", "2027"]);
     allRows.forEach((r) => set.add(r.event_date.slice(0, 4)));
-    return Array.from(set).sort();
+    return Array.from(set).sort((a, b) => (a === "2027" ? -1 : b === "2027" ? 1 : b.localeCompare(a)));
   }, [allRows]);
 
   const monthsShown = useMemo(() => {
@@ -368,13 +368,6 @@ const CalendarPage = ({ scope = "ukraine" }: { scope?: CalendarScope }) => {
           <span className="text-sm text-muted-foreground mr-1">
             {lang === "uk" ? "Рік:" : "Year:"}
           </span>
-          <Button
-            size="sm"
-            variant={yearFilter === "all" ? "default" : "outline"}
-            onClick={() => { setYearFilter("all"); }}
-          >
-            {lang === "uk" ? "Усі роки" : "All years"}
-          </Button>
           {yearOptions.map((y) => (
             <Button
               key={y}
@@ -387,7 +380,16 @@ const CalendarPage = ({ scope = "ukraine" }: { scope?: CalendarScope }) => {
             >
               {y}
             </Button>
-          ))}
+          )).flatMap((el, i) => i === 0 ? [el, (
+          <Button
+            key="all"
+            size="sm"
+            variant={yearFilter === "all" ? "default" : "outline"}
+            onClick={() => { setYearFilter("all"); }}
+          >
+            {lang === "uk" ? "Усі роки" : "All years"}
+          </Button>
+          )] : [el])}
         </div>
 
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4 mb-6">
