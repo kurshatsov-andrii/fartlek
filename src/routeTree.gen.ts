@@ -42,8 +42,11 @@ import { Route as AdminUnsubscribesRouteImport } from './routes/admin/unsubscrib
 import { Route as BlogIndexRouteImport } from './routes/blog/index'
 import { Route as BlogSlugRouteImport } from './routes/blog/$slug'
 import { Route as CalendarIndexRouteImport } from './routes/calendar/index'
+import { Route as CalendarDrohobychRouteImport } from './routes/calendar/drohobych'
 import { Route as CalendarKharkivRouteImport } from './routes/calendar/kharkiv'
+import { Route as CalendarLvivRouteImport } from './routes/calendar/lviv'
 import { Route as CalendarUzhhorodRouteImport } from './routes/calendar/uzhhorod'
+import { Route as CalendarVarashRouteImport } from './routes/calendar/varash'
 import { Route as CalendarVinnytsiaRouteImport } from './routes/calendar/vinnytsia'
 import { Route as CategoryIndexRouteImport } from './routes/category/index'
 import { Route as CategoryCategoryRouteImport } from './routes/category/$category'
@@ -244,14 +247,29 @@ const CalendarIndexRoute = CalendarIndexRouteImport.update({
   path: '/calendar/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CalendarDrohobychRoute = CalendarDrohobychRouteImport.update({
+  id: '/calendar/drohobych',
+  path: '/calendar/drohobych',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CalendarKharkivRoute = CalendarKharkivRouteImport.update({
   id: '/calendar/kharkiv',
   path: '/calendar/kharkiv',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CalendarLvivRoute = CalendarLvivRouteImport.update({
+  id: '/calendar/lviv',
+  path: '/calendar/lviv',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CalendarUzhhorodRoute = CalendarUzhhorodRouteImport.update({
   id: '/calendar/uzhhorod',
   path: '/calendar/uzhhorod',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CalendarVarashRoute = CalendarVarashRouteImport.update({
+  id: '/calendar/varash',
+  path: '/calendar/varash',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CalendarVinnytsiaRoute = CalendarVinnytsiaRouteImport.update({
@@ -461,8 +479,11 @@ export interface FileRoutesByFullPath {
   '/admin/tips': typeof AdminTipsRoute
   '/admin/unsubscribes': typeof AdminUnsubscribesRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/calendar/drohobych': typeof CalendarDrohobychRoute
   '/calendar/kharkiv': typeof CalendarKharkivRoute
+  '/calendar/lviv': typeof CalendarLvivRoute
   '/calendar/uzhhorod': typeof CalendarUzhhorodRoute
+  '/calendar/varash': typeof CalendarVarashRoute
   '/calendar/vinnytsia': typeof CalendarVinnytsiaRoute
   '/category/$category': typeof CategoryCategoryRoute
   '/clubs/$slug': typeof ClubsSlugRoute
@@ -532,8 +553,11 @@ export interface FileRoutesByTo {
   '/admin/tips': typeof AdminTipsRoute
   '/admin/unsubscribes': typeof AdminUnsubscribesRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/calendar/drohobych': typeof CalendarDrohobychRoute
   '/calendar/kharkiv': typeof CalendarKharkivRoute
+  '/calendar/lviv': typeof CalendarLvivRoute
   '/calendar/uzhhorod': typeof CalendarUzhhorodRoute
+  '/calendar/varash': typeof CalendarVarashRoute
   '/calendar/vinnytsia': typeof CalendarVinnytsiaRoute
   '/category/$category': typeof CategoryCategoryRoute
   '/clubs/$slug': typeof ClubsSlugRoute
@@ -604,8 +628,11 @@ export interface FileRoutesById {
   '/admin/tips': typeof AdminTipsRoute
   '/admin/unsubscribes': typeof AdminUnsubscribesRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/calendar/drohobych': typeof CalendarDrohobychRoute
   '/calendar/kharkiv': typeof CalendarKharkivRoute
+  '/calendar/lviv': typeof CalendarLvivRoute
   '/calendar/uzhhorod': typeof CalendarUzhhorodRoute
+  '/calendar/varash': typeof CalendarVarashRoute
   '/calendar/vinnytsia': typeof CalendarVinnytsiaRoute
   '/category/$category': typeof CategoryCategoryRoute
   '/clubs/$slug': typeof ClubsSlugRoute
@@ -677,8 +704,11 @@ export interface FileRouteTypes {
     | '/admin/tips'
     | '/admin/unsubscribes'
     | '/blog/$slug'
+    | '/calendar/drohobych'
     | '/calendar/kharkiv'
+    | '/calendar/lviv'
     | '/calendar/uzhhorod'
+    | '/calendar/varash'
     | '/calendar/vinnytsia'
     | '/category/$category'
     | '/clubs/$slug'
@@ -748,8 +778,11 @@ export interface FileRouteTypes {
     | '/admin/tips'
     | '/admin/unsubscribes'
     | '/blog/$slug'
+    | '/calendar/drohobych'
     | '/calendar/kharkiv'
+    | '/calendar/lviv'
     | '/calendar/uzhhorod'
+    | '/calendar/varash'
     | '/calendar/vinnytsia'
     | '/category/$category'
     | '/clubs/$slug'
@@ -819,8 +852,11 @@ export interface FileRouteTypes {
     | '/admin/tips'
     | '/admin/unsubscribes'
     | '/blog/$slug'
+    | '/calendar/drohobych'
     | '/calendar/kharkiv'
+    | '/calendar/lviv'
     | '/calendar/uzhhorod'
+    | '/calendar/varash'
     | '/calendar/vinnytsia'
     | '/category/$category'
     | '/clubs/$slug'
@@ -891,8 +927,11 @@ export interface RootRouteChildren {
   AdminTipsRoute: typeof AdminTipsRoute
   AdminUnsubscribesRoute: typeof AdminUnsubscribesRoute
   BlogSlugRoute: typeof BlogSlugRoute
+  CalendarDrohobychRoute: typeof CalendarDrohobychRoute
   CalendarKharkivRoute: typeof CalendarKharkivRoute
+  CalendarLvivRoute: typeof CalendarLvivRoute
   CalendarUzhhorodRoute: typeof CalendarUzhhorodRoute
+  CalendarVarashRoute: typeof CalendarVarashRoute
   CalendarVinnytsiaRoute: typeof CalendarVinnytsiaRoute
   CategoryCategoryRoute: typeof CategoryCategoryRoute
   ClubsSlugRoute: typeof ClubsSlugRoute
@@ -1165,6 +1204,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CalendarIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/calendar/drohobych': {
+      id: '/calendar/drohobych'
+      path: '/calendar/drohobych'
+      fullPath: '/calendar/drohobych'
+      preLoaderRoute: typeof CalendarDrohobychRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/calendar/kharkiv': {
       id: '/calendar/kharkiv'
       path: '/calendar/kharkiv'
@@ -1172,11 +1218,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CalendarKharkivRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/calendar/lviv': {
+      id: '/calendar/lviv'
+      path: '/calendar/lviv'
+      fullPath: '/calendar/lviv'
+      preLoaderRoute: typeof CalendarLvivRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/calendar/uzhhorod': {
       id: '/calendar/uzhhorod'
       path: '/calendar/uzhhorod'
       fullPath: '/calendar/uzhhorod'
       preLoaderRoute: typeof CalendarUzhhorodRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/calendar/varash': {
+      id: '/calendar/varash'
+      path: '/calendar/varash'
+      fullPath: '/calendar/varash'
+      preLoaderRoute: typeof CalendarVarashRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/calendar/vinnytsia': {
@@ -1451,8 +1511,11 @@ const rootRouteChildren: RootRouteChildren = {
   AdminTipsRoute: AdminTipsRoute,
   AdminUnsubscribesRoute: AdminUnsubscribesRoute,
   BlogSlugRoute: BlogSlugRoute,
+  CalendarDrohobychRoute: CalendarDrohobychRoute,
   CalendarKharkivRoute: CalendarKharkivRoute,
+  CalendarLvivRoute: CalendarLvivRoute,
   CalendarUzhhorodRoute: CalendarUzhhorodRoute,
+  CalendarVarashRoute: CalendarVarashRoute,
   CalendarVinnytsiaRoute: CalendarVinnytsiaRoute,
   CategoryCategoryRoute: CategoryCategoryRoute,
   ClubsSlugRoute: ClubsSlugRoute,

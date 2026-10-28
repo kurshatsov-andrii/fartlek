@@ -5,7 +5,7 @@ import { Link } from "@/lib/router-compat";
 import { useSearch, useNavigate } from "@tanstack/react-router";
 import { useSuspenseQuery, useQueryClient } from "@tanstack/react-query";
 import { calendarQueryOptions } from "@/lib/calendar-query";
-import { calendarDate, calendarDistance, matchesCalendarScope, type CalendarRow, type CalendarScope } from "@/lib/calendar-discovery";
+import { calendarDate, calendarDistance, CITY_CALENDARS, matchesCalendarScope, type CalendarRow, type CalendarScope } from "@/lib/calendar-discovery";
 import { discoverySeo } from "@/lib/discovery-seo";
 import { Loader2, Plus, Pencil, Trash2, ExternalLink, ArrowUpDown } from "lucide-react";
 import { Header } from "@/components/Header";
@@ -439,7 +439,7 @@ const CalendarPage = ({ scope = "ukraine" }: { scope?: CalendarScope }) => {
         </div>
 
         <nav aria-label={lang === "uk" ? "Календарі забігів" : "Race calendars"} className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-7 mb-6">
-          <Button asChild variant={scope === "ukraine" ? "default" : "outline"} className="w-full justify-center"><Link to="/calendar?year=2027">{lang === "uk" ? "Забіги України 2027" : "Ukraine races 2027"}</Link></Button>
+          <Button asChild variant={scope === "ukraine" ? "default" : "outline"} className="w-full justify-center"><Link to="/calendar?year=2027">{lang === "uk" ? "Україна" : "Ukraine"}</Link></Button>
           {CITY_CALENDARS.map((c) => (
             <Button key={c.scope} asChild variant={scope === c.scope ? "default" : "outline"} className="w-full justify-center"><Link to={`/calendar/${c.scope}` as "/calendar/kharkiv"}>{lang === "uk" ? c.uk : c.en}</Link></Button>
           ))}
