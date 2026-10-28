@@ -1,6 +1,14 @@
 import { detectCity } from "@/lib/start-filters";
 
-export type CalendarScope = "ukraine" | "kharkiv" | "vinnytsia" | "uzhhorod";
+export type CalendarScope = "ukraine" | "kharkiv" | "vinnytsia" | "uzhhorod" | "drohobych" | "lviv" | "varash";
+export const CITY_CALENDARS: { scope: Exclude<CalendarScope, "ukraine">; uk: string; ukGen: string; en: string }[] = [
+  { scope: "kharkiv", uk: "Харків", ukGen: "Харкова", en: "Kharkiv" },
+  { scope: "vinnytsia", uk: "Вінниця", ukGen: "Вінниці", en: "Vinnytsia" },
+  { scope: "uzhhorod", uk: "Ужгород", ukGen: "Ужгорода", en: "Uzhhorod" },
+  { scope: "drohobych", uk: "Дрогобич", ukGen: "Дрогобича", en: "Drohobych" },
+  { scope: "lviv", uk: "Львів", ukGen: "Львова", en: "Lviv" },
+  { scope: "varash", uk: "Вараш", ukGen: "Вараша", en: "Varash" },
+];
 export interface CalendarRow {
   id: string; source: "platform" | "calendar"; title: string; event_date: string;
   location: string | null; distances: string; organizer_name: string | null;
@@ -10,6 +18,7 @@ export interface CalendarRow {
 export const matchesCalendarScope = (location: string | null, scope: CalendarScope, notes?: string | null) => {
   if (scope === "ukraine") return true;
   if (scope === "uzhhorod") return detectCity(location) === "Ужгород";
+  if (scope === "drohobych" || scope === "lviv" || scope === "varash") return detectCity(location) === CITY_CALENDARS.find((c) => c.scope === scope)!.uk;
   if (scope === "vinnytsia") return detectCity(location) === "Вінниця";
   return detectCity(location) === "Харків" ||
     Boolean(notes?.startsWith('Джерело: афіша «Календар стартів Харкова 2027»'));

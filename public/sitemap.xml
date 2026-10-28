@@ -16,6 +16,21 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://fartlek.com.ua/calendar/drohobych</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://fartlek.com.ua/calendar/lviv</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://fartlek.com.ua/calendar/varash</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://fartlek.com.ua/calendar/vinnytsia</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>

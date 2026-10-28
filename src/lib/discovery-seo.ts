@@ -25,6 +25,18 @@ const discovery = {
     uk: { title: "Календар забігів Ужгорода 2027 — старти | Фартлек", description: "Забіги Ужгорода 2027: Krayna Uzhhorod Marathon 9 травня. Календар стартів, дати, місця проведення й опубліковані дистанції на Фартлек." },
     en: { title: "Uzhhorod running calendar 2027 | Fartlek", description: "Uzhhorod races 2027: Krayna Uzhhorod Marathon on May 9. Race calendar, dates, venues and published distances on Fartlek." },
   },
+  "/calendar/drohobych": {
+    uk: { title: "Календар забігів Дрогобича 2027 — старти | Фартлек", description: "Забіги Дрогобича 2027: календар стартів, дати, місця проведення й опубліковані дистанції на Фартлек." },
+    en: { title: "Drohobych running calendar 2027 | Fartlek", description: "Drohobych races 2027: race calendar, dates, venues and published distances on Fartlek." },
+  },
+  "/calendar/lviv": {
+    uk: { title: "Календар забігів Львова 2027 — старти | Фартлек", description: "Забіги Львова 2027: календар стартів, дати, місця проведення й опубліковані дистанції на Фартлек." },
+    en: { title: "Lviv running calendar 2027 | Fartlek", description: "Lviv races 2027: race calendar, dates, venues and published distances on Fartlek." },
+  },
+  "/calendar/varash": {
+    uk: { title: "Календар забігів Вараша 2027 — старти | Фартлек", description: "Забіги Вараша 2027: календар стартів, дати, місця проведення й опубліковані дистанції на Фартлек." },
+    en: { title: "Varash running calendar 2027 | Fartlek", description: "Varash races 2027: race calendar, dates, venues and published distances on Fartlek." },
+  },
   "/starts": {
     uk: { title: "Забіги та спортивні старти України 2027 | Фартлек", description: "Анонси забігів і спортивних стартів України 2027. Дати, міста, дистанції, організатори та посилання на реєстрацію. Знайдіть свій наступний старт." },
     en: { title: "Ukraine races and sports events 2027 | Fartlek", description: "Ukraine race announcements for 2027: dates, cities, distances, organizers and registration links. Find your next race." },
