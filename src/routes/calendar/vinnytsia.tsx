@@ -8,7 +8,7 @@ import { CalendarLoadError } from "@/components/CalendarLoadError";
 import { breadcrumbJsonLd, jsonLdScript } from "@/lib/jsonld";
 
 export const Route = createFileRoute("/calendar/vinnytsia")({
-  validateSearch: (search: Record<string, unknown>) => ({ year: /^(all|\d{4})$/.test(String(search.year)) ? String(search.year) : "2027" }),
+  validateSearch: (search: Record<string, unknown>) => ({ year: /^(all|\d{4})$/.test(String(search.year)) ? String(search.year) : undefined }),
   loader: async ({ context }) => {
     const [override] = await Promise.all([getSeoOverride({ data: { path: "/calendar/vinnytsia" } }), context.queryClient.ensureQueryData(calendarQueryOptions)]);
     return override;
