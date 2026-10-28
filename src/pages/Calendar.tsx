@@ -5,7 +5,7 @@ import { Link } from "@/lib/router-compat";
 import { useSearch, useNavigate } from "@tanstack/react-router";
 import { useSuspenseQuery, useQueryClient } from "@tanstack/react-query";
 import { calendarQueryOptions } from "@/lib/calendar-query";
-import { calendarDate, calendarDistance, matchesCalendarScope, type CalendarRow, type CalendarScope } from "@/lib/calendar-discovery";
+import { calendarDate, calendarDistance, CITY_CALENDARS, matchesCalendarScope, type CalendarRow, type CalendarScope } from "@/lib/calendar-discovery";
 import { discoverySeo } from "@/lib/discovery-seo";
 import { Loader2, Plus, Pencil, Trash2, ExternalLink, ArrowUpDown } from "lucide-react";
 import { Header } from "@/components/Header";
@@ -72,8 +72,11 @@ const emptyForm = {
   info_checked_on: null as string | null,
 };
 
+const CITY_EXTRA = new Set<string>(["drohobych", "lviv", "varash"]);
+
 const CalendarPage = ({ scope = "ukraine" }: { scope?: CalendarScope }) => {
-  const path = scope === "ukraine" ? "/calendar" : scope === "kharkiv" ? "/calendar/kharkiv" : (`/calendar/${scope}` as "/calendar/vinnytsia" | "/calendar/uzhhorod");
+  const path = scope === "ukraine" ? "/calendar" : scope === "kharkiv" ? "/calendar/kharkiv" : (`/calendar/${scope}` as "/calendar/vinnytsia" | "/calendar/uzhhorod" | "/calendar/drohobych" | "/calendar/lviv" | "/calendar/varash");
+  const cityCal = CITY_CALENDARS.find((c) => c.scope === scope);
   const { data: rows } = useSuspenseQuery(calendarQueryOptions);
   const queryClient = useQueryClient();
   const params = useSearch({ strict: false }) as { year?: string };
@@ -220,7 +223,9 @@ const CalendarPage = ({ scope = "ukraine" }: { scope?: CalendarScope }) => {
         <div className="flex flex-wrap items-end justify-between gap-4 mb-8">
           <div>
             <h1 className="font-display text-3xl sm:text-5xl font-bold tracking-tight">
-              {scope === "uzhhorod"
+              {CITY_EXTRA.has(scope)
+                ? (lang === "uk" ? `Календар забігів ${cityCal!.ukGen} 2027` : `${cityCal!.en} running calendar 2027`)
+                : scope === "uzhhorod"
                 ? (lang === "uk" ? "Календар забігів Ужгорода 2027" : "Uzhhorod running calendar 2027")
                 : scope === "vinnytsia"
                 ? (lang === "uk" ? "Календар забігів Вінниці 2027" : "Vinnytsia running calendar 2027")
@@ -229,7 +234,9 @@ const CalendarPage = ({ scope = "ukraine" }: { scope?: CalendarScope }) => {
                 : (lang === "uk" ? "Календар забігів України 2027" : "Ukraine running calendar 2027")}
             </h1>
             <p className="mt-3 text-muted-foreground">
-              {scope === "uzhhorod"
+              {CITY_EXTRA.has(scope)
+                ? (lang === "uk" ? `Забіги та пробіги ${cityCal!.ukGen} 2027: дати, місця проведення й опубліковані дистанції. Умови та реєстрацію уточнюйте на сторінці відповідного старту.` : seo.description)
+                : scope === "uzhhorod"
                 ? (lang === "uk" ? "Забіги та пробіги Ужгорода 2027: Krayna Uzhhorod Marathon 9 травня — марафон, півмарафон, 10 км і естафета. Дати, місця проведення й опубліковані дистанції. Умови та реєстрацію уточнюйте на сторінці відповідного старту." : seo.description)
                 : scope === "vinnytsia"
                 ? (lang === "uk" ? "Забіги та пробіги Вінниці 2027: VINNYTSIA RUN 23 травня та 5 вересня. Дати, місця проведення й опубліковані дистанції. Умови та реєстрацію уточнюйте на сторінці відповідного старту." : seo.description)
@@ -392,7 +399,7 @@ const CalendarPage = ({ scope = "ukraine" }: { scope?: CalendarScope }) => {
           )] : [el])}
         </div>
 
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4 mb-6">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-7 mb-6">
           <Input
             placeholder={lang === "uk" ? "Пошук за назвою, місцем…" : "Search by title, location…"}
             value={search}
@@ -431,11 +438,11 @@ const CalendarPage = ({ scope = "ukraine" }: { scope?: CalendarScope }) => {
           </Select>
         </div>
 
-        <nav aria-label={lang === "uk" ? "Календарі забігів" : "Race calendars"} className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4 mb-6">
-          <Button asChild variant={scope === "ukraine" ? "default" : "outline"} className="w-full justify-center"><Link to="/calendar?year=2027">{lang === "uk" ? "Забіги України 2027" : "Ukraine races 2027"}</Link></Button>
-          <Button asChild variant={scope === "kharkiv" ? "default" : "outline"} className="w-full justify-center"><Link to="/calendar/kharkiv">{lang === "uk" ? "Забіги Харкова 2027" : "Kharkiv races 2027"}</Link></Button>
-          <Button asChild variant={scope === "vinnytsia" ? "default" : "outline"} className="w-full justify-center"><Link to="/calendar/vinnytsia">{lang === "uk" ? "Забіги Вінниці 2027" : "Vinnytsia races 2027"}</Link></Button>
-          <Button asChild variant={scope === "uzhhorod" ? "default" : "outline"} className="w-full justify-center"><Link to="/calendar/uzhhorod">{lang === "uk" ? "Забіги Ужгорода 2027" : "Uzhhorod races 2027"}</Link></Button>
+        <nav aria-label={lang === "uk" ? "Календарі забігів" : "Race calendars"} className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-7 mb-6">
+          <Button asChild variant={scope === "ukraine" ? "default" : "outline"} className="w-full justify-center"><Link to="/calendar?year=2027">{lang === "uk" ? "Україна" : "Ukraine"}</Link></Button>
+          {CITY_CALENDARS.map((c) => (
+            <Button key={c.scope} asChild variant={scope === c.scope ? "default" : "outline"} className="w-full justify-center"><Link to={`/calendar/${c.scope}` as "/calendar/kharkiv"}>{lang === "uk" ? c.uk : c.en}</Link></Button>
+          ))}
         </nav>
 
 
