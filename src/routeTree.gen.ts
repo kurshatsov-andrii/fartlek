@@ -71,6 +71,8 @@ import { Route as OrganizerEventsNewRouteImport } from './routes/organizer/event
 import { Route as TipsCategoryIndexRouteImport } from './routes/tips/$category/index'
 import { Route as TipsCategorySlugRouteImport } from './routes/tips/$category/$slug'
 import { Route as AdminEventsIdCoOrganizersRouteImport } from './routes/admin/events/$id/co-organizers'
+import { Route as LovableEmailAuthPreviewRouteImport } from './routes/lovable/email/auth/preview'
+import { Route as LovableEmailAuthWebhookRouteImport } from './routes/lovable/email/auth/webhook'
 import { Route as OrganizerEventsIdIndexRouteImport } from './routes/organizer/events/$id/index'
 import { Route as OrganizerEventsIdAnalyticsRouteImport } from './routes/organizer/events/$id/analytics'
 import { Route as OrganizerEventsIdCampaignRouteImport } from './routes/organizer/events/$id/campaign'
@@ -388,6 +390,16 @@ const AdminEventsIdCoOrganizersRoute =
     path: '/admin/events/$id/co-organizers',
     getParentRoute: () => rootRouteImport,
   } as any)
+const LovableEmailAuthPreviewRoute = LovableEmailAuthPreviewRouteImport.update({
+  id: '/lovable/email/auth/preview',
+  path: '/lovable/email/auth/preview',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LovableEmailAuthWebhookRoute = LovableEmailAuthWebhookRouteImport.update({
+  id: '/lovable/email/auth/webhook',
+  path: '/lovable/email/auth/webhook',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const OrganizerEventsIdIndexRoute = OrganizerEventsIdIndexRouteImport.update({
   id: '/organizer/events/$id/',
   path: '/organizer/events/$id/',
@@ -481,6 +493,8 @@ export interface FileRoutesByFullPath {
   '/events/$id/': typeof EventsIdIndexRoute
   '/tips/$category/': typeof TipsCategoryIndexRoute
   '/admin/events/$id/co-organizers': typeof AdminEventsIdCoOrganizersRoute
+  '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
+  '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
   '/organizer/events/$id/analytics': typeof OrganizerEventsIdAnalyticsRoute
   '/organizer/events/$id/campaign': typeof OrganizerEventsIdCampaignRoute
   '/organizer/events/$id/changes': typeof OrganizerEventsIdChangesRoute
@@ -550,6 +564,8 @@ export interface FileRoutesByTo {
   '/events/$id': typeof EventsIdIndexRoute
   '/tips/$category': typeof TipsCategoryIndexRoute
   '/admin/events/$id/co-organizers': typeof AdminEventsIdCoOrganizersRoute
+  '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
+  '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
   '/organizer/events/$id/analytics': typeof OrganizerEventsIdAnalyticsRoute
   '/organizer/events/$id/campaign': typeof OrganizerEventsIdCampaignRoute
   '/organizer/events/$id/changes': typeof OrganizerEventsIdChangesRoute
@@ -620,6 +636,8 @@ export interface FileRoutesById {
   '/events/$id/': typeof EventsIdIndexRoute
   '/tips/$category/': typeof TipsCategoryIndexRoute
   '/admin/events/$id/co-organizers': typeof AdminEventsIdCoOrganizersRoute
+  '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
+  '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
   '/organizer/events/$id/analytics': typeof OrganizerEventsIdAnalyticsRoute
   '/organizer/events/$id/campaign': typeof OrganizerEventsIdCampaignRoute
   '/organizer/events/$id/changes': typeof OrganizerEventsIdChangesRoute
@@ -691,6 +709,8 @@ export interface FileRouteTypes {
     | '/events/$id/'
     | '/tips/$category/'
     | '/admin/events/$id/co-organizers'
+    | '/lovable/email/auth/preview'
+    | '/lovable/email/auth/webhook'
     | '/organizer/events/$id/analytics'
     | '/organizer/events/$id/campaign'
     | '/organizer/events/$id/changes'
@@ -760,6 +780,8 @@ export interface FileRouteTypes {
     | '/events/$id'
     | '/tips/$category'
     | '/admin/events/$id/co-organizers'
+    | '/lovable/email/auth/preview'
+    | '/lovable/email/auth/webhook'
     | '/organizer/events/$id/analytics'
     | '/organizer/events/$id/campaign'
     | '/organizer/events/$id/changes'
@@ -829,6 +851,8 @@ export interface FileRouteTypes {
     | '/events/$id/'
     | '/tips/$category/'
     | '/admin/events/$id/co-organizers'
+    | '/lovable/email/auth/preview'
+    | '/lovable/email/auth/webhook'
     | '/organizer/events/$id/analytics'
     | '/organizer/events/$id/campaign'
     | '/organizer/events/$id/changes'
@@ -899,6 +923,8 @@ export interface RootRouteChildren {
   EventsIdIndexRoute: typeof EventsIdIndexRoute
   TipsCategoryIndexRoute: typeof TipsCategoryIndexRoute
   AdminEventsIdCoOrganizersRoute: typeof AdminEventsIdCoOrganizersRoute
+  LovableEmailAuthPreviewRoute: typeof LovableEmailAuthPreviewRoute
+  LovableEmailAuthWebhookRoute: typeof LovableEmailAuthWebhookRoute
   OrganizerEventsIdAnalyticsRoute: typeof OrganizerEventsIdAnalyticsRoute
   OrganizerEventsIdCampaignRoute: typeof OrganizerEventsIdCampaignRoute
   OrganizerEventsIdChangesRoute: typeof OrganizerEventsIdChangesRoute
@@ -1342,6 +1368,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminEventsIdCoOrganizersRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/lovable/email/auth/preview': {
+      id: '/lovable/email/auth/preview'
+      path: '/lovable/email/auth/preview'
+      fullPath: '/lovable/email/auth/preview'
+      preLoaderRoute: typeof LovableEmailAuthPreviewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/lovable/email/auth/webhook': {
+      id: '/lovable/email/auth/webhook'
+      path: '/lovable/email/auth/webhook'
+      fullPath: '/lovable/email/auth/webhook'
+      preLoaderRoute: typeof LovableEmailAuthWebhookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/organizer/events/$id/': {
       id: '/organizer/events/$id/'
       path: '/organizer/events/$id'
@@ -1443,6 +1483,8 @@ const rootRouteChildren: RootRouteChildren = {
   EventsIdIndexRoute: EventsIdIndexRoute,
   TipsCategoryIndexRoute: TipsCategoryIndexRoute,
   AdminEventsIdCoOrganizersRoute: AdminEventsIdCoOrganizersRoute,
+  LovableEmailAuthPreviewRoute: LovableEmailAuthPreviewRoute,
+  LovableEmailAuthWebhookRoute: LovableEmailAuthWebhookRoute,
   OrganizerEventsIdAnalyticsRoute: OrganizerEventsIdAnalyticsRoute,
   OrganizerEventsIdCampaignRoute: OrganizerEventsIdCampaignRoute,
   OrganizerEventsIdChangesRoute: OrganizerEventsIdChangesRoute,
