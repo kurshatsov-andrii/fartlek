@@ -26,10 +26,15 @@ export const detectCity = (location: string | null | undefined): string | null =
   if (!location) return null;
   const key = normalizeCityKey(location);
   if (!key) return null;
+  // Earliest mention wins ("Вараш, Рівненська область" → Вараш, not Рівне); longer names win ties.
+  let best: string | null = null;
+  let bestAt = Infinity;
   for (const name of CITY_KEYS_BY_LENGTH) {
-    if (name.length > 3 && key.includes(name)) return prettyCity(name);
+    if (name.length <= 3) continue;
+    const at = key.indexOf(name);
+    if (at >= 0 && at < bestAt) { best = name; bestAt = at; }
   }
-  return null;
+  return best ? prettyCity(best) : null;
 };
 
 export const monthOf = (d: string | null | undefined) =>

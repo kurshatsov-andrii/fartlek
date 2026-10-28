@@ -72,10 +72,10 @@ const emptyForm = {
   info_checked_on: null as string | null,
 };
 
-const CITY_EXTRA = new Set<string>(["drohobych", "lviv", "varash"]);
+const CITY_EXTRA = new Set<string>(["drohobych", "lviv", "varash", "ivano-frankivsk"]);
 
 const CalendarPage = ({ scope = "ukraine" }: { scope?: CalendarScope }) => {
-  const path = scope === "ukraine" ? "/calendar" : scope === "kharkiv" ? "/calendar/kharkiv" : (`/calendar/${scope}` as "/calendar/vinnytsia" | "/calendar/uzhhorod" | "/calendar/drohobych" | "/calendar/lviv" | "/calendar/varash");
+  const path = scope === "ukraine" ? "/calendar" : scope === "kharkiv" ? "/calendar/kharkiv" : (`/calendar/${scope}` as "/calendar/vinnytsia" | "/calendar/uzhhorod" | "/calendar/drohobych" | "/calendar/lviv" | "/calendar/varash" | "/calendar/ivano-frankivsk");
   const cityCal = CITY_CALENDARS.find((c) => c.scope === scope);
   const { data: rows } = useSuspenseQuery(calendarQueryOptions);
   const queryClient = useQueryClient();
@@ -399,7 +399,7 @@ const CalendarPage = ({ scope = "ukraine" }: { scope?: CalendarScope }) => {
           )] : [el])}
         </div>
 
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-7 mb-6">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-8 mb-6">
           <Input
             placeholder={lang === "uk" ? "Пошук за назвою, місцем…" : "Search by title, location…"}
             value={search}
@@ -438,7 +438,7 @@ const CalendarPage = ({ scope = "ukraine" }: { scope?: CalendarScope }) => {
           </Select>
         </div>
 
-        <nav aria-label={lang === "uk" ? "Календарі забігів" : "Race calendars"} className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-7 mb-6">
+        <nav aria-label={lang === "uk" ? "Календарі забігів" : "Race calendars"} className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-8 mb-6">
           <Button asChild variant={scope === "ukraine" ? "default" : "outline"} className="w-full justify-center"><Link to="/calendar?year=2027">{lang === "uk" ? "Україна" : "Ukraine"}</Link></Button>
           {CITY_CALENDARS.map((c) => (
             <Button key={c.scope} asChild variant={scope === c.scope ? "default" : "outline"} className="w-full justify-center"><Link to={`/calendar/${c.scope}` as "/calendar/kharkiv"}>{lang === "uk" ? c.uk : c.en}</Link></Button>

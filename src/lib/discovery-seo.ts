@@ -37,6 +37,10 @@ const discovery = {
     uk: { title: "Календар забігів Вараша 2027 — старти | Фартлек", description: "Забіги Вараша 2027: календар стартів, дати, місця проведення й опубліковані дистанції на Фартлек." },
     en: { title: "Varash running calendar 2027 | Fartlek", description: "Varash races 2027: race calendar, dates, venues and published distances on Fartlek." },
   },
+  "/calendar/ivano-frankivsk": {
+    uk: { title: "Календар забігів Івано-Франківська 2027 — старти | Фартлек", description: "Забіги Івано-Франківська 2027: календар стартів, дати, місця проведення й опубліковані дистанції на Фартлек." },
+    en: { title: "Ivano-Frankivsk running calendar 2027 | Fartlek", description: "Ivano-Frankivsk races 2027: race calendar, dates, venues and published distances on Fartlek." },
+  },
   "/starts": {
     uk: { title: "Забіги та спортивні старти України 2027 | Фартлек", description: "Анонси забігів і спортивних стартів України 2027. Дати, міста, дистанції, організатори та посилання на реєстрацію. Знайдіть свій наступний старт." },
     en: { title: "Ukraine races and sports events 2027 | Fartlek", description: "Ukraine race announcements for 2027: dates, cities, distances, organizers and registration links. Find your next race." },
