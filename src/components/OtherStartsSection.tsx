@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { duplicatesPlatformEvent } from "@/lib/starts-catalog";
 import { EventPoster } from "@/components/EventPoster";
 import { Link } from "@/lib/router-compat";
 import { Calendar as CalendarIcon, MapPin, ExternalLink, Loader2, Search, X, Filter, FileText } from "lucide-react";
