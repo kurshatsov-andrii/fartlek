@@ -66,14 +66,17 @@ export const OtherStartsSection = ({ shared, onFacets }: { shared?: SharedStartF
 
   useEffect(() => {
     const today = new Date().toISOString().slice(0, 10);
-    supabase
-      .from("telegram_starts")
-      .select("id,slug,title,description,image_url,register_url,results_url,registration_status,event_date,city,region,organizer_name,sport_types,distances_km,is_paid")
-      .eq("status", "published")
-      .gte("event_date", today)
-      .order("event_date", { ascending: true })
-      .then(({ data }) => {
-        setRows(((data ?? []) as StartRow[]).filter((row) => !isCompletedDate(row.event_date)));
+    Promise.all([
+      supabase
+        .from("telegram_starts")
+        .select("id,slug,title,description,image_url,register_url,results_url,registration_status,event_date,city,region,organizer_name,sport_types,distances_km,is_paid")
+        .eq("status", "published")
+        .gte("event_date", today)
+        .order("event_date", { ascending: true }),
+      supabase.from("events").select("title,event_date").eq("status", "published"),
+    ]).then(([{ data }, { data: evs }]) => {
+        setRows(((data ?? []) as StartRow[]).filter((row) =>
+          !isCompletedDate(row.event_date) && !duplicatesPlatformEvent(row, evs ?? [])));
         setLoading(false);
       });
   }, []);
