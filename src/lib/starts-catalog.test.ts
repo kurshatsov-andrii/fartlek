@@ -37,3 +37,14 @@ describe("unified Starts catalog", () => {
     expect(canShowRegisterButton({ closed: row.registration_closed, defaultOpen: row.source === "event", date: row.event_date, today: "2026-10-25" })).toBe(false);
   });
 });
+import { duplicatesPlatformEvent as dupCheck } from "./starts-catalog";
+describe("duplicatesPlatformEvent", () => {
+  it("hides a Telegram start that matches a platform event", () => {
+    expect(dupCheck({ title: "EKIDEN KHARIKOFU 10K 2026", event_date: "2026-11-15" },
+      [{ title: "EKIDEN KHARIKOFU 10K 2026", event_date: "2026-11-15" }])).toBe(true);
+  });
+  it("keeps unrelated starts", () => {
+    expect(dupCheck({ title: "Лучеськ півмарафон", event_date: "2026-11-08" },
+      [{ title: "EKIDEN KHARIKOFU 10K 2026", event_date: "2026-11-15" }])).toBe(false);
+  });
+});
