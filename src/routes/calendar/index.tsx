@@ -10,7 +10,7 @@ import { breadcrumbJsonLd, jsonLdScript } from "@/lib/jsonld";
 const PATH = "/calendar";
 
 export const Route = createFileRoute("/calendar/")({
-  validateSearch: (search: Record<string, unknown>) => ({ year: /^(all|\d{4})$/.test(String(search.year)) ? String(search.year) : "all" }),
+  validateSearch: (search: Record<string, unknown>) => ({ year: /^(all|\d{4})$/.test(String(search.year)) ? String(search.year) : undefined }),
   loader: async ({ context }) => {
     const [override] = await Promise.all([getSeoOverride({ data: { path: PATH } }), context.queryClient.ensureQueryData(calendarQueryOptions)]);
     return override;
