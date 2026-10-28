@@ -43,6 +43,7 @@ import { Route as BlogIndexRouteImport } from './routes/blog/index'
 import { Route as BlogSlugRouteImport } from './routes/blog/$slug'
 import { Route as CalendarIndexRouteImport } from './routes/calendar/index'
 import { Route as CalendarDrohobychRouteImport } from './routes/calendar/drohobych'
+import { Route as CalendarIvanoFrankivskRouteImport } from './routes/calendar/ivano-frankivsk'
 import { Route as CalendarKharkivRouteImport } from './routes/calendar/kharkiv'
 import { Route as CalendarLvivRouteImport } from './routes/calendar/lviv'
 import { Route as CalendarUzhhorodRouteImport } from './routes/calendar/uzhhorod'
@@ -250,6 +251,11 @@ const CalendarIndexRoute = CalendarIndexRouteImport.update({
 const CalendarDrohobychRoute = CalendarDrohobychRouteImport.update({
   id: '/calendar/drohobych',
   path: '/calendar/drohobych',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CalendarIvanoFrankivskRoute = CalendarIvanoFrankivskRouteImport.update({
+  id: '/calendar/ivano-frankivsk',
+  path: '/calendar/ivano-frankivsk',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CalendarKharkivRoute = CalendarKharkivRouteImport.update({
@@ -480,6 +486,7 @@ export interface FileRoutesByFullPath {
   '/admin/unsubscribes': typeof AdminUnsubscribesRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/calendar/drohobych': typeof CalendarDrohobychRoute
+  '/calendar/ivano-frankivsk': typeof CalendarIvanoFrankivskRoute
   '/calendar/kharkiv': typeof CalendarKharkivRoute
   '/calendar/lviv': typeof CalendarLvivRoute
   '/calendar/uzhhorod': typeof CalendarUzhhorodRoute
@@ -554,6 +561,7 @@ export interface FileRoutesByTo {
   '/admin/unsubscribes': typeof AdminUnsubscribesRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/calendar/drohobych': typeof CalendarDrohobychRoute
+  '/calendar/ivano-frankivsk': typeof CalendarIvanoFrankivskRoute
   '/calendar/kharkiv': typeof CalendarKharkivRoute
   '/calendar/lviv': typeof CalendarLvivRoute
   '/calendar/uzhhorod': typeof CalendarUzhhorodRoute
@@ -629,6 +637,7 @@ export interface FileRoutesById {
   '/admin/unsubscribes': typeof AdminUnsubscribesRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/calendar/drohobych': typeof CalendarDrohobychRoute
+  '/calendar/ivano-frankivsk': typeof CalendarIvanoFrankivskRoute
   '/calendar/kharkiv': typeof CalendarKharkivRoute
   '/calendar/lviv': typeof CalendarLvivRoute
   '/calendar/uzhhorod': typeof CalendarUzhhorodRoute
@@ -705,6 +714,7 @@ export interface FileRouteTypes {
     | '/admin/unsubscribes'
     | '/blog/$slug'
     | '/calendar/drohobych'
+    | '/calendar/ivano-frankivsk'
     | '/calendar/kharkiv'
     | '/calendar/lviv'
     | '/calendar/uzhhorod'
@@ -779,6 +789,7 @@ export interface FileRouteTypes {
     | '/admin/unsubscribes'
     | '/blog/$slug'
     | '/calendar/drohobych'
+    | '/calendar/ivano-frankivsk'
     | '/calendar/kharkiv'
     | '/calendar/lviv'
     | '/calendar/uzhhorod'
@@ -853,6 +864,7 @@ export interface FileRouteTypes {
     | '/admin/unsubscribes'
     | '/blog/$slug'
     | '/calendar/drohobych'
+    | '/calendar/ivano-frankivsk'
     | '/calendar/kharkiv'
     | '/calendar/lviv'
     | '/calendar/uzhhorod'
@@ -928,6 +940,7 @@ export interface RootRouteChildren {
   AdminUnsubscribesRoute: typeof AdminUnsubscribesRoute
   BlogSlugRoute: typeof BlogSlugRoute
   CalendarDrohobychRoute: typeof CalendarDrohobychRoute
+  CalendarIvanoFrankivskRoute: typeof CalendarIvanoFrankivskRoute
   CalendarKharkivRoute: typeof CalendarKharkivRoute
   CalendarLvivRoute: typeof CalendarLvivRoute
   CalendarUzhhorodRoute: typeof CalendarUzhhorodRoute
@@ -1209,6 +1222,13 @@ declare module '@tanstack/react-router' {
       path: '/calendar/drohobych'
       fullPath: '/calendar/drohobych'
       preLoaderRoute: typeof CalendarDrohobychRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/calendar/ivano-frankivsk': {
+      id: '/calendar/ivano-frankivsk'
+      path: '/calendar/ivano-frankivsk'
+      fullPath: '/calendar/ivano-frankivsk'
+      preLoaderRoute: typeof CalendarIvanoFrankivskRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/calendar/kharkiv': {
@@ -1512,6 +1532,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminUnsubscribesRoute: AdminUnsubscribesRoute,
   BlogSlugRoute: BlogSlugRoute,
   CalendarDrohobychRoute: CalendarDrohobychRoute,
+  CalendarIvanoFrankivskRoute: CalendarIvanoFrankivskRoute,
   CalendarKharkivRoute: CalendarKharkivRoute,
   CalendarLvivRoute: CalendarLvivRoute,
   CalendarUzhhorodRoute: CalendarUzhhorodRoute,
