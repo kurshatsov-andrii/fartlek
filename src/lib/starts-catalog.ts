@@ -46,9 +46,27 @@ export interface CatalogEvent {
 }
 
 /** Keep the original source IDs: planner actions and detail pages use different catalogs. */
+export const normalizeStartTitle = (t: string) =>
+  t.toLowerCase().normalize("NFKC").replace(/[^\p{L}\p{N}]+/gu, "");
+
+/** True when an external start duplicates a platform event (same date and matching title). */
+export function duplicatesPlatformEvent(
+  start: { title: string; event_date: string | null },
+  events: { title: string; event_date: string }[],
+): boolean {
+  const k = normalizeStartTitle(start.title);
+  if (!k) return false;
+  return events.some((e) => {
+    const ek = normalizeStartTitle(e.title);
+    if (ek === k) return true;
+    return !!start.event_date && e.event_date === start.event_date && ek.length > 4 &&
+      (ek.includes(k) || k.includes(ek));
+  });
+}
+
 export function mergeStartsCatalog(starts: ExternalCatalogStart[], events: CatalogEvent[]): CatalogStart[] {
   return [
-    ...starts.map((start): CatalogStart => ({
+    ...starts.filter((s) => !duplicatesPlatformEvent(s, events)).map((start): CatalogStart => ({
       ...start,
       source: "start",
       url: `/starts/${start.slug ?? start.id}`,

@@ -328,6 +328,24 @@ Deno.serve(async (req) => {
     const match = (candidates || []).find((r: any) => normalizeTitleForCompare(r.title || "") === normKey);
     if (match) sameTitle = match as any;
   }
+  // Skip posts that duplicate a platform event (same title, or same date + title overlap).
+  if (normKey) {
+    const { data: platformEvents } = await supabase
+      .from("events")
+      .select("id, title, event_date")
+      .neq("status", "cancelled")
+      .limit(2000);
+    const dup = (platformEvents || []).find((e: any) => {
+      const k = normalizeTitleForCompare(e.title || "");
+      return k === normKey || (!!parsed.eventDate && e.event_date === parsed.eventDate &&
+        k.length > 4 && (k.includes(normKey) || normKey.includes(k)));
+    });
+    if (dup) {
+      return new Response(JSON.stringify({ ok: true, duplicate_event: true, id: dup.id }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+  }
   if (normKey) {
 
     if (sameTitle) {
