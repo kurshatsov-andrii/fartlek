@@ -4,6 +4,7 @@ import { HomeDirectory } from "@/components/HomeDirectory";
 import { EventsSection } from "@/components/EventsSection";
 import { CompletedEventsSection } from "@/components/CompletedEventsSection";
 import { SiSPartnerBanner } from "@/components/SiSPartnerBanner";
+import { InsuranceBanner } from "@/components/InsuranceBanner";
 import { TelegramCommunity } from "@/components/TelegramCommunity";
 import { Footer } from "@/components/Footer";
 import { DeferredSection } from "@/components/DeferredSection";
@@ -31,6 +32,7 @@ const Index = () => {
           <section className="container py-6 sm:py-8">
             <h2 className="mb-4 text-center font-display text-2xl font-bold sm:text-3xl">{lang === "uk" ? "ПАРТНЕРИ" : "PARTNERS"}</h2>
             <SiSPartnerBanner />
+            <InsuranceBanner />
           </section>
         </DeferredSection>
         <DeferredSection>

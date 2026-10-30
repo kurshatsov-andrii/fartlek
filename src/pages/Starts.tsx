@@ -7,6 +7,7 @@ import { Link } from "@/lib/router-compat";
 import { Loader2, ExternalLink, Calendar as CalendarIcon, Search, X, Filter, MapPin, FileText } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { InsuranceBanner } from "@/components/InsuranceBanner";
 import { SEO } from "@/components/SEO";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -289,9 +290,9 @@ const Starts = () => {
                 )}
               </section>
             )}
-          </>
         )}
 
+        <InsuranceBanner />
       </main>
       <Footer />
     </div>
