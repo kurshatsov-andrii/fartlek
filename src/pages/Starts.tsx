@@ -290,6 +290,7 @@ const Starts = () => {
                 )}
               </section>
             )}
+          </>
         )}
 
         <InsuranceBanner />
