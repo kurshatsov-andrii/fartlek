@@ -32,9 +32,11 @@ const Index = () => {
           <section className="container py-6 sm:py-8">
             <h2 className="mb-4 text-center font-display text-2xl font-bold sm:text-3xl">{lang === "uk" ? "ПАРТНЕРИ" : "PARTNERS"}</h2>
             <SiSPartnerBanner />
-            <InsuranceBanner />
           </section>
         </DeferredSection>
+        <div className="container pb-6 sm:pb-8">
+          <InsuranceBanner />
+        </div>
         <DeferredSection>
           <CompletedEventsSection />
         </DeferredSection>
