@@ -4,8 +4,8 @@ import { INSURANCE_PARTNER } from "@/lib/insurance-partner";
 
 /**
  * Спільний блок про спортивне страхування. Використовується на головній,
- * /starts, /calendar, /map, /clubs та /organizers, щоб посилання й тексти
- * залишалися однаковими всюди.
+ * /starts, /calendar, /map, /clubs, /organizers, а також на сторінках
+ * окремих подій і стартів, щоб посилання й тексти залишалися однаковими всюди.
  */
 export function InsuranceBanner() {
   const { lang } = useApp();

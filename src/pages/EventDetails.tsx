@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import { PageViews } from "@/components/PageViews";
 import { EventPoster } from "@/components/EventPoster";
 import { SiSPartnerBanner } from "@/components/SiSPartnerBanner";
+import { InsuranceBanner } from "@/components/InsuranceBanner";
 import { Link, useNavigate, useParams } from "@/lib/router-compat";
 import { Calendar, MapPin, Users, Loader2, ArrowLeft, UserCircle2, FileText, CalendarPlus, Calculator } from "lucide-react";
 import { PaceCalculatorDialog } from "@/components/PaceCalculatorDialog";
@@ -412,6 +413,7 @@ const EventDetails = () => {
                 </div>
               )}
               {event.status !== "completed" && !isCompletedDate(event.event_date) && <SiSPartnerBanner />}
+              <InsuranceBanner />
               <div className="flex flex-wrap gap-2">
                 {event.regulations_pdf_url && (
                   <Button
