@@ -3,6 +3,7 @@ import { Link, useNavigate } from "@/lib/router-compat";
 import { Loader2, MapPin, Plus, Search } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { InsuranceBanner } from "@/components/InsuranceBanner";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -166,6 +167,7 @@ const OrganizersCatalog = () => {
               : "Only users with the Organizer role can add an organizer profile."}
           </p>
         </div>
+        <InsuranceBanner />
       </main>
       <Footer />
     </div>

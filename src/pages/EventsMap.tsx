@@ -7,6 +7,7 @@ import "leaflet/dist/leaflet.css";
 import { Loader2, MapPin, Calendar as CalendarIcon, ExternalLink, X, Search } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { InsuranceBanner } from "@/components/InsuranceBanner";
 import { SEO } from "@/components/SEO";
 import { discoverySeo } from "@/lib/discovery-seo";
 import { Button } from "@/components/ui/button";
@@ -294,6 +295,7 @@ const EventsMap = () => {
             </div>
           </div>
         )}
+        <InsuranceBanner />
       </main>
       <Footer />
     </div>

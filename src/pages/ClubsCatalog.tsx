@@ -3,6 +3,7 @@ import { Link, useNavigate } from "@/lib/router-compat";
 import { Loader2, MapPin, Plus, Search } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { InsuranceBanner } from "@/components/InsuranceBanner";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -165,6 +166,7 @@ const ClubsCatalog = () => {
               : "Only users registered as Organizer can add a club. If you are not an organizer yet — pick this role during sign up."}
           </p>
         </div>
+        <InsuranceBanner />
       </main>
       <Footer />
     </div>

@@ -4,6 +4,7 @@ import { HomeDirectory } from "@/components/HomeDirectory";
 import { EventsSection } from "@/components/EventsSection";
 import { CompletedEventsSection } from "@/components/CompletedEventsSection";
 import { SiSPartnerBanner } from "@/components/SiSPartnerBanner";
+import { InsuranceBanner } from "@/components/InsuranceBanner";
 import { TelegramCommunity } from "@/components/TelegramCommunity";
 import { Footer } from "@/components/Footer";
 import { DeferredSection } from "@/components/DeferredSection";
@@ -33,6 +34,9 @@ const Index = () => {
             <SiSPartnerBanner />
           </section>
         </DeferredSection>
+        <div className="container pb-6 sm:pb-8">
+          <InsuranceBanner />
+        </div>
         <DeferredSection>
           <CompletedEventsSection />
         </DeferredSection>
