@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { PageViews } from "@/components/PageViews";
 import { EventPoster } from "@/components/EventPoster";
 import { SiSPartnerBanner } from "@/components/SiSPartnerBanner";
+import { InsuranceBanner } from "@/components/InsuranceBanner";
 import { Link, useParams } from "@/lib/router-compat";
 import { Loader2, ExternalLink, Calendar as CalendarIcon, ArrowLeft, MapPin, FileText } from "lucide-react";
 import { Header } from "@/components/Header";
