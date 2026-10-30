@@ -147,7 +147,7 @@ const StartDetails = () => {
         {row.event_date && !isCompletedDate(row.event_date) && (
           <div className="mb-8"><SiSPartnerBanner /></div>
         )}
-        <InsuranceBanner />
+        <div className="mb-8"><InsuranceBanner /></div>
 
         {row.results_url && (
           <Button asChild size="lg" className="w-full sm:w-auto">
