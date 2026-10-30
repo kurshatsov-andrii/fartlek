@@ -16,26 +16,6 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://fartlek.com.ua/calendar/drohobych</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://fartlek.com.ua/calendar/lviv</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://fartlek.com.ua/calendar/varash</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://fartlek.com.ua/calendar/ivano-frankivsk</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
     <loc>https://fartlek.com.ua/calendar/vinnytsia</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -826,6 +806,12 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://fartlek.com.ua/clubs/bigovyc-klub-igorya-vedmedya</loc>
+    <lastmod>2026-10-29</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://fartlek.com.ua/organizers/flashrun</loc>
     <lastmod>2026-10-22</lastmod>
     <changefreq>monthly</changefreq>
@@ -858,6 +844,12 @@
   <url>
     <loc>https://fartlek.com.ua/organizers/yadvijak</loc>
     <lastmod>2026-10-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://fartlek.com.ua/organizers/bigovyy-klub-igorya-vedmedya</loc>
+    <lastmod>2026-10-29</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
