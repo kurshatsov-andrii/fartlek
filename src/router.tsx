@@ -17,5 +17,13 @@ export const getRouter = () => {
   // don't refetch (and blank the page) right after hydration.
   setupRouterSsrQueryIntegration({ router, queryClient, wrapQueryClient: false });
 
+  // Pages rendered by an older server (cached HTML during a deploy) carry no
+  // query payload; skip query hydration instead of crashing the whole page.
+  const integratedHydrate = router.options.hydrate;
+  if (integratedHydrate) {
+    router.options.hydrate = (dehydrated: any) =>
+      dehydrated?.query ? integratedHydrate(dehydrated) : undefined;
+  }
+
   return router;
 };
