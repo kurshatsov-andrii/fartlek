@@ -413,7 +413,7 @@ const EventDetails = () => {
                 </div>
               )}
               {event.status !== "completed" && !isCompletedDate(event.event_date) && <SiSPartnerBanner />}
-              <InsuranceBanner />
+              <div className="mb-8"><InsuranceBanner /></div>
               <div className="flex flex-wrap gap-2">
                 {event.regulations_pdf_url && (
                   <Button
