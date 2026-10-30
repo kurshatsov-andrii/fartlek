@@ -216,6 +216,65 @@ const CalendarPage = ({ scope = "ukraine" }: { scope?: CalendarScope }) => {
 
   const seo = discoverySeo(path, lang);
 
+  const renderTitle = (r: Row) => (
+    <>
+      {r.source === "platform" ? (
+        <Link to={r.url ?? "#"} className="hover:text-primary">{r.title}</Link>
+      ) : r.url ? (
+        internalPath(r.url) ? (
+          <Link to={internalPath(r.url) ?? r.url} className="hover:text-primary">{r.title}</Link>
+        ) : (
+          <a href={r.url} target="_blank" rel="noreferrer" className="hover:text-primary inline-flex items-center gap-1">
+            {r.title}<ExternalLink className="h-3 w-3 shrink-0" />
+          </a>
+        )
+      ) : r.title}
+      {r.category && (
+        <div className="text-[10px] uppercase tracking-wider text-muted-foreground mt-0.5">
+          {t.categories[r.category as EventCategory] ?? r.category}
+        </div>
+      )}
+    </>
+  );
+
+  const renderActions = (r: Row) => (
+    <>
+      <StartActions source={r.source === "platform" ? "event" : "calendar"} id={r.id} />
+      {r.source === "platform" ? (
+        <Button asChild size="sm" variant="outline">
+          <Link to={r.url ?? "#"}>{lang === "uk" ? "Деталі" : "Details"}</Link>
+        </Button>
+      ) : (
+        <div className="flex flex-wrap justify-end items-center gap-1">
+          {r.url && (
+            internalPath(r.url) ? (
+              <Button asChild size="sm" variant="outline">
+                <Link to={internalPath(r.url) ?? r.url}>{lang === "uk" ? "Деталі" : "Details"}</Link>
+              </Button>
+            ) : (
+              <Button asChild size="sm" variant="secondary" className="hover:bg-primary hover:text-primary-foreground transition-colors">
+                <a href={r.url} target="_blank" rel="noreferrer">
+                  {lang === "uk" ? "Перейти" : "Open"}
+                  <ExternalLink className="h-3 w-3" />
+                </a>
+              </Button>
+            )
+          )}
+          {(isAdmin || (isOrganizer && r.created_by === user?.id)) && (
+            <>
+              <Button size="icon" variant="ghost" onClick={() => openEdit(r)} title={lang === "uk" ? "Редагувати" : "Edit"}>
+                <Pencil className="h-4 w-4" />
+              </Button>
+              <Button size="icon" variant="ghost" onClick={() => remove(r.id)} title={lang === "uk" ? "Видалити" : "Delete"}>
+                <Trash2 className="h-4 w-4" />
+              </Button>
+            </>
+          )}
+        </div>
+      )}
+    </>
+  );
+
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <SEO title={seo.title} description={seo.description} canonical={path} />
@@ -467,6 +526,33 @@ const CalendarPage = ({ scope = "ukraine" }: { scope?: CalendarScope }) => {
                       </span>
                     </h2>
                   </div>
+                  <ul className="lg:hidden divide-y divide-border">
+                    {group.rows.map((r, idx) => (
+                      <li
+                        key={`${r.source}-${r.id}`}
+                        className={`p-4 min-w-0 ${idx % 2 === 0 ? "bg-background" : "bg-muted/40"}`}
+                      >
+                        <div className="text-xs font-semibold uppercase tracking-wide text-primary">{fmtDate(r.event_date)}</div>
+                        <div className="mt-1 font-medium break-words">{renderTitle(r)}</div>
+                        <dl className="mt-2 grid grid-cols-1 gap-1 text-sm sm:grid-cols-3 sm:gap-3">
+                          <div className="min-w-0">
+                            <dt className="text-[10px] uppercase tracking-wider text-muted-foreground">{lang === "uk" ? "Місце" : "Location"}</dt>
+                            <dd className="break-words text-muted-foreground">{r.location || "Україна та весь світ"}</dd>
+                          </div>
+                          <div className="min-w-0">
+                            <dt className="text-[10px] uppercase tracking-wider text-muted-foreground">{lang === "uk" ? "Дистанції" : "Distances"}</dt>
+                            <dd className="break-words">{calendarDistance(r.distances, lang)}</dd>
+                          </div>
+                          <div className="min-w-0">
+                            <dt className="text-[10px] uppercase tracking-wider text-muted-foreground">{lang === "uk" ? "Організатор" : "Organizer"}</dt>
+                            <dd className="break-words text-muted-foreground">{r.organizer_name || "—"}</dd>
+                          </div>
+                        </dl>
+                        <div className="mt-3 flex flex-wrap items-center gap-2 [&>*]:justify-start">{renderActions(r)}</div>
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="hidden lg:block">
                   <Table>
                     <TableHeader>
                       <TableRow>
@@ -487,67 +573,16 @@ const CalendarPage = ({ scope = "ukraine" }: { scope?: CalendarScope }) => {
                             : "bg-muted/40 hover:!bg-muted/40"}
                         >
                           <TableCell className="whitespace-nowrap text-sm">{fmtDate(r.event_date)}</TableCell>
-                          <TableCell className="font-medium">
-                            {r.source === "platform" ? (
-                              <Link to={r.url ?? "#"} className="hover:text-primary">{r.title}</Link>
-                            ) : r.url ? (
-                              internalPath(r.url) ? (
-                                <Link to={internalPath(r.url) ?? r.url} className="hover:text-primary">{r.title}</Link>
-                              ) : (
-                                <a href={r.url} target="_blank" rel="noreferrer" className="hover:text-primary inline-flex items-center gap-1">
-                                  {r.title}<ExternalLink className="h-3 w-3" />
-                                </a>
-                              )
-                            ) : r.title}
-                            {r.category && (
-                              <div className="text-[10px] uppercase tracking-wider text-muted-foreground mt-0.5">
-                                {t.categories[r.category as EventCategory] ?? r.category}
-                              </div>
-                            )}
-                          </TableCell>
+                          <TableCell className="font-medium">{renderTitle(r)}</TableCell>
                           <TableCell className="text-sm text-muted-foreground whitespace-normal min-w-40 max-w-80 break-words">{r.location || "Україна та весь світ"}</TableCell>
                           <TableCell className="text-sm">{calendarDistance(r.distances, lang)}</TableCell>
                           <TableCell className="text-sm text-muted-foreground">{r.organizer_name || "—"}</TableCell>
-                          <TableCell className="text-right">
-                            <StartActions source={r.source === "platform" ? "event" : "calendar"} id={r.id} />
-                            {r.source === "platform" ? (
-                              <Button asChild size="sm" variant="outline">
-                                <Link to={r.url ?? "#"}>{lang === "uk" ? "Деталі" : "Details"}</Link>
-                              </Button>
-                            ) : (
-                              <div className="flex justify-end items-center gap-1">
-                                {r.url && (
-                                  internalPath(r.url) ? (
-                                    <Button asChild size="sm" variant="outline">
-                                      <Link to={internalPath(r.url) ?? r.url}>{lang === "uk" ? "Деталі" : "Details"}</Link>
-                                    </Button>
-                                  ) : (
-                                    <Button asChild size="sm" variant="secondary" className="hover:bg-primary hover:text-primary-foreground transition-colors">
-                                      <a href={r.url} target="_blank" rel="noreferrer">
-                                        {lang === "uk" ? "Перейти" : "Open"}
-                                        <ExternalLink className="h-3 w-3" />
-                                      </a>
-                                    </Button>
-                                  )
-                                )}
-
-                                {(isAdmin || (isOrganizer && r.created_by === user?.id)) && (
-                                  <>
-                                    <Button size="icon" variant="ghost" onClick={() => openEdit(r)} title={lang === "uk" ? "Редагувати" : "Edit"}>
-                                      <Pencil className="h-4 w-4" />
-                                    </Button>
-                                    <Button size="icon" variant="ghost" onClick={() => remove(r.id)} title={lang === "uk" ? "Видалити" : "Delete"}>
-                                      <Trash2 className="h-4 w-4" />
-                                    </Button>
-                                  </>
-                                )}
-                              </div>
-                            )}
-                          </TableCell>
+                          <TableCell className="text-right">{renderActions(r)}</TableCell>
                         </TableRow>
                       ))}
                     </TableBody>
                   </Table>
+                  </div>
                 </section>
               ))}
             </div>
