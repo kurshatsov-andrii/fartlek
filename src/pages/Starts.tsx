@@ -16,7 +16,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { supabase } from "@/integrations/supabase/client";
 import { SPORT_TYPES, SPORT_LABELS, MONTH_NAMES_UK, type SportType } from "@/lib/parseStart";
 import { canShowRegisterButton } from "@/lib/registration-status";
-import { isCompletedDate } from "@/lib/event-date";
+import { isEventCompleted } from "@/lib/event-date";
 import { DISTANCE_BUCKETS, baseCity } from "@/lib/start-filters";
 import { mergeStartsCatalog, type CatalogStart } from "@/lib/starts-catalog";
 import { discoverySeo } from "@/lib/discovery-seo";
@@ -49,7 +49,7 @@ const Starts = () => {
         .gte("event_date", "2026-07-01")
         .order("event_date", { ascending: true }),
         supabase.from("events")
-          .select("id,slug,title,description,organizer_name,event_date,location,image_url,is_paid,category,registration_closed,registration_opens_on,results_url,results_pdf_url,distances(distance_km,is_active)")
+          .select("id,slug,title,description,organizer_name,event_date,location,image_url,is_paid,category,registration_closed,registration_opens_on,registration_open_until,results_url,results_pdf_url,distances(distance_km,is_active)")
           .eq("status", "published")
           .order("event_date", { ascending: true }),
       ]);
@@ -98,12 +98,13 @@ const Starts = () => {
   }, [rows, q, month, city, region, organizer, sport, distance, paid, distanceBucket, year]);
 
   const todayStr = new Date().toISOString().slice(0, 10);
-  // Owner rule: a start counts as finished from the day before its date.
+  // Owner rule: a start counts as finished from the day before its date,
+  // unless the organizer kept registration open until a later date.
   const upcomingAll = filtered
-    .filter((r) => !r.event_date || !isCompletedDate(r.event_date, todayStr))
+    .filter((r) => !r.event_date || !isEventCompleted(r.event_date, r.registration_open_until, todayStr))
     .sort((a, b) => (a.event_date || "").localeCompare(b.event_date || ""));
   const completedAll = filtered
-    .filter((r) => !!r.event_date && isCompletedDate(r.event_date, todayStr))
+    .filter((r) => !!r.event_date && isEventCompleted(r.event_date, r.registration_open_until, todayStr))
     .sort((a, b) => (b.event_date || "").localeCompare(a.event_date || ""));
   const upcoming = upcomingAll.slice(0, upcomingLimit);
   const completed = completedAll.slice(0, completedLimit);

@@ -4,7 +4,7 @@ import { PageViews } from "@/components/PageViews";
 import { EventPoster } from "@/components/EventPoster";
 import { Link } from "@/lib/router-compat";
 import { Calendar, MapPin, ArrowUpRight, Loader2, Search, X, Filter } from "lucide-react";
-import { isCompletedDate } from "@/lib/event-date";
+import { isEventCompleted } from "@/lib/event-date";
 import { StartActions } from "@/components/StartActions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -33,6 +33,7 @@ interface EventCard {
   category: EventCategory;
   format: "offline" | "online" | "hybrid";
   registration_closed?: boolean;
+  registration_open_until?: string | null;
   distances: { distance_km: number; price: number; is_active?: boolean }[];
 }
 
@@ -60,7 +61,7 @@ export const EventsSection = () => {
 
   useEffect(() => {
     supabase.from("events")
-      .select("id, slug, title, description, organizer_name, event_date, event_time, location, image_url, is_paid, category, format, registration_closed, distances(distance_km, price, is_active)")
+      .select("id, slug, title, description, organizer_name, event_date, event_time, location, image_url, is_paid, category, format, registration_closed, registration_open_until, distances(distance_km, price, is_active)")
       .eq("status", "published")
       .order("event_date", { ascending: true })
       .then(({ data }) => {
@@ -71,7 +72,7 @@ export const EventsSection = () => {
           return 2;
         };
         const sorted = [...((data as any[]) ?? [])].sort((a, b) => pinned(a) - pinned(b) || a.event_date.localeCompare(b.event_date));
-        setEvents((sorted as EventCard[]).filter((event) => !isCompletedDate(event.event_date))); setLoading(false);
+        setEvents((sorted as EventCard[]).filter((event) => !isEventCompleted(event.event_date, event.registration_open_until))); setLoading(false);
       });
   }, []);
 

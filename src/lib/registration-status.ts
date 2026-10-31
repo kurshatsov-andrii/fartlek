@@ -24,6 +24,8 @@ export interface RegistrationInput {
   closed?: boolean;
   /** Platform events accept registration by default; external starts do not. */
   defaultOpen?: boolean;
+  /** Owner override: keep registration open until this date (inclusive). */
+  openUntil?: string | null;
   date: string | null;
   today: string;
 }
@@ -58,13 +60,14 @@ export function sourceHost(url: string | null): string | null {
   }
 }
 
-import { isCompletedDate } from "./event-date";
+import { isEventCompleted } from "./event-date";
 
 /** Listing cards must not offer registration once it is closed or cancelled; a past event date counts as closed,
- *  and per the owner rule a start is already finished the day before its date. */
+ *  and per the owner rule a start is already finished the day before its date — unless the owner kept
+ *  registration open until a later date (openUntil). */
 export function canShowRegisterButton(input: RegistrationInput): boolean {
   const state = deriveRegistrationState(input);
   if (state === "closed" || state === "cancelled") return false;
-  if (input.date && isCompletedDate(input.date, input.today)) return false;
+  if (input.date && isEventCompleted(input.date, input.openUntil, input.today)) return false;
   return true;
 }
