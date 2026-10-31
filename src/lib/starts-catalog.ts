@@ -41,6 +41,7 @@ export interface CatalogEvent {
   category: EventCategory;
   registration_closed: boolean;
   registration_opens_on: string | null;
+  registration_open_until?: string | null;
   results_url: string | null;
   results_pdf_url: string | null;
   distances: { distance_km: number; is_active: boolean }[];
@@ -89,6 +90,7 @@ export function mergeStartsCatalog(starts: ExternalCatalogStart[], events: Catal
         registration_status: null,
         registration_opens_on: event.registration_opens_on,
         registration_closed: event.registration_closed,
+        registration_open_until: event.registration_open_until ?? null,
         event_date: event.event_date,
         city: detectCity(event.location) || baseCity(event.location) || null,
         location: event.location,
