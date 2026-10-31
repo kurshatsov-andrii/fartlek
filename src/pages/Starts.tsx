@@ -16,7 +16,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { supabase } from "@/integrations/supabase/client";
 import { SPORT_TYPES, SPORT_LABELS, MONTH_NAMES_UK, type SportType } from "@/lib/parseStart";
 import { canShowRegisterButton } from "@/lib/registration-status";
-import { isCompletedDate, isEventCompleted } from "@/lib/event-date";
+import { isEventCompleted } from "@/lib/event-date";
 import { DISTANCE_BUCKETS, baseCity } from "@/lib/start-filters";
 import { mergeStartsCatalog, type CatalogStart } from "@/lib/starts-catalog";
 import { discoverySeo } from "@/lib/discovery-seo";
