@@ -13,6 +13,7 @@ export interface CatalogStart {
   registration_status: string | null;
   registration_opens_on?: string | null;
   registration_closed?: boolean;
+  registration_open_until?: string | null;
   event_date: string | null;
   city: string | null;
   location: string | null;
