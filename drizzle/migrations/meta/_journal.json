@@ -99,6 +99,13 @@
       "when": 1792601717338,
       "tag": "0013_tips_second_video",
       "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "7",
+      "when": 1793435249897,
+      "tag": "0014_events_registration_open_until",
+      "breakpoints": true
     }
   ]
 }
