@@ -24,6 +24,8 @@ export interface RegistrationInput {
   closed?: boolean;
   /** Platform events accept registration by default; external starts do not. */
   defaultOpen?: boolean;
+  /** Owner override: keep registration open until this date (inclusive). */
+  openUntil?: string | null;
   date: string | null;
   today: string;
 }
