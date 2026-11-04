@@ -285,7 +285,7 @@
   </url>
   <url>
     <loc>https://fartlek.com.ua/events/ekiden-kharikofu-10k-2026-harkiv-stadion-hpi-molodizhnyy-park-2026</loc>
-    <lastmod>2026-10-24</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -350,6 +350,12 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://fartlek.com.ua/starts/winter-trail-2026-12-19</loc>
+    <lastmod>2026-11-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://fartlek.com.ua/starts/final-nyy-zabig-rivne-2026-10-11</loc>
     <lastmod>2026-10-06</lastmod>
     <changefreq>weekly</changefreq>
@@ -393,7 +399,7 @@
   </url>
   <url>
     <loc>https://fartlek.com.ua/starts/winter-kordon-race-kordon-trail-2026-12-12</loc>
-    <lastmod>2026-10-15</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
