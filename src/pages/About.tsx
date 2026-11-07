@@ -158,7 +158,7 @@ const About = () => {
           <CommunityIntro variant="plain" />
         </section>
 
-        <section className="container pt-12 sm:pt-16 max-w-3xl">
+        <section className="container pt-12 sm:pt-16 max-w-5xl">
           <FounderInvite />
         </section>
 

@@ -3,8 +3,9 @@ const TELEGRAM_COMMUNITY_URL = "https://t.me/+KgEHRsz677s4Zjhi";
 
 export const FounderInvite = ({ className = "" }: { className?: string }) => {
   return (
-    <div className={`rounded-3xl border border-border bg-card p-6 sm:p-10 shadow-card space-y-5 ${className}`}>
-      <div className="space-y-4 text-base sm:text-lg leading-relaxed">
+    <div className={`rounded-3xl border border-border bg-card p-6 sm:p-10 shadow-card ${className}`}>
+      <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:gap-10">
+      <div className="space-y-4 text-base sm:text-lg leading-relaxed lg:flex-1">
         <p>
           Привіт! Я <span className="font-semibold">Андрій Куршацов</span> — засновник спортивної
           афіші Фартлек, бігової спільноти Харкова та організатор Харківського напівмарафону.
@@ -38,7 +39,7 @@ export const FounderInvite = ({ className = "" }: { className?: string }) => {
         </p>
         <p className="font-semibold">До зустрічі на пробіжках! Біжимо разом 🏃</p>
       </div>
-      <div className="mx-auto w-full max-w-sm overflow-hidden rounded-2xl border border-border shadow-card">
+      <div className="mx-auto w-full max-w-sm shrink-0 overflow-hidden rounded-2xl border border-border shadow-card lg:mx-0 lg:w-80">
         <div className="relative aspect-[9/16]">
           <iframe
             src={`https://www.youtube.com/embed/${YOUTUBE_SHORT_ID}`}
@@ -49,6 +50,7 @@ export const FounderInvite = ({ className = "" }: { className?: string }) => {
             className="absolute inset-0 h-full w-full"
           />
         </div>
+      </div>
       </div>
     </div>
   );
