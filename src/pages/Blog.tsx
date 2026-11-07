@@ -52,7 +52,7 @@ const Blog = () => {
 
         <CommunityIntro className="mt-2" />
 
-        <FounderInvite className="max-w-5xl" />
+        <FounderInvite />
 
         <BlogSocialLinks />
 
