@@ -8,6 +8,7 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { SEO } from "@/components/SEO";
 import { CommunityIntro } from "@/components/CommunityIntro";
+import { FounderInvite } from "@/components/FounderInvite";
 import { AnthemPlayer } from "@/components/AnthemPlayer";
 import logoFartlek from "@/assets/fartlek-logo.png.asset.json";
 import photo3465 from "@/assets/about/DSC_3465.jpg.asset.json";
@@ -155,6 +156,10 @@ const About = () => {
 
         <section className="container pt-12 sm:pt-16 max-w-3xl">
           <CommunityIntro variant="plain" />
+        </section>
+
+        <section className="container pt-12 sm:pt-16 max-w-3xl">
+          <FounderInvite />
         </section>
 
 

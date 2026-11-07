@@ -6,6 +6,7 @@ import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { BlogSocialLinks } from "@/components/BlogSocialLinks";
 import { CommunityIntro } from "@/components/CommunityIntro";
+import { FounderInvite } from "@/components/FounderInvite";
 import { PageViews } from "@/components/PageViews";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
@@ -50,6 +51,8 @@ const Blog = () => {
         </div>
 
         <CommunityIntro className="mt-2" />
+
+        <FounderInvite className="max-w-3xl" />
 
         <BlogSocialLinks />
 
