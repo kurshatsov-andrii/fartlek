@@ -18,6 +18,7 @@ import {
   Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle,
 } from "@/components/ui/dialog";
 import { useApp } from "@/contexts/AppContext";
+import { printRelayTeams } from "@/lib/print-relay-teams";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { invokeCompat } from "@/lib/fn-compat";
@@ -798,7 +799,15 @@ const Participants = () => {
                       {km} {lang === "uk" ? "км" : "km"}
                       {name && <span className="text-muted-foreground font-normal text-base ml-2">· {name}</span>}
                     </h2>
-                    <span className="text-sm text-muted-foreground">{list.length}</span>
+                    <div className="flex items-center gap-3">
+                      {isOrganizer && list.some((r: any) => r.is_relay) && (
+                        <Button size="sm" variant="outline" onClick={() => printRelayTeams(eventTitle, `${km} км${name ? " · " + name : ""}`, list, isPaid)}>
+                          <FileText className="h-4 w-4 mr-1" />
+                          {lang === "uk" ? "PDF для друку" : "Print PDF"}
+                        </Button>
+                      )}
+                      <span className="text-sm text-muted-foreground">{list.length}</span>
+                    </div>
                   </div>
                   {(() => {
                     const isRelayGroup = list.some((r: any) => r.is_relay);
