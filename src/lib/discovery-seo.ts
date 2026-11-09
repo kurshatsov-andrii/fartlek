@@ -41,6 +41,26 @@ const discovery = {
     uk: { title: "Календар забігів Івано-Франківська 2027 — старти | Фартлек", description: "Забіги Івано-Франківська 2027: календар стартів, дати, місця проведення й опубліковані дистанції на Фартлек." },
     en: { title: "Ivano-Frankivsk running calendar 2027 | Fartlek", description: "Ivano-Frankivsk races 2027: race calendar, dates, venues and published distances on Fartlek." },
   },
+  "/calendar/kyiv": {
+    uk: { title: "Календар забігів Києва 2027 — старти | Фартлек", description: "Забіги Києва 2027: календар стартів, дати, місця проведення й опубліковані дистанції на Фартлек." },
+    en: { title: "Kyiv running calendar 2027 | Fartlek", description: "Kyiv races 2027: race calendar, dates, venues and published distances on Fartlek." },
+  },
+  "/calendar/zhytomyr": {
+    uk: { title: "Календар забігів Житомира 2027 — старти | Фартлек", description: "Забіги Житомира 2027: календар стартів, дати, місця проведення й опубліковані дистанції на Фартлек." },
+    en: { title: "Zhytomyr running calendar 2027 | Fartlek", description: "Zhytomyr races 2027: race calendar, dates, venues and published distances on Fartlek." },
+  },
+  "/calendar/odesa": {
+    uk: { title: "Календар забігів Одеси 2027 — старти | Фартлек", description: "Забіги Одеси 2027: календар стартів, дати, місця проведення й опубліковані дистанції на Фартлек." },
+    en: { title: "Odesa running calendar 2027 | Fartlek", description: "Odesa races 2027: race calendar, dates, venues and published distances on Fartlek." },
+  },
+  "/calendar/pustomyty": {
+    uk: { title: "Календар забігів Пустомит 2027 — старти | Фартлек", description: "Забіги Пустомит 2027: календар стартів, дати, місця проведення й опубліковані дистанції на Фартлек." },
+    en: { title: "Pustomyty running calendar 2027 | Fartlek", description: "Pustomyty races 2027: race calendar, dates, venues and published distances on Fartlek." },
+  },
+  "/calendar/khust": {
+    uk: { title: "Календар забігів Хуста 2027 — старти | Фартлек", description: "Забіги Хуста 2027: календар стартів, дати, місця проведення й опубліковані дистанції на Фартлек." },
+    en: { title: "Khust running calendar 2027 | Fartlek", description: "Khust races 2027: race calendar, dates, venues and published distances on Fartlek." },
+  },
   "/starts": {
     uk: { title: "Забіги та спортивні старти України 2027 | Фартлек", description: "Анонси забігів і спортивних стартів України 2027. Дати, міста, дистанції, організатори та посилання на реєстрацію. Знайдіть свій наступний старт." },
     en: { title: "Ukraine races and sports events 2027 | Fartlek", description: "Ukraine race announcements for 2027: dates, cities, distances, organizers and registration links. Find your next race." },
