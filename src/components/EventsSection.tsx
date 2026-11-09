@@ -15,6 +15,7 @@ import { type EventCategory } from "@/lib/i18n";
 import { eventCity } from "@/lib/utils";
 import { availableStartCategories, showEventResults } from "@/lib/home-starts";
 import { OtherStartsSection, DISTANCE_BUCKET_LABELS, type SharedStartFilters } from "@/components/OtherStartsSection";
+import { CalendarHint } from "@/components/CalendarHint";
 import { useCallback } from "react";
 
 
@@ -258,6 +259,19 @@ export const EventsSection = () => {
         </div>
       </div>
     </section>
+
+    {!loading && filtered.length === 0 && (
+      <section className="py-6 sm:py-8">
+        <div className="container">
+          <div className="rounded-2xl border border-border bg-card p-8 text-center">
+            <p className="text-muted-foreground">
+              {lang === "uk" ? "За обраними фільтрами стартів не знайдено." : "No races match the selected filters."}
+            </p>
+            <CalendarHint />
+          </div>
+        </div>
+      </section>
+    )}
 
     {showEventResults(filtered.length, loading) && <section aria-labelledby="home-events-heading" className="py-6 sm:py-8">
       <div className="container">

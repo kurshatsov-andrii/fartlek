@@ -17,6 +17,7 @@ import { categorySeo, formatEventDate } from "@/lib/seo";
 import { isCompletedDate } from "@/lib/event-date";
 import { canShowRegisterButton } from "@/lib/registration-status";
 import { StartActions } from "@/components/StartActions";
+import { CalendarHint } from "@/components/CalendarHint";
 import { MONTH_NAMES_UK, type SportType } from "@/lib/parseStart";
 import {
   DISTANCE_BUCKETS, baseCity, categorySport, detectCity, matchesDistance, monthOf,
@@ -400,6 +401,7 @@ const CategoryPage = () => {
         ) : filtered.length === 0 ? (
           <div className="text-center py-20 bg-card rounded-2xl">
             <p className="text-muted-foreground">{activeFilters > 0 ? T.empty : t.events.empty}</p>
+            <CalendarHint />
           </div>
         ) : (
           <>

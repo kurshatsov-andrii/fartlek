@@ -21,6 +21,7 @@ import { DISTANCE_BUCKETS, baseCity } from "@/lib/start-filters";
 import { mergeStartsCatalog, type CatalogStart } from "@/lib/starts-catalog";
 import { discoverySeo } from "@/lib/discovery-seo";
 import { StartActions } from "@/components/StartActions";
+import { CalendarHint } from "@/components/CalendarHint";
 
 const PAGE_SIZE = 9;
 
@@ -250,7 +251,10 @@ const Starts = () => {
         {loading ? (
           <div className="flex justify-center py-20"><Loader2 className="h-6 w-6 animate-spin" /></div>
         ) : filtered.length === 0 ? (
-          <div className="text-center text-muted-foreground py-20">Нічого не знайдено за обраними фільтрами.</div>
+          <div className="text-center text-muted-foreground py-20">
+            Нічого не знайдено за обраними фільтрами.
+            <CalendarHint />
+          </div>
         ) : (
           <>
             {upcoming.length > 0 && (
