@@ -114,16 +114,23 @@ const CalendarPage = ({ scope = "ukraine" }: { scope?: CalendarScope }) => {
     return Array.from(set).sort((a, b) => (a === "2027" ? -1 : b === "2027" ? 1 : b.localeCompare(a)));
   }, [allRows]);
 
+  // City pages default to the season year; when a city has no starts that year
+  // but has starts in other years, show them instead of an empty page.
+  const effectiveYearFilter = useMemo(() => {
+    if (yearFilter === "all") return yearFilter;
+    return allRows.some((r) => r.event_date.startsWith(yearFilter)) ? yearFilter : "all";
+  }, [allRows, yearFilter]);
+
   const monthsShown = useMemo(() => {
-    if (yearFilter === "all") return monthOptions;
-    return monthOptions.filter((m) => m.startsWith(yearFilter));
-  }, [monthOptions, yearFilter]);
+    if (effectiveYearFilter === "all") return monthOptions;
+    return monthOptions.filter((m) => m.startsWith(effectiveYearFilter));
+  }, [monthOptions, effectiveYearFilter]);
 
   const filtered = useMemo(() => {
     const s = search.trim().toLowerCase();
     const list = allRows.filter((r) => {
       if (catFilter !== "all" && r.category !== catFilter) return false;
-      if (yearFilter !== "all" && !r.event_date.startsWith(yearFilter)) return false;
+      if (effectiveYearFilter !== "all" && !r.event_date.startsWith(effectiveYearFilter)) return false;
       if (monthFilter !== "all" && !r.event_date.startsWith(monthFilter)) return false;
       if (s && ![r.title, r.location ?? "", r.organizer_name ?? "", r.distances]
         .some((v) => v.toLowerCase().includes(s))) return false;
@@ -138,7 +145,7 @@ const CalendarPage = ({ scope = "ukraine" }: { scope?: CalendarScope }) => {
       }
     });
     return list;
-  }, [allRows, search, catFilter, yearFilter, monthFilter, sortBy, lang]);
+  }, [allRows, search, catFilter, effectiveYearFilter, monthFilter, sortBy, lang]);
 
   const grouped = useMemo(() => {
     const map = new Map<string, Row[]>();
@@ -439,7 +446,7 @@ const CalendarPage = ({ scope = "ukraine" }: { scope?: CalendarScope }) => {
             <Button
               key={y}
               size="sm"
-              variant={yearFilter === y ? "default" : "outline"}
+              variant={effectiveYearFilter === y ? "default" : "outline"}
               onClick={() => {
                 setYearFilter(y);
                 if (monthFilter !== "all" && !monthFilter.startsWith(y)) setMonthFilter("all");
@@ -451,7 +458,7 @@ const CalendarPage = ({ scope = "ukraine" }: { scope?: CalendarScope }) => {
           <Button
             key="all"
             size="sm"
-            variant={yearFilter === "all" ? "default" : "outline"}
+            variant={effectiveYearFilter === "all" ? "default" : "outline"}
             onClick={() => { setYearFilter("all"); }}
           >
             {lang === "uk" ? "Усі роки" : "All years"}
