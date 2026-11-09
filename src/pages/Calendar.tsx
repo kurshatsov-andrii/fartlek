@@ -34,6 +34,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { EVENT_CATEGORIES, type EventCategory } from "@/lib/i18n";
 import { toast } from "sonner";
 import { calendarLocation } from "@/lib/calendar-location";
+import { detectCity } from "@/lib/start-filters";
 import { StartActions } from "@/components/StartActions";
 
 type Row = CalendarRow;
@@ -89,6 +90,7 @@ const CalendarPage = ({ scope = "ukraine" }: { scope?: CalendarScope }) => {
   const [search, setSearch] = useState("");
   const [catFilter, setCatFilter] = useState<string>("all");
   const [monthFilter, setMonthFilter] = useState<string>("all");
+  const [cityFilter, setCityFilter] = useState<string>("all");
   const yearFilter = params.year ?? "2027";
   const setYearFilter = (year: string) => navigate({ to: path, search: { year } });
   const [sortBy, setSortBy] = useState<"date_asc" | "date_desc" | "title_asc" | "location_asc">("date_asc");
@@ -119,10 +121,21 @@ const CalendarPage = ({ scope = "ukraine" }: { scope?: CalendarScope }) => {
     return monthOptions.filter((m) => m.startsWith(yearFilter));
   }, [monthOptions, yearFilter]);
 
+  // Cities that actually appear in the current scope, as quick filter chips.
+  const cityOptions = useMemo(() => {
+    const set = new Set<string>();
+    allRows.forEach((r) => {
+      const city = detectCity(r.location);
+      if (city) set.add(city);
+    });
+    return Array.from(set).sort((a, b) => a.localeCompare(b, lang));
+  }, [allRows, lang]);
+
   const filtered = useMemo(() => {
     const s = search.trim().toLowerCase();
     const list = allRows.filter((r) => {
       if (catFilter !== "all" && r.category !== catFilter) return false;
+      if (cityFilter !== "all" && detectCity(r.location) !== cityFilter) return false;
       if (yearFilter !== "all" && !r.event_date.startsWith(yearFilter)) return false;
       if (monthFilter !== "all" && !r.event_date.startsWith(monthFilter)) return false;
       if (s && ![r.title, r.location ?? "", r.organizer_name ?? "", r.distances]
@@ -138,7 +151,7 @@ const CalendarPage = ({ scope = "ukraine" }: { scope?: CalendarScope }) => {
       }
     });
     return list;
-  }, [allRows, search, catFilter, yearFilter, monthFilter, sortBy, lang]);
+  }, [allRows, search, catFilter, cityFilter, yearFilter, monthFilter, sortBy, lang]);
 
   const grouped = useMemo(() => {
     const map = new Map<string, Row[]>();
@@ -458,6 +471,31 @@ const CalendarPage = ({ scope = "ukraine" }: { scope?: CalendarScope }) => {
           </Button>
           )] : [el])}
         </div>
+
+        {cityOptions.length > 1 && (
+          <div className="flex flex-wrap items-center gap-2 mb-4">
+            <span className="text-sm text-muted-foreground mr-1">
+              {lang === "uk" ? "Місто:" : "City:"}
+            </span>
+            <Button
+              size="sm"
+              variant={cityFilter === "all" ? "default" : "outline"}
+              onClick={() => setCityFilter("all")}
+            >
+              {lang === "uk" ? "Усі міста" : "All cities"}
+            </Button>
+            {cityOptions.map((city) => (
+              <Button
+                key={city}
+                size="sm"
+                variant={cityFilter === city ? "default" : "outline"}
+                onClick={() => setCityFilter(city)}
+              >
+                {city}
+              </Button>
+            ))}
+          </div>
+        )}
 
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-8 mb-6">
           <Input

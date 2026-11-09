@@ -284,6 +284,12 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://fartlek.com.ua/blog/fartlek-run-5</loc>
+    <lastmod>2026-11-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://fartlek.com.ua/events/ekiden-kharikofu-10k-2026-harkiv-stadion-hpi-molodizhnyy-park-2026</loc>
     <lastmod>2026-11-08</lastmod>
     <changefreq>weekly</changefreq>
