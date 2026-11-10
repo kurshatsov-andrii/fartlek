@@ -44,15 +44,25 @@ function tokenize(text: string): Token[] {
   return tokens;
 }
 
-export function linkifyText(text: string, onPrimary = false): React.ReactNode[] {
+export function isInternalArticleLink(href: string): boolean {
+  try {
+    const url = new URL(href);
+    return ["fartlek.com.ua", "www.fartlek.com.ua", "fartlek.lovable.app"].includes(url.hostname);
+  } catch {
+    return false;
+  }
+}
+
+export function linkifyText(text: string, onPrimary = false, articleLinks = false): React.ReactNode[] {
   const linkClass = onPrimary
     ? "font-semibold underline underline-offset-2 hover:opacity-80"
     : "text-primary underline underline-offset-2 hover:opacity-80";
   return tokenize(text).map((t, i) => {
     if (t.type === "url") {
       const href = t.value.startsWith("http") ? t.value : `https://${t.value}`;
+      const internal = articleLinks && isInternalArticleLink(href);
       return (
-        <a key={i} href={href} target="_blank" rel="noopener noreferrer" className={linkClass}>
+        <a key={i} href={href} target={internal ? undefined : "_blank"} rel={internal ? undefined : "noopener noreferrer"} className={linkClass}>
           {t.value}
         </a>
       );

@@ -54,8 +54,8 @@ const TipArticle = ({ initial }: { initial?: RunningTip | null }) => {
               </div>
             </header>
             {tip.cover_url && <img src={tip.cover_url} alt={tip.title} className="w-full h-auto rounded-2xl object-contain max-h-[520px]" />}
-            {tip.excerpt && <p className="text-lg text-muted-foreground break-words">{linkifyText(tip.excerpt)}</p>}
-            {tip.content && <div className="whitespace-pre-line break-words leading-relaxed text-foreground/90">{linkifyText(tip.content)}</div>}
+            {tip.excerpt && <p className="text-lg text-muted-foreground break-words">{linkifyText(tip.excerpt, false, true)}</p>}
+            {tip.content && <div className="whitespace-pre-line break-words leading-relaxed text-foreground/90">{linkifyText(tip.content, false, true)}</div>}
             <Video url={tip.youtube_url} title={tip.youtube_title} fallback={tip.title} />
             <Video url={tip.youtube_url_2} title={tip.youtube_title_2} fallback={tip.title} />
           </article>
