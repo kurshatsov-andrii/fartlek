@@ -50,7 +50,7 @@ const Blog = () => {
           )}
         </div>
 
-        <CommunityIntro className="mt-2" />
+        <CommunityIntro className="mt-2" videoId="ZW-YGEafCTY" videoTitle="Фартлек — бігова спільнота" />
 
         <FounderInvite />
 
