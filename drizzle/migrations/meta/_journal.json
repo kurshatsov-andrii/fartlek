@@ -113,6 +113,13 @@
       "when": 1794317726909,
       "tag": "0015_bind_avatar_writes_to_owner",
       "breakpoints": true
+    },
+    {
+      "idx": 16,
+      "version": "7",
+      "when": 1794576955544,
+      "tag": "0016_tighten_testimonials_survey_policies",
+      "breakpoints": true
     }
   ]
 }
