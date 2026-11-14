@@ -120,6 +120,13 @@
       "when": 1794576955544,
       "tag": "0016_tighten_testimonials_survey_policies",
       "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "7",
+      "when": 1794662464031,
+      "tag": "0017_event_registration_coming_soon",
+      "breakpoints": true
     }
   ]
 }

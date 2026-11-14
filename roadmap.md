@@ -1,5 +1,10 @@
 # Roadmap
 
+## Event registration announcement
+- [x] Add optional opening-soon announcement; public desktop/mobile page verified with no registration submit button, 24 tests passed.
+- [ ] Verify editor save end-to-end — requesting account is redirected to required profile completion; no profile data changed.
+- [x] Publish Kharkiv Half Marathon with registration expected; live URL returns HTTP 200 with unique title and no noindex, sitemap includes event; website publication requested. Google indexing remains Google's decision.
+
 ## Mobile loading performance
 - [x] Add responsive managed poster delivery, tiny backdrops and blog thumbnails; defer administrator SEO tools for public visitors and move font loading out of the CSS import chain
 - [x] Verify real EKIDEN mobile search and detail navigation, archive poster loading and overflow without page errors; 8 tests passed, build OK; measured EKIDEN delivery 126,354 → 25,398 bytes (79.9% smaller); a new published Lighthouse score remains unmeasured

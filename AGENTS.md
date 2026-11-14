@@ -42,6 +42,7 @@
 - Derive public blog-post metadata from published post fields and then apply per-path admin overrides so new posts do not inherit generic titles.
 - Treat public metadata transport failures as optional fallback metadata and keep calendar data failures in a retryable page with navigation, so connectivity interruptions cannot blank public pages.- Derive registration state (open/expected/closed/cancelled/unknown) only in the shared registration-status module; external starts stay "unknown" until an admin confirms a status, so the site never claims registration is open without a source.
 - Detect date-change and registration-opened reminders by comparing current public data with the acknowledged values on the user's saved row; reminders stay opt-in and in-app.
+- Store an optional expected registration state on platform events and resolve it with the shared registration-status helper so undated opening announcements stay consistent in event details, the Starts catalog and saved starts.
 - A start counts as finished from the day before its start date; decide finished/upcoming splits, register-button hiding and the SiS banner with the shared helpers in src/lib/event-date, never raw date comparisons. For platform events use isEventCompleted, which honors the events.registration_open_until column: while today <= that date the event stays upcoming and registration remains open, but never past the event date itself.
 
 - Keep running-tip categories in the shared tips module as fixed slugs so the /tips filter, category pages, admin form and sitemap stay aligned.

@@ -50,7 +50,7 @@ const Starts = () => {
         .gte("event_date", "2026-07-01")
         .order("event_date", { ascending: true }),
         supabase.from("events")
-          .select("id,slug,title,description,organizer_name,event_date,location,image_url,is_paid,category,registration_closed,registration_opens_on,registration_open_until,results_url,results_pdf_url,distances(distance_km,is_active)")
+          .select("id,slug,title,description,organizer_name,event_date,location,image_url,is_paid,category,registration_closed,registration_status,registration_opens_on,registration_open_until,results_url,results_pdf_url,distances(distance_km,is_active)")
           .eq("status", "published")
           .order("event_date", { ascending: true }),
       ]);

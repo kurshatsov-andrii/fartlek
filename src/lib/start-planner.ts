@@ -84,7 +84,7 @@ export async function resolveStarts(refs: StartRef[]): Promise<PlannedStart[]> {
       ? supabase
           .from("events")
           .select(
-            "id,slug,title,event_date,event_time,location,image_url,is_paid,organizer_name,status,registration_closed,registration_opens_on,updated_at,distances(distance_km,price,is_active)",
+            "id,slug,title,event_date,event_time,location,image_url,is_paid,organizer_name,status,registration_closed,registration_status,registration_opens_on,updated_at,distances(distance_km,price,is_active)",
           )
           .in("id", ids("event"))
           .in("status", ["published", "completed"])
@@ -126,6 +126,7 @@ export async function resolveStarts(refs: StartRef[]): Promise<PlannedStart[]> {
       image: e.image_url,
       registration: {
         state: deriveRegistrationState({
+          explicit: e.registration_status,
           cancelled: e.status === "cancelled",
           closed: e.registration_closed || e.status === "completed",
           opensOn: e.registration_opens_on,

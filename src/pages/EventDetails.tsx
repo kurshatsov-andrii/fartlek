@@ -48,6 +48,7 @@ interface EventRow {
   regulations_pdf_url: string | null;
   description_image_url: string | null;
   registration_closed?: boolean;
+  registration_status?: string | null;
   registration_opens_on?: string | null;
   registration_open_until?: string | null;
   updated_at?: string;
@@ -88,6 +89,15 @@ const EventDetails = () => {
   const [hasExternalResults, setHasExternalResults] = useState(false);
 
   const selectedDist = distances.find((d) => d.id === selectedDistance);
+  const registrationState = event ? deriveRegistrationState({
+    explicit: event.registration_status,
+    cancelled: event.status === "cancelled",
+    closed: !!event.registration_closed || event.status === "completed" || isEventCompleted(event.event_date, event.registration_open_until),
+    opensOn: event.registration_opens_on,
+    defaultOpen: true,
+    date: event.event_date,
+    today: kyivToday(),
+  }) : "unknown";
   const isRelay = !!selectedDist?.is_relay;
   const relayLegs = selectedDist?.relay_legs_count ?? 4;
 
@@ -379,14 +389,7 @@ const EventDetails = () => {
                 <RegistrationStatus
                   uk={lang === "uk"}
                   info={{
-                    state: deriveRegistrationState({
-                      cancelled: event.status === "cancelled",
-                      closed: !!event.registration_closed || event.status === "completed",
-                      opensOn: event.registration_opens_on ?? null,
-                      defaultOpen: true,
-                      date: event.event_date,
-                      today: kyivToday(),
-                    }),
+                    state: registrationState,
                     opensOn: event.registration_opens_on ?? null,
                     sourceUrl: null,
                     sourceLabel: lang === "uk" ? "Організатор на Фартлек" : "Organizer on Fartlek",
@@ -503,15 +506,15 @@ const EventDetails = () => {
                     <p className="text-sm text-muted-foreground">{t.events.resultsNone}</p>
                   )}
                 </div>
-              ) : event.registration_opens_on && event.registration_opens_on > kyivToday() && !isEventCompleted(event.event_date, event.registration_open_until) ? (
+              ) : registrationState === "expected" ? (
                 <div className="sticky top-24 rounded-2xl border border-border bg-card p-6 space-y-3">
                   <h3 className="font-display text-xl font-bold text-foreground">
-                    {lang === "uk" ? "Реєстрація очікується" : "Registration expected"}
+                    {lang === "uk" ? "Скоро відкриття реєстрації" : "Registration opening soon"}
                   </h3>
-                  <p className="text-sm text-muted-foreground">
+                  {event.registration_opens_on && <p className="text-sm text-muted-foreground">
                     {lang === "uk" ? "Відкриття реєстрації: " : "Opens on: "}
                     {calendarDate(event.registration_opens_on, lang === "uk" ? "uk-UA" : "en-US")}
-                  </p>
+                  </p>}
                 </div>
               ) : event.registration_closed || isEventCompleted(event.event_date, event.registration_open_until) ? (
                 <div className="sticky top-24 rounded-2xl border border-border bg-card p-6 space-y-3">

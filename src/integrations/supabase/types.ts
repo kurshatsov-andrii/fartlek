@@ -929,6 +929,7 @@ export type Database = {
           registration_closed: boolean
           registration_open_until: string | null
           registration_opens_on: string | null
+          registration_status: string | null
           regulations_pdf_url: string | null
           results_pdf_url: string | null
           results_url: string | null
@@ -958,6 +959,7 @@ export type Database = {
           registration_closed?: boolean
           registration_open_until?: string | null
           registration_opens_on?: string | null
+          registration_status?: string | null
           regulations_pdf_url?: string | null
           results_pdf_url?: string | null
           results_url?: string | null
@@ -987,6 +989,7 @@ export type Database = {
           registration_closed?: boolean
           registration_open_until?: string | null
           registration_opens_on?: string | null
+          registration_status?: string | null
           regulations_pdf_url?: string | null
           results_pdf_url?: string | null
           results_url?: string | null

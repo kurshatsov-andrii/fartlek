@@ -41,7 +41,7 @@ const EventEditor = () => {
   const [form, setForm] = useState({
     title: "", description: "", organizer_name: "",
     event_date: "", event_time: "", location: "",
-    image_url: "", is_paid: false, payment_url: "", status: "draft", registration_closed: false, registration_opens_on: "" as string, changes_deadline_days: 1, max_total_participants: "" as string,
+    image_url: "", is_paid: false, payment_url: "", status: "draft", registration_closed: false, registration_status: null as "expected" | null, registration_opens_on: "" as string, changes_deadline_days: 1, max_total_participants: "" as string,
     category: "run" as EventCategory,
     format: "offline" as "offline" | "online" | "hybrid",
     results_pdf_url: "",
@@ -102,6 +102,7 @@ const EventEditor = () => {
           payment_url: (ev as any).payment_url ?? "",
           status: ev.status,
           registration_closed: !!(ev as any).registration_closed,
+          registration_status: ev.registration_status === "expected" ? "expected" : null,
           registration_opens_on: (ev as any).registration_opens_on ?? "",
           changes_deadline_days: (ev as any).changes_deadline_days ?? 1,
           max_total_participants: (ev as any).max_total_participants != null ? String((ev as any).max_total_participants) : "",
@@ -886,6 +887,17 @@ const EventEditor = () => {
               </Select>
             </div>
 
+            <div className="flex items-center gap-3 border border-border p-3 rounded-lg">
+              <Switch
+                id="registration_expected"
+                checked={form.registration_status === "expected"}
+                onCheckedChange={(checked) => setForm({ ...form, registration_status: checked ? "expected" : null, registration_closed: checked ? false : form.registration_closed })}
+              />
+              <Label htmlFor="registration_expected" className="cursor-pointer">
+                {lang === "uk" ? "Скоро відкриття реєстрації" : "Registration opening soon"}
+              </Label>
+            </div>
+
             <div className="space-y-1.5">
               <Label htmlFor="registration_opens_on">
                 {lang === "uk" ? "Дата відкриття реєстрації (необов'язково)" : "Registration opens on (optional)"}
@@ -905,7 +917,7 @@ const EventEditor = () => {
               <Switch
                 id="registration_closed"
                 checked={form.registration_closed}
-                onCheckedChange={(v) => setForm({ ...form, registration_closed: v })}
+                onCheckedChange={(v) => setForm({ ...form, registration_closed: v, registration_status: v ? null : form.registration_status })}
               />
               <div className="flex-1">
                 <Label htmlFor="registration_closed" className="cursor-pointer">

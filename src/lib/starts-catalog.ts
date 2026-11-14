@@ -40,6 +40,7 @@ export interface CatalogEvent {
   is_paid: boolean;
   category: EventCategory;
   registration_closed: boolean;
+  registration_status?: string | null;
   registration_opens_on: string | null;
   registration_open_until?: string | null;
   results_url: string | null;
@@ -87,7 +88,7 @@ export function mergeStartsCatalog(starts: ExternalCatalogStart[], events: Catal
         image_url: event.image_url,
         register_url: url,
         results_url: event.results_url || event.results_pdf_url,
-        registration_status: null,
+        registration_status: event.registration_status ?? null,
         registration_opens_on: event.registration_opens_on,
         registration_closed: event.registration_closed,
         registration_open_until: event.registration_open_until ?? null,
