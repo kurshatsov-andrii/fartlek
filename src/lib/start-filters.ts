@@ -40,6 +40,21 @@ export const detectCity = (location: string | null | undefined): string | null =
 export const monthOf = (d: string | null | undefined) =>
   d ? parseInt(d.split("-")[1] ?? "0", 10) : 0;
 
+export const availableYearMonths = (dates: (string | null | undefined)[], year = "all") =>
+  Array.from(new Set(dates.filter((date): date is string => !!date).map((date) => date.slice(0, 7))))
+    .filter((month) => year === "all" || month.startsWith(`${year}-`)).sort();
+
+export const matchesYearMonth = (date: string | null | undefined, month: string) =>
+  month === "all" || !!date?.startsWith(`${month}-`);
+
+export const yearMonthLabel = (month: string) => {
+  const [year, number] = month.split("-").map(Number);
+  const label = new Date(Date.UTC(year, number - 1, 1)).toLocaleDateString("uk-UA", {
+    month: "long", year: "numeric", timeZone: "Europe/Kyiv",
+  });
+  return label.charAt(0).toUpperCase() + label.slice(1);
+};
+
 export const matchesDistance = (
   dists: (number | string)[] | null | undefined,
   bucket: { label: string; match: (d: number) => boolean } | null

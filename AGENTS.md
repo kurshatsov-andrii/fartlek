@@ -30,6 +30,7 @@
 - Keep the sports-insurance block in a shared configuration and banner component so the strahovki.kh.ua anchors stay identical across every placement.
 
 - Keep start-listing filter facets (distance buckets, city detection, month matching, category-to-sport mapping) in the shared start-filters module so the Starts page and category pages filter identically.
+- Use populated year-month pairs for the Starts month selector and clear incompatible month selections on year changes so different seasons never mix.
 - Keep homepage discovery controls above sibling event and external-start sections; derive category availability from upcoming records in both catalogs so empty categories and empty event results do not mislead visitors.
 
 - Keep discovery-page metadata in discovery-seo and use it in both route heads and page SEO so initial HTML and hydrated metadata agree.

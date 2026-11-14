@@ -14,10 +14,10 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
-import { SPORT_TYPES, SPORT_LABELS, MONTH_NAMES_UK, type SportType } from "@/lib/parseStart";
+import { SPORT_TYPES, SPORT_LABELS, type SportType } from "@/lib/parseStart";
 import { canShowRegisterButton } from "@/lib/registration-status";
 import { isEventCompleted } from "@/lib/event-date";
-import { DISTANCE_BUCKETS, baseCity } from "@/lib/start-filters";
+import { DISTANCE_BUCKETS, baseCity, availableYearMonths, matchesYearMonth, yearMonthLabel } from "@/lib/start-filters";
 import { mergeStartsCatalog, type CatalogStart } from "@/lib/starts-catalog";
 import { discoverySeo } from "@/lib/discovery-seo";
 import { StartActions } from "@/components/StartActions";
@@ -72,6 +72,7 @@ const Starts = () => {
   );
   const regions = useMemo(() => Array.from(new Set(rows.map((r) => r.region).filter(Boolean) as string[])).sort(), [rows]);
   const organizers = useMemo(() => Array.from(new Set(rows.map((r) => r.organizer_name).filter(Boolean) as string[])).sort(), [rows]);
+  const months = useMemo(() => availableYearMonths(rows.map((r) => r.event_date), year), [rows, year]);
 
   const distanceBucket = distance === "all" ? null : DISTANCE_BUCKETS.find((b) => b.label === distance);
 
@@ -83,10 +84,7 @@ const Starts = () => {
         if (!hay.includes(qLower)) return false;
       }
       if (!matchesYear(r.event_date, year)) return false;
-      if (month !== "all" && r.event_date) {
-        const m = parseInt(r.event_date.split("-")[1], 10);
-        if (String(m) !== month) return false;
-      } else if (month !== "all" && !r.event_date) return false;
+      if (!matchesYearMonth(r.event_date, month)) return false;
       if (city !== "all" && baseCity(r.city) !== city) return false;
       if (region !== "all" && r.region !== region) return false;
       if (organizer !== "all" && r.organizer_name !== organizer) return false;
@@ -183,7 +181,10 @@ const Starts = () => {
               </Button>
             )}
           </div>
-          <YearFilterButtons value={year} onChange={setYear} />
+          <YearFilterButtons value={year} onChange={(value) => {
+            setYear(value);
+            if (month !== "all" && value !== "all" && !month.startsWith(`${value}-`)) setMonth("all");
+          }} />
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
             <Input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Пошук за назвою, описом, містом…" className="pl-9" />
@@ -193,8 +194,8 @@ const Starts = () => {
               <SelectTrigger><SelectValue placeholder="Місяць" /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">Усі місяці</SelectItem>
-                {MONTH_NAMES_UK.map((n, i) => (
-                  <SelectItem key={i} value={String(i + 1)}>{n}</SelectItem>
+                {months.map((value) => (
+                  <SelectItem key={value} value={value}>{yearMonthLabel(value)}</SelectItem>
                 ))}
               </SelectContent>
             </Select>
