@@ -302,6 +302,12 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://fartlek.com.ua/events/kaskad-park-run-harkiv-2026</loc>
+    <lastmod>2026-11-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://fartlek.com.ua/starts/mhp-run4victory-cherkasy-marafon-2026-09-19</loc>
     <lastmod>2026-09-05</lastmod>
     <changefreq>weekly</changefreq>
@@ -428,6 +434,18 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://fartlek.com.ua/starts/vinnytsia-new-year-run-2027-2027-01-01</loc>
+    <lastmod>2026-11-11</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fartlek.com.ua/starts/final-nyy-zabig-chernivci-2026-11-28</loc>
+    <lastmod>2026-11-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://fartlek.com.ua/starts/zhytomyrs-ki-vertykali-2026-11-21</loc>
     <lastmod>2026-10-15</lastmod>
     <changefreq>weekly</changefreq>
@@ -442,6 +460,12 @@
   <url>
     <loc>https://fartlek.com.ua/starts/simple-trail-2026-08-22</loc>
     <lastmod>2026-10-15</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fartlek.com.ua/starts/final-nyy-zabig-kamyanec-podil-s-kyy-2026-11-29</loc>
+    <lastmod>2026-11-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -484,6 +508,12 @@
   <url>
     <loc>https://fartlek.com.ua/starts/west-carpathian-marathon-2026-10-18</loc>
     <lastmod>2026-10-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fartlek.com.ua/starts/zymi-nazustrich-2026-12-06</loc>
+    <lastmod>2026-11-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
