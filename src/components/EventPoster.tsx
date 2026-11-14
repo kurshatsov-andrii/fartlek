@@ -6,12 +6,12 @@ interface EventPosterProps {
   alt: string;
   className?: string;
   loading?: "lazy" | "eager";
-  /** "contain" keeps the whole poster visible with a blurred backdrop; "cover" fills the frame edge to edge. */
+  /** Both modes keep the whole poster visible; "cover" selects detail-page delivery sizes. */
   fit?: "contain" | "cover";
   sizes?: string;
 }
 
-/** "contain" keeps the original poster readable; "cover" fills the frame with no empty bars. */
+/** Keeps the original poster fully visible with an image-derived backdrop on every screen. */
 export function EventPoster({ src, alt, className, loading = "lazy", fit = "contain", sizes = fit === "cover" ? "(max-width: 767px) 100vw, 1000px" : "(max-width: 767px) calc(100vw - 48px), (max-width: 1023px) 50vw, 450px" }: EventPosterProps) {
   const optimized = imageDeliveryUrl(src, 1140);
   const srcSet = optimized === src ? undefined : [480, 768, 1140, 1920].map((width) => `${imageDeliveryUrl(src, width)} ${width}w`).join(", ");
@@ -40,11 +40,7 @@ export function EventPoster({ src, alt, className, loading = "lazy", fit = "cont
         loading={loading}
         decoding="async"
         onError={fallback}
-        className={cn(
-          "relative block h-full w-full",
-          // Phones keep the edge-to-edge fill; tablets and desktops show the whole poster.
-          fit === "cover" ? "object-cover md:object-contain" : "object-contain",
-        )}
+        className="relative block h-full w-full object-contain"
       />
     </div>
   );
