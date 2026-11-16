@@ -296,14 +296,14 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://fartlek.com.ua/events/kharkiv-half-marathon-harkiv-2027</loc>
-    <lastmod>2026-11-14</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <loc>https://fartlek.com.ua/blog/ekiden-2026</loc>
+    <lastmod>2026-11-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://fartlek.com.ua/events/ekiden-kharikofu-10k-2026-harkiv-stadion-hpi-molodizhnyy-park-2026</loc>
-    <lastmod>2026-11-08</lastmod>
+    <loc>https://fartlek.com.ua/events/kharkiv-half-marathon-harkiv-2027</loc>
+    <lastmod>2026-11-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
