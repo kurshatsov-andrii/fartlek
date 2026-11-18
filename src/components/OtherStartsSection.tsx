@@ -269,11 +269,8 @@ export const OtherStartsSection = ({ shared, onFacets }: { shared?: SharedStartF
                 )}
               </Link>
               <div className="px-6 pt-4">
-                <span className="inline-flex items-center rounded-full bg-background/95 px-3 py-1 text-[10px] font-semibold uppercase tracking-wider text-foreground backdrop-blur">
-                  {lang === "uk" ? "Анонс" : "Announcement"}
-                </span>
                 {(r.distances_km || []).length > 0 && (
-                  <div className="mt-2 flex flex-wrap gap-1.5">
+                  <div className="flex flex-wrap gap-1.5">
                     {[...(r.distances_km || [])].sort((a, b) => Number(b) - Number(a)).slice(0, 4).map((d) => (
                       <span key={String(d)} className="rounded-md bg-background/95 px-2 py-1 text-xs font-bold text-foreground">{d} km</span>
                     ))}
