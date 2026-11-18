@@ -373,8 +373,8 @@ const EventDetails = () => {
           <Link to="/#events" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-6">
             <ArrowLeft className="h-4 w-4" /> {t.events.backToEvents}
           </Link>
-          <div className={event.status === "completed" ? "grid lg:grid-cols-3 gap-8" : "grid lg:grid-cols-3 gap-8"}>
-            <div className="lg:col-span-2 space-y-6">
+          <div className="grid gap-8 [grid-template-areas:'top'_'side'_'bottom'] lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] lg:grid-rows-[auto_1fr] lg:[grid-template-areas:'top_side'_'bottom_side']">
+            <div className="space-y-6 [grid-area:top]">
               <div className="flex flex-wrap gap-2">
                 <span className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wider ${event.is_paid ? "bg-primary text-primary-foreground" : "bg-accent text-accent-foreground"}`}>
                   {event.is_paid ? t.events.paid : t.events.free}
@@ -422,6 +422,9 @@ const EventDetails = () => {
                   {linkifyText(event.description)}
                 </div>
               )}
+            </div>
+
+            <div className="space-y-6 [grid-area:bottom]">
               {event.status !== "completed" && !isEventCompleted(event.event_date, event.registration_open_until) && <SiSPartnerBanner />}
               <div className="mb-8"><InsuranceBanner /></div>
               <div className="flex flex-wrap gap-2">
@@ -460,7 +463,7 @@ const EventDetails = () => {
               />
             </div>
 
-            <aside className="lg:col-span-1">
+            <aside className="[grid-area:side]">
               {event.status === "completed" ? (
                 <div className="sticky top-24 rounded-2xl border border-border bg-card p-6 space-y-3">
                   <h3 className="font-display text-xl font-bold flex items-center gap-2">
