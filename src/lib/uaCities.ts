@@ -154,6 +154,14 @@ export const UA_CITY_COORDS: Record<string, [number, number]> = {
   "стільсько": [49.4230, 24.1050],
 };
 
+// One place name can belong to different oblasts. Keep the default above for
+// existing records and use the stored region when it disambiguates the place.
+const UA_REGIONAL_CITY_COORDS: Record<string, [number, number]> = {
+  "південне|одеська": [46.6200, 31.1000],
+};
+
+const normalizeRegionKey = (raw?: string | null) =>
+  (raw ?? "").toLowerCase().replace(/\s*область\s*/g, "").trim();
 
 export const normalizeCityKey = (raw: string) =>
   raw
@@ -162,9 +170,11 @@ export const normalizeCityKey = (raw: string) =>
     .replace(/[’`]/g, "'")
     .trim();
 
-export const findCityCoords = (raw: string): [number, number] | null => {
+export const findCityCoords = (raw: string, region?: string | null): [number, number] | null => {
   const key = normalizeCityKey(raw);
   if (!key) return null;
+  const regionalCoords = UA_REGIONAL_CITY_COORDS[`${key}|${normalizeRegionKey(region)}`];
+  if (regionalCoords) return regionalCoords;
   if (UA_CITY_COORDS[key]) return UA_CITY_COORDS[key];
   // try matching any known city contained in the string
   for (const name of Object.keys(UA_CITY_COORDS)) {

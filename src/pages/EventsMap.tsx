@@ -85,7 +85,7 @@ const EventsMap = () => {
           .gte("event_date", todayIso),
         supabase
           .from("telegram_starts")
-          .select("id, slug, title, event_date, city, distances_km")
+          .select("id, slug, title, event_date, city, region, distances_km")
           .eq("status", "published")
           .gte("event_date", todayIso),
         supabase
@@ -118,7 +118,7 @@ const EventsMap = () => {
 
       ((starts as any[]) ?? []).forEach((s) => {
         const city = (s.city ?? "").split(",")[0].trim();
-        const coords = city ? findCityCoords(city) : null;
+        const coords = city ? findCityCoords(city, s.region) : null;
         if (!coords) return;
         acc.push({
           id: `s-${s.id}`,
