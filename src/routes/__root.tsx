@@ -40,7 +40,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "author", content: "Fartlek Events" },
       {
         name: "google-site-verification",
-        content: "nmvx4wn1_8D9Qci1LZyDE-woV5YYYj9N57iDayZJ0nQ",
+        content: "i_ybuHBSblbnaWuQZy5VEzqqLKmARKdMExBnsjm2VBU",
       },
       { property: "og:type", content: "website" },
       { property: "og:site_name", content: "Fartlek Events" },
@@ -74,6 +74,12 @@ function RootShell({ children }: { children: React.ReactNode }) {
   return (
     <html lang="uk" className="dark" suppressHydrationWarning>
       <head>
+        {/* Second verification code kept as a literal tag: HeadContent dedupes
+            meta entries by name, so only one could live in the head() array. */}
+        <meta
+          name="google-site-verification"
+          content="nmvx4wn1_8D9Qci1LZyDE-woV5YYYj9N57iDayZJ0nQ"
+        />
         <HeadContent />
       </head>
       <body>
