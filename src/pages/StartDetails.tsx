@@ -144,13 +144,8 @@ const StartDetails = () => {
           {linkifyText(row.description || "")}
         </div>
 
-        {row.event_date && !isCompletedDate(row.event_date) && (
-          <div className="mb-8"><SiSPartnerBanner /></div>
-        )}
-        <div className="mb-8"><InsuranceBanner /></div>
-
         {row.results_url && (
-          <Button asChild size="lg" className="w-full sm:w-auto">
+          <Button asChild size="lg" className="w-full sm:w-auto mb-8">
             <a href={row.results_url} target="_blank" rel="noreferrer">
               Результати {row.title || ""} <FileText className="h-4 w-4 ml-2" />
             </a>
@@ -158,12 +153,17 @@ const StartDetails = () => {
         )}
 
         {row.register_url && !isCompletedDate(row.event_date) && !row.results_url && regState !== "cancelled" && regState !== "closed" && (
-          <Button asChild size="lg" className="w-full sm:w-auto">
+          <Button asChild size="lg" className="w-full sm:w-auto mb-8">
             <a href={row.register_url} target="_blank" rel="noreferrer">
               Зареєструватися <ExternalLink className="h-4 w-4 ml-2" />
             </a>
           </Button>
         )}
+
+        {row.event_date && !isCompletedDate(row.event_date) && (
+          <div className="mb-8"><SiSPartnerBanner /></div>
+        )}
+        <div className="mb-8"><InsuranceBanner /></div>
       </main>
       <Footer />
     </div>
