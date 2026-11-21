@@ -254,20 +254,14 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://fartlek.com.ua/blog/fartlek-run-2</loc>
-    <lastmod>2026-10-05</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://fartlek.com.ua/blog/fartlek-run-1</loc>
-    <lastmod>2026-10-05</lastmod>
+    <loc>https://fartlek.com.ua/blog/hydra-run</loc>
+    <lastmod>2026-11-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://fartlek.com.ua/blog/fartlek-run-3</loc>
-    <lastmod>2026-10-05</lastmod>
+    <lastmod>2026-11-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -279,31 +273,55 @@
   </url>
   <url>
     <loc>https://fartlek.com.ua/blog/fartlek-run-4</loc>
-    <lastmod>2026-10-18</lastmod>
+    <lastmod>2026-11-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://fartlek.com.ua/blog/trail-zolota-osin-kharkiv</loc>
-    <lastmod>2026-10-26</lastmod>
+    <lastmod>2026-11-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://fartlek.com.ua/blog/bilka-run-10-km-kharkiv-1-lystopada-2026</loc>
-    <lastmod>2026-11-07</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://fartlek.com.ua/blog/fartlek-run-5</loc>
-    <lastmod>2026-11-08</lastmod>
+    <lastmod>2026-11-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://fartlek.com.ua/blog/ekiden-2026</loc>
-    <lastmod>2026-11-16</lastmod>
+    <lastmod>2026-11-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://fartlek.com.ua/blog/fartlek-run-1</loc>
+    <lastmod>2026-11-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://fartlek.com.ua/blog/kharkiv-half-marathon</loc>
+    <lastmod>2026-11-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://fartlek.com.ua/blog/fartlek-run-2</loc>
+    <lastmod>2026-11-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://fartlek.com.ua/blog/fartlek-run-5</loc>
+    <lastmod>2026-11-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://fartlek.com.ua/blog/traktor-run</loc>
+    <lastmod>2026-11-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
