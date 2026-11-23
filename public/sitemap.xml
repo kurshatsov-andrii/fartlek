@@ -326,14 +326,14 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://fartlek.com.ua/events/kharkiv-half-marathon-harkiv-2027</loc>
-    <lastmod>2026-11-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <loc>https://fartlek.com.ua/blog/kaskad-park-run</loc>
+    <lastmod>2026-11-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://fartlek.com.ua/events/kaskad-park-run-harkiv-2026</loc>
-    <lastmod>2026-11-21</lastmod>
+    <loc>https://fartlek.com.ua/events/kharkiv-half-marathon-harkiv-2027</loc>
+    <lastmod>2026-11-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -664,6 +664,12 @@
   <url>
     <loc>https://fartlek.com.ua/starts/estafeta-pokolin-2026-09-20</loc>
     <lastmod>2026-09-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fartlek.com.ua/starts/final-nyy-zabig-kyiv-2026-12-27</loc>
+    <lastmod>2026-11-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>

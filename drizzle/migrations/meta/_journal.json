@@ -127,6 +127,13 @@
       "when": 1794662464031,
       "tag": "0017_event_registration_coming_soon",
       "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "7",
+      "when": 1795429024722,
+      "tag": "0018_migration",
+      "breakpoints": true
     }
   ]
 }

@@ -54,6 +54,14 @@ Deno.serve(async (req) => {
       throw new Error(`Registration not found: ${regErr?.message}`);
     }
 
+    // Захист від зловживань: сповіщаємо лише про щойно створені реєстрації.
+    if (Date.now() - new Date(reg.created_at).getTime() > 10 * 60 * 1000) {
+      return new Response(JSON.stringify({ skipped: true }), {
+        status: 200,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
     const [{ data: event }, { data: distance }, { data: profile }, { data: athlete }] = await Promise.all([
       supabase.from('events').select('title, event_date, location').eq('id', reg.event_id).maybeSingle(),
       supabase.from('distances').select('distance_km, name, price').eq('id', reg.distance_id).maybeSingle(),
