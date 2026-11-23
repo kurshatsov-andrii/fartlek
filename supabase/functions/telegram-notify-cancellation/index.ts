@@ -41,6 +41,10 @@ Deno.serve(async (req) => {
       .maybeSingle();
     if (reqErr || !reqRow) throw new Error(`Request not found: ${reqErr?.message}`);
 
+    if (!reqRow || Date.now() - new Date(reqRow.created_at).getTime() > 10 * 60 * 1000) {
+      return new Response(JSON.stringify({ skipped: true }), { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+    }
+
     const { data: reg } = await supabase
       .from('registrations')
       .select('id, bib_number, athlete_id, distance_id')

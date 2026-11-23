@@ -46,6 +46,10 @@ Deno.serve(async (req) => {
       .eq('id', userId)
       .maybeSingle();
 
+    if (!profile || Date.now() - new Date(profile.created_at).getTime() > 10 * 60 * 1000) {
+      return new Response(JSON.stringify({ skipped: true }), { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+    }
+
     const { data: roleRow } = await supabase
       .from('user_roles')
       .select('role')
