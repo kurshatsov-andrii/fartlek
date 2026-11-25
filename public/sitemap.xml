@@ -327,7 +327,7 @@
   </url>
   <url>
     <loc>https://fartlek.com.ua/blog/kaskad-park-run</loc>
-    <lastmod>2026-11-22</lastmod>
+    <lastmod>2026-11-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -406,6 +406,12 @@
   <url>
     <loc>https://fartlek.com.ua/starts/winter-trail-2026-12-19</loc>
     <lastmod>2026-11-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fartlek.com.ua/starts/final-nyy-zabig-cherkasy-2026-12-06</loc>
+    <lastmod>2026-11-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
