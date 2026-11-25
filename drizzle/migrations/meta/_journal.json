@@ -141,6 +141,13 @@
       "when": 1795598499944,
       "tag": "0019_add_events_total_count_to_public_stats",
       "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "7",
+      "when": 1795598580238,
+      "tag": "0020_events_and_starts_total_on_platform",
+      "breakpoints": true
     }
   ]
 }

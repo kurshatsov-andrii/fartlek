@@ -2432,8 +2432,8 @@ export type Database = {
           athletes_count: number
           cities_count: number
           clubs_count: number
+          events_and_starts_count: number
           events_count: number
-          events_total_count: number
           organizers_count: number
           registrations_count: number
           runners_count: number
