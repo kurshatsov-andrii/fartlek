@@ -21,6 +21,7 @@ export const HomeDirectory = () => {
     ? [
         { v: s.athletes_count, l: uk ? "Спортсменів" : "Athletes" },
         { v: s.events_count, l: uk ? "Подій" : "Events" },
+        { v: s.events_total_count, l: uk ? "Подій за весь час" : "Events all time" },
         { v: s.cities_count, l: uk ? "Міст" : "Cities" },
         { v: s.clubs_count, l: uk ? "Клубів" : "Clubs" },
         { v: s.organizers_count, l: uk ? "Організаторів" : "Organizers" },

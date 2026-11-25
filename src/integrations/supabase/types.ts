@@ -2433,6 +2433,7 @@ export type Database = {
           cities_count: number
           clubs_count: number
           events_count: number
+          events_total_count: number
           organizers_count: number
           registrations_count: number
           runners_count: number
