@@ -11,7 +11,7 @@ export const Route = createFileRoute("/contacts")({
   head: ({ loaderData }) =>
     ({ ...pageHead({
       title: 'Контакти Fartlek Events',
-      description: "Зв'яжіться з командою Fartlek Events: підтримка учасників, співпраця з організаторами та питання щодо реєстрації.",
+      description: "Контакти Фартлек: підтримка учасників, додавання забігів до календаря, розміщення змагань та співпраця з організаторами, клубами й спонсорами.",
       path: PATH,
       override: loaderData ?? null,
     }), scripts: [jsonLdScript(breadcrumbJsonLd([{ name: "Головна", path: "/" }, { name: "Контакти", path: PATH }]))] }),
