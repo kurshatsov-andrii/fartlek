@@ -17,11 +17,10 @@ export const HomeDirectory = () => {
     });
   }, []);
 
-  const stats: { v: number; l: string; wide?: boolean }[] = s
+  const stats: { v: number; l: string }[] = s
     ? [
         { v: s.athletes_count, l: uk ? "Спортсменів" : "Athletes" },
         { v: s.events_count, l: uk ? "Подій" : "Events" },
-        { v: s.events_and_starts_count, l: uk ? "Подій та стартів розміщених на платформі" : "Events and starts on the platform", wide: true },
         { v: s.cities_count, l: uk ? "Міст" : "Cities" },
         { v: s.clubs_count, l: uk ? "Клубів" : "Clubs" },
         { v: s.organizers_count, l: uk ? "Організаторів" : "Organizers" },
@@ -52,7 +51,7 @@ export const HomeDirectory = () => {
       {stats.length > 0 && (
         <dl className="mt-5 flex flex-wrap justify-center gap-x-10 gap-y-4">
           {stats.map((x) => (
-            <div key={x.l} className={`text-center ${x.wide ? "min-w-[210px]" : "min-w-[120px]"}`}>
+            <div key={x.l} className="min-w-[120px] text-center">
               <dt className="font-display text-2xl font-bold text-primary">{x.v ?? 0}</dt>
               <dd className="text-xs uppercase tracking-wider text-muted-foreground">{x.l}</dd>
             </div>

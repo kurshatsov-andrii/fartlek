@@ -148,6 +148,13 @@
       "when": 1795598580238,
       "tag": "0020_events_and_starts_total_on_platform",
       "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "7",
+      "when": 1795598705074,
+      "tag": "0021_combined_events_and_starts_count",
+      "breakpoints": true
     }
   ]
 }
