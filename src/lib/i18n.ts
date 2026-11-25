@@ -127,7 +127,7 @@ export const translations: Record<Lang, Dict> = {
     hero: {
       kicker: "Спортивні події нового покоління",
       title: "Біжи. Реєструйся. Перемагай.",
-      subtitle: "Fartlek Events — платформа реєстрації на забіги, трейли та змагання по всій Україні. QR-стартові пакети, миттєві результати, зручні протоколи.",
+      subtitle: "Фартлек — платформа реєстрації на забіги, трейли та змагання по всій Україні. QR-стартові пакети, миттєві результати, зручні протоколи.",
       ctaParticipant: "Вхід для учасників",
       ctaOrganizer: "Вхід для організаторів",
       ctaNearest: "Найближчі події",
@@ -324,7 +324,7 @@ export const translations: Record<Lang, Dict> = {
     hero: {
       kicker: "Next-generation sports events",
       title: "Run. Register. Conquer.",
-      subtitle: "Fartlek Events — the registration platform for races, trails and competitions across Ukraine. QR start packs, instant results, clean protocols.",
+      subtitle: "Фартлек — the registration platform for races, trails and competitions across Ukraine. QR start packs, instant results, clean protocols.",
       ctaParticipant: "Participant sign in", ctaOrganizer: "Organizer sign in",
       ctaNearest: "Upcoming events",
       stats: { events: "Events", runners: "Runners", cities: "Cities", clubs: "Clubs", organizers: "Organizers", registrations: "Registrations" },

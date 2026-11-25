@@ -174,7 +174,7 @@ const Survey = () => {
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <SEO
-        title="Опитування — Fartlek Events"
+        title="Опитування — Фартлек"
         description="Допоможіть зробити платформу зручнішою — пройдіть коротке опитування."
         canonical="/survey"
       />

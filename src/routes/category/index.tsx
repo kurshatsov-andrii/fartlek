@@ -10,7 +10,7 @@ export const Route = createFileRoute("/category/")({
   loader: () => getSeoOverride({ data: { path: PATH } }),
   head: ({ loaderData }) =>
     ({ ...pageHead({
-      title: 'Види спортивних подій — категорії | Fartlek Events',
+      title: 'Види спортивних подій — категорії | Фартлек',
       description: 'Забіги, напівмарафони, марафони, ультра, трейли, OCR, вело, триатлон і запливи в Україні. Обери категорію та зареєструйся.',
       path: PATH,
       override: loaderData ?? null,

@@ -10,7 +10,7 @@ export const Route = createFileRoute("/contacts")({
   loader: () => getSeoOverride({ data: { path: PATH } }),
   head: ({ loaderData }) =>
     ({ ...pageHead({
-      title: 'Контакти Fartlek Events',
+      title: 'Контакти Фартлек',
       description: "Контакти Фартлек: підтримка учасників, додавання забігів до календаря, розміщення змагань та співпраця з організаторами, клубами й спонсорами.",
       path: PATH,
       override: loaderData ?? null,

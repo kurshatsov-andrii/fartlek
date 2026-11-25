@@ -10,8 +10,8 @@ export const Route = createFileRoute("/public-offer")({
   loader: () => getSeoOverride({ data: { path: PATH } }),
   head: ({ loaderData }) =>
     ({ ...pageHead({
-      title: 'Публічна оферта | Fartlek Events',
-      description: 'Умови публічного договору про надання послуг з онлайн-реєстрації на спортивні події Fartlek Events.',
+      title: 'Публічна оферта | Фартлек',
+      description: 'Умови публічного договору про надання послуг з онлайн-реєстрації на спортивні події Фартлек.',
       path: PATH,
       override: loaderData ?? null,
     }), scripts: [jsonLdScript(breadcrumbJsonLd([{ name: "Головна", path: "/" }, { name: "Публічна оферта", path: PATH }]))] }),

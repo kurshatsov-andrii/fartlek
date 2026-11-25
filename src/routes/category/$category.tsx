@@ -14,8 +14,8 @@ export const Route = createFileRoute("/category/$category")({
   },
   head: ({ loaderData }) => {
     const fallback = {
-      title: "Спортивні події в Україні | Fartlek Events",
-      description: "Каталог спортивних подій України з онлайн-реєстрацією на платформі Fartlek Events.",
+      title: "Спортивні події в Україні | Фартлек",
+      description: "Каталог спортивних подій України з онлайн-реєстрацією на платформі Фартлек.",
     };
     let seo = fallback;
     try {

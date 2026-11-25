@@ -47,12 +47,12 @@ const Features = () => {
 
   const seo = isUk
     ? {
-        title: "Можливості Fartlek Events — для учасників та організаторів",
-        description: "Збереження та порівняння стартів, нагадування, лайки, календарі забігів 2027, реєстрація, QR-квитки й інструменти організаторів Fartlek Events.",
+        title: "Можливості Фартлек — для учасників та організаторів",
+        description: "Збереження та порівняння стартів, нагадування, лайки, календарі забігів 2027, реєстрація, QR-квитки й інструменти організаторів Фартлек.",
       }
     : {
-        title: "Fartlek Events Features — for participants and organizers",
-        description: "Save and compare races, opt-in reminders, likes, 2027 race calendars, registration, QR tickets and organizer tools on Fartlek Events.",
+        title: "Фартлек Features — for participants and organizers",
+        description: "Save and compare races, opt-in reminders, likes, 2027 race calendars, registration, QR tickets and organizer tools on Фартлек.",
       };
 
   const participantGroups: Group[] = isUk ? [
@@ -335,7 +335,7 @@ const Features = () => {
 
   const t = isUk ? {
     eyebrow: "Можливості",
-    title: "Усе, що вміє Fartlek Events",
+    title: "Усе, що вміє Фартлек",
     subtitle: "Платформа для організації забігів та реєстрації учасників. Зібрали всі можливості в одному місці — і регулярно оновлюємо.",
     forParticipants: "Для учасників",
     forOrganizers: "Для організаторів",
@@ -346,7 +346,7 @@ const Features = () => {
     updated: "Сторінка оновлюється — нові можливості додаються щотижня.",
   } : {
     eyebrow: "Features",
-    title: "Everything Fartlek Events can do",
+    title: "Everything Фартлек can do",
     subtitle: "A platform to organize races and register participants. All features in one place — updated regularly.",
     forParticipants: "For participants",
     forOrganizers: "For organizers",
@@ -451,8 +451,8 @@ const Features = () => {
                 </div>
                 <p className="text-muted-foreground mb-8">
                   {isUk
-                    ? "Fartlek Events не бере комісію з оплат — гроші учасників надходять напряму на ваш рахунок. Підтримуємо три сценарії: автоматичне підтвердження через WayForPay, автоматичне через LiqPay, або ручну перевірку квитанції за будь-яким посиланням."
-                    : "Fartlek Events takes no payment commission — participants pay you directly. Three flows are supported: WayForPay auto-confirmation, LiqPay auto-confirmation, or manual receipt approval for any other payment link."}
+                    ? "Фартлек не бере комісію з оплат — гроші учасників надходять напряму на ваш рахунок. Підтримуємо три сценарії: автоматичне підтвердження через WayForPay, автоматичне через LiqPay, або ручну перевірку квитанції за будь-яким посиланням."
+                    : "Фартлек takes no payment commission — participants pay you directly. Three flows are supported: WayForPay auto-confirmation, LiqPay auto-confirmation, or manual receipt approval for any other payment link."}
                 </p>
 
                 {/* Сценарій 1 — WayForPay */}

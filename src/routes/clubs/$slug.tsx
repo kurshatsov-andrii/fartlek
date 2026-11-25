@@ -15,8 +15,8 @@ export const Route = createFileRoute("/clubs/$slug")({
   },
   head: ({ loaderData }) => {
     const h = pageHead({
-      title: loaderData?.seo?.title ?? "Біговий клуб | Fartlek Events",
-      description: loaderData?.seo?.description ?? "Біговий клуб: тренування, розклад та контакти на Fartlek Events.",
+      title: loaderData?.seo?.title ?? "Біговий клуб | Фартлек",
+      description: loaderData?.seo?.description ?? "Біговий клуб: тренування, розклад та контакти на Фартлек.",
       path: loaderData?.seo?.path ?? loaderData?.path ?? "/clubs",
       image: loaderData?.seo?.image ?? null,
       type: "profile",

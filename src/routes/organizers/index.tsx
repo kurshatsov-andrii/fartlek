@@ -10,7 +10,7 @@ export const Route = createFileRoute("/organizers/")({
   loader: () => getSeoOverride({ data: { path: PATH } }),
   head: ({ loaderData }) =>
     ({ ...pageHead({
-      title: 'Організатори спортивних подій України | Fartlek Events',
+      title: 'Організатори спортивних подій України | Фартлек',
       description: 'Каталог організаторів забігів, трейлів і триатлонів в Україні: профілі, події та контакти для співпраці.',
       path: PATH,
       override: loaderData ?? null,

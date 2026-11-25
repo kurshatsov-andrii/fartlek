@@ -239,8 +239,8 @@ const Testimonials = () => {
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <SEO
-        title="Відгуки — Fartlek Events"
-        description="Що кажуть учасники та організатори про платформу Fartlek Events."
+        title="Відгуки — Фартлек"
+        description="Що кажуть учасники та організатори про платформу Фартлек."
         canonical="/testimonials"
       />
       <Header />

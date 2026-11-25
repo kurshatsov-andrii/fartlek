@@ -37,13 +37,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1.0" },
       { name: "color-scheme", content: "dark" },
-      { name: "author", content: "Fartlek Events" },
+      { name: "author", content: "Фартлек" },
       {
         name: "google-site-verification",
         content: "i_ybuHBSblbnaWuQZy5VEzqqLKmARKdMExBnsjm2VBU",
       },
       { property: "og:type", content: "website" },
-      { property: "og:site_name", content: "Fartlek Events" },
+      { property: "og:site_name", content: "Фартлек" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [

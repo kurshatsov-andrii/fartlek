@@ -10,7 +10,7 @@ export const Route = createFileRoute("/clubs/")({
   loader: () => getSeoOverride({ data: { path: PATH } }),
   head: ({ loaderData }) =>
     ({ ...pageHead({
-      title: 'Бігові клуби України — каталог | Fartlek Events',
+      title: 'Бігові клуби України — каталог | Фартлек',
       description: 'Каталог бігових і спортивних клубів України: міста, тренування, контакти та події клубів. Знайди свій клуб.',
       path: PATH,
       override: loaderData ?? null,

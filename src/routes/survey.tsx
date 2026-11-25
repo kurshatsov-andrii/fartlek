@@ -9,7 +9,7 @@ export const Route = createFileRoute("/survey")({
   loader: () => getSeoOverride({ data: { path: PATH } }),
   head: ({ loaderData }) =>
     pageHead({
-      title: 'Опитування бігунів України | Fartlek Events',
+      title: 'Опитування бігунів України | Фартлек',
       description: 'Пройдіть коротке опитування — допоможіть зробити старти та реєстрацію зручнішими для бігунів України.',
       path: PATH,
       override: loaderData ?? null,

@@ -15,10 +15,10 @@ export const Route = createFileRoute("/events/$id/")({
   },
   head: ({ loaderData }) => {
     const h = pageHead({
-      title: loaderData?.event?.title ?? "Спортивна подія | Fartlek Events",
+      title: loaderData?.event?.title ?? "Спортивна подія | Фартлек",
       description:
         loaderData?.event?.description ??
-        "Деталі події, дистанції та онлайн-реєстрація на платформі Fartlek Events.",
+        "Деталі події, дистанції та онлайн-реєстрація на платформі Фартлек.",
       path: loaderData?.path ?? "/",
       image: loaderData?.event?.image ?? null,
       type: "article",

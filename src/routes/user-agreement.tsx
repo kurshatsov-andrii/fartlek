@@ -10,8 +10,8 @@ export const Route = createFileRoute("/user-agreement")({
   loader: () => getSeoOverride({ data: { path: PATH } }),
   head: ({ loaderData }) =>
     ({ ...pageHead({
-      title: 'Угода користувача | Fartlek Events',
-      description: 'Правила користування платформою Fartlek Events для учасників та організаторів спортивних подій.',
+      title: 'Угода користувача | Фартлек',
+      description: 'Правила користування платформою Фартлек для учасників та організаторів спортивних подій.',
       path: PATH,
       override: loaderData ?? null,
     }), scripts: [jsonLdScript(breadcrumbJsonLd([{ name: "Головна", path: "/" }, { name: "Угода користувача", path: PATH }]))] }),

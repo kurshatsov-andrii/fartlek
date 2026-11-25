@@ -31,7 +31,7 @@ const EMAIL_TEMPLATES: Record<string, React.ComponentType<any>> = {
 }
 
 // Configuration
-const SITE_NAME = "Fartlek Events"
+const SITE_NAME = "Фартлек"
 const SENDER_DOMAIN = "notify.fartlek.com.ua"
 const ROOT_DOMAIN = "fartlek.com.ua"
 const FROM_DOMAIN = "notify.fartlek.com.ua"

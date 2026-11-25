@@ -177,8 +177,8 @@ const PublicOffer = () => {
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <SEO
-        title="Договір публічної оферти — Fartlek Events"
-        description="Договір публічної оферти Fartlek Events. Умови надання послуг та правила користування."
+        title="Договір публічної оферти — Фартлек"
+        description="Договір публічної оферти Фартлек. Умови надання послуг та правила користування."
         canonical="/public-offer"
       />
       <Header />

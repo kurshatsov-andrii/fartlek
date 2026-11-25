@@ -103,8 +103,8 @@ const Privacy = () => {
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <SEO
-        title="Політика конфіденційності — Fartlek Events"
-        description="Політика конфіденційності Fartlek Events. Правила збору, обробки та зберігання персональних даних."
+        title="Політика конфіденційності — Фартлек"
+        description="Політика конфіденційності Фартлек. Правила збору, обробки та зберігання персональних даних."
         canonical="/privacy"
       />
       <Header />

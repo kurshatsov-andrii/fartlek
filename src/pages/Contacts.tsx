@@ -56,7 +56,7 @@ const COPY = {
       "Ми відкриті до нових знайомств, партнерств та ідей, які допомагають розвивати спорт і бігову культуру в Україні.",
     ],
     closing: "Фартлек — об'єднуємо тих, хто біжить!",
-    seoTitle: "Контакти — Fartlek Events",
+    seoTitle: "Контакти — Фартлек",
     seoDescription:
       "Контакти Фартлек: підтримка учасників, додавання забігів до календаря, співпраця з організаторами, клубами та спонсорами.",
   },
@@ -109,7 +109,7 @@ const COPY = {
       "We are open to new connections, partnerships and ideas that help develop sport and running culture in Ukraine.",
     ],
     closing: "Fartlek — bringing together those who run!",
-    seoTitle: "Contacts — Fartlek Events",
+    seoTitle: "Contacts — Фартлек",
     seoDescription:
       "Fartlek contacts: participant support, adding runs to the calendar, cooperation with organizers, clubs and sponsors.",
   },

@@ -10,8 +10,8 @@ export const Route = createFileRoute("/features")({
   loader: () => getSeoOverride({ data: { path: PATH } }),
   head: ({ loaderData }) =>
     ({ ...pageHead({
-      title: 'Можливості Fartlek Events — для учасників та організаторів',
-      description: 'Збереження та порівняння стартів, нагадування, лайки, календарі забігів 2027, реєстрація, QR-квитки й інструменти організаторів Fartlek Events.',
+      title: 'Можливості Фартлек — для учасників та організаторів',
+      description: 'Збереження та порівняння стартів, нагадування, лайки, календарі забігів 2027, реєстрація, QR-квитки й інструменти організаторів Фартлек.',
       path: PATH,
       override: loaderData ?? null,
     }), scripts: [jsonLdScript(breadcrumbJsonLd([{ name: "Головна", path: "/" }, { name: "Можливості", path: PATH }]))] }),

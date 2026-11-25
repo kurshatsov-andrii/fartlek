@@ -10,11 +10,11 @@ const CategoriesIndex = () => {
   const { t, lang } = useApp();
   const seo = lang === "uk"
     ? {
-        title: "Категорії подій — Fartlek Events",
+        title: "Категорії подій — Фартлек",
         description: "Усі категорії спортивних подій в Україні: забіги, напівмарафони, марафони, ультра, трейли, OCR та онлайн-старти.",
       }
     : {
-        title: "Event categories — Fartlek Events",
+        title: "Event categories — Фартлек",
         description: "All sports event categories in Ukraine: runs, half marathons, marathons, ultras, trails, OCR and online races.",
       };
 

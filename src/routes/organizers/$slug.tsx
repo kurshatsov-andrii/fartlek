@@ -15,8 +15,8 @@ export const Route = createFileRoute("/organizers/$slug")({
   },
   head: ({ loaderData }) => {
     const h = pageHead({
-      title: loaderData?.seo?.title ?? "Організатор подій | Fartlek Events",
-      description: loaderData?.seo?.description ?? "Організатор спортивних подій: старти, контакти та реєстрація на Fartlek Events.",
+      title: loaderData?.seo?.title ?? "Організатор подій | Фартлек",
+      description: loaderData?.seo?.description ?? "Організатор спортивних подій: старти, контакти та реєстрація на Фартлек.",
       path: loaderData?.seo?.path ?? loaderData?.path ?? "/organizers",
       image: loaderData?.seo?.image ?? null,
       type: "profile",

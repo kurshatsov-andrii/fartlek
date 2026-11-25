@@ -118,7 +118,7 @@ const UserAgreement = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
-      <SEO title="Угода користувача — Fartlek Events" description="Угода користування сайтом Fartlek Events." canonical="/user-agreement" />
+      <SEO title="Угода користувача — Фартлек" description="Угода користування сайтом Фартлек." canonical="/user-agreement" />
       <Header />
       <main className="flex-1 container py-12 sm:py-16 max-w-4xl">
         <Link to="/" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-6">

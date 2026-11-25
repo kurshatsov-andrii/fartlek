@@ -15,8 +15,8 @@ export const Route = createFileRoute("/starts/$slug")({
   },
   head: ({ loaderData }) => {
     const h = pageHead({
-      title: loaderData?.seo?.title ?? "Старт | Fartlek Events",
-      description: loaderData?.seo?.description ?? "Деталі старту, дистанції та реєстрація на Fartlek Events.",
+      title: loaderData?.seo?.title ?? "Старт | Фартлек",
+      description: loaderData?.seo?.description ?? "Деталі старту, дистанції та реєстрація на Фартлек.",
       path: loaderData?.seo?.path ?? loaderData?.path ?? "/starts",
       image: loaderData?.seo?.image ?? null,
       type: "article",

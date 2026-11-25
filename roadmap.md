@@ -102,3 +102,7 @@
 - [ ] Біготрейли Вінниця / Хмельницький / Тернопіль — no distances yet, unpublished
 - [ ] Verify FAQ wording on /about (weekly runs — participant count confirmed)
 - [x] /calendar quick year filter chips (Усі роки / 2026 / 2027) above search+filters; month dropdown narrows to chosen year
+
+## Platform name replacement
+- [x] Replace the old platform name with «Фартлек» in website text, metadata, structured data and email branding.
+- [x] Replace saved public copy in SEO overrides, organizer profile, event organizer and founder testimonial; six real pages verified in browser without errors, seven structured-data tests passed, build OK.

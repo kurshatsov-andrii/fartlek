@@ -78,7 +78,7 @@ const getEventSeoRpc = createServerFn({ method: "GET" })
       const desc =
         raw.length > 0
           ? raw
-          : `${row.title}${city ? ` — ${city}` : ""}${date ? `, ${date}` : ""}. Онлайн-реєстрація на Fartlek Events.`;
+          : `${row.title}${city ? ` — ${city}` : ""}${date ? `, ${date}` : ""}. Онлайн-реєстрація на Фартлек.`;
 
       const image =
         typeof row.image_url === "string" && row.image_url.startsWith("http")
@@ -127,7 +127,7 @@ const getClubSeoRpc = createServerFn({ method: "GET" })
       const title = c.city ? `${kind} ${c.name} — ${c.city}` : `${kind} ${c.name}`;
       const raw = (c.description ?? "").replace(/\s+/g, " ").trim();
       const desc = raw.length > 40 ? raw
-        : `${kind} ${c.name}${c.city ? ` у місті ${c.city}` : ""}: тренування, розклад, контакти та старти клубу на Fartlek Events.`;
+        : `${kind} ${c.name}${c.city ? ` у місті ${c.city}` : ""}: тренування, розклад, контакти та старти клубу на Фартлек.`;
       return {
         title: cut(title, 60), description: cut(desc, 160),
         image: typeof c.logo_url === "string" && c.logo_url.startsWith("http") ? c.logo_url : null,
@@ -152,7 +152,7 @@ const getOrganizerSeoRpc = createServerFn({ method: "GET" })
       const title = o.city ? `Організатор ${o.name} — ${o.city}` : `Організатор ${o.name}`;
       const raw = (o.description ?? "").replace(/\s+/g, " ").trim();
       const desc = raw.length > 40 ? raw
-        : `Організатор спортивних подій ${o.name}${o.city ? ` (${o.city})` : ""}: забіги, старти, контакти та реєстрація на Fartlek Events.`;
+        : `Організатор спортивних подій ${o.name}${o.city ? ` (${o.city})` : ""}: забіги, старти, контакти та реєстрація на Фартлек.`;
       return {
         title: cut(title, 60), description: cut(desc, 160),
         image: typeof o.logo_url === "string" && o.logo_url.startsWith("http") ? o.logo_url : null,
@@ -180,7 +180,7 @@ const getStartSeoRpc = createServerFn({ method: "GET" })
       const date = s.event_date ? new Date(s.event_date).toLocaleDateString("uk-UA", { day: "numeric", month: "long", year: "numeric" }) : "";
       const title = s.seo_title || [s.title, s.city, date].filter(Boolean).join(", ");
       const raw = (s.seo_description || s.description || "").replace(/\s+/g, " ").trim();
-      const desc = raw || `${s.title}${s.city ? ` — ${s.city}` : ""}${date ? `, ${date}` : ""}. Дистанції та реєстрація на Fartlek Events.`;
+      const desc = raw || `${s.title}${s.city ? ` — ${s.city}` : ""}${date ? `, ${date}` : ""}. Дистанції та реєстрація на Фартлек.`;
       return {
         title: cut(title, 60), description: cut(desc, 160),
         image: typeof s.image_url === "string" && s.image_url.startsWith("http") ? s.image_url : null,

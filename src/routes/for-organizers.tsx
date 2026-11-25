@@ -10,9 +10,9 @@ export const Route = createFileRoute("/for-organizers")({
   loader: () => getSeoOverride({ data: { path: PATH } }),
   head: ({ loaderData }) =>
     ({ ...pageHead({
-      title: 'Організаторам забігів — реєстрація, оплати та просування | Fartlek Events',
+      title: 'Організаторам забігів — реєстрація, оплати та просування | Фартлек',
       description:
-        'Створюйте події та приймайте реєстрації учасників безкоштовно: онлайн-оплати, стартові номери, результати, розсилки й аналітика — в одній панелі Fartlek Events.',
+        'Створюйте події та приймайте реєстрації учасників безкоштовно: онлайн-оплати, стартові номери, результати, розсилки й аналітика — в одній панелі Фартлек.',
       path: PATH,
       override: loaderData ?? null,
     }), scripts: [jsonLdScript(breadcrumbJsonLd([{ name: "Головна", path: "/" }, { name: "Організаторам", path: PATH }]))] }),

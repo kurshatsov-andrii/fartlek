@@ -169,7 +169,7 @@ const Auth = () => {
             {mode === "signup" ? t.auth.signUpSub : t.auth.signInSub}
           </p>
         </div>
-        <div className="relative text-sm opacity-70">© Fartlek Events</div>
+        <div className="relative text-sm opacity-70">© Фартлек</div>
       </div>
 
       <div className="flex items-center justify-center p-6 sm:p-12">

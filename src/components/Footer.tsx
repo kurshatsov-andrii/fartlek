@@ -14,7 +14,7 @@ export const Footer = () => {
             <Activity className="h-5 w-5 text-primary-foreground" strokeWidth={2.5} />
           </div>
           <div>
-            <div className="font-display font-bold">Fartlek Events</div>
+            <div className="font-display font-bold">Фартлек</div>
             <div className="text-xs text-secondary-foreground/60">{t.footer.tagline}</div>
           </div>
         </div>

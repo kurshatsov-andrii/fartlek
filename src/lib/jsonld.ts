@@ -68,8 +68,8 @@ export const articleJsonLd = (a: {
   mainEntityOfPage: abs(a.path),
   ...(a.datePublished ? { datePublished: a.datePublished } : {}),
   ...(a.dateModified ? { dateModified: a.dateModified } : {}),
-  author: { "@type": "Organization", name: "Fartlek Events", url: SITE_URL },
-  publisher: { "@type": "Organization", name: "Fartlek Events", url: SITE_URL },
+  author: { "@type": "Organization", name: "Фартлек", url: SITE_URL },
+  publisher: { "@type": "Organization", name: "Фартлек", url: SITE_URL },
 });
 
 export type OrganizationInput = {
@@ -115,7 +115,7 @@ export const organizationJsonLd = (): JsonLd[] => [
     "@context": "https://schema.org",
     "@type": "Organization",
     "@id": `${SITE_URL}/#organization`,
-    name: "Fartlek Events",
+    name: "Фартлек",
     alternateName: "Фартлек",
     url: `${SITE_URL}/`,
     logo: `${SITE_URL}/favicon.png`,
@@ -143,7 +143,7 @@ export const organizationJsonLd = (): JsonLd[] => [
     "@context": "https://schema.org",
     "@type": "WebSite",
     "@id": `${SITE_URL}/#website`,
-    name: "Fartlek Events",
+    name: "Фартлек",
     alternateName: "Фартлек",
     url: `${SITE_URL}/`,
     inLanguage: "uk",

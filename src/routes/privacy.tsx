@@ -10,8 +10,8 @@ export const Route = createFileRoute("/privacy")({
   loader: () => getSeoOverride({ data: { path: PATH } }),
   head: ({ loaderData }) =>
     ({ ...pageHead({
-      title: 'Політика конфіденційності | Fartlek Events',
-      description: 'Як Fartlek Events збирає, зберігає та захищає персональні дані учасників спортивних подій.',
+      title: 'Політика конфіденційності | Фартлек',
+      description: 'Як Фартлек збирає, зберігає та захищає персональні дані учасників спортивних подій.',
       path: PATH,
       override: loaderData ?? null,
     }), scripts: [jsonLdScript(breadcrumbJsonLd([{ name: "Головна", path: "/" }, { name: "Політика конфіденційності", path: PATH }]))] }),

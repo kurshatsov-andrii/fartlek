@@ -10,8 +10,8 @@ export const Route = createFileRoute("/testimonials")({
   loader: () => getSeoOverride({ data: { path: PATH } }),
   head: ({ loaderData }) =>
     ({ ...pageHead({
-      title: 'Відгуки учасників і організаторів | Fartlek Events',
-      description: 'Що кажуть учасники забігів і організатори про реєстрацію, стартові пакети та результати на платформі Fartlek Events.',
+      title: 'Відгуки учасників і організаторів | Фартлек',
+      description: 'Що кажуть учасники забігів і організатори про реєстрацію, стартові пакети та результати на платформі Фартлек.',
       path: PATH,
       override: loaderData ?? null,
     }), scripts: [jsonLdScript(breadcrumbJsonLd([{ name: "Головна", path: "/" }, { name: "Відгуки", path: PATH }]))] }),

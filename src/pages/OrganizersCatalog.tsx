@@ -65,7 +65,7 @@ const OrganizersCatalog = () => {
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <SEO
-        title={lang === "uk" ? "Організатори спортивних подій — Fartlek Events" : "Sports event organizers — Fartlek Events"}
+        title={lang === "uk" ? "Організатори спортивних подій — Фартлек" : "Sports event organizers — Фартлек"}
         description={lang === "uk"
           ? "Каталог організаторів бігових, трейлових та OCR подій в Україні."
           : "Catalog of running, trail and OCR event organizers in Ukraine."}
