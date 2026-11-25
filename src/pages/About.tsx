@@ -4,6 +4,7 @@ import { ArrowLeft, BookOpen, ChevronLeft, ChevronRight, Instagram, MessagesSqua
 import { Button } from "@/components/ui/button";
 import { INSTAGRAM_URL, TELEGRAM_CHAT_URL } from "@/lib/blog";
 import { ABOUT_FAQ } from "@/lib/about-faq";
+import { PLATFORM_SINCE_UK } from "@/lib/platform-since";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { SEO } from "@/components/SEO";
@@ -129,7 +130,7 @@ const About = () => {
             <div className="space-y-4 text-base sm:text-lg leading-relaxed">
               <p>
                 Fartlek.com.ua — українська платформа, що об'єднує бігунів, бігові клуби й
-                організаторів спортивних подій.
+                організаторів спортивних подій. Вона працює з {PLATFORM_SINCE_UK}.
               </p>
               <p>
                 На Фартлек можна знайти забіги, марафони, напівмарафони, трейли та інші спортивні

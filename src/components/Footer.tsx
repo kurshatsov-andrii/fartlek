@@ -1,10 +1,11 @@
 import { Link } from "@/lib/router-compat";
 import { Activity, Send, MessagesSquare } from "lucide-react";
 import { useApp } from "@/contexts/AppContext";
+import { platformSinceLine } from "@/lib/platform-since";
 import { TELEGRAM_CHANNEL_URL, TELEGRAM_CHAT_URL } from "@/components/TelegramCommunity";
 
 export const Footer = () => {
-  const { t } = useApp();
+  const { t, lang } = useApp();
   return (
     <footer className="border-t border-border bg-secondary text-secondary-foreground">
       <div className="container py-12 flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
@@ -31,6 +32,7 @@ export const Footer = () => {
           </div>
         </div>
         <div className="text-xs text-secondary-foreground/50 flex flex-col gap-1 text-center md:text-right">
+          <div>{platformSinceLine(lang === "uk")}</div>
           <div>© {new Date().getFullYear()} Fartlek. {t.footer.rights}</div>
           <div className="flex flex-wrap gap-3 justify-center md:justify-end">
             <Link to="/about" className="hover:text-primary transition-colors">Про нас</Link>
