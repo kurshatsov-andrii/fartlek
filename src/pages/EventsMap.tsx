@@ -1,3 +1,4 @@
+import { useL } from "@/lib/use-l";
 import { useEffect, useMemo, useState } from "react";
 import { PageViews } from "@/components/PageViews";
 import { Link } from "@/lib/router-compat";
@@ -68,6 +69,7 @@ const FlyTo = ({ coords }: { coords: [number, number] | null }) => {
 };
 
 const EventsMap = () => {
+  const L = useL();
   const [items, setItems] = useState<MapItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState<string | null>(null);
@@ -198,9 +200,9 @@ const EventsMap = () => {
       />
       <Header />
       <main className="flex-1 container py-8">
-        <h1 className="font-display text-3xl md:text-4xl font-bold mb-2">Забіги України 2027 на мапі</h1>
+        <h1 className="font-display text-3xl md:text-4xl font-bold mb-2">{L("Забіги України 2027 на мапі", "Ukraine races 2027 on the map")}</h1>
         <p className="text-muted-foreground mb-6">
-          Натисни на місто, щоб побачити старти та перейти до реєстрації. Усього {items.length} подій у {groups.length} містах.
+          {L(`Натисни на місто, щоб побачити старти та перейти до реєстрації. Усього ${items.length} подій у ${groups.length} містах.`, `Tap a city to see its races and go to registration. ${items.length} events in ${groups.length} cities in total.`)}
         </p>
         <PageViews pageKey="page:map" className="mb-6" />
         <YearFilterButtons value={year} onChange={(y) => { setYear(y); setSelected(null); }} className="mb-4" />
@@ -236,7 +238,7 @@ const EventsMap = () => {
             <div className="flex flex-col gap-3 lg:h-[72vh]">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Пошук міста" className="pl-9" />
+                <Input value={q} onChange={(e) => setQ(e.target.value)} placeholder={L("Пошук міста", "Search city")} className="pl-9" />
               </div>
 
               {activeGroup ? (
@@ -246,7 +248,7 @@ const EventsMap = () => {
                       <h2 className="font-display text-xl font-bold flex items-center gap-2">
                         <MapPin className="h-5 w-5 text-primary" />{activeGroup.city}
                       </h2>
-                      <p className="text-sm text-muted-foreground">{activeGroup.items.length} подій</p>
+                      <p className="text-sm text-muted-foreground">{activeGroup.items.length} {L("подій", "events")}</p>
                     </div>
                     <Button variant="ghost" size="icon" onClick={() => setSelected(null)}><X className="h-4 w-4" /></Button>
                   </div>
@@ -264,10 +266,10 @@ const EventsMap = () => {
                         {i.href && (
                           i.external ? (
                             <Button asChild size="sm" variant="secondary" className="w-full">
-                              <a href={i.href} target="_blank" rel="noreferrer">Реєстрація <ExternalLink className="h-3.5 w-3.5 ml-1.5" /></a>
+                              <a href={i.href} target="_blank" rel="noreferrer">{L("Реєстрація", "Register")} <ExternalLink className="h-3.5 w-3.5 ml-1.5" /></a>
                             </Button>
                           ) : (
-                            <Button asChild size="sm" className="w-full"><Link to={i.href}>Детальніше та реєстрація</Link></Button>
+                            <Button asChild size="sm" className="w-full"><Link to={i.href}>{L("Детальніше та реєстрація", "Details & registration")}</Link></Button>
                           )
                         )}
                       </div>
@@ -276,7 +278,7 @@ const EventsMap = () => {
                 </Card>
               ) : (
                 <Card className="flex-1 overflow-auto p-4">
-                  <h2 className="font-semibold mb-3">Міста з подіями</h2>
+                  <h2 className="font-semibold mb-3">{L("Міста з подіями", "Cities with events")}</h2>
                   <div className="flex flex-col">
                     {visibleGroups.map((g) => (
                       <button
@@ -288,7 +290,7 @@ const EventsMap = () => {
                         <span className="text-sm font-semibold text-muted-foreground">{g.items.length}</span>
                       </button>
                     ))}
-                    {visibleGroups.length === 0 && <p className="text-sm text-muted-foreground">Нічого не знайдено</p>}
+                    {visibleGroups.length === 0 && <p className="text-sm text-muted-foreground">{L("Нічого не знайдено", "Nothing found")}</p>}
                   </div>
                 </Card>
               )}

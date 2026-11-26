@@ -1,3 +1,4 @@
+import { useL } from "@/lib/use-l";
 import { RegistrationStatus } from "@/components/RegistrationStatus";
 import { deriveRegistrationState } from "@/lib/registration-status";
 import { kyivToday } from "@/lib/calendar-discovery";
@@ -14,7 +15,7 @@ import { SEO } from "@/components/SEO";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { linkifyText } from "@/lib/linkify";
-import { SPORT_LABELS, type SportType } from "@/lib/parseStart";
+import { SPORT_LABELS, SPORT_LABELS_EN, type SportType } from "@/lib/parseStart";
 import { isEventCompleted } from "@/lib/event-date";
 import { StartActions } from "@/components/StartActions";
 
@@ -42,6 +43,7 @@ interface StartRow {
 }
 
 const StartDetails = () => {
+  const L = useL();
   const { slug } = useParams<{ slug: string }>();
   const [row, setRow] = useState<StartRow | null>(null);
   const [loading, setLoading] = useState(true);
@@ -134,7 +136,7 @@ const StartDetails = () => {
 
         <div className="flex flex-wrap gap-1 mb-4">
           {Array.from(new Set((row.sport_types || []).filter((s): s is SportType => s in SPORT_LABELS))).map((s) => (
-            <span key={s} className="text-xs px-2 py-1 rounded bg-muted">{SPORT_LABELS[s]}</span>
+            <span key={s} className="text-xs px-2 py-1 rounded bg-muted">{L(SPORT_LABELS[s], SPORT_LABELS_EN[s])}</span>
           ))}
           {(row.distances_km || []).length > 0 ? [...(row.distances_km || [])].sort((a, b) => Number(b) - Number(a)).map((d) => (
             <span key={String(d)} className="text-xs px-2 py-1 rounded bg-primary/10 text-primary">{d} км</span>

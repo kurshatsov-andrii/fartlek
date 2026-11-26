@@ -1,3 +1,4 @@
+import { useL } from "@/lib/use-l";
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "@/lib/router-compat";
 import { Loader2, Eye, EyeOff } from "lucide-react";
@@ -20,6 +21,7 @@ const TURNSTILE_SITE_KEY = "0x4AAAAAADqTpZFbZ--nataL";
 type Mode = "signin" | "signup" | "forgot";
 
 const Auth = () => {
+  const L = useL();
   const { t } = useApp();
   const { user, loading } = useAuth();
   const navigate = useNavigate();
@@ -54,18 +56,18 @@ const Auth = () => {
     const errCode = params.get("error_code");
     if (errDesc || errCode) {
       const message = errCode === "otp_expired" || /expired/i.test(errDesc ?? "")
-        ? "Термін дії посилання сплив. Введіть email і натисніть «Надіслати лист повторно»."
+        ? L("Термін дії посилання сплив. Введіть email і натисніть «Надіслати лист повторно».", "The link has expired. Enter your email and tap “Resend email”.")
         : translateAuthError(decodeURIComponent(errDesc ?? errCode ?? ""));
       toast.error(message, { duration: 10000 });
       window.history.replaceState(null, "", window.location.pathname + window.location.search);
     } else if (params.get("type") === "signup") {
-      toast.success("Email підтверджено! Тепер увійдіть.", { duration: 8000 });
+      toast.success(L("Email підтверджено! Тепер увійдіть.", "Email confirmed! Now sign in."), { duration: 8000 });
     }
   }, []);
 
   const handleResendConfirmation = async () => {
     if (!email) {
-      toast.error("Введіть email");
+      toast.error(L("Введіть email", "Enter your email"));
       return;
     }
     setBusy(true);
@@ -76,7 +78,7 @@ const Auth = () => {
     });
     setBusy(false);
     if (error) toast.error(translateAuthError(error));
-    else toast.success("Лист надіслано. Перевірте пошту (та папку Спам).", { duration: 10000 });
+    else toast.success(L("Лист надіслано. Перевірте пошту (та папку Спам).", "Email sent. Check your inbox (and Spam folder)."), { duration: 10000 });
   };
 
   const handleSignIn = async (e: React.FormEvent) => {
@@ -101,12 +103,12 @@ const Auth = () => {
 
     // Anti-bot: time check (real users take >2 sec to fill the form)
     if (Date.now() - formLoadedAt < 2000) {
-      toast.error("Будь ласка, заповніть форму уважно");
+      toast.error(L("Будь ласка, заповніть форму уважно", "Please fill in the form carefully"));
       return;
     }
 
     if (!captchaToken) {
-      toast.error("Будь ласка, пройдіть перевірку «Я не робот»");
+      toast.error(L("Будь ласка, пройдіть перевірку «Я не робот»", "Please complete the “I’m not a robot” check"));
       return;
     }
 
@@ -130,11 +132,11 @@ const Auth = () => {
 
     if (error || !data?.success) {
       const code = (data as any)?.error ?? "";
-      if (code === "CAPTCHA_FAILED") toast.error("Перевірка «Я не робот» не пройдена. Спробуйте ще раз.");
-      else if (code === "DISPOSABLE_EMAIL_NOT_ALLOWED") toast.error("Цей поштовий домен заборонений. Використайте справжню адресу.");
-      else if (code === "USER_ALREADY_EXISTS") toast.error("Користувач з таким email вже існує.");
-      else if (code === "WEAK_PASSWORD") toast.error("Пароль має містити щонайменше 6 символів.");
-      else toast.error(translateAuthError(error ?? code ?? "Помилка реєстрації"));
+      if (code === "CAPTCHA_FAILED") toast.error(L("Перевірка «Я не робот» не пройдена. Спробуйте ще раз.", "The “I’m not a robot” check failed. Please try again."));
+      else if (code === "DISPOSABLE_EMAIL_NOT_ALLOWED") toast.error(L("Цей поштовий домен заборонений. Використайте справжню адресу.", "This email domain is not allowed. Please use a real address."));
+      else if (code === "USER_ALREADY_EXISTS") toast.error(L("Користувач з таким email вже існує.", "A user with this email already exists."));
+      else if (code === "WEAK_PASSWORD") toast.error(L("Пароль має містити щонайменше 6 символів.", "Password must be at least 6 characters."));
+      else toast.error(translateAuthError(error ?? code ?? L("Помилка реєстрації", "Registration error")));
       return;
     }
 
@@ -223,7 +225,7 @@ const Auth = () => {
                 <svg className="h-4 w-4" viewBox="0 0 24 24" aria-hidden="true">
                   <path fill="#EA4335" d="M12 10.2v3.9h5.5c-.2 1.4-1.7 4.1-5.5 4.1-3.3 0-6-2.7-6-6.1s2.7-6.1 6-6.1c1.9 0 3.1.8 3.8 1.5l2.6-2.5C16.7 3.4 14.6 2.4 12 2.4 6.7 2.4 2.4 6.7 2.4 12s4.3 9.6 9.6 9.6c5.5 0 9.2-3.9 9.2-9.4 0-.6-.1-1.1-.2-1.6H12z"/>
                 </svg>
-                Увійти через Google
+                {L("Увійти через Google", "Sign in with Google")}
               </Button>
               <Button
                 type="button"
@@ -244,11 +246,11 @@ const Auth = () => {
                 <svg className="h-4 w-4" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
                   <path d="M16.365 1.43c0 1.14-.46 2.23-1.21 3.04-.81.85-2.13 1.51-3.21 1.43-.13-1.13.4-2.31 1.16-3.07.86-.86 2.31-1.5 3.26-1.4zM20.5 17.36c-.59 1.31-.88 1.9-1.64 3.05-1.07 1.61-2.58 3.61-4.45 3.62-1.66.02-2.09-1.08-4.34-1.07-2.25.01-2.72 1.09-4.39 1.07-1.87-.02-3.3-1.83-4.37-3.43-2.99-4.52-3.31-9.83-1.46-12.65 1.31-2 3.39-3.18 5.34-3.18 1.99 0 3.24 1.09 4.88 1.09 1.59 0 2.56-1.09 4.86-1.09 1.74 0 3.58.95 4.89 2.59-4.3 2.36-3.6 8.51.68 10z"/>
                 </svg>
-                Увійти через Apple
+                {L("Увійти через Apple", "Sign in with Apple")}
               </Button>
               <div className="relative">
                 <div className="absolute inset-0 flex items-center"><span className="w-full border-t border-border" /></div>
-                <div className="relative flex justify-center text-xs"><span className="bg-background px-2 text-muted-foreground">або</span></div>
+                <div className="relative flex justify-center text-xs"><span className="bg-background px-2 text-muted-foreground">{L("або", "or")}</span></div>
               </div>
             </div>
           )}
@@ -268,7 +270,7 @@ const Auth = () => {
                   <Label htmlFor="password">{t.auth.password}</Label>
                   <div className="relative">
                     <Input id="password" type={showPassword ? "text" : "password"} required value={password} onChange={(e) => setPassword(e.target.value)} className="pr-10" />
-                    <button type="button" onClick={() => setShowPassword((v) => !v)} className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground" aria-label={showPassword ? "Сховати пароль" : "Показати пароль"}>
+                    <button type="button" onClick={() => setShowPassword((v) => !v)} className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground" aria-label={showPassword ? L("Сховати пароль", "Hide password") : L("Показати пароль", "Show password")}>
                       {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                     </button>
                   </div>
@@ -285,7 +287,7 @@ const Auth = () => {
                   </button>
                 </div>
                 <button type="button" onClick={handleResendConfirmation} disabled={busy} className="text-xs text-muted-foreground hover:text-primary w-full text-center underline-offset-2 hover:underline">
-                  Не отримали лист підтвердження? Надіслати повторно
+                  {L("Не отримали лист підтвердження? Надіслати повторно", "Didn't get the confirmation email? Resend")}
                 </button>
               </form>
             </>
@@ -327,7 +329,7 @@ const Auth = () => {
                   <Label htmlFor="password2">{t.auth.password}</Label>
                   <div className="relative">
                     <Input id="password2" type={showPassword ? "text" : "password"} required minLength={6} value={password} onChange={(e) => setPassword(e.target.value)} className="pr-10" />
-                    <button type="button" onClick={() => setShowPassword((v) => !v)} className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground" aria-label={showPassword ? "Сховати пароль" : "Показати пароль"}>
+                    <button type="button" onClick={() => setShowPassword((v) => !v)} className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground" aria-label={showPassword ? L("Сховати пароль", "Hide password") : L("Показати пароль", "Show password")}>
                       {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                     </button>
                   </div>

@@ -1,3 +1,4 @@
+import { useL } from "@/lib/use-l";
 import { useEffect, useMemo, useState } from "react";
 import { EventPoster } from "@/components/EventPoster";
 import { Link, Navigate, useParams } from "@/lib/router-compat";
@@ -19,7 +20,7 @@ import { canShowRegisterButton } from "@/lib/registration-status";
 import { StartActions } from "@/components/StartActions";
 import { CalendarHint } from "@/components/CalendarHint";
 import { MONTH_NAMES_UK, type SportType } from "@/lib/parseStart";
-import {
+import { distanceLabel,
   DISTANCE_BUCKETS, baseCity, categorySport, detectCity, matchesDistance, monthOf,
 } from "@/lib/start-filters";
 
@@ -66,6 +67,7 @@ const PAGE_SIZE = 9;
 const CategoryPage = () => {
   const { category } = useParams<{ category: string }>();
   const { t, lang } = useApp();
+  const L = useL();
   const todayStr = new Date().toISOString().slice(0, 10);
   const [events, setEvents] = useState<EventCard[]>([]);
   const [starts, setStarts] = useState<StartRow[]>([]);
@@ -372,7 +374,7 @@ const CategoryPage = () => {
               <SelectContent>
                 <SelectItem value="all">{T.anyDistance}</SelectItem>
                 {DISTANCE_BUCKETS.map((b) => (
-                  <SelectItem key={b.label} value={b.label}>{b.label}</SelectItem>
+                  <SelectItem key={b.label} value={b.label}>{distanceLabel(b.label, L("uk", "en"))}</SelectItem>
                 ))}
               </SelectContent>
             </Select>

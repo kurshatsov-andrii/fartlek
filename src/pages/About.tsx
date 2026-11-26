@@ -1,10 +1,11 @@
+import { useL } from "@/lib/use-l";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Link } from "@/lib/router-compat";
 import { ArrowLeft, BookOpen, ChevronLeft, ChevronRight, Instagram, MessagesSquare, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { INSTAGRAM_URL, TELEGRAM_CHAT_URL } from "@/lib/blog";
-import { ABOUT_FAQ } from "@/lib/about-faq";
-import { PLATFORM_SINCE_UK } from "@/lib/platform-since";
+import { ABOUT_FAQ, ABOUT_FAQ_EN } from "@/lib/about-faq";
+import { PLATFORM_SINCE_UK, PLATFORM_SINCE_EN } from "@/lib/platform-since";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { SEO } from "@/components/SEO";
@@ -33,21 +34,22 @@ const PHOTOS = [
 ];
 
 const VALUES = [
-  { icon: "🏃", text: "Бігайте там, де вам подобається." },
-  { icon: "🤝", text: "Тренуйтеся в різних клубах та спільнотах." },
-  { icon: "🔥", text: "Відвідуйте різні пробіжки та змагання." },
-  { icon: "❤️", text: "Знайомтеся з новими людьми." },
-  { icon: "💪", text: "Обирайте те, що підходить саме вам." },
+  { icon: "🏃", text: "Бігайте там, де вам подобається.", en: "Run wherever you like." },
+  { icon: "🤝", text: "Тренуйтеся в різних клубах та спільнотах.", en: "Train with different clubs and communities." },
+  { icon: "🔥", text: "Відвідуйте різні пробіжки та змагання.", en: "Join different runs and races." },
+  { icon: "❤️", text: "Знайомтеся з новими людьми.", en: "Meet new people." },
+  { icon: "💪", text: "Обирайте те, що підходить саме вам.", en: "Choose what suits you best." },
 ];
 
 const MOTTO = [
-  { icon: "🏃‍♂️", text: "Більше бігу." },
-  { icon: "🤝", text: "Більше дружби." },
-  { icon: "❤️", text: "Менше поділу." },
-  { icon: "🔥", text: "Більше спільних стартів." },
+  { icon: "🏃‍♂️", text: "Більше бігу.", en: "More running." },
+  { icon: "🤝", text: "Більше дружби.", en: "More friendship." },
+  { icon: "❤️", text: "Менше поділу.", en: "Less division." },
+  { icon: "🔥", text: "Більше спільних стартів.", en: "More races together." },
 ];
 
 const About = () => {
+  const L = useL();
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const touchStartX = useRef<number | null>(null);
 
@@ -92,8 +94,8 @@ const About = () => {
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <SEO
-        title="Фартлек — бігова спільнота Харкова | Про нас"
-        description="Фартлек — бігова спільнота Харкова: спільні пробіжки щонеділі, тренування й забіги. Приєднуйтеся до Telegram-чату, Instagram та читайте блог."
+        title={L("Фартлек — бігова спільнота Харкова | Про нас", "Фартлек — Kharkiv running community | About")}
+        description={L("Фартлек — бігова спільнота Харкова: спільні пробіжки щонеділі, тренування й забіги. Приєднуйтеся до Telegram-чату, Instagram та читайте блог.", "Фартлек is a Kharkiv running community: Sunday group runs, training sessions and races. Join our Telegram chat and Instagram, and read the blog.")}
         canonical="/about"
       />
       <Header />
@@ -101,23 +103,23 @@ const About = () => {
         <section className="relative overflow-hidden bg-secondary text-secondary-foreground">
           <div className="container relative z-10 py-16 sm:py-20 max-w-3xl animate-fade-in-up">
             <Link to="/" className="inline-flex items-center gap-2 text-sm text-secondary-foreground/70 hover:text-secondary-foreground mb-6">
-              <ArrowLeft className="h-4 w-4" /> На головну
+              <ArrowLeft className="h-4 w-4" /> {L("На головну", "Home")}
             </Link>
             <img
               src={logoFartlek.url}
-              alt="Фартлек — бігова спільнота Харкова"
+              alt={L("Фартлек — бігова спільнота Харкова", "Фартлек — Kharkiv running community")}
               width={112}
               height={112}
               className="mb-6 h-28 w-28 rounded-full object-cover ring-1 ring-primary/40 shadow-glow sm:h-32 sm:w-32"
             />
             <h1 className="font-display text-4xl sm:text-5xl font-bold leading-tight tracking-tight">
-              ФАРТЛЕК — <span className="text-gradient">ЗА ОБ'ЄДНАННЯ ВСІХ БІГУНІВ!</span>
+              {L("ФАРТЛЕК — ", "ФАРТЛЕК — ")}<span className="text-gradient">{L("ЗА ОБ'ЄДНАННЯ ВСІХ БІГУНІВ!", "FOR UNITING ALL RUNNERS!")}</span>
             </h1>
             <p className="mt-6 text-lg text-secondary-foreground/80 leading-relaxed">
-              Ми віримо, що бігове місто — це не одна команда, один клуб чи одна спільнота.
+              {L("Ми віримо, що бігове місто — це не одна команда, один клуб чи одна спільнота.", "We believe a running city is not one team, one club or one community.")}
             </p>
             <p className="mt-4 text-lg font-semibold text-secondary-foreground">
-              Це всі ми разом. ❤️
+              {L("Це всі ми разом. ❤️", "It’s all of us together. ❤️")}
             </p>
           </div>
         </section>
@@ -125,31 +127,23 @@ const About = () => {
         <section className="container pt-12 sm:pt-16">
           <div className="rounded-3xl border border-border bg-card p-6 sm:p-10 shadow-card space-y-5">
             <h2 className="font-display text-2xl sm:text-3xl font-bold tracking-tight">
-              Фартлек — українська платформа <span className="text-gradient">спортивних подій</span> та бігова спільнота
+              {L("Фартлек — українська платформа ", "Фартлек — a Ukrainian ")}<span className="text-gradient">{L("спортивних подій", "sports events")}</span>{L(" та бігова спільнота", " platform and running community")}
             </h2>
             <div className="space-y-4 text-base sm:text-lg leading-relaxed">
               <p>
-                Fartlek.com.ua — українська платформа, що об'єднує бігунів, бігові клуби й
-                організаторів спортивних подій. Вона працює з {PLATFORM_SINCE_UK}.
+                {L(`Fartlek.com.ua — українська платформа, що об'єднує бігунів, бігові клуби й організаторів спортивних подій. Вона працює з ${PLATFORM_SINCE_UK}.`, `Fartlek.com.ua is a Ukrainian platform that brings together runners, running clubs and sports event organizers. It has been running since ${PLATFORM_SINCE_EN}.`)}
               </p>
               <p>
-                На Фартлек можна знайти забіги, марафони, напівмарафони, трейли та інші спортивні
-                старти в Україні, переглянути календар і мапу подій, обрати дистанцію та
-                зареєструватися онлайн.
+                {L("На Фартлек можна знайти забіги, марафони, напівмарафони, трейли та інші спортивні старти в Україні, переглянути календар і мапу подій, обрати дистанцію та зареєструватися онлайн.", "On Фартлек you can find races, marathons, half marathons, trails and other sports events in Ukraine, browse the event calendar and map, choose a distance and register online.")}
               </p>
               <p>
-                Фартлек допомагає організаторам створювати сторінки подій, приймати
-                реєстрації й оплати, керувати учасниками, публікувати результати та видавати
-                цифрові сертифікати.
+                {L("Фартлек допомагає організаторам створювати сторінки подій, приймати реєстрації й оплати, керувати учасниками, публікувати результати та видавати цифрові сертифікати.", "Фартлек helps organizers create event pages, accept registrations and payments, manage participants, publish results and issue digital certificates.")}
               </p>
               <p>
-                Платформа розвивається разом зі спортивною спільнотою: нові інструменти допомагають
-                спортсменам знаходити старти, клубам — залучати учасників, а організаторам —
-                простіше проводити спортивні заходи.
+                {L("Платформа розвивається разом зі спортивною спільнотою: нові інструменти допомагають спортсменам знаходити старти, клубам — залучати учасників, а організаторам — простіше проводити спортивні заходи.", "The platform grows together with the sports community: new tools help athletes find races, clubs attract members and organizers run events more easily.")}
               </p>
               <p className="font-semibold">
-                Місія Фартлек — зробити спортивні події в Україні доступнішими, а бігову спільноту —
-                більш об'єднаною.
+                {L("Місія Фартлек — зробити спортивні події в Україні доступнішими, а бігову спільноту — більш об'єднаною.", "Фартлек’s mission is to make sports events in Ukraine more accessible and the running community more united.")}
               </p>
             </div>
           </div>
@@ -166,7 +160,7 @@ const About = () => {
 
         <section className="container py-12 sm:py-16 max-w-3xl">
           <div className="space-y-5 text-base sm:text-lg leading-relaxed">
-            <p>Ми за те, щоб кожен бігун мав вибір, альтернативу та свободу.</p>
+            <p>{L("Ми за те, щоб кожен бігун мав вибір, альтернативу та свободу.", "We want every runner to have choice, alternatives and freedom.")}</p>
 
             <ul className="grid gap-3 sm:grid-cols-2">
               {VALUES.map((v) => (
@@ -175,44 +169,38 @@ const About = () => {
                   className="flex items-center gap-3 rounded-2xl border border-border bg-card px-4 py-3"
                 >
                   <span className="text-xl shrink-0" aria-hidden>{v.icon}</span>
-                  <span className="font-medium">{v.text}</span>
+                  <span className="font-medium">{L(v.text, v.en)}</span>
                 </li>
               ))}
             </ul>
 
             <p>
-              Ми не хочемо, щоб бігуни були прив'язані тільки до однієї спільноти.
+              {L("Ми не хочемо, щоб бігуни були прив'язані тільки до однієї спільноти.", "We don’t want runners to be tied to just one community.")}
             </p>
             <p className="font-semibold">
-              Навпаки — ми хочемо, щоб біг об'єднував, а не розділяв.
+              {L("Навпаки — ми хочемо, щоб біг об'єднував, а не розділяв.", "On the contrary, we want running to unite, not divide.")}
             </p>
             <p>
-              Фартлек завжди радий бачити вас на наших спільних пробіжках,
-              тренуваннях та змаганнях — незалежно від того, в яких ще клубах або
-              командах ви бігаєте.
+              {L("Фартлек завжди радий бачити вас на наших спільних пробіжках, тренуваннях та змаганнях — незалежно від того, в яких ще клубах або командах ви бігаєте.", "Фартлек is always happy to see you at our group runs, training sessions and races, whatever other clubs or teams you run with.")}
             </p>
             <p>
-              Ви можете сьогодні бігти з нами, завтра — з іншою спільнотою,
-              а післязавтра — знову з нами.
+              {L("Ви можете сьогодні бігти з нами, завтра — з іншою спільнотою, а післязавтра — знову з нами.", "You can run with us today, with another community tomorrow, and with us again the day after.")}
             </p>
-            <p className="text-lg font-semibold">І це нормально. 🙌</p>
-            <p className="text-lg font-semibold text-gradient">Бо біг — це свобода.</p>
+            <p className="text-lg font-semibold">{L("І це нормально. 🙌", "And that’s fine. 🙌")}</p>
+            <p className="text-lg font-semibold text-gradient">{L("Бо біг — це свобода.", "Because running is freedom.")}</p>
           </div>
         </section>
 
         <section className="container pb-12 sm:pb-16 max-w-3xl">
           <div className="rounded-3xl border border-border bg-card p-6 sm:p-10 space-y-5 shadow-card">
             <p className="text-base sm:text-lg leading-relaxed">
-              Наша мета — не зібрати всіх тільки у Фартлек.
+              {L("Наша мета — не зібрати всіх тільки у Фартлек.", "Our goal isn’t to gather everyone only in Фартлек.")}
             </p>
             <p className="text-base sm:text-lg leading-relaxed">
-              Наша мета — об'єднати всіх бігунів Харкова та інших міст в одну
-              велику бігову спільноту, де немає поділу на «наших» і «чужих».
+              {L("Наша мета — об'єднати всіх бігунів Харкова та інших міст в одну велику бігову спільноту, де немає поділу на «наших» і «чужих».", "Our goal is to unite all runners in Kharkiv and other cities into one big running community with no division into “ours” and “theirs”.")}
             </p>
             <p className="text-base sm:text-lg leading-relaxed">
-              Де можна підтримувати одне одного, разом бігати, проводити
-              тренування та змагання, знайомитися, дружити й розвивати бігову
-              культуру.
+              {L("Де можна підтримувати одне одного, разом бігати, проводити тренування та змагання, знайомитися, дружити й розвивати бігову культуру.", "A place to support each other, run together, hold training sessions and races, meet people, make friends and grow running culture.")}
             </p>
 
             <div className="grid gap-3 sm:grid-cols-2 pt-2">
@@ -222,20 +210,20 @@ const About = () => {
                   className="flex items-center gap-3 rounded-2xl border border-border bg-secondary px-4 py-3"
                 >
                   <span className="text-xl shrink-0" aria-hidden>{m.icon}</span>
-                  <span className="font-display font-bold text-lg">{m.text}</span>
+                  <span className="font-display font-bold text-lg">{L(m.text, m.en)}</span>
                 </div>
               ))}
             </div>
 
             <p className="font-display text-xl sm:text-2xl font-bold pt-4">
-              Фартлек — за єдність усіх бігунів.
+              {L("Фартлек — за єдність усіх бігунів.", "Фартлек stands for the unity of all runners.")}
             </p>
             <p className="text-base sm:text-lg leading-relaxed">
-              Бігайте там, де хочете.
+              {L("Бігайте там, де хочете.", "Run wherever you want.")}
               <br />
-              Будьте там, де вам добре.
+              {L("Будьте там, де вам добре.", "Be wherever you feel good.")}
               <br />
-              А ми завжди будемо раді бачити вас у Фартлек. 🫶
+              {L("А ми завжди будемо раді бачити вас у Фартлек. 🫶", "And we’ll always be glad to see you at Фартлек. 🫶")}
             </p>
 
             <div className="flex justify-center pt-4">
@@ -246,10 +234,10 @@ const About = () => {
 
         <section className="container pb-16 sm:pb-20 max-w-5xl">
           <h2 className="font-display text-2xl sm:text-3xl font-bold tracking-tight text-center">
-            ФАРТЛЕК <span className="text-gradient">У РУСІ</span> 📸
+            ФАРТЛЕК <span className="text-gradient">{L("У РУСІ", "IN MOTION")}</span> 📸
           </h2>
           <p className="mt-3 text-center text-muted-foreground">
-            Спільні пробіжки, тренування та змагання — дивіться, як це виглядає наживо.
+            {L("Спільні пробіжки, тренування та змагання — дивіться, як це виглядає наживо.", "Group runs, training sessions and races — see what it looks like in real life.")}
           </p>
           <div className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
             {PHOTOS.map((photo, i) => (
@@ -273,10 +261,10 @@ const About = () => {
 
         <section className="container pb-16 sm:pb-20 max-w-3xl">
           <h2 className="font-display text-2xl sm:text-3xl font-bold tracking-tight text-center">
-            Бігова спільнота Харкова: <span className="text-gradient">питання та відповіді</span>
+            {L("Бігова спільнота Харкова: ", "Kharkiv running community: ")}<span className="text-gradient">{L("питання та відповіді", "questions and answers")}</span>
           </h2>
           <div className="mt-8 space-y-3">
-            {ABOUT_FAQ.map((f) => (
+            {L(ABOUT_FAQ, ABOUT_FAQ_EN).map((f) => (
               <details key={f.q} className="group rounded-2xl border border-border bg-card px-5 py-4" open>
                 <summary className="cursor-pointer font-display font-bold text-lg">{f.q}</summary>
                 <p className="mt-3 text-muted-foreground leading-relaxed">{f.a}</p>
@@ -284,11 +272,11 @@ const About = () => {
             ))}
           </div>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
-            <Button asChild><a href={TELEGRAM_CHAT_URL} target="_blank" rel="noopener noreferrer"><MessagesSquare className="h-4 w-4" />Telegram-чат Фартлек</a></Button>
-            <Button asChild variant="outline"><a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer"><Instagram className="h-4 w-4" />Instagram Фартлек</a></Button>
-            <Button asChild variant="outline"><Link to="/blog"><BookOpen className="h-4 w-4" />Блог Фартлек</Link></Button>
-            <Button asChild variant="outline"><Link to="/clubs">Бігові клуби Харкова</Link></Button>
-            <Button asChild variant="outline"><Link to="/calendar">Календар забігів</Link></Button>
+            <Button asChild><a href={TELEGRAM_CHAT_URL} target="_blank" rel="noopener noreferrer"><MessagesSquare className="h-4 w-4" />{L("Telegram-чат Фартлек", "Фартлек Telegram chat")}</a></Button>
+            <Button asChild variant="outline"><a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer"><Instagram className="h-4 w-4" />{L("Instagram Фартлек", "Фартлек Instagram")}</a></Button>
+            <Button asChild variant="outline"><Link to="/blog"><BookOpen className="h-4 w-4" />{L("Блог Фартлек", "Фартлек blog")}</Link></Button>
+            <Button asChild variant="outline"><Link to="/clubs">{L("Бігові клуби Харкова", "Kharkiv running clubs")}</Link></Button>
+            <Button asChild variant="outline"><Link to="/calendar">{L("Календар забігів", "Race calendar")}</Link></Button>
           </div>
         </section>
       </main>
@@ -302,7 +290,7 @@ const About = () => {
         >
           <button
             type="button"
-            aria-label="Закрити"
+            aria-label={L("Закрити", "Close")}
             onClick={close}
             className="absolute top-4 right-4 z-10 flex h-11 w-11 items-center justify-center rounded-full border border-border bg-card/80 text-foreground shadow-md transition hover:bg-card"
           >
@@ -310,7 +298,7 @@ const About = () => {
           </button>
           <button
             type="button"
-            aria-label="Попереднє фото"
+            aria-label={L("Попереднє фото", "Previous photo")}
             onClick={(e) => { e.stopPropagation(); prev(); }}
             className="absolute left-2 sm:left-6 z-10 flex h-11 w-11 items-center justify-center rounded-full border border-border bg-card/80 text-foreground shadow-md transition hover:bg-card"
           >
@@ -318,7 +306,7 @@ const About = () => {
           </button>
           <button
             type="button"
-            aria-label="Наступне фото"
+            aria-label={L("Наступне фото", "Next photo")}
             onClick={(e) => { e.stopPropagation(); next(); }}
             className="absolute right-2 sm:right-6 z-10 flex h-11 w-11 items-center justify-center rounded-full border border-border bg-card/80 text-foreground shadow-md transition hover:bg-card"
           >

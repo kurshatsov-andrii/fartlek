@@ -1,3 +1,4 @@
+import { useL } from "@/lib/use-l";
 import { useEffect, useMemo, useState } from "react";
 import { YearFilterButtons, matchesYear } from "@/components/YearFilterButtons";
 import { PageViews } from "@/components/PageViews";
@@ -14,10 +15,10 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
-import { SPORT_TYPES, SPORT_LABELS, type SportType } from "@/lib/parseStart";
+import { SPORT_TYPES, SPORT_LABELS, SPORT_LABELS_EN, type SportType } from "@/lib/parseStart";
 import { canShowRegisterButton } from "@/lib/registration-status";
 import { isEventCompleted } from "@/lib/event-date";
-import { DISTANCE_BUCKETS, baseCity, availableYearMonths, matchesYearMonth, yearMonthLabel } from "@/lib/start-filters";
+import { distanceLabel, DISTANCE_BUCKETS, baseCity, availableYearMonths, matchesYearMonth, yearMonthLabel } from "@/lib/start-filters";
 import { mergeStartsCatalog, type CatalogStart } from "@/lib/starts-catalog";
 import { discoverySeo } from "@/lib/discovery-seo";
 import { StartActions } from "@/components/StartActions";
@@ -26,6 +27,7 @@ import { CalendarHint } from "@/components/CalendarHint";
 const PAGE_SIZE = 9;
 
 const Starts = () => {
+  const L = useL();
   const [rows, setRows] = useState<CatalogStart[]>([]);
   const [loading, setLoading] = useState(true);
   const [upcomingLimit, setUpcomingLimit] = useState(PAGE_SIZE);
@@ -124,31 +126,31 @@ const Starts = () => {
       <div className="p-4 flex flex-col gap-3 flex-1">
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
           {r.event_date && (<span className="inline-flex items-center gap-1"><CalendarIcon className="h-3.5 w-3.5" />{fmtDate(r.event_date)}</span>)}
-          <span className="inline-flex items-center gap-1"><MapPin className="h-3.5 w-3.5" />{r.location || "Україна та весь світ"}</span>
+          <span className="inline-flex items-center gap-1"><MapPin className="h-3.5 w-3.5" />{r.location || L("Україна та весь світ", "Ukraine and worldwide")}</span>
         </div>
         <h2 className="font-semibold text-lg leading-snug">
-          <Link to={r.url} className="hover:underline">{r.title || "Без назви"}</Link>
+          <Link to={r.url} className="hover:underline">{r.title || L("Без назви", "Untitled")}</Link>
         </h2>
         <StartActions source={r.source} id={r.id} />
         <div className="flex flex-wrap gap-1">
           {Array.from(new Set((r.sport_types || []).filter((s): s is SportType => s in SPORT_LABELS))).slice(0, 3).map((s) => (
-            <span key={s} className="text-[10px] px-1.5 py-0.5 rounded bg-muted">{SPORT_LABELS[s]}</span>
+            <span key={s} className="text-[10px] px-1.5 py-0.5 rounded bg-muted">{L(SPORT_LABELS[s], SPORT_LABELS_EN[s])}</span>
           ))}
           {(r.distances_km || []).length > 0 ? [...(r.distances_km || [])].sort((a, b) => Number(b) - Number(a)).slice(0, 4).map((d) => (
-            <span key={String(d)} className="text-[10px] px-1.5 py-0.5 rounded bg-primary/10 text-primary">{d} км</span>
+            <span key={String(d)} className="text-[10px] px-1.5 py-0.5 rounded bg-primary/10 text-primary">{d} {L("км", "km")}</span>
           )) : (
-            <span className="text-[10px] px-1.5 py-0.5 rounded bg-primary/10 text-primary">Вільна дистанція</span>
+            <span className="text-[10px] px-1.5 py-0.5 rounded bg-primary/10 text-primary">{L("Вільна дистанція", "Open distance")}</span>
           )}
-          {r.is_paid === false && <span className="text-[10px] px-1.5 py-0.5 rounded bg-accent text-accent-foreground">Безкоштовно</span>}
+          {r.is_paid === false && <span className="text-[10px] px-1.5 py-0.5 rounded bg-accent text-accent-foreground">{L("Безкоштовно", "Free")}</span>}
         </div>
         <div className="flex gap-2 pt-1">
           <Button asChild size="sm" className="flex-1">
-            <Link to={r.url}>Детальніше та реєстрація</Link>
+            <Link to={r.url}>{L("Детальніше та реєстрація", "Details & registration")}</Link>
           </Button>
           {r.results_url && (
             <Button asChild size="sm" variant="secondary" className="flex-1">
               <a href={r.results_url} target="_blank" rel="noreferrer">
-                Результати <FileText className="h-3.5 w-3.5 ml-1" />
+                {L("Результати", "Results")} <FileText className="h-3.5 w-3.5 ml-1" />
               </a>
             </Button>
           )}
@@ -165,19 +167,19 @@ const Starts = () => {
       />
       <Header />
       <main className="flex-1 container py-10">
-        <h1 className="font-display text-3xl md:text-4xl font-bold mb-2">Забіги та спортивні старти України 2027</h1>
+        <h1 className="font-display text-3xl md:text-4xl font-bold mb-2">{L("Забіги та спортивні старти України 2027", "Races and sports events in Ukraine 2027")}</h1>
         <p className="text-muted-foreground mb-6">
-          Події Фартлек та анонси найближчих стартів з телеграм-каналу{" "}
+          {L("Події Фартлек та анонси найближчих стартів з телеграм-каналу", "Фартлек events and upcoming race announcements from the Telegram channel")}{" "}
           <a href="https://t.me/fartlekua" target="_blank" rel="noreferrer" className="underline">@fartlekua</a>.
         </p>
         <PageViews pageKey="page:starts" className="mb-6" />
 
         <div className="rounded-lg border bg-card p-4 mb-8 space-y-3">
           <div className="flex items-center gap-2 text-sm font-medium">
-            <Filter className="h-4 w-4" /> Фільтри
+            <Filter className="h-4 w-4" /> {L("Фільтри", "Filters")}
             {activeFilters > 0 && (
               <Button variant="ghost" size="sm" className="ml-auto h-7" onClick={reset}>
-                <X className="h-3.5 w-3.5 mr-1" /> Скинути ({activeFilters})
+                <X className="h-3.5 w-3.5 mr-1" /> {L("Скинути", "Reset")} ({activeFilters})
               </Button>
             )}
           </div>
@@ -187,63 +189,63 @@ const Starts = () => {
           }} />
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
-            <Input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Пошук за назвою, описом, містом…" className="pl-9" />
+            <Input value={q} onChange={(e) => setQ(e.target.value)} placeholder={L("Пошук за назвою, описом, містом…", "Search by name, description, city…")} className="pl-9" />
           </div>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
             <Select value={month} onValueChange={setMonth}>
-              <SelectTrigger><SelectValue placeholder="Місяць" /></SelectTrigger>
+              <SelectTrigger><SelectValue placeholder={L("Місяць", "Month")} /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">Усі місяці</SelectItem>
+                <SelectItem value="all">{L("Усі місяці", "All months")}</SelectItem>
                 {months.map((value) => (
-                  <SelectItem key={value} value={value}>{yearMonthLabel(value)}</SelectItem>
+                  <SelectItem key={value} value={value}>{yearMonthLabel(value, L("uk", "en"))}</SelectItem>
                 ))}
               </SelectContent>
             </Select>
             <Select value={sport} onValueChange={(v) => setSport(v as any)}>
-              <SelectTrigger><SelectValue placeholder="Вид спорту" /></SelectTrigger>
+              <SelectTrigger><SelectValue placeholder={L("Вид спорту", "Sport")} /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">Усі види</SelectItem>
+                <SelectItem value="all">{L("Усі види", "All sports")}</SelectItem>
                 {SPORT_TYPES.map((s) => (
-                  <SelectItem key={s} value={s}>{SPORT_LABELS[s]}</SelectItem>
+                  <SelectItem key={s} value={s}>{L(SPORT_LABELS[s], SPORT_LABELS_EN[s])}</SelectItem>
                 ))}
               </SelectContent>
             </Select>
             <Select value={distance} onValueChange={setDistance}>
-              <SelectTrigger><SelectValue placeholder="Дистанція" /></SelectTrigger>
+              <SelectTrigger><SelectValue placeholder={L("Дистанція", "Distance")} /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">Будь-яка дистанція</SelectItem>
+                <SelectItem value="all">{L("Будь-яка дистанція", "Any distance")}</SelectItem>
                 {DISTANCE_BUCKETS.map((b) => (
-                  <SelectItem key={b.label} value={b.label}>{b.label}</SelectItem>
+                  <SelectItem key={b.label} value={b.label}>{distanceLabel(b.label, L("uk", "en"))}</SelectItem>
                 ))}
               </SelectContent>
             </Select>
             <Select value={city} onValueChange={setCity}>
-              <SelectTrigger><SelectValue placeholder="Місто" /></SelectTrigger>
+              <SelectTrigger><SelectValue placeholder={L("Місто", "City")} /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">Усі міста</SelectItem>
+                <SelectItem value="all">{L("Усі міста", "All cities")}</SelectItem>
                 {cities.map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}
               </SelectContent>
             </Select>
             <Select value={region} onValueChange={setRegion}>
-              <SelectTrigger><SelectValue placeholder="Область" /></SelectTrigger>
+              <SelectTrigger><SelectValue placeholder={L("Область", "Region")} /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">Усі області</SelectItem>
+                <SelectItem value="all">{L("Усі області", "All regions")}</SelectItem>
                 {regions.map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}
               </SelectContent>
             </Select>
             <Select value={organizer} onValueChange={setOrganizer}>
-              <SelectTrigger><SelectValue placeholder="Організатор" /></SelectTrigger>
+              <SelectTrigger><SelectValue placeholder={L("Організатор", "Organizer")} /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">Усі організатори</SelectItem>
+                <SelectItem value="all">{L("Усі організатори", "All organizers")}</SelectItem>
                 {organizers.map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}
               </SelectContent>
             </Select>
             <Select value={paid} onValueChange={(v) => setPaid(v as any)}>
-              <SelectTrigger><SelectValue placeholder="Тип" /></SelectTrigger>
+              <SelectTrigger><SelectValue placeholder={L("Тип", "Type")} /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">Платні і безкоштовні</SelectItem>
-                <SelectItem value="free">Безкоштовні</SelectItem>
-                <SelectItem value="paid">Платні</SelectItem>
+                <SelectItem value="all">{L("Платні і безкоштовні", "Paid and free")}</SelectItem>
+                <SelectItem value="free">{L("Безкоштовні", "Free")}</SelectItem>
+                <SelectItem value="paid">{L("Платні", "Paid")}</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -253,7 +255,7 @@ const Starts = () => {
           <div className="flex justify-center py-20"><Loader2 className="h-6 w-6 animate-spin" /></div>
         ) : filtered.length === 0 ? (
           <div className="text-center text-muted-foreground py-20">
-            Нічого не знайдено за обраними фільтрами.
+            {L("Нічого не знайдено за обраними фільтрами.", "Nothing found for the selected filters.")}
             <CalendarHint />
           </div>
         ) : (
@@ -266,31 +268,31 @@ const Starts = () => {
                 {upcomingLimit < upcomingAll.length && (
                   <div className="flex justify-center mt-8">
                     <Button variant="outline" onClick={() => setUpcomingLimit((n) => n + PAGE_SIZE)}>
-                      Завантажити ще старти
+                      {L("Завантажити ще старти", "Load more starts")}
                     </Button>
                   </div>
                 )}
               </>
             )}
             <div className="mt-12 flex flex-wrap items-center gap-3 rounded-lg border bg-card p-4">
-              <span className="text-sm text-muted-foreground">Бігова спільнота Харкова у Telegram:</span>
+              <span className="text-sm text-muted-foreground">{L("Бігова спільнота Харкова у Telegram:", "Kharkiv running community on Telegram:")}</span>
               <Button asChild size="sm">
-                <a href={TELEGRAM_CHANNEL_URL} target="_blank" rel="noopener noreferrer">Приєднатися до каналу</a>
+                <a href={TELEGRAM_CHANNEL_URL} target="_blank" rel="noopener noreferrer">{L("Приєднатися до каналу", "Join the channel")}</a>
               </Button>
               <Button asChild size="sm" variant="outline">
-                <a href={TELEGRAM_CHAT_URL} target="_blank" rel="noopener noreferrer">Приєднатися до чату</a>
+                <a href={TELEGRAM_CHAT_URL} target="_blank" rel="noopener noreferrer">{L("Приєднатися до чату", "Join the chat")}</a>
               </Button>
             </div>
             {completed.length > 0 && (
               <section className="mt-12">
-                <h2 className="font-display text-2xl font-bold mb-6">Завершені</h2>
+                <h2 className="font-display text-2xl font-bold mb-6">{L("Завершені", "Completed")}</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 opacity-75">
                   {completed.map(renderCard)}
                 </div>
                 {completedLimit < completedAll.length && (
                   <div className="flex justify-center mt-8">
                     <Button variant="outline" onClick={() => setCompletedLimit((n) => n + PAGE_SIZE)}>
-                      Завантажити ще старти
+                      {L("Завантажити ще старти", "Load more starts")}
                     </Button>
                   </div>
                 )}

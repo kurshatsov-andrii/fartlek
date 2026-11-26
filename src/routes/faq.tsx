@@ -2,7 +2,8 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { breadcrumbJsonLd, jsonLdScript } from "@/lib/jsonld";
-import { PLATFORM_SINCE_UK } from "@/lib/platform-since";
+import { PLATFORM_SINCE_UK, PLATFORM_SINCE_EN } from "@/lib/platform-since";
+import { useL } from "@/lib/use-l";
 
 const TITLE = "Часті питання про Фартлек — забіги, реєстрація, організаторам";
 const DESCRIPTION = "Відповіді на часті питання про Фартлек: календар забігів України, пошук стартів, онлайн-реєстрація, результати, бігові клуби та можливості для організаторів.";
@@ -98,6 +99,27 @@ function FaqPage() {
       a: <>Фартлек має інструменти для публікації подій, реєстрації учасників і роботи з результатами. Перегляньте сторінку <Link className={linkClass} to="/for-organizers">«Організаторам»</Link>, <Link className={linkClass} to="/features">можливості платформи</Link> або <Link className={linkClass} to="/contacts">зв’яжіться з нами</Link>, щоб обговорити свій старт.</>,
     },
   ];
+  const questionsEn = [
+    { q: "Where can I find all races in Ukraine?", a: <>Фартлек publishes races and other sports events in Ukraine. Browse the <Link className={linkClass} to="/starts">race catalog</Link> or the <Link className={linkClass} to="/calendar" search={{ year: "all" }}>race calendar</Link>. The list keeps growing and does not guarantee coverage of every event.</> },
+    { q: "Where can I see the calendar of running events in Ukraine?", a: <>The <Link className={linkClass} to="/calendar" search={{ year: "all" }}>Фартлек calendar</Link> collects published races with dates, venues and distances. Open a race to see the details.</> },
+    { q: "Where can I find marathons and half marathons in Ukraine?", a: <>Go to <Link className={linkClass} to="/category">event categories</Link> and choose marathons or half marathons. In the catalog you can also filter races by distance and city.</> },
+    { q: "How do I find races in my city?", a: <>In the <Link className={linkClass} to="/starts">race catalog</Link>, choose a city or region. You can also see venues on the <Link className={linkClass} to="/map">map</Link>. Kharkiv, Vinnytsia and Uzhhorod have their own city calendars.</> },
+    { q: "Where can I find trail races in Ukraine?", a: <>Choose the “Trail” category in the <Link className={linkClass} to="/category">category catalog</Link>. Before registering, check the route description, distance and the organizer’s requirements.</> },
+    { q: "Where can I see the 2027 race calendar?", a: <>Open the <Link className={linkClass} to="/calendar" search={{ year: "2027" }}>Ukraine race calendar 2027</Link>. Dates and other details may change, so check the race page and the organizer.</> },
+    { q: "How do I find a 5K, 10K or 21K race?", a: <>Use the distance filter on the <Link className={linkClass} to="/starts">Starts</Link> page. Check exact distances, such as 21.1 km for a half marathon, in the event description.</> },
+    { q: "Where can I find running events this weekend?", a: <>Check the upcoming dates in the <Link className={linkClass} to="/calendar" search={{ year: "all" }}>calendar</Link> and pick races on the Saturday or Sunday you need. In the catalog you can narrow the search by month and city.</> },
+    { q: "Where can I find online and virtual races?", a: <>Open the “Online” category in the <Link className={linkClass} to="/category">category catalog</Link>. The organizer sets the rules, deadlines and how results are submitted; these are listed in each race description.</> },
+    { q: "How do I find sports events on a map of Ukraine?", a: <>On the <Link className={linkClass} to="/map">Map</Link> page, choose a city to see its races. The map shows events whose venue could be determined.</> },
+    { q: "Where can I find races for beginners?", a: <>Start by looking for shorter distances in the <Link className={linkClass} to="/starts">catalog</Link>, but consider more than distance: check the terrain, time limit and rules. If needed, ask the organizer and read our <Link className={linkClass} to="/tips">running tips</Link>.</> },
+    { q: "Where can I find running clubs in my city?", a: <>Browse the clubs and communities in the <Link className={linkClass} to="/clubs">running club catalog</Link>. Their pages include information and published contacts.</> },
+    { q: "How do I register for a race on Фартлек?", a: <>Open the event page and check the registration status. For events with registration on Фартлек, sign in, choose a distance and fill in the required details. For external races, the link leads to the organizer’s website or registration service.</> },
+    { q: "Where can I see race results?", a: <>Check the event page: results may be published on Фартлек or available via the “Results” link on an external site. If there are no results yet, contact the organizer.</> },
+    { q: "Can I save a race and get reminders?", a: <>After signing in, save a race with the bookmark. In <Link className={linkClass} to="/saved">saved races</Link> you can opt in to on-site reminders about the upcoming race, date changes and registration opening. You can also add it to your personal calendar; reminders are never turned on without your consent.</> },
+    { q: "Since when has Фартлек been running?", a: <>Фартлек has been running since {PLATFORM_SINCE_EN}. Since then the platform has added a race catalog, race calendar, event map, running club and organizer catalogs, and participant registration tools.</> },
+    { q: "What does Фартлек offer organizers?", a: <>Фартлек has tools for publishing events, registering participants and handling results. See the <Link className={linkClass} to="/for-organizers">For organizers</Link> page, the <Link className={linkClass} to="/features">platform features</Link> or <Link className={linkClass} to="/contacts">contact us</Link> to discuss your race.</> },
+  ];
+  const L = useL();
+  const list = L(questions, questionsEn);
 
   return (
     <div className="min-h-screen flex flex-col bg-background text-foreground">
@@ -105,11 +127,11 @@ function FaqPage() {
       <main className="flex-1 container py-8 sm:py-12">
         <div className="border-b border-border pb-8">
           <p className="text-primary font-semibold mb-3">FAQ</p>
-          <h1 className="font-display text-3xl sm:text-4xl font-bold leading-tight">Часті питання про Фартлек</h1>
-          <p className="mt-4 text-muted-foreground leading-relaxed">{DESCRIPTION}</p>
+          <h1 className="font-display text-3xl sm:text-4xl font-bold leading-tight">{L("Часті питання про Фартлек", "Фартлек FAQ")}</h1>
+          <p className="mt-4 text-muted-foreground leading-relaxed">{L(DESCRIPTION, "Answers to common questions about Фартлек: the Ukraine race calendar, finding races, online registration, results, running clubs and tools for organizers.")}</p>
         </div>
         <div className="divide-y divide-border">
-          {questions.map(({ q, a }, index) => (
+          {list.map(({ q, a }, index) => (
             <section key={q} aria-labelledby={`faq-${index + 1}`} className="py-6 sm:py-8">
               <h2 id={`faq-${index + 1}`} className="font-display text-xl sm:text-2xl font-semibold leading-snug">{q}</h2>
               <p className="mt-3 text-muted-foreground leading-relaxed">{a}</p>

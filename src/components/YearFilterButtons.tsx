@@ -1,3 +1,4 @@
+import { useApp } from "@/contexts/AppContext";
 import { Button } from "@/components/ui/button";
 
 export const YEAR_OPTIONS = ["2026", "2027"];
@@ -8,7 +9,7 @@ export const matchesYear = (date: string | null | undefined, year: string) =>
 export function YearFilterButtons({
   value,
   onChange,
-  lang = "uk",
+  lang: langProp,
   className = "",
 }: {
   value: string;
@@ -16,6 +17,8 @@ export function YearFilterButtons({
   lang?: string;
   className?: string;
 }) {
+  const { lang: ctxLang } = useApp();
+  const lang = langProp ?? ctxLang;
   return (
     <div className={`flex flex-wrap items-center gap-2 ${className}`}>
       <span className="text-sm text-muted-foreground mr-1">{lang === "uk" ? "Рік:" : "Year:"}</span>

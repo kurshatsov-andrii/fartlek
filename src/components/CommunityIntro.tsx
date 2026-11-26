@@ -1,3 +1,4 @@
+import { useApp } from "@/contexts/AppContext";
 export const COMMUNITY_INTRO = {
   title: "Фартлек — найбільша бігова спільнота Харкова з 2026 року! 🏃‍♂️",
   paragraphs: [
@@ -5,6 +6,16 @@ export const COMMUNITY_INTRO = {
     "До тренувань Фартлек долучаються спортсмени з різних бігових і триатлонних клубів та спільнот Харкова. Ми об'єднуємо людей, які люблять біг, прагнуть розвиватися, ставити нові цілі та знаходити однодумців.",
     "Фартлек — це біг для кожного! Незалежно від темпу, досвіду чи спортивних результатів, у нас знайдеться місце для тебе.",
     "Бігаємо разом, підтримуємо одне одного та розвиваємо бігову культуру Харкова!",
+  ],
+};
+
+export const COMMUNITY_INTRO_EN = {
+  title: "Фартлек — the largest running community in Kharkiv since 2026! 🏃‍♂️",
+  paragraphs: [
+    "Our community already has more than 200 members, from beginners to experienced runners.",
+    "Athletes from many Kharkiv running and triathlon clubs and communities join Фартлек training sessions. We bring together people who love running, want to improve, set new goals and find like-minded friends.",
+    "Фартлек is running for everyone! Whatever your pace, experience or results, there’s a place for you here.",
+    "We run together, support each other and grow Kharkiv’s running culture!",
   ],
 };
 
@@ -19,11 +30,13 @@ export const CommunityIntro = ({
   videoId?: string;
   videoTitle?: string;
 }) => {
+  const { lang } = useApp();
+  const intro = lang === "uk" ? COMMUNITY_INTRO : COMMUNITY_INTRO_EN;
   const text = (
     <div className="space-y-4 lg:flex-1">
-      <h2 className="font-display text-2xl font-bold leading-snug">{COMMUNITY_INTRO.title}</h2>
+      <h2 className="font-display text-2xl font-bold leading-snug">{intro.title}</h2>
       <div className="space-y-3 text-base sm:text-lg leading-relaxed">
-        {COMMUNITY_INTRO.paragraphs.map((p) => (
+        {intro.paragraphs.map((p) => (
           <p key={p.slice(0, 24)}>{p}</p>
         ))}
       </div>

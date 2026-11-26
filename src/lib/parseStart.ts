@@ -34,6 +34,15 @@ export const SPORT_LABELS: Record<SportType, string> = {
   online: "Онлайн",
 };
 
+export const SPORT_LABELS_EN: Record<SportType, string> = {
+  run: "Running", half_marathon: "Half marathon", marathon: "Marathon", ultra: "Ultramarathon",
+  trail: "Trail", ocr: "Obstacle races", swim: "Swimming", cycling: "Cycling", triathlon: "Triathlon",
+  aquathlon: "Aquathlon", duathlon: "Duathlon", cross: "Cross-country", online: "Online",
+};
+
+export const sportLabel = (s: SportType, lang: string = "uk") =>
+  (lang === "en" ? SPORT_LABELS_EN : SPORT_LABELS)[s];
+
 export const SPORT_TYPES: SportType[] = [
   "run", "half_marathon", "marathon", "ultra", "trail", "ocr", "cross",
   "swim", "cycling", "triathlon", "aquathlon", "duathlon", "online",

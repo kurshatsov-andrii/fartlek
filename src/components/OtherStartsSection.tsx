@@ -1,3 +1,5 @@
+import { distanceLabel } from "@/lib/start-filters";
+import { useL } from "@/lib/use-l";
 import { useEffect, useMemo, useState } from "react";
 import { duplicatesPlatformEvent } from "@/lib/starts-catalog";
 import { EventPoster } from "@/components/EventPoster";
@@ -8,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useApp } from "@/contexts/AppContext";
 import { supabase } from "@/integrations/supabase/client";
-import { SPORT_TYPES, SPORT_LABELS, MONTH_NAMES_UK, type SportType } from "@/lib/parseStart";
+import { SPORT_TYPES, SPORT_LABELS, SPORT_LABELS_EN, MONTH_NAMES_UK, type SportType } from "@/lib/parseStart";
 import { canShowRegisterButton } from "@/lib/registration-status";
 import { matchesYear } from "@/components/YearFilterButtons";
 import { StartActions } from "@/components/StartActions";
@@ -53,6 +55,7 @@ export const DISTANCE_BUCKET_LABELS = DISTANCE_BUCKETS.map((b) => b.label);
 
 export const OtherStartsSection = ({ shared, onFacets }: { shared?: SharedStartFilters; onFacets?: (cities: string[], months: string[], sports: string[]) => void } = {}) => {
   const { lang } = useApp();
+  const L = useL();
   const [rows, setRows] = useState<StartRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [limit, setLimit] = useState(PAGE_SIZE);
@@ -196,7 +199,7 @@ export const OtherStartsSection = ({ shared, onFacets }: { shared?: SharedStartF
         </div>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
           <Select value={month} onValueChange={setMonth}>
-            <SelectTrigger><SelectValue placeholder="Місяць" /></SelectTrigger>
+            <SelectTrigger><SelectValue placeholder={L("Місяць", "Month")} /></SelectTrigger>
             <SelectContent>
               <SelectItem value="all">{lang === "uk" ? "Усі місяці" : "All months"}</SelectItem>
               {MONTH_NAMES_UK.map((n, i) => (
@@ -205,46 +208,46 @@ export const OtherStartsSection = ({ shared, onFacets }: { shared?: SharedStartF
             </SelectContent>
           </Select>
           <Select value={sport} onValueChange={(v) => setSport(v as any)}>
-            <SelectTrigger><SelectValue placeholder="Вид спорту" /></SelectTrigger>
+            <SelectTrigger><SelectValue placeholder={L("Вид спорту", "Sport")} /></SelectTrigger>
             <SelectContent>
               <SelectItem value="all">{lang === "uk" ? "Усі види" : "All sports"}</SelectItem>
               {SPORT_TYPES.map((s) => (
-                <SelectItem key={s} value={s}>{SPORT_LABELS[s]}</SelectItem>
+                <SelectItem key={s} value={s}>{L(SPORT_LABELS[s], SPORT_LABELS_EN[s])}</SelectItem>
               ))}
             </SelectContent>
           </Select>
           <Select value={distance} onValueChange={setDistance}>
-            <SelectTrigger><SelectValue placeholder="Дистанція" /></SelectTrigger>
+            <SelectTrigger><SelectValue placeholder={L("Дистанція", "Distance")} /></SelectTrigger>
             <SelectContent>
               <SelectItem value="all">{lang === "uk" ? "Будь-яка дистанція" : "Any distance"}</SelectItem>
               {DISTANCE_BUCKETS.map((b) => (
-                <SelectItem key={b.label} value={b.label}>{b.label}</SelectItem>
+                <SelectItem key={b.label} value={b.label}>{distanceLabel(b.label, L("uk", "en"))}</SelectItem>
               ))}
             </SelectContent>
           </Select>
           <Select value={city} onValueChange={setCity}>
-            <SelectTrigger><SelectValue placeholder="Місто" /></SelectTrigger>
+            <SelectTrigger><SelectValue placeholder={L("Місто", "City")} /></SelectTrigger>
             <SelectContent>
               <SelectItem value="all">{lang === "uk" ? "Усі міста" : "All cities"}</SelectItem>
               {cities.map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}
             </SelectContent>
           </Select>
           <Select value={region} onValueChange={setRegion}>
-            <SelectTrigger><SelectValue placeholder="Область" /></SelectTrigger>
+            <SelectTrigger><SelectValue placeholder={L("Область", "Region")} /></SelectTrigger>
             <SelectContent>
               <SelectItem value="all">{lang === "uk" ? "Усі області" : "All regions"}</SelectItem>
               {regions.map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}
             </SelectContent>
           </Select>
           <Select value={organizer} onValueChange={setOrganizer}>
-            <SelectTrigger><SelectValue placeholder="Організатор" /></SelectTrigger>
+            <SelectTrigger><SelectValue placeholder={L("Організатор", "Organizer")} /></SelectTrigger>
             <SelectContent>
               <SelectItem value="all">{lang === "uk" ? "Усі організатори" : "All organizers"}</SelectItem>
               {organizers.map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}
             </SelectContent>
           </Select>
           <Select value={paid} onValueChange={(v) => setPaid(v as any)}>
-            <SelectTrigger><SelectValue placeholder="Тип" /></SelectTrigger>
+            <SelectTrigger><SelectValue placeholder={L("Тип", "Type")} /></SelectTrigger>
             <SelectContent>
               <SelectItem value="all">{lang === "uk" ? "Платні і безкоштовні" : "Paid and free"}</SelectItem>
               <SelectItem value="free">{lang === "uk" ? "Безкоштовні" : "Free"}</SelectItem>

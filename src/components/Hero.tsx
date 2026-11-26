@@ -18,7 +18,7 @@ const formatCount = (n: number) => {
 };
 
 export const Hero = () => {
-  const { t } = useApp();
+  const { t, lang } = useApp();
   const { user } = useAuth();
   const [stats, setStats] = useState({ events: 0, runners: 0, cities: 0, clubs: 0, organizers: 0, registrations: 0 });
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -145,9 +145,9 @@ export const Hero = () => {
             </button>
             <Music2 className="h-4 w-4 text-primary" />
             <div className="flex min-w-0 flex-col leading-tight">
-              <span className="truncate text-sm font-semibold">Фартлек — гімн</span>
+              <span className="truncate text-sm font-semibold">{lang === "uk" ? "Фартлек — гімн" : "Фартлек anthem"}</span>
               <span className="truncate text-[11px] uppercase tracking-wider text-secondary-foreground/60">
-                Музика для мотивації
+                {lang === "uk" ? "Музика для мотивації" : "Music for motivation"}
               </span>
             </div>
             <audio

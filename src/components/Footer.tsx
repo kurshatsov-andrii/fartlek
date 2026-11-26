@@ -6,6 +6,7 @@ import { TELEGRAM_CHANNEL_URL, TELEGRAM_CHAT_URL } from "@/components/TelegramCo
 
 export const Footer = () => {
   const { t, lang } = useApp();
+  const L = (uk: string, en: string) => (lang === "uk" ? uk : en);
   return (
     <footer className="border-t border-border bg-secondary text-secondary-foreground">
       <div className="container py-12 flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
@@ -19,15 +20,15 @@ export const Footer = () => {
           </div>
         </div>
         <div className="text-center text-sm text-secondary-foreground/70 space-y-1">
-          <div className="font-semibold">ФОП КУРШАЦОВ А. І.</div>
+          <div className="font-semibold">{L("ФОП КУРШАЦОВ А. І.", "FOP Kurshatsov A. I.")}</div>
           <a href="tel:+380972520551" className="block hover:text-primary transition-colors">+38 097 252 05 51</a>
           <a href="mailto:info@fartlek.com.ua" className="block hover:text-primary transition-colors">info@fartlek.com.ua</a>
           <div className="flex items-center justify-center gap-3 pt-2">
             <a href={TELEGRAM_CHANNEL_URL} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-full border border-secondary-foreground/20 px-3 py-1.5 text-xs hover:border-primary hover:text-primary transition-colors">
-              <Send className="h-3.5 w-3.5" /> Telegram-канал
+              <Send className="h-3.5 w-3.5" /> {L("Telegram-канал", "Telegram channel")}
             </a>
             <a href={TELEGRAM_CHAT_URL} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-full border border-secondary-foreground/20 px-3 py-1.5 text-xs hover:border-primary hover:text-primary transition-colors">
-              <MessagesSquare className="h-3.5 w-3.5" /> Telegram-чат
+              <MessagesSquare className="h-3.5 w-3.5" /> {L("Telegram-чат", "Telegram chat")}
             </a>
           </div>
         </div>
@@ -35,13 +36,13 @@ export const Footer = () => {
           <div>{platformSinceLine(lang === "uk")}</div>
           <div>© {new Date().getFullYear()} Fartlek. {t.footer.rights}</div>
           <div className="flex flex-wrap gap-3 justify-center md:justify-end">
-            <Link to="/about" className="hover:text-primary transition-colors">Про нас</Link>
+            <Link to="/about" className="hover:text-primary transition-colors">{L("Про нас", "About")}</Link>
             <Link to="/faq" className="hover:text-primary transition-colors">FAQ</Link>
-            <Link to="/results" className="hover:text-primary transition-colors">Фартлек у цифрах</Link>
-            <Link to="/for-organizers" className="hover:text-primary transition-colors">Організаторам</Link>
-            <Link to="/privacy" className="hover:text-primary transition-colors">Політика конфіденційності</Link>
-            <Link to="/public-offer" className="hover:text-primary transition-colors">Публічна оферта</Link>
-            <Link to="/user-agreement" className="hover:text-primary transition-colors">Угода користувача</Link>
+            <Link to="/results" className="hover:text-primary transition-colors">{L("Фартлек у цифрах", "Фартлек in numbers")}</Link>
+            <Link to="/for-organizers" className="hover:text-primary transition-colors">{L("Організаторам", "For organizers")}</Link>
+            <Link to="/privacy" className="hover:text-primary transition-colors">{L("Політика конфіденційності", "Privacy policy")}</Link>
+            <Link to="/public-offer" className="hover:text-primary transition-colors">{L("Публічна оферта", "Public offer")}</Link>
+            <Link to="/user-agreement" className="hover:text-primary transition-colors">{L("Угода користувача", "User agreement")}</Link>
           </div>
         </div>
       </div>

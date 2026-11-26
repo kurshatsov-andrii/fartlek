@@ -47,9 +47,12 @@ export const availableYearMonths = (dates: (string | null | undefined)[], year =
 export const matchesYearMonth = (date: string | null | undefined, month: string) =>
   month === "all" || !!date?.startsWith(`${month}-`);
 
-export const yearMonthLabel = (month: string) => {
+export const distanceLabel = (label: string, lang: string = "uk") =>
+  lang === "en" ? label.replace("до ", "up to ").replace("км", "km") : label;
+
+export const yearMonthLabel = (month: string, lang: string = "uk") => {
   const [year, number] = month.split("-").map(Number);
-  const label = new Date(Date.UTC(year, number - 1, 1)).toLocaleDateString("uk-UA", {
+  const label = new Date(Date.UTC(year, number - 1, 1)).toLocaleDateString(lang === "en" ? "en-GB" : "uk-UA", {
     month: "long", year: "numeric", timeZone: "Europe/Kyiv",
   });
   return label.charAt(0).toUpperCase() + label.slice(1);

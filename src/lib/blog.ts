@@ -22,5 +22,5 @@ export const youtubeEmbed = (url: string | null): string | null => {
   return m ? `https://www.youtube.com/embed/${m[1]}` : null;
 };
 
-export const formatBlogDate = (d: string | null) =>
-  d ? new Date(d + "T00:00:00").toLocaleDateString("uk-UA", { day: "numeric", month: "long", year: "numeric" }) : "";
+export const formatBlogDate = (d: string | null, lang: string = "uk") =>
+  d ? new Date(d + "T00:00:00").toLocaleDateString(lang === "en" ? "en-GB" : "uk-UA", { day: "numeric", month: "long", year: "numeric" }) : "";

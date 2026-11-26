@@ -1,3 +1,4 @@
+import { useL } from "@/lib/use-l";
 import { useEffect, useState } from "react";
 import { Link } from "@/lib/router-compat";
 import { Header } from "@/components/Header";
@@ -66,6 +67,7 @@ const Stars = ({
 };
 
 const Testimonials = () => {
+  const L = useL();
   const { user, isAdmin } = useAuth();
   const [items, setItems] = useState<Testimonial[]>([]);
   const [loading, setLoading] = useState(true);
@@ -81,7 +83,7 @@ const Testimonials = () => {
       .order("created_at", { ascending: false })
       .limit(200);
     if (error) {
-      toast.error("Не вдалося завантажити відгуки");
+      toast.error(L("Не вдалося завантажити відгуки", "Couldn't load reviews"));
       setLoading(false);
       return;
     }
@@ -124,7 +126,7 @@ const Testimonials = () => {
 
   const toggleReaction = async (testimonialId: string, emoji: string) => {
     if (!user) {
-      toast.error("Увійдіть, щоб додати реакцію");
+      toast.error(L("Увійдіть, щоб додати реакцію", "Sign in to react"));
       return;
     }
     const t = items.find((i) => i.id === testimonialId);
@@ -137,7 +139,7 @@ const Testimonials = () => {
         .eq("user_id", user.id)
         .eq("emoji", emoji);
       if (error) {
-        toast.error("Не вдалося прибрати реакцію");
+        toast.error(L("Не вдалося прибрати реакцію", "Couldn't remove reaction"));
         return;
       }
     } else {
@@ -145,7 +147,7 @@ const Testimonials = () => {
         .from("testimonial_reactions")
         .insert({ testimonial_id: testimonialId, user_id: user.id, emoji });
       if (error) {
-        toast.error("Не вдалося додати реакцію");
+        toast.error(L("Не вдалося додати реакцію", "Couldn't add reaction"));
         return;
       }
     }
@@ -177,16 +179,16 @@ const Testimonials = () => {
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user) {
-      toast.error("Увійдіть, щоб залишити відгук");
+      toast.error(L("Увійдіть, щоб залишити відгук", "Sign in to leave a review"));
       return;
     }
     const trimmed = content.trim();
     if (trimmed.length < 3) {
-      toast.error("Відгук занадто короткий");
+      toast.error(L("Відгук занадто короткий", "Review is too short"));
       return;
     }
     if (trimmed.length > 2000) {
-      toast.error("Відгук занадто довгий (макс. 2000 символів)");
+      toast.error(L("Відгук занадто довгий (макс. 2000 символів)", "Review is too long (max 2000 characters)"));
       return;
     }
     setBusy(true);
@@ -197,33 +199,33 @@ const Testimonials = () => {
           .update({ rating, content: trimmed })
           .eq("id", myExisting.id);
         if (error) throw error;
-        toast.success("Відгук оновлено");
+        toast.success(L("Відгук оновлено", "Review updated"));
       } else {
         const { error } = await supabase
           .from("testimonials")
           .insert({ user_id: user.id, rating, content: trimmed });
         if (error) throw error;
-        toast.success("Дякуємо за відгук!");
+        toast.success(L("Дякуємо за відгук!", "Thanks for your review!"));
       }
       setContent("");
       setRating(5);
       load();
     } catch (err: any) {
       console.error(err);
-      toast.error("Не вдалося надіслати");
+      toast.error(L("Не вдалося надіслати", "Couldn't send"));
     } finally {
       setBusy(false);
     }
   };
 
   const remove = async (id: string) => {
-    if (!confirm("Видалити відгук?")) return;
+    if (!confirm(L("Видалити відгук?", "Delete review?"))) return;
     const { error } = await supabase.from("testimonials").delete().eq("id", id);
     if (error) {
-      toast.error("Не вдалося видалити");
+      toast.error(L("Не вдалося видалити", "Couldn't delete"));
       return;
     }
-    toast.success("Видалено");
+    toast.success(L("Видалено", "Deleted"));
     load();
   };
 
@@ -239,8 +241,8 @@ const Testimonials = () => {
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <SEO
-        title="Відгуки — Фартлек"
-        description="Що кажуть учасники та організатори про платформу Фартлек."
+        title={L("Відгуки — Фартлек", "Reviews — Фартлек")}
+        description={L("Що кажуть учасники та організатори про платформу Фартлек.", "What participants and organizers say about the Фартлек platform.")}
         canonical="/testimonials"
       />
       <Header />
@@ -249,16 +251,16 @@ const Testimonials = () => {
           <div className="text-center mb-10">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold tracking-widest uppercase mb-4">
               <Quote className="h-3.5 w-3.5" />
-              Відгуки
+              {L("Відгуки", "Reviews")}
             </div>
             <h1 className="font-display text-3xl md:text-5xl font-bold tracking-tight mb-4">
-              Що кажуть про Fartlek
+              {L("Що кажуть про Fartlek", "What people say about Фартлек")}
             </h1>
             {items.length > 0 && (
               <div className="flex items-center justify-center gap-3 text-muted-foreground">
                 <Stars value={Math.round(avg)} size={20} />
                 <span className="text-sm">
-                  {avg.toFixed(1)} / 5 · {items.length} {items.length === 1 ? "відгук" : "відгуків"}
+                  {avg.toFixed(1)} / 5 · {items.length} {items.length === 1 ? L("відгук", "review") : L("відгуків", "reviews")}
                 </span>
               </div>
             )}
@@ -268,27 +270,27 @@ const Testimonials = () => {
             <Card className="mb-10">
               <CardContent className="pt-6 space-y-4">
                 <h2 className="text-lg font-semibold">
-                  {myExisting ? "Оновити свій відгук" : "Залишити відгук"}
+                  {myExisting ? L("Оновити свій відгук", "Update your review") : L("Залишити відгук", "Leave a review")}
                 </h2>
                 <form onSubmit={submit} className="space-y-4">
                   <div className="space-y-2">
-                    <Label>Ваша оцінка</Label>
+                    <Label>{L("Ваша оцінка", "Your rating")}</Label>
                     <Stars value={rating} onChange={setRating} />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="content">Ваш відгук</Label>
+                    <Label htmlFor="content">{L("Ваш відгук", "Your review")}</Label>
                     <Textarea
                       id="content"
                       value={content}
                       onChange={(e) => setContent(e.target.value)}
                       rows={4}
                       maxLength={2000}
-                      placeholder="Поділіться враженнями про платформу…"
+                      placeholder={L("Поділіться враженнями про платформу…", "Share your impressions of the platform…")}
                     />
                     <div className="text-xs text-muted-foreground text-right">{content.length}/2000</div>
                   </div>
                   <Button type="submit" disabled={busy}>
-                    {busy ? "Надсилаємо…" : myExisting ? "Оновити" : "Надіслати"}
+                    {busy ? L("Надсилаємо…", "Sending…") : myExisting ? L("Оновити", "Update") : L("Надіслати", "Send")}
                   </Button>
                 </form>
               </CardContent>
@@ -297,10 +299,10 @@ const Testimonials = () => {
             <Card className="mb-10">
               <CardContent className="py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
                 <p className="text-muted-foreground text-center sm:text-left">
-                  Лише користувачі платформи можуть залишати відгуки.
+                  {L("Лише користувачі платформи можуть залишати відгуки.", "Only platform users can leave reviews.")}
                 </p>
                 <Button asChild>
-                  <Link to="/auth">Увійти / зареєструватися</Link>
+                  <Link to="/auth">{L("Увійти / зареєструватися", "Sign in / register")}</Link>
                 </Button>
               </CardContent>
             </Card>
@@ -308,12 +310,12 @@ const Testimonials = () => {
 
           <div className="space-y-4">
             {loading ? (
-              <p className="text-center text-muted-foreground">Завантаження…</p>
+              <p className="text-center text-muted-foreground">{L("Завантаження…", "Loading…")}</p>
             ) : items.length === 0 ? (
-              <p className="text-center text-muted-foreground">Ще немає відгуків. Будьте першим!</p>
+              <p className="text-center text-muted-foreground">{L("Ще немає відгуків. Будьте першим!", "No reviews yet. Be the first!")}</p>
             ) : (
               items.map((it) => {
-                const name = it.author?.full_name || "Користувач";
+                const name = it.author?.full_name || L("Користувач", "User");
                 const initials = name.split(" ").map((s) => s[0]).slice(0, 2).join("").toUpperCase();
                 const canDelete = isAdmin || it.user_id === user?.id;
                 return (
@@ -332,7 +334,7 @@ const Testimonials = () => {
                             </div>
                             <div className="flex items-center gap-2">
                               <span className="text-xs text-muted-foreground">
-                                {new Date(it.created_at).toLocaleDateString("uk-UA")}
+                                {new Date(it.created_at).toLocaleDateString(L("uk-UA", "en-GB"))}
                               </span>
                               {it.user_id === user?.id && (
                                 <Button
@@ -344,7 +346,7 @@ const Testimonials = () => {
                                     window.scrollTo({ top: 0, behavior: "smooth" });
                                   }}
                                   className="h-7 w-7"
-                                  aria-label="Редагувати"
+                                  aria-label={L("Редагувати", "Edit")}
                                 >
                                   <Pencil className="h-3.5 w-3.5" />
                                 </Button>
@@ -355,7 +357,7 @@ const Testimonials = () => {
                                   variant="ghost"
                                   onClick={() => remove(it.id)}
                                   className="h-7 w-7"
-                                  aria-label="Видалити"
+                                  aria-label={L("Видалити", "Delete")}
                                 >
                                   <Trash2 className="h-3.5 w-3.5" />
                                 </Button>
