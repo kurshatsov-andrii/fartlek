@@ -116,7 +116,7 @@
 - [x] Correct English brand headings on About; verified all five real pages in English, Ukrainian restoration, three charts and mobile legal page without overflow or browser errors
 
 ## English start translations
-- [ ] Add editable English start fields and an administrator-only automatic translation action
-- [ ] Show saved English title, description, location and metadata on the Starts listing and start details, falling back to Ukrainian when absent
-- [ ] Test translation fallback and verify the administrator translation/edit/save flow and public English page
-- [ ] Do not create a test user; verify without adding accounts (test-user creation failed before creating anything)
+- [x] Add editable English start fields and an administrator-only automatic translation action
+- [x] Show saved English title, description, location and metadata on the Starts listing and start details, falling back to Ukrainian when absent
+- [x] Test translation fallback and verify the public English page, English listing search, edited translation storage and 116 regression tests
+- [ ] Verify the administrator translation button in the live editor — the existing administrator account was not approved for browser testing; no test user was created
