@@ -15,19 +15,27 @@ interface AppContextValue {
 const AppContext = createContext<AppContextValue | undefined>(undefined);
 
 export const AppProvider = ({ children }: { children: ReactNode }) => {
-  const lang: Lang = "uk";
+  const [lang, setLangState] = useState<Lang>("uk");
   const theme: Theme = "dark";
 
   useEffect(() => {
     document.documentElement.classList.add("dark");
-    document.documentElement.lang = "uk";
     localStorage.setItem("fe.theme", "dark");
-    localStorage.setItem("fe.lang", "uk");
+    if (localStorage.getItem("fe.lang") === "en") setLangState("en");
   }, []);
+
+  useEffect(() => {
+    document.documentElement.lang = lang;
+  }, [lang]);
+
+  const setLang = (l: Lang) => {
+    setLangState(l);
+    localStorage.setItem("fe.lang", l);
+  };
 
   const value: AppContextValue = {
     lang,
-    setLang: () => {},
+    setLang,
     theme,
     setTheme: () => {},
     toggleTheme: () => {},

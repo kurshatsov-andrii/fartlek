@@ -14,7 +14,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 export const Header = () => {
-  const { t } = useApp();
+  const { t, lang, setLang } = useApp();
+  const L = (uk: string, en: string) => (lang === "en" ? en : uk);
   const { user, isOrganizer, isAdmin, signOut } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
@@ -52,16 +53,16 @@ export const Header = () => {
 
         <nav className="hidden min-w-0 flex-1 flex-wrap items-center justify-center gap-x-3.5 gap-y-1 px-2 whitespace-nowrap lg:flex xl:gap-x-2.5 2xl:gap-x-4">
           <a href="/#events" onClick={handleEventsClick} className="text-[13px] xl:text-sm font-medium text-muted-foreground hover:text-foreground transition-base cursor-pointer">{t.nav.events}</a>
-          <Link to="/starts" className="text-[13px] xl:text-sm font-medium text-muted-foreground hover:text-foreground transition-base">Старти</Link>
-          <Link to="/calendar" className="text-[13px] xl:text-sm font-medium text-muted-foreground hover:text-foreground transition-base">Календар</Link>
-          <Link to="/map" className="text-[13px] xl:text-sm font-medium text-muted-foreground hover:text-foreground transition-base">Мапа</Link>
-          <Link to="/clubs" className="text-[13px] xl:text-sm font-medium text-muted-foreground hover:text-foreground transition-base">Клуби</Link>
-          <Link to="/organizers" className="text-[13px] xl:text-sm font-medium text-muted-foreground hover:text-foreground transition-base">Організатори</Link>
-          <Link to="/blog" className="text-[13px] xl:text-sm font-medium text-muted-foreground hover:text-foreground transition-base">Блог</Link>
-          <Link to="/tips" className="text-[13px] xl:text-sm font-medium text-muted-foreground hover:text-foreground transition-base">Поради</Link>
-          <Link to="/features" className="text-[13px] xl:text-sm font-medium text-muted-foreground hover:text-foreground transition-base">Можливості</Link>
-          <Link to="/about" className="text-[13px] xl:text-sm font-medium text-muted-foreground hover:text-foreground transition-base">Про нас</Link>
-          <Link to="/testimonials" className="text-[13px] xl:text-sm font-medium text-muted-foreground hover:text-foreground transition-base">Відгуки</Link>
+          <Link to="/starts" className="text-[13px] xl:text-sm font-medium text-muted-foreground hover:text-foreground transition-base">{L("Старти", "Starts")}</Link>
+          <Link to="/calendar" className="text-[13px] xl:text-sm font-medium text-muted-foreground hover:text-foreground transition-base">{L("Календар", "Calendar")}</Link>
+          <Link to="/map" className="text-[13px] xl:text-sm font-medium text-muted-foreground hover:text-foreground transition-base">{L("Мапа", "Map")}</Link>
+          <Link to="/clubs" className="text-[13px] xl:text-sm font-medium text-muted-foreground hover:text-foreground transition-base">{L("Клуби", "Clubs")}</Link>
+          <Link to="/organizers" className="text-[13px] xl:text-sm font-medium text-muted-foreground hover:text-foreground transition-base">{L("Організатори", "Organizers")}</Link>
+          <Link to="/blog" className="text-[13px] xl:text-sm font-medium text-muted-foreground hover:text-foreground transition-base">{L("Блог", "Blog")}</Link>
+          <Link to="/tips" className="text-[13px] xl:text-sm font-medium text-muted-foreground hover:text-foreground transition-base">{L("Поради", "Tips")}</Link>
+          <Link to="/features" className="text-[13px] xl:text-sm font-medium text-muted-foreground hover:text-foreground transition-base">{L("Можливості", "Features")}</Link>
+          <Link to="/about" className="text-[13px] xl:text-sm font-medium text-muted-foreground hover:text-foreground transition-base">{L("Про нас", "About")}</Link>
+          <Link to="/testimonials" className="text-[13px] xl:text-sm font-medium text-muted-foreground hover:text-foreground transition-base">{L("Відгуки", "Reviews")}</Link>
           <Link to="/faq" className="text-[13px] xl:text-sm font-medium text-muted-foreground hover:text-foreground transition-base">FAQ</Link>
 
           {isOrganizer ? (
@@ -73,9 +74,9 @@ export const Header = () => {
         </nav>
 
         <nav className="flex lg:hidden min-w-0 flex-1 items-center justify-center gap-2 text-xs sm:text-sm sm:gap-6 [&>a]:text-inherit">
-          <Link to="/starts" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-base">Старти</Link>
-          <Link to="/calendar" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-base">Календар</Link>
-          <Link to="/map" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-base">Мапа</Link>
+          <Link to="/starts" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-base">{L("Старти", "Starts")}</Link>
+          <Link to="/calendar" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-base">{L("Календар", "Calendar")}</Link>
+          <Link to="/map" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-base">{L("Мапа", "Map")}</Link>
         </nav>
 
         <div className="flex shrink-0 items-center gap-0 sm:gap-1.5">
@@ -83,6 +84,9 @@ export const Header = () => {
             <Link to="/saved">{dueCount > 0 ? <Bell className="h-4 w-4 text-primary" /> : <Bookmark className="h-4 w-4" />}{dueCount > 0 && <span className="absolute -right-1 -top-1 rounded-full bg-primary px-1 text-[10px] text-primary-foreground">{dueCount}</span>}</Link>
           </Button>
           {planner.comparison.length > 0 && <Button asChild variant="outline" size="sm" className="gap-1 px-2 sm:gap-2 sm:px-3" aria-label="Порівняння стартів"><Link to="/compare"><GitCompareArrows className="h-4 w-4" />{planner.comparison.length}</Link></Button>}
+          <Button variant="ghost" size="sm" onClick={() => setLang(lang === "uk" ? "en" : "uk")} aria-label={lang === "uk" ? "Switch to English" : "Перемкнути на українську"} className="h-8 px-2 text-xs font-semibold sm:h-9">
+            {lang === "uk" ? "EN" : "UA"}
+          </Button>
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -105,15 +109,15 @@ export const Header = () => {
                 {isAdmin && (
                   <DropdownMenuItem asChild><Link to="/admin"><Shield className="h-4 w-4" />Адмін-панель</Link></DropdownMenuItem>
                 )}
-                <DropdownMenuItem asChild className="lg:hidden"><Link to="/clubs"><Users className="h-4 w-4" />Клуби</Link></DropdownMenuItem>
-                <DropdownMenuItem asChild className="lg:hidden"><Link to="/blog"><BookOpen className="h-4 w-4" />Блог</Link></DropdownMenuItem>
-                <DropdownMenuItem asChild className="lg:hidden"><Link to="/tips"><BookOpen className="h-4 w-4" />Поради</Link></DropdownMenuItem>
-                <DropdownMenuItem asChild className="lg:hidden"><Link to="/features"><Sparkles className="h-4 w-4" />Можливості</Link></DropdownMenuItem>
-                <DropdownMenuItem asChild className="lg:hidden"><Link to="/about"><Heart className="h-4 w-4" />Про нас</Link></DropdownMenuItem>
+                <DropdownMenuItem asChild className="lg:hidden"><Link to="/clubs"><Users className="h-4 w-4" />{L("Клуби", "Clubs")}</Link></DropdownMenuItem>
+                <DropdownMenuItem asChild className="lg:hidden"><Link to="/blog"><BookOpen className="h-4 w-4" />{L("Блог", "Blog")}</Link></DropdownMenuItem>
+                <DropdownMenuItem asChild className="lg:hidden"><Link to="/tips"><BookOpen className="h-4 w-4" />{L("Поради", "Tips")}</Link></DropdownMenuItem>
+                <DropdownMenuItem asChild className="lg:hidden"><Link to="/features"><Sparkles className="h-4 w-4" />{L("Можливості", "Features")}</Link></DropdownMenuItem>
+                <DropdownMenuItem asChild className="lg:hidden"><Link to="/about"><Heart className="h-4 w-4" />{L("Про нас", "About")}</Link></DropdownMenuItem>
                 {!isOrganizer && (
                   <DropdownMenuItem asChild className="lg:hidden"><Link to="/for-organizers"><Megaphone className="h-4 w-4" />{t.nav.organizer}</Link></DropdownMenuItem>
                 )}
-                <DropdownMenuItem asChild><Link to="/testimonials"><Star className="h-4 w-4" />Відгуки</Link></DropdownMenuItem>
+                <DropdownMenuItem asChild><Link to="/testimonials"><Star className="h-4 w-4" />{L("Відгуки", "Reviews")}</Link></DropdownMenuItem>
                 <DropdownMenuItem asChild><Link to="/faq"><HelpCircle className="h-4 w-4" />FAQ</Link></DropdownMenuItem>
                 <DropdownMenuItem asChild className="lg:hidden"><Link to="/contacts"><Mail className="h-4 w-4" />{t.nav.contacts}</Link></DropdownMenuItem>
                 <DropdownMenuSeparator />
@@ -133,14 +137,14 @@ export const Header = () => {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-52">
                   <DropdownMenuItem asChild><a href="/#events" onClick={handleEventsClick}><Ticket className="h-4 w-4" />{t.nav.events}</a></DropdownMenuItem>
-                  <DropdownMenuItem asChild><Link to="/clubs"><Users className="h-4 w-4" />Клуби</Link></DropdownMenuItem>
-                  <DropdownMenuItem asChild><Link to="/organizers"><Users className="h-4 w-4" />Організатори</Link></DropdownMenuItem>
-                  <DropdownMenuItem asChild><Link to="/blog"><BookOpen className="h-4 w-4" />Блог</Link></DropdownMenuItem>
-                  <DropdownMenuItem asChild><Link to="/tips"><BookOpen className="h-4 w-4" />Поради</Link></DropdownMenuItem>
+                  <DropdownMenuItem asChild><Link to="/clubs"><Users className="h-4 w-4" />{L("Клуби", "Clubs")}</Link></DropdownMenuItem>
+                  <DropdownMenuItem asChild><Link to="/organizers"><Users className="h-4 w-4" />{L("Організатори", "Organizers")}</Link></DropdownMenuItem>
+                  <DropdownMenuItem asChild><Link to="/blog"><BookOpen className="h-4 w-4" />{L("Блог", "Blog")}</Link></DropdownMenuItem>
+                  <DropdownMenuItem asChild><Link to="/tips"><BookOpen className="h-4 w-4" />{L("Поради", "Tips")}</Link></DropdownMenuItem>
                   <DropdownMenuItem asChild><Link to="/for-organizers" className="text-primary font-semibold"><Megaphone className="h-4 w-4" />{t.nav.organizer}</Link></DropdownMenuItem>
-                  <DropdownMenuItem asChild><Link to="/features"><Sparkles className="h-4 w-4" />Можливості</Link></DropdownMenuItem>
-                  <DropdownMenuItem asChild><Link to="/about"><Heart className="h-4 w-4" />Про нас</Link></DropdownMenuItem>
-                  <DropdownMenuItem asChild><Link to="/testimonials"><Star className="h-4 w-4" />Відгуки</Link></DropdownMenuItem>
+                  <DropdownMenuItem asChild><Link to="/features"><Sparkles className="h-4 w-4" />{L("Можливості", "Features")}</Link></DropdownMenuItem>
+                  <DropdownMenuItem asChild><Link to="/about"><Heart className="h-4 w-4" />{L("Про нас", "About")}</Link></DropdownMenuItem>
+                  <DropdownMenuItem asChild><Link to="/testimonials"><Star className="h-4 w-4" />{L("Відгуки", "Reviews")}</Link></DropdownMenuItem>
                   <DropdownMenuItem asChild><Link to="/faq"><HelpCircle className="h-4 w-4" />FAQ</Link></DropdownMenuItem>
 
                   <DropdownMenuItem asChild><Link to="/contacts"><Mail className="h-4 w-4" />{t.nav.contacts}</Link></DropdownMenuItem>
