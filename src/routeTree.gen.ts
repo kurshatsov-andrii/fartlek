@@ -24,6 +24,7 @@ import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as PublicOfferRouteImport } from './routes/public-offer'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as ResultsRouteImport } from './routes/results'
 import { Route as SavedRouteImport } from './routes/saved'
 import { Route as SurveyRouteImport } from './routes/survey'
 import { Route as TestimonialsRouteImport } from './routes/testimonials'
@@ -161,6 +162,11 @@ const PublicOfferRoute = PublicOfferRouteImport.update({
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
   id: '/reset-password',
   path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResultsRoute = ResultsRouteImport.update({
+  id: '/results',
+  path: '/results',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SavedRoute = SavedRouteImport.update({
@@ -500,6 +506,7 @@ export interface FileRoutesByFullPath {
   '/profile': typeof ProfileRoute
   '/public-offer': typeof PublicOfferRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/results': typeof ResultsRoute
   '/saved': typeof SavedRoute
   '/survey': typeof SurveyRoute
   '/testimonials': typeof TestimonialsRoute
@@ -580,6 +587,7 @@ export interface FileRoutesByTo {
   '/profile': typeof ProfileRoute
   '/public-offer': typeof PublicOfferRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/results': typeof ResultsRoute
   '/saved': typeof SavedRoute
   '/survey': typeof SurveyRoute
   '/testimonials': typeof TestimonialsRoute
@@ -661,6 +669,7 @@ export interface FileRoutesById {
   '/profile': typeof ProfileRoute
   '/public-offer': typeof PublicOfferRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/results': typeof ResultsRoute
   '/saved': typeof SavedRoute
   '/survey': typeof SurveyRoute
   '/testimonials': typeof TestimonialsRoute
@@ -743,6 +752,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/public-offer'
     | '/reset-password'
+    | '/results'
     | '/saved'
     | '/survey'
     | '/testimonials'
@@ -823,6 +833,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/public-offer'
     | '/reset-password'
+    | '/results'
     | '/saved'
     | '/survey'
     | '/testimonials'
@@ -903,6 +914,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/public-offer'
     | '/reset-password'
+    | '/results'
     | '/saved'
     | '/survey'
     | '/testimonials'
@@ -984,6 +996,7 @@ export interface RootRouteChildren {
   ProfileRoute: typeof ProfileRoute
   PublicOfferRoute: typeof PublicOfferRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
+  ResultsRoute: typeof ResultsRoute
   SavedRoute: typeof SavedRoute
   SurveyRoute: typeof SurveyRoute
   TestimonialsRoute: typeof TestimonialsRoute
@@ -1154,6 +1167,13 @@ declare module '@tanstack/react-router' {
       path: '/reset-password'
       fullPath: '/reset-password'
       preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/results': {
+      id: '/results'
+      path: '/results'
+      fullPath: '/results'
+      preLoaderRoute: typeof ResultsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/saved': {
@@ -1616,6 +1636,7 @@ const rootRouteChildren: RootRouteChildren = {
   ProfileRoute: ProfileRoute,
   PublicOfferRoute: PublicOfferRoute,
   ResetPasswordRoute: ResetPasswordRoute,
+  ResultsRoute: ResultsRoute,
   SavedRoute: SavedRoute,
   SurveyRoute: SurveyRoute,
   TestimonialsRoute: TestimonialsRoute,

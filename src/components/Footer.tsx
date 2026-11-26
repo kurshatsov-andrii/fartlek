@@ -37,6 +37,7 @@ export const Footer = () => {
           <div className="flex flex-wrap gap-3 justify-center md:justify-end">
             <Link to="/about" className="hover:text-primary transition-colors">Про нас</Link>
             <Link to="/faq" className="hover:text-primary transition-colors">FAQ</Link>
+            <Link to="/results" className="hover:text-primary transition-colors">Фартлек у цифрах</Link>
             <Link to="/for-organizers" className="hover:text-primary transition-colors">Організаторам</Link>
             <Link to="/privacy" className="hover:text-primary transition-colors">Політика конфіденційності</Link>
             <Link to="/public-offer" className="hover:text-primary transition-colors">Публічна оферта</Link>
