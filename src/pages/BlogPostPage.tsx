@@ -7,11 +7,15 @@ import { Button } from "@/components/ui/button";
 import { BlogSocialLinks } from "@/components/BlogSocialLinks";
 import { PageViews } from "@/components/PageViews";
 import { supabase } from "@/integrations/supabase/client";
-import { BlogPost, formatBlogDate, youtubeEmbed } from "@/lib/blog";
+import { useApp } from "@/contexts/AppContext";
+import { BlogPost, localizePost, formatBlogDate, youtubeEmbed } from "@/lib/blog";
 
 const BlogPostPage = () => {
   const { slug } = useParams() as { slug: string };
-  const [post, setPost] = useState<BlogPost | null | undefined>(undefined);
+  const { lang } = useApp();
+  const en = lang === "en";
+  const [rawPost, setPost] = useState<BlogPost | null | undefined>(undefined);
+  const post = rawPost ? localizePost(rawPost, lang) : rawPost;
   const [open, setOpen] = useState<string | null>(null);
 
   useEffect(() => {
@@ -25,17 +29,17 @@ const BlogPostPage = () => {
     <div className="min-h-screen flex flex-col bg-background">
       <Header />
       <main className="flex-1 container py-8 max-w-4xl space-y-8">
-        <Link to="/blog" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"><ArrowLeft className="h-4 w-4" />До блогу</Link>
+        <Link to="/blog" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"><ArrowLeft className="h-4 w-4" />{en ? "Back to blog" : "До блогу"}</Link>
         {post === undefined ? (
           <div className="flex justify-center py-16"><Loader2 className="h-6 w-6 animate-spin" /></div>
         ) : post === null ? (
-          <p className="text-muted-foreground">Запис не знайдено.</p>
+          <p className="text-muted-foreground">{en ? "Post not found." : "Запис не знайдено."}</p>
         ) : (
           <>
             <header className="space-y-3">
               <h1 className="font-display text-3xl md:text-4xl font-bold">{post.title}</h1>
               <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
-                {post.event_date && <span className="flex items-center gap-1"><Calendar className="h-4 w-4" />{formatBlogDate(post.event_date)}</span>}
+                {post.event_date && <span className="flex items-center gap-1"><Calendar className="h-4 w-4" />{formatBlogDate(post.event_date, lang)}</span>}
                 {post.location && <span className="flex items-center gap-1"><MapPin className="h-4 w-4" />{post.location}</span>}
                 <PageViews pageKey={`blog:${post.slug}`} />
               </div>
@@ -60,7 +64,7 @@ const BlogPostPage = () => {
             )}
 
             {post.photos_album_url && (
-              <Button asChild size="lg"><a href={post.photos_album_url} target="_blank" rel="noopener noreferrer"><Images className="h-4 w-4" />Усі фото події</a></Button>
+              <Button asChild size="lg"><a href={post.photos_album_url} target="_blank" rel="noopener noreferrer"><Images className="h-4 w-4" />{en ? "All event photos" : "Усі фото події"}</a></Button>
             )}
           </>
         )}

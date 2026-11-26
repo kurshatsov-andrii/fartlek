@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useApp } from "@/contexts/AppContext";
 import { Link } from "@/lib/router-compat";
 import { supabase } from "@/integrations/supabase/client";
-import { BlogPost, formatBlogDate } from "@/lib/blog";
+import { BlogPost, localizePost, formatBlogDate } from "@/lib/blog";
 import logo from "@/assets/logo-fartlek.jpg";
 import { imageDeliveryUrl } from "@/lib/image-delivery";
 
@@ -89,7 +89,7 @@ export const TelegramCommunity = ({ showBlog = false }: { showBlog?: boolean }) 
                 <Link to="/blog" className="text-sm text-primary hover:underline">{L.allPosts} →</Link>
               </div>
               <div className="mt-4 grid gap-4 md:grid-cols-2">
-                {posts.map((p) => (
+                {posts.map((raw) => localizePost(raw as BlogPost, lang)).map((p) => (
                   <Link key={p.id} to={`/blog/${p.slug}`} className="group flex gap-3 rounded-lg border border-border bg-card p-3 transition-base hover:border-primary">
                     <img src={imageDeliveryUrl(p.cover_url || p.photos?.[0] || logo, 256)} alt={p.title} loading="lazy" decoding="async" width={128} height={96} onError={(event) => { const original = p.cover_url || p.photos?.[0] || logo; if (event.currentTarget.getAttribute("src") !== original) event.currentTarget.src = original; }} className="h-24 w-24 shrink-0 rounded-md object-cover sm:w-32" />
                     <div className="min-w-0 space-y-1">

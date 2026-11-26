@@ -14,6 +14,19 @@ export type BlogPost = {
   youtube_url: string | null;
   photos_album_url: string | null;
   is_published: boolean;
+  title_en?: string | null;
+  excerpt_en?: string | null;
+  content_en?: string | null;
+  location_en?: string | null;
+};
+
+/** English view of a post: *_en fields when filled, Ukrainian originals otherwise. */
+export const localizePost = <T extends BlogPost>(p: T, lang: string): T => lang !== "en" ? p : {
+  ...p,
+  title: p.title_en?.trim() || p.title,
+  excerpt: p.excerpt_en?.trim() || p.excerpt,
+  content: p.content_en?.trim() || p.content,
+  location: p.location_en?.trim() || p.location,
 };
 
 export const youtubeEmbed = (url: string | null): string | null => {

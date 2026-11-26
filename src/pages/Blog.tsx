@@ -11,7 +11,7 @@ import { FounderInvite } from "@/components/FounderInvite";
 import { PageViews } from "@/components/PageViews";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
-import { BlogPost, formatBlogDate } from "@/lib/blog";
+import { BlogPost, localizePost, formatBlogDate } from "@/lib/blog";
 import logo from "@/assets/logo-fartlek.jpg";
 import { BlogHeadingEditor } from "@/components/BlogHeadingEditor";
 
@@ -65,7 +65,7 @@ const Blog = () => {
           <p className="text-muted-foreground">{L("Записів поки немає.", "No posts yet.")}</p>
         ) : (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {posts.map((p) => (
+            {posts.map((raw) => localizePost(raw, L("uk", "en"))).map((p) => (
               <Link key={p.id} to={`/blog/${p.slug}`} className="group rounded-2xl overflow-hidden border border-border bg-card transition-bounce hover:-translate-y-2 hover:shadow-elevated isolate">
                 <div className="aspect-[16/10] bg-muted overflow-hidden">
                   <img src={p.cover_url || p.photos[0] || logo} alt={p.title} loading="lazy" className="h-full w-full object-cover" />

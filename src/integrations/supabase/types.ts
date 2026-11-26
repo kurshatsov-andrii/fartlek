@@ -64,52 +64,64 @@ export type Database = {
       blog_posts: {
         Row: {
           content: string | null
+          content_en: string | null
           cover_url: string | null
           created_at: string
           created_by: string | null
           event_date: string | null
           excerpt: string | null
+          excerpt_en: string | null
           id: string
           is_published: boolean
           location: string | null
+          location_en: string | null
           photos: string[]
           photos_album_url: string | null
           slug: string
           title: string
+          title_en: string | null
           updated_at: string
           youtube_url: string | null
         }
         Insert: {
           content?: string | null
+          content_en?: string | null
           cover_url?: string | null
           created_at?: string
           created_by?: string | null
           event_date?: string | null
           excerpt?: string | null
+          excerpt_en?: string | null
           id?: string
           is_published?: boolean
           location?: string | null
+          location_en?: string | null
           photos?: string[]
           photos_album_url?: string | null
           slug: string
           title: string
+          title_en?: string | null
           updated_at?: string
           youtube_url?: string | null
         }
         Update: {
           content?: string | null
+          content_en?: string | null
           cover_url?: string | null
           created_at?: string
           created_by?: string | null
           event_date?: string | null
           excerpt?: string | null
+          excerpt_en?: string | null
           id?: string
           is_published?: boolean
           location?: string | null
+          location_en?: string | null
           photos?: string[]
           photos_album_url?: string | null
           slug?: string
           title?: string
+          title_en?: string | null
           updated_at?: string
           youtube_url?: string | null
         }
