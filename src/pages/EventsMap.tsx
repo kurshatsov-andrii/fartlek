@@ -1,4 +1,6 @@
+import { translitCity } from "@/lib/translit-city";
 import { useL } from "@/lib/use-l";
+import { useApp } from "@/contexts/AppContext";
 import { useEffect, useMemo, useState } from "react";
 import { PageViews } from "@/components/PageViews";
 import { Link } from "@/lib/router-compat";
@@ -70,6 +72,8 @@ const FlyTo = ({ coords }: { coords: [number, number] | null }) => {
 
 const EventsMap = () => {
   const L = useL();
+  const { lang } = useApp();
+  const cityName = (c: string) => (lang === "en" ? translitCity(c) : c);
   const [items, setItems] = useState<MapItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState<string | null>(null);
@@ -187,7 +191,7 @@ const EventsMap = () => {
   const visibleGroups = useMemo(() => {
     const s = q.trim().toLowerCase();
     if (!s) return groups;
-    return groups.filter((g) => g.city.toLowerCase().includes(s));
+    return groups.filter((g) => (g.city.toLowerCase().includes(s) || translitCity(g.city).toLowerCase().includes(s)));
   }, [groups, q]);
 
   const activeGroup = groups.find((g) => g.city === selected) ?? null;
@@ -228,7 +232,7 @@ const EventsMap = () => {
                   <Marker
                     key={g.city}
                     position={g.coords}
-                    icon={markerIcon(g.city, g.items.length, g.city === selected)}
+                    icon={markerIcon(cityName(g.city), g.items.length, g.city === selected)}
                     eventHandlers={{ click: () => setSelected(g.city) }}
                   />
                 ))}
@@ -246,7 +250,7 @@ const EventsMap = () => {
                   <div className="flex items-start justify-between gap-2 mb-3">
                     <div>
                       <h2 className="font-display text-xl font-bold flex items-center gap-2">
-                        <MapPin className="h-5 w-5 text-primary" />{activeGroup.city}
+                        <MapPin className="h-5 w-5 text-primary" />{cityName(activeGroup.city)}
                       </h2>
                       <p className="text-sm text-muted-foreground">{activeGroup.items.length} {L("подій", "events")}</p>
                     </div>
@@ -286,7 +290,7 @@ const EventsMap = () => {
                         onClick={() => setSelected(g.city)}
                         className="flex items-center justify-between gap-2 py-2 px-2 rounded-md hover:bg-muted text-left"
                       >
-                        <span className="inline-flex items-center gap-2 text-sm"><MapPin className="h-4 w-4 text-primary" />{g.city}</span>
+                        <span className="inline-flex items-center gap-2 text-sm"><MapPin className="h-4 w-4 text-primary" />{cityName(g.city)}</span>
                         <span className="text-sm font-semibold text-muted-foreground">{g.items.length}</span>
                       </button>
                     ))}
