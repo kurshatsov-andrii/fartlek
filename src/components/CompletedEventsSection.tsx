@@ -12,6 +12,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { eventCity } from "@/lib/utils";
 
 interface CompletedEvent {
+  title_en?: string | null; location_en?: string | null;
   id: string;
   slug: string | null;
   title: string;
