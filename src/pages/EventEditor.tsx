@@ -650,14 +650,14 @@ const EventEditor = () => {
                 <div className="space-y-2">
                   <Label>Merchant Domain *</Label>
                   <Input
-                    placeholder="fartlek.lovable.app"
+                    placeholder="fartlek.com.ua"
                     value={form.wfp_merchant_domain}
                     onChange={(e) => setForm({ ...form, wfp_merchant_domain: e.target.value })}
                     maxLength={120}
                   />
                 </div>
                 <div className="rounded-md bg-background border border-border p-3 text-xs text-muted-foreground">
-                  Вкажи той самий домен, який доданий у кабінеті WayForPay. Для поточного сайту це <code className="font-mono">fartlek.lovable.app</code>.
+                  Вкажи той самий домен, який доданий у кабінеті WayForPay. Для поточного сайту це <code className="font-mono">fartlek.com.ua</code>.
                 </div>
                 <div className="rounded-md bg-background border border-border p-3 text-xs space-y-3">
                   <p className="font-semibold">⚙️ Налаштуй у кабінеті WayForPay:</p>
