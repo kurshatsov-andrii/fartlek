@@ -11,6 +11,8 @@ interface SEOProps {
   jsonLd?: Record<string, any> | Record<string, any>[];
   /** Override path key (defaults to current pathname) */
   path?: string;
+  /** Ukrainian admin overrides must not replace translated content. */
+  useOverride?: boolean;
 }
 
 const setMeta = (selector: string, attr: "name" | "property", key: string, value: string) => {
@@ -36,14 +38,18 @@ const setLink = (rel: string, href: string) => {
 // Tiny in-memory cache to avoid refetching on every nav
 const overrideCache = new Map<string, { title: string | null; description: string | null }>();
 
-export const SEO = ({ title, description, canonical, image, jsonLd, path }: SEOProps) => {
+export const SEO = ({ title, description, canonical, image, jsonLd, path, useOverride = true }: SEOProps) => {
   const location = useLocation();
   const key = path ?? location.pathname;
   const [overrideEntry, setOverrideEntry] = useState<{ key: string; value: { title: string | null; description: string | null } } | null>(null);
-  const override = overrideEntry?.key === key ? overrideEntry.value : null;
+  const override = useOverride && overrideEntry?.key === key ? overrideEntry.value : null;
 
   useEffect(() => {
     let cancelled = false;
+    if (!useOverride) {
+      setOverrideEntry({ key, value: { title: null, description: null } });
+      return;
+    }
     const cached = overrideCache.get(key);
     if (cached) {
       setOverrideEntry({ key, value: cached });
@@ -62,7 +68,7 @@ export const SEO = ({ title, description, canonical, image, jsonLd, path }: SEOP
     return () => {
       cancelled = true;
     };
-  }, [key]);
+  }, [key, useOverride]);
 
   useEffect(() => {
     const finalTitle = override?.title?.trim() ? override.title : title;
@@ -99,7 +105,7 @@ export const SEO = ({ title, description, canonical, image, jsonLd, path }: SEOP
       script.text = JSON.stringify(jsonLd);
       document.head.appendChild(script);
     }
-  }, [title, description, canonical, image, JSON.stringify(jsonLd), override?.title, override?.description]);
+  }, [title, description, canonical, image, JSON.stringify(jsonLd), override?.title, override?.description, useOverride]);
 
   return null;
 };

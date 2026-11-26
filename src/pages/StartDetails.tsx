@@ -109,6 +109,7 @@ const StartDetails = () => {
         title={content.seo_title || `${content.title} — ${L("Старти", "Starts")} Fartlek`}
         description={(content.seo_description || content.description || "").slice(0, 160)}
         image={row.image_url || undefined}
+        useOverride={lang === "uk"}
       />
       <Header />
       <main className="flex-1 container py-10 max-w-3xl">

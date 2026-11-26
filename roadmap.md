@@ -119,4 +119,6 @@
 - [x] Add editable English start fields and an administrator-only automatic translation action
 - [x] Show saved English title, description, location and metadata on the Starts listing and start details, falling back to Ukrainian when absent
 - [x] Test translation fallback and verify the public English page, English listing search, edited translation storage and 116 regression tests
+- [x] Translate the currently viewed Dnipro E-RUN start and verify language switching, English metadata, catalog search and Ukrainian restoration in the browser
+- [x] Translate all 87 published starts into English, preserve Ukrainian originals, clean invalid SEO snippets and verify full database coverage
 - [ ] Verify the administrator translation button in the live editor — the existing administrator account was not approved for browser testing; no test user was created
