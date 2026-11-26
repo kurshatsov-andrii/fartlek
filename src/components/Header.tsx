@@ -73,10 +73,10 @@ export const Header = () => {
           <Link to="/contacts" className="text-[13px] xl:text-sm font-medium text-muted-foreground hover:text-foreground transition-base">{t.nav.contacts}</Link>
         </nav>
 
-        <nav className="flex lg:hidden min-w-0 flex-1 items-center justify-center gap-2 text-xs sm:text-sm sm:gap-6 [&>a]:text-inherit">
-          <Link to="/starts" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-base">{L("Старти", "Starts")}</Link>
-          <Link to="/calendar" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-base">{L("Календар", "Calendar")}</Link>
-          <Link to="/map" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-base">{L("Мапа", "Map")}</Link>
+        <nav className="flex lg:hidden min-w-0 flex-1 items-center justify-center gap-1.5 overflow-hidden text-xs sm:text-sm sm:gap-6 [&>a]:text-inherit">
+          <Link to="/starts" className="shrink-0 text-xs min-[400px]:text-sm font-medium text-muted-foreground hover:text-foreground transition-base">{L("Старти", "Starts")}</Link>
+          <Link to="/calendar" className="shrink-0 text-xs min-[400px]:text-sm font-medium text-muted-foreground hover:text-foreground transition-base">{L("Календар", "Calendar")}</Link>
+          <Link to="/map" className="hidden min-[420px]:inline shrink-0 text-sm font-medium text-muted-foreground hover:text-foreground transition-base">{L("Мапа", "Map")}</Link>
         </nav>
 
         <div className="flex shrink-0 items-center gap-0 sm:gap-1.5">
@@ -84,7 +84,7 @@ export const Header = () => {
             <Link to="/saved">{dueCount > 0 ? <Bell className="h-4 w-4 text-primary" /> : <Bookmark className="h-4 w-4" />}{dueCount > 0 && <span className="absolute -right-1 -top-1 rounded-full bg-primary px-1 text-[10px] text-primary-foreground">{dueCount}</span>}</Link>
           </Button>
           {planner.comparison.length > 0 && <Button asChild variant="outline" size="sm" className="gap-1 px-2 sm:gap-2 sm:px-3" aria-label="Порівняння стартів"><Link to="/compare"><GitCompareArrows className="h-4 w-4" />{planner.comparison.length}</Link></Button>}
-          <Button variant="ghost" size="sm" onClick={() => setLang(lang === "uk" ? "en" : "uk")} aria-label={lang === "uk" ? "Switch to English" : "Перемкнути на українську"} className="h-8 px-2 text-xs font-semibold sm:h-9">
+          <Button variant="ghost" size="sm" onClick={() => setLang(lang === "uk" ? "en" : "uk")} aria-label={lang === "uk" ? "Switch to English" : "Перемкнути на українську"} className="h-8 px-1.5 text-xs font-semibold sm:h-9 sm:px-2">
             {lang === "uk" ? "EN" : "UA"}
           </Button>
           {user ? (
