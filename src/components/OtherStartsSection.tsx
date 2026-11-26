@@ -26,6 +26,8 @@ interface StartRow {
   id: string;
   slug: string;
   title: string;
+  title_en?: string | null;
+  city_en?: string | null;
   description: string | null;
   image_url: string | null;
   register_url: string | null;
@@ -74,7 +76,7 @@ export const OtherStartsSection = ({ shared, onFacets }: { shared?: SharedStartF
     Promise.all([
       supabase
         .from("telegram_starts")
-        .select("id,slug,title,description,image_url,register_url,results_url,registration_status,registration_open_until,event_date,city,region,organizer_name,sport_types,distances_km,is_paid")
+        .select("id,slug,title,title_en,city_en,description,image_url,register_url,results_url,registration_status,registration_open_until,event_date,city,region,organizer_name,sport_types,distances_km,is_paid")
         .eq("status", "published")
         .or(`event_date.gte.${today},registration_open_until.gte.${today}`)
         .order("event_date", { ascending: true }),
@@ -92,6 +94,7 @@ export const OtherStartsSection = ({ shared, onFacets }: { shared?: SharedStartF
     return `${day}.${m}.${y}`;
   };
 
+  const T = (r: StartRow) => (lang === "en" && r.title_en?.trim()) || r.title;
   const baseCity = (c: string | null) => (c ?? "").split(",")[0].trim();
   const cities = useMemo(
     () => Array.from(new Set(rows.map((r) => baseCity(r.city)).filter(Boolean))).sort(),
@@ -114,7 +117,7 @@ export const OtherStartsSection = ({ shared, onFacets }: { shared?: SharedStartF
       const sq = shared.q.trim().toLowerCase();
       return rows.filter((r) => {
         if (!matchesStartCategory(r.sport_types, shared.category)) return false;
-        if (sq && !`${r.title} ${r.description ?? ""} ${r.city ?? ""} ${r.organizer_name ?? ""}`.toLowerCase().includes(sq)) return false;
+        if (sq && !`${r.title} ${r.title_en ?? ""} ${r.description ?? ""} ${r.city ?? ""} ${r.organizer_name ?? ""}`.toLowerCase().includes(sq)) return false;
         if (!matchesYear(r.event_date, shared.year)) return false;
         if (shared.month !== "all" && !(r.event_date ?? "").startsWith(shared.month)) return false;
         if (shared.city !== "all" && baseCity(r.city).toLowerCase() !== shared.city.toLowerCase()) return false;
@@ -127,7 +130,7 @@ export const OtherStartsSection = ({ shared, onFacets }: { shared?: SharedStartF
     const qLower = q.trim().toLowerCase();
     return rows.filter((r) => {
       if (qLower) {
-        const hay = `${r.title} ${r.description ?? ""} ${r.city ?? ""} ${r.organizer_name ?? ""}`.toLowerCase();
+        const hay = `${r.title} ${r.title_en ?? ""} ${r.description ?? ""} ${r.city ?? ""} ${r.organizer_name ?? ""}`.toLowerCase();
         if (!hay.includes(qLower)) return false;
       }
       if (month !== "all") {
@@ -265,9 +268,9 @@ export const OtherStartsSection = ({ shared, onFacets }: { shared?: SharedStartF
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {visible.map((r) => (
             <article key={r.id} className="group flex flex-col overflow-hidden rounded-2xl bg-card shadow-card transition-bounce hover:-translate-y-1 hover:shadow-elevated">
-              <Link to={`/starts/${r.slug}`} className="relative aspect-video w-full overflow-hidden bg-muted block" aria-label={r.title}>
+              <Link to={`/starts/${r.slug}`} className="relative aspect-video w-full overflow-hidden bg-muted block" aria-label={T(r)}>
                 {r.image_url ? (
-                  <EventPoster src={r.image_url} alt={r.title} />
+                  <EventPoster src={r.image_url} alt={T(r)} />
                 ) : (
                   <div className="h-full w-full bg-gradient-hero" />
                 )}
@@ -283,14 +286,14 @@ export const OtherStartsSection = ({ shared, onFacets }: { shared?: SharedStartF
               </div>
               <div className="flex flex-1 flex-col p-6">
                 <h3 className="font-display text-xl font-bold leading-tight">
-                  <Link to={`/starts/${r.slug}`} className="hover:underline">{r.title}</Link>
+                  <Link to={`/starts/${r.slug}`} className="hover:underline">{T(r)}</Link>
                 </h3>
                 <StartActions source="start" id={r.id} />
                 <div className="mt-3 flex flex-col gap-1.5 text-sm text-muted-foreground">
                   {r.event_date && (
                     <div className="flex items-center gap-2"><CalendarIcon className="h-4 w-4 text-primary" />{fmtDate(r.event_date)}</div>
                   )}
-                  <div className="flex items-center gap-2"><MapPin className="h-4 w-4 text-primary" />{r.city || (lang === "uk" ? "Україна та весь світ" : "Ukraine and worldwide")}</div>
+                  <div className="flex items-center gap-2"><MapPin className="h-4 w-4 text-primary" />{(lang === "en" && r.city_en) || r.city || (lang === "uk" ? "Україна та весь світ" : "Ukraine and worldwide")}</div>
                 </div>
                 <div className="mt-6 flex items-center gap-2 pt-4 border-t border-border">
                   <Button asChild className="flex-1">
