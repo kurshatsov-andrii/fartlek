@@ -67,6 +67,7 @@ const emptyForm = {
   notes: "",
   registration_status: null as string | null,
   registration_opens_on: null as string | null,
+  registration_open_until: null as string | null,
   info_source_url: null as string | null,
   info_checked_on: null as string | null,
 };
@@ -177,6 +178,7 @@ const CalendarPage = ({ scope = "ukraine" }: { scope?: CalendarScope }) => {
       notes: r.notes ?? "",
       registration_status: r.registration_status ?? null,
       registration_opens_on: r.registration_opens_on ?? null,
+      registration_open_until: r.registration_open_until ?? null,
       info_source_url: r.info_source_url ?? null,
       info_checked_on: r.info_checked_on ?? null,
     });

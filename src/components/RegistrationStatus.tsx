@@ -39,6 +39,11 @@ export function RegistrationStatus({
             {uk ? "з" : "from"} {calendarDate(info.opensOn, locale)}
           </span>
         )}
+        {info.openUntil && info.state !== "cancelled" && (
+          <span className="text-muted-foreground">
+            {uk ? "до" : "until"} {calendarDate(info.openUntil, locale)}
+          </span>
+        )}
       </div>
       {!compact && (info.sourceLabel || host || info.checkedOn) && (
         <p className="text-xs text-muted-foreground">

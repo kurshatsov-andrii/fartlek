@@ -14,7 +14,7 @@ import { useApp } from "@/contexts/AppContext";
 import { supabase } from "@/integrations/supabase/client";
 import { EVENT_CATEGORIES, type EventCategory } from "@/lib/i18n";
 import { categorySeo, formatEventDate } from "@/lib/seo";
-import { isCompletedDate } from "@/lib/event-date";
+import { isEventCompleted } from "@/lib/event-date";
 import { canShowRegisterButton } from "@/lib/registration-status";
 import { StartActions } from "@/components/StartActions";
 import { CalendarHint } from "@/components/CalendarHint";
@@ -34,7 +34,8 @@ interface EventCard {
 
 interface StartRow {
   id: string; slug: string; title: string; description: string | null;
-  image_url: string | null; register_url: string | null; results_url: string | null; registration_status: string | null; event_date: string | null;
+  image_url: string | null; register_url: string | null; results_url: string | null; registration_status: string | null;
+  registration_open_until: string | null; event_date: string | null;
   city: string | null; organizer_name: string | null; sport_types: string[] | null;
   distances_km: number[] | null; is_paid: boolean | null;
 }
@@ -57,6 +58,7 @@ interface CatItem {
   badges: string[];
   registerUrl: string | null;
   resultsUrl: string | null;
+  openUntil: string | null;
 }
 
 const PAGE_SIZE = 9;
@@ -94,7 +96,7 @@ const CategoryPage = () => {
           .order("event_date", { ascending: true }),
         sport
           ? supabase.from("telegram_starts")
-              .select("id, slug, title, description, image_url, register_url, results_url, registration_status, event_date, city, organizer_name, sport_types, distances_km, is_paid")
+              .select("id, slug, title, description, image_url, register_url, results_url, registration_status, registration_open_until, event_date, city, organizer_name, sport_types, distances_km, is_paid")
               .eq("status", "published")
               .contains("sport_types", [sport])
               .order("event_date", { ascending: true })
@@ -132,6 +134,7 @@ const CategoryPage = () => {
         badges: [ev.format === "hybrid" ? t.format.badgeHybrid : ev.format === "online" ? t.format.badgeOnline : t.format.badgeOffline],
         registerUrl: null,
         resultsUrl: null,
+        openUntil: null,
       };
     });
 
@@ -153,7 +156,8 @@ const CategoryPage = () => {
         .slice(0, 2)
         .map((x) => t.categories[x as EventCategory]),
       resultsUrl: s.results_url,
-      registerUrl: canShowRegisterButton({ explicit: s.registration_status, date: s.event_date, today: todayStr }) ? s.register_url : null,
+      openUntil: s.registration_open_until ?? null,
+      registerUrl: canShowRegisterButton({ explicit: s.registration_status, date: s.event_date, openUntil: s.registration_open_until, today: todayStr }) ? s.register_url : null,
     }));
 
     return [...fromEvents, ...fromStarts];
@@ -189,12 +193,13 @@ const CategoryPage = () => {
     });
   }, [items, q, month, city, organizer, distanceBucket, paid]);
 
-  // Owner rule: a start counts as finished from the day before its date.
+  // Owner rule: a start counts as finished from the day before its date,
+  // unless the organizer kept registration open until a later date.
   const upcomingAll = filtered
-    .filter((i) => !i.date || !isCompletedDate(i.date, todayStr))
+    .filter((i) => !i.date || !isEventCompleted(i.date, i.openUntil, todayStr))
     .sort((a, b) => (a.date || "").localeCompare(b.date || ""));
   const completedAll = filtered
-    .filter((i) => !!i.date && isCompletedDate(i.date, todayStr))
+    .filter((i) => !!i.date && isEventCompleted(i.date, i.openUntil, todayStr))
     .sort((a, b) => (b.date || "").localeCompare(a.date || ""));
   const upcoming = upcomingAll.slice(0, visibleCount);
   const completed = completedAll.slice(0, completedCount);
@@ -244,7 +249,7 @@ const CategoryPage = () => {
       };
 
   const renderCard = (i: CatItem) => {
-    const finished = !!i.date && isCompletedDate(i.date);
+    const finished = !!i.date && isEventCompleted(i.date, i.openUntil);
     return (
       <article key={`${i.kind}-${i.id}`} className="group flex flex-col overflow-hidden rounded-2xl bg-card shadow-card transition-bounce hover:-translate-y-2 hover:shadow-elevated">
         <Link to={i.url} className="relative aspect-video overflow-hidden bg-muted block">

@@ -13,7 +13,7 @@ import { canShowRegisterButton } from "@/lib/registration-status";
 import { matchesYear } from "@/components/YearFilterButtons";
 import { StartActions } from "@/components/StartActions";
 import type { EventCategory } from "@/lib/i18n";
-import { isCompletedDate } from "@/lib/event-date";
+import { isEventCompleted } from "@/lib/event-date";
 import { matchesStartCategory } from "@/lib/home-starts";
 
 export interface SharedStartFilters {
@@ -29,6 +29,7 @@ interface StartRow {
   register_url: string | null;
   results_url: string | null;
   registration_status: string | null;
+  registration_open_until: string | null;
   event_date: string | null;
   city: string | null;
   region: string | null;
@@ -70,14 +71,14 @@ export const OtherStartsSection = ({ shared, onFacets }: { shared?: SharedStartF
     Promise.all([
       supabase
         .from("telegram_starts")
-        .select("id,slug,title,description,image_url,register_url,results_url,registration_status,event_date,city,region,organizer_name,sport_types,distances_km,is_paid")
+        .select("id,slug,title,description,image_url,register_url,results_url,registration_status,registration_open_until,event_date,city,region,organizer_name,sport_types,distances_km,is_paid")
         .eq("status", "published")
-        .gte("event_date", today)
+        .or(`event_date.gte.${today},registration_open_until.gte.${today}`)
         .order("event_date", { ascending: true }),
       supabase.from("events").select("title,event_date").eq("status", "published"),
     ]).then(([{ data }, { data: evs }]) => {
         setRows(((data ?? []) as StartRow[]).filter((row) =>
-          !isCompletedDate(row.event_date) && !duplicatesPlatformEvent(row, evs ?? [])));
+          !isEventCompleted(row.event_date, row.registration_open_until) && !duplicatesPlatformEvent(row, evs ?? [])));
         setLoading(false);
       });
   }, []);

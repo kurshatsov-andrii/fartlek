@@ -87,7 +87,7 @@ const EventsMap = () => {
           .from("telegram_starts")
           .select("id, slug, title, event_date, city, region, distances_km")
           .eq("status", "published")
-          .gte("event_date", todayIso),
+          .or(`event_date.gte.${todayIso},registration_open_until.gte.${todayIso}`),
         supabase
           .from("calendar_events" as any)
           .select("id, title, event_date, location, distances, url")

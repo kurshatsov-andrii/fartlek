@@ -19,7 +19,7 @@ export interface CalendarRow {
   id: string; source: "platform" | "calendar"; title: string; event_date: string;
   location: string | null; distances: string; organizer_name: string | null;
   category: string | null; url: string | null; notes?: string | null; created_by?: string | null;
-  registration_status?: string | null; registration_opens_on?: string | null; info_source_url?: string | null; info_checked_on?: string | null;
+  registration_status?: string | null; registration_opens_on?: string | null; registration_open_until?: string | null; info_source_url?: string | null; info_checked_on?: string | null;
 }
 export const matchesCalendarScope = (location: string | null, scope: CalendarScope, notes?: string | null) => {
   if (scope === "ukraine") return true;

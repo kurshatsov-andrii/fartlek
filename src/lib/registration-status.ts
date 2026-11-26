@@ -1,3 +1,5 @@
+import { isEventCompleted, registrationOpenOverride } from "./event-date";
+
 export type RegistrationState =
   | "open"
   | "expected"
@@ -14,6 +16,8 @@ export interface RegistrationInfo {
   /** Set when the source is the organizer's own page on Fartlek. */
   sourceLabel: string | null;
   checkedOn: string | null;
+  /** Owner override: registration stays open until this date (inclusive). */
+  openUntil?: string | null;
 }
 
 export interface RegistrationInput {
@@ -32,8 +36,10 @@ export interface RegistrationInput {
 
 export function deriveRegistrationState(i: RegistrationInput): RegistrationState {
   if (i.cancelled || i.explicit === "cancelled") return "cancelled";
-  if (i.date && i.date < i.today) return "closed";
   if (i.closed || i.explicit === "closed") return "closed";
+  // Owner override: registration stays open until the confirmed date, even after the event date.
+  if (registrationOpenOverride(i.openUntil, i.today)) return "open";
+  if (i.date && i.date < i.today) return "closed";
   if (i.opensOn && i.opensOn > i.today) return "expected";
   if (i.explicit === "expected") return i.opensOn ? "open" : "expected";
   if (i.explicit === "open") return "open";
@@ -59,8 +65,6 @@ export function sourceHost(url: string | null): string | null {
     return null;
   }
 }
-
-import { isEventCompleted } from "./event-date";
 
 /** Listing cards must not offer registration once it is closed or cancelled; a past event date counts as closed,
  *  and per the owner rule a start is already finished the day before its date — unless the owner kept

@@ -38,6 +38,7 @@ interface Row {
   is_paid: boolean | null;
   registration_status: string | null;
   registration_opens_on: string | null;
+  registration_open_until: string | null;
   info_source_url: string | null;
   info_checked_on: string | null;
   results_url: string | null;
@@ -92,7 +93,7 @@ const AdminStarts = () => {
       event_date: "", slug: "", seo_title: "", seo_description: "",
       status: "draft", telegram_message_id: null, created_at: new Date().toISOString(),
       city: "", region: "", organizer_name: "", sport_types: [], distances_km: [], is_paid: true,
-      registration_status: null, registration_opens_on: null, info_source_url: null, info_checked_on: null,
+      registration_status: null, registration_opens_on: null, registration_open_until: null, info_source_url: null, info_checked_on: null,
       results_url: null,
     });
   };

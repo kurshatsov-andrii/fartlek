@@ -84,7 +84,7 @@ export async function resolveStarts(refs: StartRef[]): Promise<PlannedStart[]> {
       ? supabase
           .from("events")
           .select(
-            "id,slug,title,event_date,event_time,location,image_url,is_paid,organizer_name,status,registration_closed,registration_status,registration_opens_on,updated_at,distances(distance_km,price,is_active)",
+            "id,slug,title,event_date,event_time,location,image_url,is_paid,organizer_name,status,registration_closed,registration_status,registration_opens_on,registration_open_until,updated_at,distances(distance_km,price,is_active)",
           )
           .in("id", ids("event"))
           .in("status", ["published", "completed"])
@@ -93,7 +93,7 @@ export async function resolveStarts(refs: StartRef[]): Promise<PlannedStart[]> {
       ? supabase
           .from("telegram_starts")
           .select(
-            "id,slug,title,event_date,city,distances_km,is_paid,organizer_name,image_url,register_url,registration_status,registration_opens_on,info_source_url,info_checked_on",
+            "id,slug,title,event_date,city,distances_km,is_paid,organizer_name,image_url,register_url,registration_status,registration_opens_on,registration_open_until,info_source_url,info_checked_on",
           )
           .in("id", ids("start"))
           .eq("status", "published")
@@ -101,7 +101,7 @@ export async function resolveStarts(refs: StartRef[]): Promise<PlannedStart[]> {
     ids("calendar").length
       ? supabase
           .from("calendar_events")
-          .select("id,title,event_date,location,distances,organizer_name,url,registration_status,registration_opens_on,info_source_url,info_checked_on")
+          .select("id,title,event_date,location,distances,organizer_name,url,registration_status,registration_opens_on,registration_open_until,info_source_url,info_checked_on")
           .in("id", ids("calendar"))
       : Promise.resolve({ data: [], error: null }),
   ]);
@@ -130,11 +130,13 @@ export async function resolveStarts(refs: StartRef[]): Promise<PlannedStart[]> {
           cancelled: e.status === "cancelled",
           closed: e.registration_closed || e.status === "completed",
           opensOn: e.registration_opens_on,
+          openUntil: e.registration_open_until,
           defaultOpen: true,
           date: e.event_date,
           today,
         }),
         opensOn: e.registration_opens_on,
+        openUntil: e.registration_open_until,
         sourceUrl: null,
         sourceLabel: "Організатор на Фартлек",
         checkedOn: e.updated_at.slice(0, 10),
@@ -159,10 +161,12 @@ export async function resolveStarts(refs: StartRef[]): Promise<PlannedStart[]> {
         state: deriveRegistrationState({
           explicit: s.registration_status,
           opensOn: s.registration_opens_on,
+          openUntil: s.registration_open_until,
           date: s.event_date,
           today,
         }),
         opensOn: s.registration_opens_on,
+        openUntil: s.registration_open_until,
         sourceUrl: s.info_source_url ?? s.register_url,
         sourceLabel: null,
         checkedOn: s.info_checked_on,
@@ -186,10 +190,12 @@ export async function resolveStarts(refs: StartRef[]): Promise<PlannedStart[]> {
         state: deriveRegistrationState({
           explicit: c.registration_status,
           opensOn: c.registration_opens_on,
+          openUntil: c.registration_open_until,
           date: c.event_date,
           today,
         }),
         opensOn: c.registration_opens_on,
+        openUntil: c.registration_open_until,
         sourceUrl: c.info_source_url ?? c.url,
         sourceLabel: null,
         checkedOn: c.info_checked_on,

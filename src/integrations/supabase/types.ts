@@ -128,6 +128,7 @@ export type Database = {
           location: string | null
           notes: string | null
           organizer_name: string | null
+          registration_open_until: string | null
           registration_opens_on: string | null
           registration_status: string | null
           telegram_start_id: string | null
@@ -147,6 +148,7 @@ export type Database = {
           location?: string | null
           notes?: string | null
           organizer_name?: string | null
+          registration_open_until?: string | null
           registration_opens_on?: string | null
           registration_status?: string | null
           telegram_start_id?: string | null
@@ -166,6 +168,7 @@ export type Database = {
           location?: string | null
           notes?: string | null
           organizer_name?: string | null
+          registration_open_until?: string | null
           registration_opens_on?: string | null
           registration_status?: string | null
           telegram_start_id?: string | null
@@ -2060,6 +2063,7 @@ export type Database = {
           raw_payload: Json | null
           region: string | null
           register_url: string | null
+          registration_open_until: string | null
           registration_opens_on: string | null
           registration_status: string | null
           results_url: string | null
@@ -2090,6 +2094,7 @@ export type Database = {
           raw_payload?: Json | null
           region?: string | null
           register_url?: string | null
+          registration_open_until?: string | null
           registration_opens_on?: string | null
           registration_status?: string | null
           results_url?: string | null
@@ -2120,6 +2125,7 @@ export type Database = {
           raw_payload?: Json | null
           region?: string | null
           register_url?: string | null
+          registration_open_until?: string | null
           registration_opens_on?: string | null
           registration_status?: string | null
           results_url?: string | null

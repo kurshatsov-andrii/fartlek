@@ -45,7 +45,7 @@ const Starts = () => {
     (async () => {
       const [starts, events] = await Promise.all([supabase
         .from("telegram_starts")
-        .select("id,slug,title,description,image_url,register_url,results_url,registration_status,registration_opens_on,event_date,city,region,organizer_name,sport_types,distances_km,is_paid")
+        .select("id,slug,title,description,image_url,register_url,results_url,registration_status,registration_opens_on,registration_open_until,event_date,city,region,organizer_name,sport_types,distances_km,is_paid")
         .eq("status", "published")
         .gte("event_date", "2026-07-01")
         .order("event_date", { ascending: true }),

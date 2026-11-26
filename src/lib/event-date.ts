@@ -14,16 +14,16 @@ export function isCompletedDate(dateStr: string | null | undefined, today: strin
   return dateStr <= cutoff.toISOString().slice(0, 10);
 }
 
-// Owner override: an event may keep registration open past the day-before cutoff
-// until a specific date (inclusive). It never extends past the event date itself.
+// Owner override: registration may stay open past the event date until a specific
+// date (inclusive) — e.g. an online race that keeps collecting entries after its start day.
 export function registrationOpenOverride(openUntil: string | null | undefined, today: string = new Date().toISOString().slice(0, 10)): boolean {
   return !!openUntil && openUntil >= today;
 }
 
-// Completed/upcoming split for platform events: like isCompletedDate, but the
-// registration override keeps the event "upcoming" until the override date.
+// Completed/upcoming split: an explicit future override always wins, otherwise a
+// start counts as finished from the day before its date.
 export function isEventCompleted(dateStr: string | null | undefined, openUntil: string | null | undefined, today: string = new Date().toISOString().slice(0, 10)): boolean {
-  if (isPastDate(dateStr, today)) return true;
   if (registrationOpenOverride(openUntil, today)) return false;
+  if (isPastDate(dateStr, today)) return true;
   return isCompletedDate(dateStr, today);
 }

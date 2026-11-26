@@ -14,6 +14,7 @@ import { kyivToday } from "@/lib/calendar-discovery";
 export interface RegistrationAdminValue {
   registration_status: string | null;
   registration_opens_on: string | null;
+  registration_open_until: string | null;
   info_source_url: string | null;
   info_checked_on: string | null;
 }
@@ -22,6 +23,7 @@ export function registrationAdminPayload(v: RegistrationAdminValue) {
   return {
     registration_status: v.registration_status || null,
     registration_opens_on: v.registration_opens_on || null,
+    registration_open_until: v.registration_open_until || null,
     info_source_url: v.info_source_url?.trim() || null,
     info_checked_on: v.info_checked_on || null,
   };
@@ -63,6 +65,14 @@ export function RegistrationAdminFields({
           type="date"
           value={value.registration_opens_on ?? ""}
           onChange={(e) => onChange({ registration_opens_on: e.target.value })}
+        />
+      </div>
+      <div>
+        <Label>Реєстрація до (навіть після дати старту)</Label>
+        <Input
+          type="date"
+          value={value.registration_open_until ?? ""}
+          onChange={(e) => onChange({ registration_open_until: e.target.value })}
         />
       </div>
       <div>
