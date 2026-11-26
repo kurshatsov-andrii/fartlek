@@ -1,4 +1,6 @@
 import { useL } from "@/lib/use-l";
+import { useApp } from "@/contexts/AppContext";
+import { localizeStart } from "@/lib/start-translations";
 import { useEffect, useMemo, useState } from "react";
 import { YearFilterButtons, matchesYear } from "@/components/YearFilterButtons";
 import { PageViews } from "@/components/PageViews";
@@ -28,6 +30,7 @@ const PAGE_SIZE = 9;
 
 const Starts = () => {
   const L = useL();
+  const { lang } = useApp();
   const [rows, setRows] = useState<CatalogStart[]>([]);
   const [loading, setLoading] = useState(true);
   const [upcomingLimit, setUpcomingLimit] = useState(PAGE_SIZE);
@@ -47,7 +50,7 @@ const Starts = () => {
     (async () => {
       const [starts, events] = await Promise.all([supabase
         .from("telegram_starts")
-        .select("id,slug,title,description,image_url,register_url,results_url,registration_status,registration_opens_on,registration_open_until,event_date,city,region,organizer_name,sport_types,distances_km,is_paid")
+        .select("id,slug,title,description,title_en,description_en,image_url,register_url,results_url,registration_status,registration_opens_on,registration_open_until,event_date,city,region,city_en,region_en,organizer_name,sport_types,distances_km,is_paid")
         .eq("status", "published")
         .gte("event_date", "2026-07-01")
         .order("event_date", { ascending: true }),
@@ -61,6 +64,16 @@ const Starts = () => {
     })();
   }, []);
 
+  const localizedRows = useMemo<CatalogStart[]>(() => rows.map((row) => {
+    const localized = localizeStart(row, lang);
+    return row.source === "start" ? { ...localized, location: localized.city } : localized;
+  }), [rows, lang]);
+
+  useEffect(() => {
+    setCity("all");
+    setRegion("all");
+  }, [lang]);
+
   const fmtDate = (d: string | null) => {
     if (!d) return "";
     const [y, m, day] = d.split("-");
@@ -69,18 +82,18 @@ const Starts = () => {
 
   // unique facet values from data
   const cities = useMemo(
-    () => Array.from(new Set(rows.map((r) => baseCity(r.city)).filter(Boolean))).sort(),
-    [rows]
+    () => Array.from(new Set(localizedRows.map((r) => baseCity(r.city)).filter(Boolean))).sort(),
+    [localizedRows]
   );
-  const regions = useMemo(() => Array.from(new Set(rows.map((r) => r.region).filter(Boolean) as string[])).sort(), [rows]);
-  const organizers = useMemo(() => Array.from(new Set(rows.map((r) => r.organizer_name).filter(Boolean) as string[])).sort(), [rows]);
+  const regions = useMemo(() => Array.from(new Set(localizedRows.map((r) => r.region).filter(Boolean) as string[])).sort(), [localizedRows]);
+  const organizers = useMemo(() => Array.from(new Set(localizedRows.map((r) => r.organizer_name).filter(Boolean) as string[])).sort(), [localizedRows]);
   const months = useMemo(() => availableYearMonths(rows.map((r) => r.event_date), year), [rows, year]);
 
   const distanceBucket = distance === "all" ? null : DISTANCE_BUCKETS.find((b) => b.label === distance);
 
   const filtered = useMemo(() => {
     const qLower = q.trim().toLowerCase();
-    return rows.filter((r) => {
+    return localizedRows.filter((r) => {
       if (qLower) {
         const hay = `${r.title} ${r.description ?? ""} ${r.location ?? ""} ${r.city ?? ""} ${r.organizer_name ?? ""}`.toLowerCase();
         if (!hay.includes(qLower)) return false;
@@ -96,7 +109,7 @@ const Starts = () => {
       if (paid === "free" && r.is_paid !== false) return false;
       return true;
     });
-  }, [rows, q, month, city, region, organizer, sport, distance, paid, distanceBucket, year]);
+  }, [localizedRows, q, month, city, region, organizer, sport, distance, paid, distanceBucket, year]);
 
   const todayStr = new Date().toISOString().slice(0, 10);
   // Owner rule: a start counts as finished from the day before its date,

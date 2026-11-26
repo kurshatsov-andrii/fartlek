@@ -1,4 +1,6 @@
 import { useL } from "@/lib/use-l";
+import { useApp } from "@/contexts/AppContext";
+import { localizeStart } from "@/lib/start-translations";
 import { RegistrationStatus } from "@/components/RegistrationStatus";
 import { deriveRegistrationState } from "@/lib/registration-status";
 import { kyivToday } from "@/lib/calendar-discovery";
@@ -24,6 +26,8 @@ interface StartRow {
   slug: string;
   title: string;
   description: string;
+  title_en: string | null;
+  description_en: string | null;
   image_url: string | null;
   register_url: string | null;
   results_url: string | null;
@@ -35,8 +39,12 @@ interface StartRow {
   event_date: string | null;
   seo_title: string | null;
   seo_description: string | null;
+  seo_title_en: string | null;
+  seo_description_en: string | null;
   city: string | null;
   region: string | null;
+  city_en: string | null;
+  region_en: string | null;
   sport_types: string[];
   distances_km: number[];
   is_paid: boolean | null;
@@ -44,6 +52,7 @@ interface StartRow {
 
 const StartDetails = () => {
   const L = useL();
+  const { lang } = useApp();
   const { slug } = useParams<{ slug: string }>();
   const [row, setRow] = useState<StartRow | null>(null);
   const [loading, setLoading] = useState(true);
@@ -54,7 +63,7 @@ const StartDetails = () => {
     (async () => {
       const { data } = await supabase
         .from("telegram_starts")
-        .select("id,slug,title,description,image_url,register_url,results_url,registration_status,registration_opens_on,registration_open_until,info_source_url,info_checked_on,event_date,seo_title,seo_description,city,region,sport_types,distances_km,is_paid")
+        .select("id,slug,title,description,title_en,description_en,image_url,register_url,results_url,registration_status,registration_opens_on,registration_open_until,info_source_url,info_checked_on,event_date,seo_title,seo_description,seo_title_en,seo_description_en,city,region,city_en,region_en,sport_types,distances_km,is_paid")
         .eq("slug", slug)
         .maybeSingle();
       if (!data) { setNotFound(true); setLoading(false); return; }
@@ -71,12 +80,14 @@ const StartDetails = () => {
     <div className="min-h-screen flex flex-col">
       <Header />
       <main className="flex-1 container py-20 text-center">
-        <h1 className="font-display text-2xl mb-4">Старт не знайдено</h1>
-        <Button asChild><Link to="/starts">До всіх стартів</Link></Button>
+        <h1 className="font-display text-2xl mb-4">{L("Старт не знайдено", "Start not found")}</h1>
+        <Button asChild><Link to="/starts">{L("До всіх стартів", "All starts")}</Link></Button>
       </main>
       <Footer />
     </div>
   );
+
+  const content = localizeStart(row, lang);
 
   const regState = deriveRegistrationState({
     explicit: row.registration_status,
@@ -95,23 +106,23 @@ const StartDetails = () => {
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <SEO
-        title={row.seo_title || `${row.title} — Старти Fartlek`}
-        description={(row.seo_description || row.description || "").slice(0, 160)}
+        title={content.seo_title || `${content.title} — ${L("Старти", "Starts")} Fartlek`}
+        description={(content.seo_description || content.description || "").slice(0, 160)}
         image={row.image_url || undefined}
       />
       <Header />
       <main className="flex-1 container py-10 max-w-3xl">
         <Link to="/starts" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-6">
-          <ArrowLeft className="h-4 w-4" /> До всіх стартів
+          <ArrowLeft className="h-4 w-4" /> {L("До всіх стартів", "All starts")}
         </Link>
 
         {row.image_url && (
           <div className="aspect-video rounded-lg overflow-hidden mb-6 bg-muted">
-            <EventPoster src={row.image_url} alt={row.title} loading="eager" fit="cover" />
+            <EventPoster src={row.image_url} alt={content.title} loading="eager" fit="cover" />
           </div>
         )}
 
-        <h1 className="font-display text-3xl md:text-4xl font-bold mb-3">{row.title || "Без назви"}</h1>
+        <h1 className="font-display text-3xl md:text-4xl font-bold mb-3">{content.title || L("Без назви", "Untitled")}</h1>
         <StartActions source="start" id={row.id} />
 
         {row.event_date && (
@@ -120,7 +131,7 @@ const StartDetails = () => {
           </div>
         )}
         <div className="flex items-center gap-2 text-muted-foreground mb-2">
-          <MapPin className="h-4 w-4" />{row.city || "Україна та весь світ"}
+          <MapPin className="h-4 w-4" />{content.city || L("Україна та весь світ", "Ukraine and worldwide")}
         </div>
         <div className="mb-4">
           <RegistrationStatus info={{
@@ -139,20 +150,20 @@ const StartDetails = () => {
             <span key={s} className="text-xs px-2 py-1 rounded bg-muted">{L(SPORT_LABELS[s], SPORT_LABELS_EN[s])}</span>
           ))}
           {(row.distances_km || []).length > 0 ? [...(row.distances_km || [])].sort((a, b) => Number(b) - Number(a)).map((d) => (
-            <span key={String(d)} className="text-xs px-2 py-1 rounded bg-primary/10 text-primary">{d} км</span>
+            <span key={String(d)} className="text-xs px-2 py-1 rounded bg-primary/10 text-primary">{d} {L("км", "km")}</span>
           )) : (
-            <span className="text-xs px-2 py-1 rounded bg-primary/10 text-primary">Вільна дистанція</span>
+            <span className="text-xs px-2 py-1 rounded bg-primary/10 text-primary">{L("Вільна дистанція", "Open distance")}</span>
           )}
-          {row.is_paid === false && <span className="text-xs px-2 py-1 rounded bg-accent text-accent-foreground">Безкоштовно</span>}
+          {row.is_paid === false && <span className="text-xs px-2 py-1 rounded bg-accent text-accent-foreground">{L("Безкоштовно", "Free")}</span>}
         </div>
         <div className="prose prose-sm max-w-none whitespace-pre-wrap break-words mb-8 text-foreground">
-          {linkifyText(row.description || "")}
+          {linkifyText(content.description || "")}
         </div>
 
         {row.results_url && (
           <Button asChild size="lg" className="w-full sm:w-auto mb-8">
             <a href={row.results_url} target="_blank" rel="noreferrer">
-              Результати {row.title || ""} <FileText className="h-4 w-4 ml-2" />
+              {L("Результати", "Results")} {content.title || ""} <FileText className="h-4 w-4 ml-2" />
             </a>
           </Button>
         )}
@@ -160,7 +171,7 @@ const StartDetails = () => {
         {row.register_url && !isEventCompleted(row.event_date, row.registration_open_until) && !row.results_url && regState !== "cancelled" && regState !== "closed" && (
           <Button asChild size="lg" className="w-full sm:w-auto mb-8">
             <a href={row.register_url} target="_blank" rel="noreferrer">
-              Зареєструватися <ExternalLink className="h-4 w-4 ml-2" />
+              {L("Зареєструватися", "Register")} <ExternalLink className="h-4 w-4 ml-2" />
             </a>
           </Button>
         )}

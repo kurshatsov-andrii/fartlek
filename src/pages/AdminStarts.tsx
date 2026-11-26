@@ -1,7 +1,9 @@
 import { RegistrationAdminFields, registrationAdminPayload } from "@/components/RegistrationAdminFields";
 import { useEffect, useState } from "react";
 import { Navigate, Link } from "@/lib/router-compat";
-import { ArrowLeft, Trash2, Loader2, Plus, ExternalLink, Eye, EyeOff, Pencil, Sparkles } from "lucide-react";
+import { ArrowLeft, Trash2, Loader2, Plus, ExternalLink, Eye, EyeOff, Pencil, Sparkles, Languages } from "lucide-react";
+import { useServerFn } from "@tanstack/react-start";
+import { translateStartToEnglish } from "@/lib/translate-start.functions";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -22,17 +24,23 @@ interface Row {
   id: string;
   title: string;
   description: string;
+  title_en: string | null;
+  description_en: string | null;
   image_url: string | null;
   register_url: string | null;
   event_date: string | null;
   slug: string;
   seo_title: string | null;
   seo_description: string | null;
+  seo_title_en: string | null;
+  seo_description_en: string | null;
   status: Status;
   telegram_message_id: number | null;
   created_at: string;
   city: string | null;
   region: string | null;
+  city_en: string | null;
+  region_en: string | null;
   organizer_name: string | null;
   sport_types: string[];
   distances_km: number[];
@@ -52,6 +60,8 @@ const AdminStarts = () => {
   const [editing, setEditing] = useState<Row | null>(null);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [translating, setTranslating] = useState(false);
+  const translateStart = useServerFn(translateStartToEnglish);
 
   const uploadImage = async (file: File) => {
     if (!editing) return;
@@ -86,10 +96,10 @@ const AdminStarts = () => {
 
   const createNew = () => {
     setEditing({
-      id: "", title: "", description: "", image_url: "", register_url: "",
-      event_date: "", slug: "", seo_title: "", seo_description: "",
+      id: "", title: "", description: "", title_en: "", description_en: "", image_url: "", register_url: "",
+      event_date: "", slug: "", seo_title: "", seo_description: "", seo_title_en: "", seo_description_en: "",
       status: "draft", telegram_message_id: null, created_at: new Date().toISOString(),
-      city: "", region: "", organizer_name: "", sport_types: [], distances_km: [], is_paid: true,
+      city: "", region: "", city_en: "", region_en: "", organizer_name: "", sport_types: [], distances_km: [], is_paid: true,
       registration_status: null, registration_opens_on: null, registration_open_until: null, info_source_url: null, info_checked_on: null,
       results_url: null,
     });
@@ -117,6 +127,32 @@ const AdminStarts = () => {
     setEditing({ ...editing, sport_types: Array.from(cur) });
   };
 
+  const translateToEnglish = async () => {
+    if (!editing?.title.trim()) {
+      toast.error("Спочатку введіть українську назву старту");
+      return;
+    }
+    setTranslating(true);
+    try {
+      const translated = await translateStart({
+        data: {
+          title: editing.title,
+          description: editing.description || "",
+          city: editing.city || "",
+          region: editing.region || "",
+          seo_title: editing.seo_title || "",
+          seo_description: editing.seo_description || "",
+        },
+      });
+      setEditing((current) => current ? { ...current, ...translated } : current);
+      toast.success("Переклад додано. Перевірте його та натисніть «Зберегти».");
+    } catch (error: any) {
+      toast.error(error?.message || "Не вдалося перекласти старт");
+    } finally {
+      setTranslating(false);
+    }
+  };
+
   const save = async () => {
     if (!editing) return;
     // Auto-fill SEO if empty so the fields are never blank
@@ -139,15 +175,21 @@ const AdminStarts = () => {
     const payload: any = {
       title: editing.title.trim(),
       description: editing.description,
+      title_en: editing.title_en?.trim() || null,
+      description_en: editing.description_en?.trim() || null,
       image_url: editing.image_url?.trim() || null,
       register_url: editing.register_url?.trim() || null,
       results_url: editing.results_url?.trim() || null,
       event_date: editing.event_date || null,
       seo_title: seoTitle,
       seo_description: seoDesc,
+      seo_title_en: editing.seo_title_en?.trim() || null,
+      seo_description_en: editing.seo_description_en?.trim() || null,
       status: editing.status,
       city: editing.city?.trim() || null,
       region: editing.region?.trim() || null,
+      city_en: editing.city_en?.trim() || null,
+      region_en: editing.region_en?.trim() || null,
       organizer_name: editing.organizer_name?.trim() || null,
       sport_types: editing.sport_types || [],
       distances_km: editing.distances_km || [],
@@ -222,6 +264,7 @@ const AdminStarts = () => {
                   <Badge variant={r.status === "published" ? "default" : r.status === "draft" ? "secondary" : "outline"}>
                     {r.status === "draft" ? "чернетка" : r.status === "published" ? "опубліковано" : "приховано"}
                   </Badge>
+                  {(r.title_en || r.description_en) && <Badge variant="outline">EN</Badge>}
                   {r.event_date && <span className="text-xs text-muted-foreground">{r.event_date}</span>}
                   {r.city && <span className="text-xs text-muted-foreground">📍 {r.city}</span>}
                   {r.telegram_message_id && <span className="text-xs text-muted-foreground">tg #{r.telegram_message_id}</span>}
@@ -387,6 +430,43 @@ const AdminStarts = () => {
                 </div>
               </div>
 
+              <div className="border-t pt-4 space-y-4">
+                <div className="flex items-center justify-between gap-3 flex-wrap">
+                  <h4 className="font-medium text-sm">Англійська версія</h4>
+                  <Button type="button" size="sm" variant="outline" onClick={translateToEnglish} disabled={translating || !editing.title.trim()}>
+                    {translating ? <Loader2 className="w-4 h-4 mr-1 animate-spin" /> : <Languages className="w-4 h-4 mr-1" />}
+                    {translating ? "Перекладаю…" : "Перекласти англійською"}
+                  </Button>
+                </div>
+                <p className="text-xs text-muted-foreground">Переклад заповнить поля нижче, але не збере їх автоматично. Перевірте текст, за потреби виправте й натисніть «Зберегти».</p>
+                <div>
+                  <Label>Назва англійською</Label>
+                  <Input value={editing.title_en ?? ""} onChange={(e) => setEditing({ ...editing, title_en: e.target.value })} />
+                </div>
+                <div>
+                  <Label>Опис англійською</Label>
+                  <Textarea rows={8} value={editing.description_en ?? ""} onChange={(e) => setEditing({ ...editing, description_en: e.target.value })} />
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <Label>Місто англійською</Label>
+                    <Input value={editing.city_en ?? ""} onChange={(e) => setEditing({ ...editing, city_en: e.target.value })} />
+                  </div>
+                  <div>
+                    <Label>Область / регіон англійською</Label>
+                    <Input value={editing.region_en ?? ""} onChange={(e) => setEditing({ ...editing, region_en: e.target.value })} />
+                  </div>
+                </div>
+                <div>
+                  <Label>SEO Title англійською (до 60 символів)</Label>
+                  <Input value={editing.seo_title_en ?? ""} maxLength={60} onChange={(e) => setEditing({ ...editing, seo_title_en: e.target.value })} />
+                </div>
+                <div>
+                  <Label>SEO Description англійською (до 160 символів)</Label>
+                  <Textarea rows={2} value={editing.seo_description_en ?? ""} maxLength={160} onChange={(e) => setEditing({ ...editing, seo_description_en: e.target.value })} />
+                </div>
+              </div>
+
               <div>
                 <Label>Статус</Label>
                 <div className="flex gap-2 mt-1">
@@ -401,7 +481,7 @@ const AdminStarts = () => {
           )}
           <DialogFooter>
             <Button variant="ghost" onClick={() => setEditing(null)}>Скасувати</Button>
-            <Button onClick={save} disabled={saving}>{saving ? "Збереження…" : "Зберегти"}</Button>
+            <Button onClick={save} disabled={saving || translating}>{saving ? "Збереження…" : "Зберегти"}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

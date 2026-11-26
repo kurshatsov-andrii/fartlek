@@ -114,3 +114,8 @@
 ## Remaining English pages
 - [x] Translate Privacy, User Agreement, Public Offer and Results including chart labels
 - [x] Correct English brand headings on About; verified all five real pages in English, Ukrainian restoration, three charts and mobile legal page without overflow or browser errors
+
+## English start translations
+- [ ] Add editable English start fields and an administrator-only automatic translation action
+- [ ] Show saved English title, description, location and metadata on the Starts listing and start details, falling back to Ukrainian when absent
+- [ ] Test translation fallback and verify the administrator translation/edit/save flow and public English page

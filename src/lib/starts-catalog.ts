@@ -22,6 +22,10 @@ export interface CatalogStart {
   sport_types: string[];
   distances_km: number[];
   is_paid: boolean | null;
+  title_en?: string | null;
+  description_en?: string | null;
+  city_en?: string | null;
+  region_en?: string | null;
 }
 
 export interface ExternalCatalogStart extends Omit<CatalogStart, "source" | "url" | "location"> {

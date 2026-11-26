@@ -2049,8 +2049,10 @@ export type Database = {
       telegram_starts: {
         Row: {
           city: string | null
+          city_en: string | null
           created_at: string
           description: string
+          description_en: string | null
           distances_km: number[]
           event_date: string | null
           id: string
@@ -2062,13 +2064,16 @@ export type Database = {
           published_at: string | null
           raw_payload: Json | null
           region: string | null
+          region_en: string | null
           register_url: string | null
           registration_open_until: string | null
           registration_opens_on: string | null
           registration_status: string | null
           results_url: string | null
           seo_description: string
+          seo_description_en: string | null
           seo_title: string
+          seo_title_en: string | null
           slug: string | null
           sport_types: string[]
           status: Database["public"]["Enums"]["telegram_start_status"]
@@ -2076,12 +2081,15 @@ export type Database = {
           telegram_media_group_id: string | null
           telegram_message_id: number | null
           title: string
+          title_en: string | null
           updated_at: string
         }
         Insert: {
           city?: string | null
+          city_en?: string | null
           created_at?: string
           description?: string
+          description_en?: string | null
           distances_km?: number[]
           event_date?: string | null
           id?: string
@@ -2093,13 +2101,16 @@ export type Database = {
           published_at?: string | null
           raw_payload?: Json | null
           region?: string | null
+          region_en?: string | null
           register_url?: string | null
           registration_open_until?: string | null
           registration_opens_on?: string | null
           registration_status?: string | null
           results_url?: string | null
           seo_description?: string
+          seo_description_en?: string | null
           seo_title?: string
+          seo_title_en?: string | null
           slug?: string | null
           sport_types?: string[]
           status?: Database["public"]["Enums"]["telegram_start_status"]
@@ -2107,12 +2118,15 @@ export type Database = {
           telegram_media_group_id?: string | null
           telegram_message_id?: number | null
           title?: string
+          title_en?: string | null
           updated_at?: string
         }
         Update: {
           city?: string | null
+          city_en?: string | null
           created_at?: string
           description?: string
+          description_en?: string | null
           distances_km?: number[]
           event_date?: string | null
           id?: string
@@ -2124,13 +2138,16 @@ export type Database = {
           published_at?: string | null
           raw_payload?: Json | null
           region?: string | null
+          region_en?: string | null
           register_url?: string | null
           registration_open_until?: string | null
           registration_opens_on?: string | null
           registration_status?: string | null
           results_url?: string | null
           seo_description?: string
+          seo_description_en?: string | null
           seo_title?: string
+          seo_title_en?: string | null
           slug?: string | null
           sport_types?: string[]
           status?: Database["public"]["Enums"]["telegram_start_status"]
@@ -2138,6 +2155,7 @@ export type Database = {
           telegram_media_group_id?: string | null
           telegram_message_id?: number | null
           title?: string
+          title_en?: string | null
           updated_at?: string
         }
         Relationships: []
