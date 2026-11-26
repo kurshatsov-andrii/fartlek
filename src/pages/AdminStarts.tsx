@@ -76,6 +76,7 @@ const AdminStarts = () => {
     const { data } = await supabase
       .from("telegram_starts")
       .select("*")
+      .order("created_at", { ascending: false, nullsFirst: false })
       .order("event_date", { ascending: true, nullsFirst: false });
     setRows((data ?? []) as Row[]);
   };
