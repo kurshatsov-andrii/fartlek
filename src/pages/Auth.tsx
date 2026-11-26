@@ -160,8 +160,8 @@ const Auth = () => {
       <div className="hidden lg:flex relative bg-gradient-hero p-12 flex-col justify-between text-primary-foreground overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_20%,hsl(0_0%_0%/0.4),transparent)]" />
         <Link to="/" className="relative flex items-center gap-3 group w-fit">
-          <img src={logoFartlek} alt="Фартлек" className="h-10 w-10 rounded-full object-cover shadow-glow transition-bounce group-hover:scale-110" />
-          <span className="font-display text-2xl font-bold">Фартлек</span>
+          <img src={logoFartlek} alt={L("Фартлек", "Fartlek")} className="h-10 w-10 rounded-full object-cover shadow-glow transition-bounce group-hover:scale-110" />
+          <span className="font-display text-2xl font-bold">{L("Фартлек", "Fartlek")}</span>
         </Link>
         <div className="relative">
           <h2 className="font-display text-5xl font-bold leading-tight mb-4">
@@ -171,14 +171,14 @@ const Auth = () => {
             {mode === "signup" ? t.auth.signUpSub : t.auth.signInSub}
           </p>
         </div>
-        <div className="relative text-sm opacity-70">© Фартлек</div>
+        <div className="relative text-sm opacity-70">© {L("Фартлек", "Fartlek")}</div>
       </div>
 
       <div className="flex items-center justify-center p-6 sm:p-12">
         <div className="w-full max-w-md space-y-6">
           <Link to="/" className="lg:hidden flex items-center gap-3 mb-8">
-            <img src={logoFartlek} alt="Фартлек" className="h-9 w-9 rounded-full object-cover" />
-            <span className="font-display text-xl font-bold">Фартлек</span>
+            <img src={logoFartlek} alt={L("Фартлек", "Fartlek")} className="h-9 w-9 rounded-full object-cover" />
+            <span className="font-display text-xl font-bold">{L("Фартлек", "Fartlek")}</span>
           </Link>
 
           {mode !== "forgot" && (

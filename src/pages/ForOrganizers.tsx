@@ -78,7 +78,7 @@ const ForOrganizers = () => {
     badge: "For race organizers",
     h1a: "Run your race,",
     h1b: "we handle the rest",
-    sub: "Фартлек is a Ukrainian platform for participant registration in running, trail and multisport events. Registration, payments, bib numbers, results and participant communication — all in one dashboard.",
+    sub: "Fartlek is a Ukrainian platform for participant registration in running, trail and multisport events. Registration, payments, bib numbers, results and participant communication — all in one dashboard.",
     ctaPrimary: isOrganizer ? "Organizer dashboard" : "Create your first race",
     ctaSecondary: "Explore features",
     statsFree: "0 ₴",

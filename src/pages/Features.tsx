@@ -51,8 +51,8 @@ const Features = () => {
         description: "Збереження та порівняння стартів, нагадування, лайки, календарі забігів 2027, реєстрація, QR-квитки й інструменти організаторів Фартлек.",
       }
     : {
-        title: "Фартлек Features — for participants and organizers",
-        description: "Save and compare races, opt-in reminders, likes, 2027 race calendars, registration, QR tickets and organizer tools on Фартлек.",
+        title: "Fartlek Features — for participants and organizers",
+        description: "Save and compare races, opt-in reminders, likes, 2027 race calendars, registration, QR tickets and organizer tools on Fartlek.",
       };
 
   const participantGroups: Group[] = isUk ? [
@@ -346,7 +346,7 @@ const Features = () => {
     updated: "Сторінка оновлюється — нові можливості додаються щотижня.",
   } : {
     eyebrow: "Features",
-    title: "Everything Фартлек can do",
+    title: "Everything Fartlek can do",
     subtitle: "A platform to organize races and register participants. All features in one place — updated regularly.",
     forParticipants: "For participants",
     forOrganizers: "For organizers",
@@ -452,7 +452,7 @@ const Features = () => {
                 <p className="text-muted-foreground mb-8">
                   {isUk
                     ? "Фартлек не бере комісію з оплат — гроші учасників надходять напряму на ваш рахунок. Підтримуємо три сценарії: автоматичне підтвердження через WayForPay, автоматичне через LiqPay, або ручну перевірку квитанції за будь-яким посиланням."
-                    : "Фартлек takes no payment commission — participants pay you directly. Three flows are supported: WayForPay auto-confirmation, LiqPay auto-confirmation, or manual receipt approval for any other payment link."}
+                    : "Fartlek takes no payment commission — participants pay you directly. Three flows are supported: WayForPay auto-confirmation, LiqPay auto-confirmation, or manual receipt approval for any other payment link."}
                 </p>
 
                 {/* Сценарій 1 — WayForPay */}

@@ -47,7 +47,7 @@ export const Header = () => {
         <Link to="/" className="flex items-center gap-3 group shrink-0">
           <img src={logoFartlek} alt="Фартлек" className="h-8 w-8 sm:h-10 sm:w-10 rounded-full object-cover shadow-glow transition-bounce group-hover:scale-110" />
           <span className="hidden sm:inline font-display text-xl font-bold tracking-tight">
-            Фартлек
+            {L("Фартлек", "Fartlek")}
           </span>
         </Link>
 

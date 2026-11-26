@@ -15,7 +15,7 @@ export const Footer = () => {
             <Activity className="h-5 w-5 text-primary-foreground" strokeWidth={2.5} />
           </div>
           <div>
-            <div className="font-display font-bold">Фартлек</div>
+            <div className="font-display font-bold">{L("Фартлек", "Fartlek")}</div>
             <div className="text-xs text-secondary-foreground/60">{t.footer.tagline}</div>
           </div>
         </div>
@@ -38,7 +38,7 @@ export const Footer = () => {
           <div className="flex flex-wrap gap-3 justify-center md:justify-end">
             <Link to="/about" className="hover:text-primary transition-colors">{L("Про нас", "About")}</Link>
             <Link to="/faq" className="hover:text-primary transition-colors">FAQ</Link>
-            <Link to="/results" className="hover:text-primary transition-colors">{L("Фартлек у цифрах", "Фартлек in numbers")}</Link>
+            <Link to="/results" className="hover:text-primary transition-colors">{L("Фартлек у цифрах", "Fartlek in numbers")}</Link>
             <Link to="/for-organizers" className="hover:text-primary transition-colors">{L("Організаторам", "For organizers")}</Link>
             <Link to="/privacy" className="hover:text-primary transition-colors">{L("Політика конфіденційності", "Privacy policy")}</Link>
             <Link to="/public-offer" className="hover:text-primary transition-colors">{L("Публічна оферта", "Public offer")}</Link>

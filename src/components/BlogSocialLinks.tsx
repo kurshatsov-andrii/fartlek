@@ -8,7 +8,7 @@ export const BlogSocialLinks = () => {
   return (
   <div className="rounded-2xl border border-border bg-card p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
     <div>
-      <h3 className="font-display text-lg font-bold">{L("Бігова спільнота Фартлек", "Фартлек running community")}</h3>
+      <h3 className="font-display text-lg font-bold">{L("Бігова спільнота Фартлек", "Fartlek running community")}</h3>
       <p className="text-sm text-muted-foreground">{L("Слідкуйте за нами та бігайте разом щонеділі.", "Follow us and run together every Sunday.")}</p>
     </div>
     <div className="flex flex-wrap gap-2">

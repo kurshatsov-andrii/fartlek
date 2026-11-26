@@ -14,7 +14,7 @@ const CategoriesIndex = () => {
         description: "Усі категорії спортивних подій в Україні: забіги, напівмарафони, марафони, ультра, трейли, OCR та онлайн-старти.",
       }
     : {
-        title: "Event categories — Фартлек",
+        title: "Event categories — Fartlek",
         description: "All sports event categories in Ukraine: runs, half marathons, marathons, ultras, trails, OCR and online races.",
       };
 

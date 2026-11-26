@@ -169,7 +169,7 @@ const Starts = () => {
       <main className="flex-1 container py-10">
         <h1 className="font-display text-3xl md:text-4xl font-bold mb-2">{L("Забіги та спортивні старти України 2027", "Races and sports events in Ukraine 2027")}</h1>
         <p className="text-muted-foreground mb-6">
-          {L("Події Фартлек та анонси найближчих стартів з телеграм-каналу", "Фартлек events and upcoming race announcements from the Telegram channel")}{" "}
+          {L("Події Фартлек та анонси найближчих стартів з телеграм-каналу", "Fartlek events and upcoming race announcements from the Telegram channel")}{" "}
           <a href="https://t.me/fartlekua" target="_blank" rel="noreferrer" className="underline">@fartlekua</a>.
         </p>
         <PageViews pageKey="page:starts" className="mb-6" />

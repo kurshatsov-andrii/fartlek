@@ -24,14 +24,14 @@ export const AnthemPlayer = () => {
       <button
         type="button"
         onClick={toggle}
-        aria-label={isPlaying ? L("Пауза — гімн Фартлек", "Pause Фартлек anthem") : L("Слухати гімн Фартлек", "Play Фартлек anthem")}
+        aria-label={isPlaying ? L("Пауза — гімн Фартлек", "Pause Fartlek anthem") : L("Слухати гімн Фартлек", "Play Fartlek anthem")}
         className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-glow transition-transform hover:scale-105"
       >
         {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="ml-0.5 h-4 w-4" />}
       </button>
       <Music2 className="h-4 w-4 text-primary" aria-hidden />
       <div className="flex min-w-0 flex-col leading-tight">
-        <span className="truncate text-sm font-semibold">{L("Фартлек — гімн", "Фартлек anthem")}</span>
+        <span className="truncate text-sm font-semibold">{L("Фартлек — гімн", "Fartlek anthem")}</span>
         <span className="truncate text-[11px] uppercase tracking-wider text-muted-foreground">
           {L("Музика для мотивації", "Music for motivation")}
         </span>

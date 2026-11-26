@@ -109,7 +109,7 @@ const COPY = {
       "We are open to new connections, partnerships and ideas that help develop sport and running culture in Ukraine.",
     ],
     closing: "Fartlek — bringing together those who run!",
-    seoTitle: "Contacts — Фартлек",
+    seoTitle: "Contacts — Fartlek",
     seoDescription:
       "Fartlek contacts: participant support, adding runs to the calendar, cooperation with organizers, clubs and sponsors.",
   },

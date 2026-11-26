@@ -48,9 +48,9 @@ const Tips = ({ category }: { category?: string }) => {
             ) : (
               <div className="space-y-3 text-muted-foreground">
                 <h2 className="font-display text-xl font-semibold text-foreground">{L("Поради бігунам — усе, що потрібно знати про біг", "Running tips — everything you need to know about running")}</h2>
-                <p>{L("Як почати бігати, правильно обрати екіпірування, підготуватися до першого забігу або подолати марафон? У розділі «Поради бігунам» від Фартлек зібрані практичні статті, які допоможуть бігати комфортніше, тренуватися ефективніше та впевнено виходити на старт.", "How do you start running, choose the right gear, prepare for your first race or finish a marathon? Фартлек’s running tips collect practical articles to help you run more comfortably, train more effectively and line up at the start with confidence.")}</p>
+                <p>{L("Як почати бігати, правильно обрати екіпірування, підготуватися до першого забігу або подолати марафон? У розділі «Поради бігунам» від Фартлек зібрані практичні статті, які допоможуть бігати комфортніше, тренуватися ефективніше та впевнено виходити на старт.", "How do you start running, choose the right gear, prepare for your first race or finish a marathon? Fartlek’s running tips collect practical articles to help you run more comfortably, train more effectively and line up at the start with confidence.")}</p>
                 <p>{L("Читайте про бігові кросівки та правильне шнурування, спортивні годинники й GPS, контроль пульсу, техніку бігу, спортивне харчування, відновлення після тренувань і підготовку до дистанцій 5 км, 10 км, напівмарафону та марафону.", "Read about running shoes and lacing, sports watches and GPS, heart rate, running technique, sports nutrition, recovery and preparing for 5K, 10K, half marathon and marathon distances.")}</p>
-                <p>{L("Фартлек — ваш помічник у світі бігу: від перших кілометрів до нових особистих рекордів.", "Фартлек is your running companion, from the first kilometres to new personal bests.")}</p>
+                <p>{L("Фартлек — ваш помічник у світі бігу: від перших кілометрів до нових особистих рекордів.", "Fartlek is your running companion, from the first kilometres to new personal bests.")}</p>
               </div>
             )}
           </div>

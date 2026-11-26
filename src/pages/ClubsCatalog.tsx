@@ -64,7 +64,7 @@ const ClubsCatalog = () => {
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <SEO
-        title={lang === "uk" ? "Спортивні клуби України — Фартлек" : "Sports clubs of Ukraine — Фартлек"}
+        title={lang === "uk" ? "Спортивні клуби України — Фартлек" : "Sports clubs of Ukraine — Fartlek"}
         description={lang === "uk"
           ? "Спортивні клуби України: біг, трейл, плавання, велоспорт, триатлон, OCR — Київ, Харків, Дніпро, Одеса, Львів та інші міста."
           : "Sports clubs of Ukraine: running, trail, swimming, cycling, triathlon, OCR — Kyiv, Kharkiv, Dnipro, Odesa, Lviv and other cities."}

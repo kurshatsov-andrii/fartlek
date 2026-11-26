@@ -10,11 +10,11 @@ export const COMMUNITY_INTRO = {
 };
 
 export const COMMUNITY_INTRO_EN = {
-  title: "Фартлек — the largest running community in Kharkiv since 2026! 🏃‍♂️",
+  title: "Fartlek — the largest running community in Kharkiv since 2026! 🏃‍♂️",
   paragraphs: [
     "Our community already has more than 200 members, from beginners to experienced runners.",
-    "Athletes from many Kharkiv running and triathlon clubs and communities join Фартлек training sessions. We bring together people who love running, want to improve, set new goals and find like-minded friends.",
-    "Фартлек is running for everyone! Whatever your pace, experience or results, there’s a place for you here.",
+    "Athletes from many Kharkiv running and triathlon clubs and communities join Fartlek training sessions. We bring together people who love running, want to improve, set new goals and find like-minded friends.",
+    "Fartlek is running for everyone! Whatever your pace, experience or results, there’s a place for you here.",
     "We run together, support each other and grow Kharkiv’s running culture!",
   ],
 };

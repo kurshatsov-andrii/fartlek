@@ -100,8 +100,8 @@ function FaqPage() {
     },
   ];
   const questionsEn = [
-    { q: "Where can I find all races in Ukraine?", a: <>Фартлек publishes races and other sports events in Ukraine. Browse the <Link className={linkClass} to="/starts">race catalog</Link> or the <Link className={linkClass} to="/calendar" search={{ year: "all" }}>race calendar</Link>. The list keeps growing and does not guarantee coverage of every event.</> },
-    { q: "Where can I see the calendar of running events in Ukraine?", a: <>The <Link className={linkClass} to="/calendar" search={{ year: "all" }}>Фартлек calendar</Link> collects published races with dates, venues and distances. Open a race to see the details.</> },
+    { q: "Where can I find all races in Ukraine?", a: <>Fartlek publishes races and other sports events in Ukraine. Browse the <Link className={linkClass} to="/starts">race catalog</Link> or the <Link className={linkClass} to="/calendar" search={{ year: "all" }}>race calendar</Link>. The list keeps growing and does not guarantee coverage of every event.</> },
+    { q: "Where can I see the calendar of running events in Ukraine?", a: <>The <Link className={linkClass} to="/calendar" search={{ year: "all" }}>Fartlek calendar</Link> collects published races with dates, venues and distances. Open a race to see the details.</> },
     { q: "Where can I find marathons and half marathons in Ukraine?", a: <>Go to <Link className={linkClass} to="/category">event categories</Link> and choose marathons or half marathons. In the catalog you can also filter races by distance and city.</> },
     { q: "How do I find races in my city?", a: <>In the <Link className={linkClass} to="/starts">race catalog</Link>, choose a city or region. You can also see venues on the <Link className={linkClass} to="/map">map</Link>. Kharkiv, Vinnytsia and Uzhhorod have their own city calendars.</> },
     { q: "Where can I find trail races in Ukraine?", a: <>Choose the “Trail” category in the <Link className={linkClass} to="/category">category catalog</Link>. Before registering, check the route description, distance and the organizer’s requirements.</> },
@@ -112,11 +112,11 @@ function FaqPage() {
     { q: "How do I find sports events on a map of Ukraine?", a: <>On the <Link className={linkClass} to="/map">Map</Link> page, choose a city to see its races. The map shows events whose venue could be determined.</> },
     { q: "Where can I find races for beginners?", a: <>Start by looking for shorter distances in the <Link className={linkClass} to="/starts">catalog</Link>, but consider more than distance: check the terrain, time limit and rules. If needed, ask the organizer and read our <Link className={linkClass} to="/tips">running tips</Link>.</> },
     { q: "Where can I find running clubs in my city?", a: <>Browse the clubs and communities in the <Link className={linkClass} to="/clubs">running club catalog</Link>. Their pages include information and published contacts.</> },
-    { q: "How do I register for a race on Фартлек?", a: <>Open the event page and check the registration status. For events with registration on Фартлек, sign in, choose a distance and fill in the required details. For external races, the link leads to the organizer’s website or registration service.</> },
-    { q: "Where can I see race results?", a: <>Check the event page: results may be published on Фартлек or available via the “Results” link on an external site. If there are no results yet, contact the organizer.</> },
+    { q: "How do I register for a race on Fartlek?", a: <>Open the event page and check the registration status. For events with registration on Fartlek, sign in, choose a distance and fill in the required details. For external races, the link leads to the organizer’s website or registration service.</> },
+    { q: "Where can I see race results?", a: <>Check the event page: results may be published on Fartlek or available via the “Results” link on an external site. If there are no results yet, contact the organizer.</> },
     { q: "Can I save a race and get reminders?", a: <>After signing in, save a race with the bookmark. In <Link className={linkClass} to="/saved">saved races</Link> you can opt in to on-site reminders about the upcoming race, date changes and registration opening. You can also add it to your personal calendar; reminders are never turned on without your consent.</> },
-    { q: "Since when has Фартлек been running?", a: <>Фартлек has been running since {PLATFORM_SINCE_EN}. Since then the platform has added a race catalog, race calendar, event map, running club and organizer catalogs, and participant registration tools.</> },
-    { q: "What does Фартлек offer organizers?", a: <>Фартлек has tools for publishing events, registering participants and handling results. See the <Link className={linkClass} to="/for-organizers">For organizers</Link> page, the <Link className={linkClass} to="/features">platform features</Link> or <Link className={linkClass} to="/contacts">contact us</Link> to discuss your race.</> },
+    { q: "Since when has Fartlek been running?", a: <>Fartlek has been running since {PLATFORM_SINCE_EN}. Since then the platform has added a race catalog, race calendar, event map, running club and organizer catalogs, and participant registration tools.</> },
+    { q: "What does Fartlek offer organizers?", a: <>Fartlek has tools for publishing events, registering participants and handling results. See the <Link className={linkClass} to="/for-organizers">For organizers</Link> page, the <Link className={linkClass} to="/features">platform features</Link> or <Link className={linkClass} to="/contacts">contact us</Link> to discuss your race.</> },
   ];
   const L = useL();
   const list = L(questions, questionsEn);
@@ -127,8 +127,8 @@ function FaqPage() {
       <main className="flex-1 container py-8 sm:py-12">
         <div className="border-b border-border pb-8">
           <p className="text-primary font-semibold mb-3">FAQ</p>
-          <h1 className="font-display text-3xl sm:text-4xl font-bold leading-tight">{L("Часті питання про Фартлек", "Фартлек FAQ")}</h1>
-          <p className="mt-4 text-muted-foreground leading-relaxed">{L(DESCRIPTION, "Answers to common questions about Фартлек: the Ukraine race calendar, finding races, online registration, results, running clubs and tools for organizers.")}</p>
+          <h1 className="font-display text-3xl sm:text-4xl font-bold leading-tight">{L("Часті питання про Фартлек", "Fartlek FAQ")}</h1>
+          <p className="mt-4 text-muted-foreground leading-relaxed">{L(DESCRIPTION, "Answers to common questions about Fartlek: the Ukraine race calendar, finding races, online registration, results, running clubs and tools for organizers.")}</p>
         </div>
         <div className="divide-y divide-border">
           {list.map(({ q, a }, index) => (

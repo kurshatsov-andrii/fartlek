@@ -324,7 +324,7 @@ export const translations: Record<Lang, Dict> = {
     hero: {
       kicker: "Next-generation sports events",
       title: "Run. Register. Conquer.",
-      subtitle: "Фартлек — the registration platform for races, trails and competitions across Ukraine. QR start packs, instant results, clean protocols.",
+      subtitle: "Fartlek — the registration platform for races, trails and competitions across Ukraine. QR start packs, instant results, clean protocols.",
       ctaParticipant: "Participant sign in", ctaOrganizer: "Organizer sign in",
       ctaNearest: "Upcoming events",
       stats: { events: "Events", runners: "Runners", cities: "Cities", clubs: "Clubs", organizers: "Organizers", registrations: "Registrations" },

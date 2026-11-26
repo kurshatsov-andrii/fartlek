@@ -11,18 +11,18 @@ export const FounderInvite = ({ className = "" }: { className?: string }) => {
         <p>
           {L("Привіт! Я ", "Hi! I’m ")}<span className="font-semibold">{L("Андрій Куршацов", "Andrii Kurshatsov")}</span>{L(
             " — засновник спортивної афіші Фартлек, бігової спільноти Харкова та організатор Харківського напівмарафону.",
-            " — founder of the Фартлек sports events platform and Kharkiv running community, and organizer of the Kharkiv Half Marathon.",
+            " — founder of the Fartlek sports events platform and Kharkiv running community, and organizer of the Kharkiv Half Marathon.",
           )}
         </p>
         <p>
-          {L("Запрошую тебе приєднатися до нашої бігової спільноти Фартлек 👉", "Join our Фартлек running community 👉")}{" "}
+          {L("Запрошую тебе приєднатися до нашої бігової спільноти Фартлек 👉", "Join our Fartlek running community 👉")}{" "}
           <a
             href={TELEGRAM_COMMUNITY_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="text-primary font-semibold underline underline-offset-4 hover:opacity-80"
           >
-            {L("Telegram-спільнота Фартлек", "Фартлек Telegram community")}
+            {L("Telegram-спільнота Фартлек", "Fartlek Telegram community")}
           </a>
         </p>
         <p>
@@ -35,7 +35,7 @@ export const FounderInvite = ({ className = "" }: { className?: string }) => {
           {L("Приходь, будемо разом бігати, знайомитися, спілкуватися та відкривати нові бігові маршрути нашого міста.", "Come run with us, meet new people, chat and discover new running routes in our city.")}
         </p>
         <p>
-          {L("Неважливо, ти тільки починаєш бігати чи вже маєш за плечима десятки марафонів — у Фартлек раді кожному!", "Whether you’re just starting out or have dozens of marathons behind you, everyone is welcome at Фартлек!")}
+          {L("Неважливо, ти тільки починаєш бігати чи вже маєш за плечима десятки марафонів — у Фартлек раді кожному!", "Whether you’re just starting out or have dozens of marathons behind you, everyone is welcome at Fartlek!")}
         </p>
         <p className="font-semibold">{L("До зустрічі на пробіжках! Біжимо разом 🏃", "See you on the run! Let’s run together 🏃")}</p>
       </div>
@@ -43,7 +43,7 @@ export const FounderInvite = ({ className = "" }: { className?: string }) => {
         <div className="relative aspect-[9/16]">
           <iframe
             src={`https://www.youtube.com/embed/${YOUTUBE_SHORT_ID}`}
-            title={L("Фартлек — біжимо разом", "Фартлек — let’s run together")}
+            title={L("Фартлек — біжимо разом", "Fartlek — let’s run together")}
             loading="lazy"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             allowFullScreen

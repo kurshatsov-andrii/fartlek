@@ -241,8 +241,8 @@ const Testimonials = () => {
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <SEO
-        title={L("Відгуки — Фартлек", "Reviews — Фартлек")}
-        description={L("Що кажуть учасники та організатори про платформу Фартлек.", "What participants and organizers say about the Фартлек platform.")}
+        title={L("Відгуки — Фартлек", "Reviews — Fartlek")}
+        description={L("Що кажуть учасники та організатори про платформу Фартлек.", "What participants and organizers say about the Fartlek platform.")}
         canonical="/testimonials"
       />
       <Header />
@@ -254,7 +254,7 @@ const Testimonials = () => {
               {L("Відгуки", "Reviews")}
             </div>
             <h1 className="font-display text-3xl md:text-5xl font-bold tracking-tight mb-4">
-              {L("Що кажуть про Fartlek", "What people say about Фартлек")}
+              {L("Що кажуть про Фартлек", "What people say about Fartlek")}
             </h1>
             {items.length > 0 && (
               <div className="flex items-center justify-center gap-3 text-muted-foreground">

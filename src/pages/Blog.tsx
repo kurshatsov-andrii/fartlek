@@ -41,7 +41,7 @@ const Blog = () => {
       <main className="flex-1 container py-10 space-y-8">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
-            <h1 className="font-display text-3xl md:text-4xl font-bold">{isEn ? "Фартлек blog" : head.h1 || DEFAULT_H1}</h1>
+            <h1 className="font-display text-3xl md:text-4xl font-bold">{isEn ? "Fartlek blog" : head.h1 || DEFAULT_H1}</h1>
             <p className="text-muted-foreground mt-2 whitespace-pre-line">{isEn ? "Kharkiv running team and community: photos, videos and stories from our races." : head.subtitle || DEFAULT_SUB}</p>
             <PageViews pageKey="page:blog" className="mt-3" />
           </div>
@@ -53,7 +53,7 @@ const Blog = () => {
           )}
         </div>
 
-        <CommunityIntro className="mt-2" videoId="ZW-YGEafCTY" videoTitle={L("Фартлек — бігова спільнота", "Фартлек — running community")} />
+        <CommunityIntro className="mt-2" videoId="ZW-YGEafCTY" videoTitle={L("Фартлек — бігова спільнота", "Fartlek — running community")} />
 
         <FounderInvite />
 
