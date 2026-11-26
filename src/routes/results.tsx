@@ -3,6 +3,7 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { breadcrumbJsonLd, jsonLdScript } from "@/lib/jsonld";
 import { PLATFORM_SINCE_UK } from "@/lib/platform-since";
+import { GrowthCharts } from "@/components/GrowthCharts";
 import { getPlatformStats } from "@/lib/platform-stats.functions";
 
 const TITLE = "Фартлек у цифрах — результати бігової платформи";
@@ -32,7 +33,7 @@ export const Route = createFileRoute("/results")({
 const fmt = (n: number) => n.toLocaleString("uk-UA");
 
 function ResultsPage() {
-  const s = Route.useLoaderData();
+  const { stats: s, growth } = Route.useLoaderData();
   const metrics = s ? [
     { v: s.runners, l: "зареєстрованих бігунів" },
     { v: s.registrations, l: "онлайн-реєстрацій на змагання" },
@@ -69,6 +70,8 @@ function ResultsPage() {
             </div>
           </section>
         )}
+
+        {growth.length > 1 && <GrowthCharts data={growth} />}
 
         <section aria-labelledby="features" className="mb-12">
           <h2 id="features" className="text-2xl font-bold mb-6">Що вміє платформа</h2>

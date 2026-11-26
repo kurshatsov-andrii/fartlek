@@ -169,6 +169,13 @@
       "when": 1795688391793,
       "tag": "0023_calendar_events_registration_open_until",
       "breakpoints": true
+    },
+    {
+      "idx": 24,
+      "version": "7",
+      "when": 1795709328144,
+      "tag": "0024_public_growth_stats",
+      "breakpoints": true
     }
   ]
 }

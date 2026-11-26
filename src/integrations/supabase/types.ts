@@ -2432,6 +2432,15 @@ export type Database = {
           unread_count: number
         }[]
       }
+      get_public_growth: {
+        Args: never
+        Returns: {
+          events: number
+          month: string
+          registrations: number
+          runners: number
+        }[]
+      }
       get_public_stats: {
         Args: never
         Returns: {
