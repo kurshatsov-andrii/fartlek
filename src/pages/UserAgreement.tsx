@@ -7,11 +7,11 @@ import { SEO } from "@/components/SEO";
 const UserAgreement = () => {
   const htmlContent = `<h1 class="text-3xl font-bold mt-4 mb-6 text-foreground">Угода користувача</h1>
 
-<p class="mb-3 leading-relaxed text-foreground/90"><strong>УГОДА користування сайтом <a href="https://fartlek.lovable.app/" class="text-primary hover:underline">https://fartlek.lovable.app/</a></strong></p>
+<p class="mb-3 leading-relaxed text-foreground/90"><strong>УГОДА користування сайтом <a href="https://fartlek.com.ua/" class="text-primary hover:underline">https://fartlek.com.ua/</a></strong></p>
 
 <h2 class="text-xl font-bold mt-8 mb-4 text-foreground">Терміни</h2>
 
-<p class="mb-3 leading-relaxed text-foreground/90">Сайт - <a href="https://fartlek.lovable.app/" class="text-primary hover:underline">https://fartlek.lovable.app/</a></p>
+<p class="mb-3 leading-relaxed text-foreground/90">Сайт - <a href="https://fartlek.com.ua/" class="text-primary hover:underline">https://fartlek.com.ua/</a></p>
 
 <p class="mb-3 leading-relaxed text-foreground/90">Відвідувач Сайту - будь-яка фізична особа, що відвідала, проглянула хоча б одну сторінку Сайту без попередньої реєстрації та авторизації на Сайті.</p>
 
@@ -19,7 +19,7 @@ const UserAgreement = () => {
 
 <h2 class="text-xl font-bold mt-8 mb-4 text-foreground">1. Предмет угоди</h2>
 
-<p class="mb-3 leading-relaxed text-foreground/90">1.1. Дана угода укладена між Адміністрацією сайту <a href="https://fartlek.lovable.app/" class="text-primary hover:underline">https://fartlek.lovable.app/</a> і Відвідувачем/Користувачем сайту та описує умови використання Сайту.</p>
+<p class="mb-3 leading-relaxed text-foreground/90">1.1. Дана угода укладена між Адміністрацією сайту <a href="https://fartlek.com.ua/" class="text-primary hover:underline">https://fartlek.com.ua/</a> і Відвідувачем/Користувачем сайту та описує умови використання Сайту.</p>
 
 <p class="mb-3 leading-relaxed text-foreground/90">1.2. Дана Угода може бути змінена Адміністрацією без будь-якого попереднього повідомлення Відвідувача/Користувача. Нова редакція Угоди вступає в силу з моменту її розміщення на Сайті, якщо інше не передбачено новою редакцією Угоди. Відвідувач/Користувач самостійно несе обов'язок по ознайомленню з новими редакціями Угоди.</p>
 
@@ -59,7 +59,7 @@ const UserAgreement = () => {
 <p class="mb-3 leading-relaxed text-foreground/90">3.1. Використовувати розміщену на Сайті інформацію тільки для поширення інформації про Сайт.</p>
 <p class="mb-3 leading-relaxed text-foreground/90">3.2. Отримувати інформацію про календар заходів.</p>
 <p class="mb-3 leading-relaxed text-foreground/90">3.3. На захист своїх прав згідно зі Законом України «Про захист персональних даних».</p>
-<p class="mb-3 leading-relaxed text-foreground/90">3.4. У будь-який час доповнювати, змінювати або видаляти публікації/інформацію, які були зроблені за допомогою сайту <a href="https://fartlek.lovable.app/" class="text-primary hover:underline">https://fartlek.lovable.app/</a>.</p>
+<p class="mb-3 leading-relaxed text-foreground/90">3.4. У будь-який час доповнювати, змінювати або видаляти публікації/інформацію, які були зроблені за допомогою сайту <a href="https://fartlek.com.ua/" class="text-primary hover:underline">https://fartlek.com.ua/</a>.</p>
 <p class="mb-3 leading-relaxed text-foreground/90">3.5. Створювати власні текстові повідомлення, коментарі що стосуються інформації, розміщеної на Сайті.</p>
 <p class="mb-3 leading-relaxed text-foreground/90">3.6. Користувач надає Адміністрації Сайту дозвіл на обробку наданої ним інформації, що передбачає також і використання такої інформації.</p>
 <p class="mb-3 leading-relaxed text-foreground/90">3.7. Звертатися до Адміністрації Сайту з метою вирішення спірних питань.</p>
@@ -81,9 +81,9 @@ const UserAgreement = () => {
 
 <h2 class="text-xl font-bold mt-8 mb-4 text-foreground">5. Відвідувач/Користувач несе відповідальність:</h2>
 
-<p class="mb-3 leading-relaxed text-foreground/90">5.1. За всю інформацію, опубліковану Користувачем за допомогою сайту <a href="https://fartlek.lovable.app/" class="text-primary hover:underline">https://fartlek.lovable.app/</a>.</p>
+<p class="mb-3 leading-relaxed text-foreground/90">5.1. За всю інформацію, опубліковану Користувачем за допомогою сайту <a href="https://fartlek.com.ua/" class="text-primary hover:underline">https://fartlek.com.ua/</a>.</p>
 <p class="mb-3 leading-relaxed text-foreground/90">5.2. За всю активність на Сайті.</p>
-<p class="mb-3 leading-relaxed text-foreground/90">5.3. Користувач усвідомлює всі ризики публікації інформації за допомогою сайту <a href="https://fartlek.lovable.app/" class="text-primary hover:underline">https://fartlek.lovable.app/</a> і несе відповідальність за всі можливі наслідки такої публікації.</p>
+<p class="mb-3 leading-relaxed text-foreground/90">5.3. Користувач усвідомлює всі ризики публікації інформації за допомогою сайту <a href="https://fartlek.com.ua/" class="text-primary hover:underline">https://fartlek.com.ua/</a> і несе відповідальність за всі можливі наслідки такої публікації.</p>
 
 <h2 class="text-xl font-bold mt-8 mb-4 text-foreground">6. Адміністрація зобов'язується:</h2>
 

@@ -351,7 +351,7 @@ const EventDetails = () => {
   });
 
   const canonical = `/events/${event.slug ?? event.id}`;
-  const siteOrigin = typeof window !== "undefined" ? window.location.origin : "https://fartlek.lovable.app";
+  const siteOrigin = typeof window !== "undefined" ? window.location.origin : "https://fartlek.com.ua";
 
   return (
     <div className="min-h-screen flex flex-col bg-background">

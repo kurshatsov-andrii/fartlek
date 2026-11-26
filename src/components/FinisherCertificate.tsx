@@ -252,7 +252,7 @@ export const FinisherCertificate = ({
         </div>
 
         <div style={{ position: "absolute", bottom: 48, left: 0, right: 0, textAlign: "center", fontSize: 14 * f, letterSpacing: 2, color: C.muted }}>
-          fartlek.lovable.app
+          fartlek.com.ua
         </div>
       </div>
     );

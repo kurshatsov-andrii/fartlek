@@ -2,7 +2,7 @@ import * as React from "react";
 import { Body, Button, Container, Head, Heading, Html, Preview, Section, Text } from "@react-email/components";
 
 const SITE_NAME = "fartlek";
-const SITE_URL = "https://fartlek.lovable.app";
+const SITE_URL = "https://fartlek.com.ua";
 
 interface PaymentReminderProps {
   name?: string;
@@ -77,7 +77,7 @@ export const template = {
   previewData: {
     name: "Олександр",
     eventTitle: "Київський напівмарафон",
-    ticketUrl: "https://fartlek.lovable.app/ticket/example",
+    ticketUrl: "https://fartlek.com.ua/ticket/example",
     amount: 500,
   },
 };

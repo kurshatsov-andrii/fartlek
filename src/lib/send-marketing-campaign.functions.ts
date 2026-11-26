@@ -3,7 +3,7 @@ import { adminClient, getAuthedUser } from "@/lib/server-supabase";
 
 const GATEWAY_URL = "https://connector-gateway.lovable.dev/resend";
 const FROM_ADDRESS = "Фартлек <news@fartlek.com.ua>";
-const SITE_URL = "https://fartlek.lovable.app";
+const SITE_URL = "https://fartlek.com.ua";
 const BATCH_DELAY_MS = 250; // ~4/sec — safe for Resend free tier
 
 function escapeHtml(s: string): string {

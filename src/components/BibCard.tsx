@@ -126,7 +126,7 @@ export const BibCard = ({ eventTitle, fullName: rawFullName, club, bibNumber, di
 
   const safeBib = bibNumber ?? "—";
   const fileBase = `bib-${bibNumber ?? "noncolor"}-${(fullName ?? "runner").replace(/\s+/g, "_")}`;
-  const targetUrl = qrUrl || (typeof window !== "undefined" ? window.location.href : "https://fartlek.lovable.app");
+  const targetUrl = qrUrl || (typeof window !== "undefined" ? window.location.href : "https://fartlek.com.ua");
 
   useEffect(() => {
     if (!open) return;

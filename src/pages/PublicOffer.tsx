@@ -11,7 +11,7 @@ const PublicOffer = () => {
 
 <h2 class="text-xl font-bold mt-8 mb-4 text-foreground">Пропозиція (публічна оферта)</h2>
 
-<p class="mb-3 leading-relaxed text-foreground/90">Викладений нижче текст Договору, адресований фізичним особам і є офіційною публічною пропозицією (відповідно до ст. 641 Цивільного кодексу України) <strong>ФОП Куршацов А.І.</strong>, названого в подальшому як «Виконавець» на визначених Договором умовах, згідно з обраним переліком послуг, розміщених на Сайті Виконавця: <a href="https://fartlek.lovable.app/" class="text-primary hover:underline">https://fartlek.lovable.app/</a>.</p>
+<p class="mb-3 leading-relaxed text-foreground/90">Викладений нижче текст Договору, адресований фізичним особам і є офіційною публічною пропозицією (відповідно до ст. 641 Цивільного кодексу України) <strong>ФОП Куршацов А.І.</strong>, названого в подальшому як «Виконавець» на визначених Договором умовах, згідно з обраним переліком послуг, розміщених на Сайті Виконавця: <a href="https://fartlek.com.ua/" class="text-primary hover:underline">https://fartlek.com.ua/</a>.</p>
 
 <p class="mb-3 leading-relaxed text-foreground/90">Договір вважається укладеним в порядку ст. 642 Цивільного кодексу України і набуває сили договору приєднання з моменту здійснення Вами дій, передбачених п. 4.5. цього Договору, що означають повне і беззастережне прийняття Вами всіх умов Договору без будь-яких виключень та/або обмежень (акцепт).</p>
 
@@ -25,7 +25,7 @@ const PublicOffer = () => {
 
 <p class="mb-3 leading-relaxed text-foreground/90">2.1. «Клієнт» — фізична особа, що досягла 18-річного віку, яка має повну цивільну дієздатність, яка купує у Виконавця послуги з організації змагань.</p>
 
-<p class="mb-3 leading-relaxed text-foreground/90">2.2. «Сайт Виконавця» — сукупність веб-сторінок, доступних у мережі Інтернет під доменним ім'ям <a href="https://fartlek.lovable.app/" class="text-primary hover:underline">https://fartlek.lovable.app/</a>.</p>
+<p class="mb-3 leading-relaxed text-foreground/90">2.2. «Сайт Виконавця» — сукупність веб-сторінок, доступних у мережі Інтернет під доменним ім'ям <a href="https://fartlek.com.ua/" class="text-primary hover:underline">https://fartlek.com.ua/</a>.</p>
 
 <p class="mb-3 leading-relaxed text-foreground/90">2.3. Надалі по тексту Договору Клієнт і Виконавець також називаються разом «Сторони», а кожен окремо «Сторона».</p>
 
@@ -172,7 +172,7 @@ const PublicOffer = () => {
 
 <p class="mb-3 leading-relaxed text-foreground/90">Електронна пошта: <a href="mailto:info@fartlek.com.ua" class="text-primary hover:underline">info@fartlek.com.ua</a></p>
 
-<p class="mb-3 leading-relaxed text-foreground/90">Сайт: <a href="https://fartlek.lovable.app/" class="text-primary hover:underline">https://fartlek.lovable.app/</a></p>`;
+<p class="mb-3 leading-relaxed text-foreground/90">Сайт: <a href="https://fartlek.com.ua/" class="text-primary hover:underline">https://fartlek.com.ua/</a></p>`;
 
   return (
     <div className="min-h-screen flex flex-col bg-background">

@@ -5,7 +5,7 @@ import {
 import type { TemplateEntry } from './registry.ts'
 
 const SITE_NAME = 'fartlek'
-const SITE_URL = 'https://fartlek.lovable.app'
+const SITE_URL = 'https://fartlek.com.ua'
 
 interface PaymentReminderProps {
   name?: string
@@ -88,7 +88,7 @@ export const template = {
   previewData: {
     name: 'Олександр',
     eventTitle: 'Київський напівмарафон',
-    ticketUrl: 'https://fartlek.lovable.app/ticket/example',
+    ticketUrl: 'https://fartlek.com.ua/ticket/example',
     amount: 500,
   },
 } satisfies TemplateEntry
