@@ -14,6 +14,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { parseStartContent, generateStartSeo, SPORT_TYPES, SPORT_LABELS, type SportType } from "@/lib/parseStart";
+import { fetchAdminStarts } from "@/lib/admin-starts";
 
 type Status = "draft" | "published" | "hidden";
 
@@ -73,12 +74,7 @@ const AdminStarts = () => {
   };
 
   const fetchAll = async () => {
-    const { data } = await supabase
-      .from("telegram_starts")
-      .select("*")
-      .order("created_at", { ascending: false, nullsFirst: false })
-      .order("event_date", { ascending: true, nullsFirst: false });
-    setRows((data ?? []) as Row[]);
+    setRows(await fetchAdminStarts<Row>(supabase));
   };
 
   useEffect(() => { if (isAdmin) fetchAll(); }, [isAdmin]);

@@ -106,3 +106,7 @@
 ## Platform name replacement
 - [x] Replace the old platform name with «Фартлек» in website text, metadata, structured data and email branding.
 - [x] Replace saved public copy in SEO overrides, organizer profile, event organizer and founder testimonial; six real pages verified in browser without errors, seven structured-data tests passed, build OK.
+
+## Admin starts ordering
+- [x] Sort /admin/starts by the moment a start was added, newest first; event date only breaks ties within one insertion batch
+- [x] Verify the backend query returns newest-added first against real records and 3 new regression tests (113 total passed), typecheck and build OK; administrator screen itself not opened in preview because the viewing account is not an administrator
