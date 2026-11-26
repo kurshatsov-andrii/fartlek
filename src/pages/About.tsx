@@ -113,7 +113,7 @@ const About = () => {
               className="mb-6 h-28 w-28 rounded-full object-cover ring-1 ring-primary/40 shadow-glow sm:h-32 sm:w-32"
             />
             <h1 className="font-display text-4xl sm:text-5xl font-bold leading-tight tracking-tight">
-              {L("ФАРТЛЕК — ", "ФАРТЛЕК — ")}<span className="text-gradient">{L("ЗА ОБ'ЄДНАННЯ ВСІХ БІГУНІВ!", "FOR UNITING ALL RUNNERS!")}</span>
+              {L("ФАРТЛЕК — ", "Fartlek — ")}<span className="text-gradient">{L("ЗА ОБ'ЄДНАННЯ ВСІХ БІГУНІВ!", "FOR UNITING ALL RUNNERS!")}</span>
             </h1>
             <p className="mt-6 text-lg text-secondary-foreground/80 leading-relaxed">
               {L("Ми віримо, що бігове місто — це не одна команда, один клуб чи одна спільнота.", "We believe a running city is not one team, one club or one community.")}
@@ -234,7 +234,7 @@ const About = () => {
 
         <section className="container pb-16 sm:pb-20 max-w-5xl">
           <h2 className="font-display text-2xl sm:text-3xl font-bold tracking-tight text-center">
-            ФАРТЛЕК <span className="text-gradient">{L("У РУСІ", "IN MOTION")}</span> 📸
+            {L("ФАРТЛЕК", "Fartlek")} <span className="text-gradient">{L("У РУСІ", "IN MOTION")}</span> 📸
           </h2>
           <p className="mt-3 text-center text-muted-foreground">
             {L("Спільні пробіжки, тренування та змагання — дивіться, як це виглядає наживо.", "Group runs, training sessions and races — see what it looks like in real life.")}

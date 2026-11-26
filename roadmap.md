@@ -110,3 +110,7 @@
 ## Admin starts ordering
 - [x] Sort /admin/starts by the moment a start was added, newest first; event date only breaks ties within one insertion batch
 - [x] Verify the backend query returns newest-added first against real records and 3 new regression tests (113 total passed), typecheck and build OK; administrator screen itself not opened in preview because the viewing account is not an administrator
+
+## Remaining English pages
+- [x] Translate Privacy, User Agreement, Public Offer and Results including chart labels
+- [x] Correct English brand headings on About; verified all five real pages in English, Ukrainian restoration, three charts and mobile legal page without overflow or browser errors

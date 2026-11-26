@@ -1,3 +1,5 @@
+import { useL } from "@/lib/use-l";
+import { USER_AGREEMENT_EN } from "@/lib/legal-content-en";
 import { Link } from "@/lib/router-compat";
 import { ArrowLeft } from "lucide-react";
 import { Header } from "@/components/Header";
@@ -5,6 +7,7 @@ import { Footer } from "@/components/Footer";
 import { SEO } from "@/components/SEO";
 
 const UserAgreement = () => {
+  const L = useL();
   const htmlContent = `<h1 class="text-3xl font-bold mt-4 mb-6 text-foreground">Угода користувача</h1>
 
 <p class="mb-3 leading-relaxed text-foreground/90"><strong>УГОДА користування сайтом <a href="https://fartlek.com.ua/" class="text-primary hover:underline">https://fartlek.com.ua/</a></strong></p>
@@ -118,13 +121,13 @@ const UserAgreement = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
-      <SEO title="Угода користувача — Фартлек" description="Угода користування сайтом Фартлек." canonical="/user-agreement" />
+      <SEO title={L("Угода користувача — Фартлек", "User Agreement — Fartlek")} description={L("Угода користування сайтом Фартлек.", "Terms of use of the Fartlek website.")} canonical="/user-agreement" />
       <Header />
       <main className="flex-1 container py-12 sm:py-16 max-w-4xl">
         <Link to="/" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-6">
-          <ArrowLeft className="h-4 w-4" /> До списку подій
+          <ArrowLeft className="h-4 w-4" /> {L("До списку подій", "Back to events")}
         </Link>
-        <article dangerouslySetInnerHTML={{ __html: htmlContent }} />
+        <article dangerouslySetInnerHTML={{ __html: L(htmlContent, USER_AGREEMENT_EN) }} />
       </main>
       <Footer />
     </div>

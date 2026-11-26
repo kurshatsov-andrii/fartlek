@@ -1,3 +1,5 @@
+import { useL } from "@/lib/use-l";
+import { PUBLIC_OFFER_EN } from "@/lib/legal-content-en";
 import { Link } from "@/lib/router-compat";
 import { ArrowLeft } from "lucide-react";
 import { Header } from "@/components/Header";
@@ -5,6 +7,7 @@ import { Footer } from "@/components/Footer";
 import { SEO } from "@/components/SEO";
 
 const PublicOffer = () => {
+  const L = useL();
   const htmlContent = `<h1 class="text-3xl font-bold mt-4 mb-6 text-foreground">Договір публічної оферти</h1>
 
 <p class="mb-3 leading-relaxed text-foreground/90">Прочитайте текст даної оферти і якщо Ви не згодні з яким-небудь пунктом цієї оферти, чи не зрозуміли будь-який пункт цієї оферти, пропонуємо Вам відмовитися від послуг, або уточнити інформацію, що Вас цікавить за телефоном <a href="tel:+380972520551" class="text-primary hover:underline">+38 097 252 05 51</a> чи написавши електронний лист за адресою: <a href="mailto:info@fartlek.com.ua" class="text-primary hover:underline">info@fartlek.com.ua</a>. У випадку прийняття умов даної публічної оферти, Ви погоджуєтеся з усіма умовами оферти і підтверджуєте, що Вам зрозумілі всі її положення.</p>
@@ -177,18 +180,18 @@ const PublicOffer = () => {
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <SEO
-        title="Договір публічної оферти — Фартлек"
-        description="Договір публічної оферти Фартлек. Умови надання послуг та правила користування."
+        title={L("Договір публічної оферти — Фартлек", "Public Offer Agreement — Fartlek")}
+        description={L("Договір публічної оферти Фартлек. Умови надання послуг та правила користування.", "Fartlek Public Offer Agreement. Service terms and conditions of use.")}
         canonical="/public-offer"
       />
       <Header />
       <main className="flex-1 container py-12 sm:py-16">
         <Link to="/" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-6">
-          <ArrowLeft className="h-4 w-4" /> До списку подій
+          <ArrowLeft className="h-4 w-4" /> {L("До списку подій", "Back to events")}
         </Link>
         <div
           className="max-w-3xl mx-auto"
-          dangerouslySetInnerHTML={{ __html: htmlContent }}
+          dangerouslySetInnerHTML={{ __html: L(htmlContent, PUBLIC_OFFER_EN) }}
         />
       </main>
       <Footer />

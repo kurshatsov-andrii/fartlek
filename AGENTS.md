@@ -48,3 +48,5 @@
 - Keep running-tip categories in the shared tips module as fixed slugs so the /tips filter, category pages, admin form and sitemap stay aligned.
 - Render running-tip plain text with the shared linkify helper so pasted links are clickable in both initial HTML and the browser without interpreting raw HTML.
 - Build JSON-LD structured data only with the shared builders in src/lib/jsonld.ts and emit it via route head() scripts (SSR), not via the client-side SEO component, so crawlers see Event/Organization/BreadcrumbList markup in the initial HTML without duplicates. Model clubs as SportsClub (a SportsOrganization subtype), organizer profiles as ProfilePage with an Organization mainEntity, and include only sourced names, locations, organizers and publication dates.
+
+- Keep English legal documents as trusted static translations selected with the existing language picker; preserve Ukrainian clauses and payment details so switching language never changes the agreement.

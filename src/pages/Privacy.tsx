@@ -1,3 +1,5 @@
+import { useL } from "@/lib/use-l";
+import { PRIVACY_EN } from "@/lib/legal-content-en";
 import { Link } from "@/lib/router-compat";
 import { ArrowLeft } from "lucide-react";
 import { Header } from "@/components/Header";
@@ -5,6 +7,7 @@ import { Footer } from "@/components/Footer";
 import { SEO } from "@/components/SEO";
 
 const Privacy = () => {
+  const L = useL();
   const htmlContent = `<h1 class="text-3xl font-bold mt-4 mb-6 text-foreground">Політика конфіденційності</h1>
 
 <p class="mb-3 leading-relaxed text-foreground/90"><strong>ПОЛІТИКА КОНФІДЕНЦІЙНОСТІ ТА ЗАХИСТУ ПЕРСОНАЛЬНИХ ДАНИХ</strong></p>
@@ -103,18 +106,18 @@ const Privacy = () => {
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <SEO
-        title="Політика конфіденційності — Фартлек"
-        description="Політика конфіденційності Фартлек. Правила збору, обробки та зберігання персональних даних."
+        title={L("Політика конфіденційності — Фартлек", "Privacy Policy — Fartlek")}
+        description={L("Політика конфіденційності Фартлек. Правила збору, обробки та зберігання персональних даних.", "Fartlek Privacy Policy. Rules for collecting, processing and storing personal data.")}
         canonical="/privacy"
       />
       <Header />
       <main className="flex-1 container py-12 sm:py-16">
         <Link to="/" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-6">
-          <ArrowLeft className="h-4 w-4" /> До списку подій
+          <ArrowLeft className="h-4 w-4" /> {L("До списку подій", "Back to events")}
         </Link>
         <div
           className="max-w-3xl mx-auto"
-          dangerouslySetInnerHTML={{ __html: htmlContent }}
+          dangerouslySetInnerHTML={{ __html: L(htmlContent, PRIVACY_EN) }}
         />
       </main>
       <Footer />
