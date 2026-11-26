@@ -183,6 +183,13 @@
       "when": 1795715208342,
       "tag": "0025_add_english_translations_to_telegram_starts",
       "breakpoints": true
+    },
+    {
+      "idx": 26,
+      "version": "7",
+      "when": 1795716881796,
+      "tag": "0026_add_english_translations_to_events",
+      "breakpoints": true
     }
   ]
 }

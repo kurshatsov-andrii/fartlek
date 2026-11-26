@@ -1,0 +1,1 @@
+ALTER TABLE public.events ADD COLUMN IF NOT EXISTS title_en text, ADD COLUMN IF NOT EXISTS description_en text, ADD COLUMN IF NOT EXISTS location_en text;

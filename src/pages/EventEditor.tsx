@@ -41,6 +41,7 @@ const EventEditor = () => {
   const [form, setForm] = useState({
     title: "", description: "", organizer_name: "",
     event_date: "", event_time: "", location: "",
+    title_en: "", description_en: "", location_en: "",
     image_url: "", is_paid: false, payment_url: "", status: "draft", registration_closed: false, registration_status: null as "expected" | null, registration_opens_on: "" as string, changes_deadline_days: 1, max_total_participants: "" as string,
     category: "run" as EventCategory,
     format: "offline" as "offline" | "online" | "hybrid",
@@ -98,6 +99,7 @@ const EventEditor = () => {
           title: ev.title, description: ev.description ?? "",
           organizer_name: ev.organizer_name, event_date: ev.event_date,
           event_time: ev.event_time.slice(0, 5), location: ev.location ?? "",
+          title_en: ev.title_en ?? "", description_en: ev.description_en ?? "", location_en: ev.location_en ?? "",
           image_url: ev.image_url ?? "", is_paid: ev.is_paid,
           payment_url: (ev as any).payment_url ?? "",
           status: ev.status,
@@ -247,6 +249,9 @@ const EventEditor = () => {
       image_url: form.image_url || null,
       location: form.location,
       description: form.description || null,
+      title_en: form.title_en.trim() || null,
+      description_en: form.description_en.trim() || null,
+      location_en: form.location_en.trim() || null,
       payment_url: form.is_paid && paymentMethod === "link" ? (form.payment_url || null) : null,
       results_pdf_url: form.results_pdf_url || null,
       regulations_pdf_url: form.regulations_pdf_url || null,
@@ -519,6 +524,12 @@ const EventEditor = () => {
             <div className="space-y-2">
               <Label>{t.organizer.description}</Label>
               <Textarea rows={5} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
+              <div className="mt-4 space-y-2 rounded-md border border-border p-3">
+                <Label>English version (optional)</Label>
+                <Input placeholder="Title (EN)" value={form.title_en} onChange={(e) => setForm({ ...form, title_en: e.target.value })} />
+                <Input placeholder="Location (EN)" value={form.location_en} onChange={(e) => setForm({ ...form, location_en: e.target.value })} />
+                <Textarea rows={5} placeholder="Description (EN)" value={form.description_en} onChange={(e) => setForm({ ...form, description_en: e.target.value })} />
+              </div>
             </div>
             <div className="space-y-2">
               <Label>Зображення в описі</Label>

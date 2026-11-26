@@ -916,6 +916,7 @@ export type Database = {
           changes_deadline_days: number
           created_at: string
           description: string | null
+          description_en: string | null
           description_image_url: string | null
           event_date: string
           event_time: string
@@ -924,6 +925,7 @@ export type Database = {
           image_url: string | null
           is_paid: boolean
           location: string | null
+          location_en: string | null
           max_total_participants: number | null
           organizer_id: string
           organizer_name: string
@@ -939,6 +941,7 @@ export type Database = {
           slug: string | null
           status: Database["public"]["Enums"]["event_status"]
           title: string
+          title_en: string | null
           updated_at: string
         }
         Insert: {
@@ -946,6 +949,7 @@ export type Database = {
           changes_deadline_days?: number
           created_at?: string
           description?: string | null
+          description_en?: string | null
           description_image_url?: string | null
           event_date: string
           event_time: string
@@ -954,6 +958,7 @@ export type Database = {
           image_url?: string | null
           is_paid?: boolean
           location?: string | null
+          location_en?: string | null
           max_total_participants?: number | null
           organizer_id: string
           organizer_name: string
@@ -969,6 +974,7 @@ export type Database = {
           slug?: string | null
           status?: Database["public"]["Enums"]["event_status"]
           title: string
+          title_en?: string | null
           updated_at?: string
         }
         Update: {
@@ -976,6 +982,7 @@ export type Database = {
           changes_deadline_days?: number
           created_at?: string
           description?: string | null
+          description_en?: string | null
           description_image_url?: string | null
           event_date?: string
           event_time?: string
@@ -984,6 +991,7 @@ export type Database = {
           image_url?: string | null
           is_paid?: boolean
           location?: string | null
+          location_en?: string | null
           max_total_participants?: number | null
           organizer_id?: string
           organizer_name?: string
@@ -999,6 +1007,7 @@ export type Database = {
           slug?: string | null
           status?: Database["public"]["Enums"]["event_status"]
           title?: string
+          title_en?: string | null
           updated_at?: string
         }
         Relationships: []

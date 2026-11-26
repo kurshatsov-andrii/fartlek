@@ -30,6 +30,7 @@ const DISTANCE_BUCKETS_MATCH: Record<string, (d: number) => boolean> = {
 interface EventCard {
   id: string; slug: string | null; title: string; description: string | null; organizer_name: string;
   event_date: string; event_time: string; location: string | null;
+  title_en?: string | null; description_en?: string | null; location_en?: string | null;
   image_url: string | null; is_paid: boolean;
   category: EventCategory;
   format: "offline" | "online" | "hybrid";
@@ -62,7 +63,7 @@ export const EventsSection = () => {
 
   useEffect(() => {
     supabase.from("events")
-      .select("id, slug, title, description, organizer_name, event_date, event_time, location, image_url, is_paid, category, format, registration_closed, registration_open_until, distances(distance_km, price, is_active)")
+      .select("id, slug, title, title_en, location_en, description, organizer_name, event_date, event_time, location, image_url, is_paid, category, format, registration_closed, registration_open_until, distances(distance_km, price, is_active)")
       .eq("status", "published")
       .order("event_date", { ascending: true })
       .then(({ data }) => {
@@ -285,9 +286,9 @@ export const EventsSection = () => {
               const price = minPrice(ev);
               return (
                 <article key={ev.id} className="group relative flex flex-col overflow-hidden rounded-2xl bg-card shadow-card transition-bounce hover:-translate-y-2 hover:shadow-elevated animate-fade-in-up" style={{ animationDelay: `${(idx % PAGE_SIZE) * 80}ms` }}>
-                  <Link to={`/events/${ev.slug ?? ev.id}`} className="relative aspect-video overflow-hidden bg-muted block isolate" aria-label={ev.title}>
+                  <Link to={`/events/${ev.slug ?? ev.id}`} className="relative aspect-video overflow-hidden bg-muted block isolate" aria-label={((lang === "en" && ev.title_en) || ev.title)}>
                     {ev.image_url ? (
-                      <EventPoster src={ev.image_url} alt={ev.title} />
+                      <EventPoster src={ev.image_url} alt={((lang === "en" && ev.title_en) || ev.title)} />
                     ) : (
                       <div className="h-full w-full bg-gradient-hero" />
                     )}
@@ -308,11 +309,11 @@ export const EventsSection = () => {
                       ))}
                     </div>
                   <div className="flex flex-1 flex-col p-6">
-                    <h3 className="font-display text-xl font-bold leading-tight">{ev.title}</h3>
+                    <h3 className="font-display text-xl font-bold leading-tight">{((lang === "en" && ev.title_en) || ev.title)}</h3>
                     <StartActions source="event" id={ev.id} />
                     <div className="mt-3 flex flex-col gap-1.5 text-sm text-muted-foreground">
                       <div className="flex items-center gap-2"><Calendar className="h-4 w-4 text-primary" />{fmtDate(ev.event_date)}</div>
-                      {ev.location && <div className="flex items-center gap-2"><MapPin className="h-4 w-4 text-primary" />{ev.location}</div>}
+                      {ev.location && <div className="flex items-center gap-2"><MapPin className="h-4 w-4 text-primary" />{((lang === "en" && ev.location_en) || ev.location)}</div>}
                     </div>
                     
                     <div className="mt-6 flex items-center gap-2 pt-4 border-t border-border">

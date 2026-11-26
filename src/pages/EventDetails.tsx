@@ -40,6 +40,7 @@ interface EventRow {
   id: string; slug: string | null; title: string; description: string | null; organizer_name: string;
   organizer_id: string;
   event_date: string; event_time: string; location: string | null;
+  title_en?: string | null; description_en?: string | null; location_en?: string | null;
   image_url: string | null; is_paid: boolean; payment_url: string | null; status: string; category: EventCategory;
   format: "offline" | "online" | "hybrid";
   results_pdf_url: string | null;
@@ -341,9 +342,14 @@ const EventDetails = () => {
 
 
 
+  const en = lang === "en";
+  const viewTitle = (en && event.title_en?.trim()) || event.title;
+  const viewDescription = (en && event.description_en?.trim()) || event.description;
+  const viewLocation = (en && event.location_en?.trim()) || event.location;
+
   const seo = buildEventSeo({
-    title: event.title,
-    city: event.location,
+    title: viewTitle,
+    city: viewLocation,
     isoDate: event.event_date,
     organizer: event.organizer_name,
     distancesKm: distances.map((d) => d.distance_km),
@@ -362,7 +368,7 @@ const EventDetails = () => {
           <div className="relative h-auto md:h-[50vh] overflow-hidden">
             <EventPoster
               src={event.image_url}
-              alt={event.title}
+              alt={viewTitle}
               loading="eager"
               fit="cover"
               className="h-auto [&>img:last-child]:h-auto md:h-full md:[&>img:last-child]:h-full"
@@ -383,7 +389,7 @@ const EventDetails = () => {
                   {event.format === "hybrid" ? t.format.badgeHybrid : event.format === "online" ? t.format.badgeOnline : t.format.badgeOffline}
                 </span>
               </div>
-              <h1 className="font-display text-4xl sm:text-5xl font-bold leading-tight">{event.title}</h1>
+              <h1 className="font-display text-4xl sm:text-5xl font-bold leading-tight">{viewTitle}</h1>
               <StartActions source="event" id={event.id} />
               <div className="mt-3">
                 <RegistrationStatus
@@ -399,7 +405,7 @@ const EventDetails = () => {
               </div>
               <div className="flex flex-wrap gap-x-6 gap-y-3 text-sm">
                 <div className="flex items-center gap-2"><Calendar className="h-4 w-4 text-primary" />{fmtDate} · {event.event_time.slice(0, 5)}</div>
-                {event.location && <div className="flex items-center gap-2"><MapPin className="h-4 w-4 text-primary" />{event.location}</div>}
+                {viewLocation && <div className="flex items-center gap-2"><MapPin className="h-4 w-4 text-primary" />{viewLocation}</div>}
                 <div className="flex items-center gap-2"><Users className="h-4 w-4 text-primary" />{displayParticipantsCount} {t.events.participants.toLowerCase()}</div>
                 <PageViews pageKey={`event:${event.id}`} className="text-sm" />
                 <div className="flex items-center gap-2" title={t.events.organizer}>
@@ -417,9 +423,9 @@ const EventDetails = () => {
                   )}
                 </div>
               </div>
-              {event.description && (
+              {viewDescription && (
                 <div className="prose prose-sm max-w-none text-foreground whitespace-pre-wrap break-words [overflow-wrap:anywhere] [&_a]:break-all">
-                  {linkifyText(event.description)}
+                  {linkifyText(viewDescription)}
                 </div>
               )}
             </div>
@@ -452,7 +458,7 @@ const EventDetails = () => {
               {event.description_image_url && (
                 <img
                   src={event.description_image_url}
-                  alt={event.title}
+                  alt={viewTitle}
                   loading="lazy"
                   className="w-full rounded-xl border border-border object-contain max-h-[600px] bg-muted"
                 />

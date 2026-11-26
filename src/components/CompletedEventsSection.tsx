@@ -44,7 +44,7 @@ export const CompletedEventsSection = () => {
   useEffect(() => {
     supabase
       .from("events")
-      .select("id, slug, title, event_date, location, image_url, results_pdf_url, results_url, photos_url, format, is_paid, description, organizer_name")
+      .select("id, slug, title, title_en, location_en, event_date, location, image_url, results_pdf_url, results_url, photos_url, format, is_paid, description, organizer_name")
       .eq("status", "completed")
       .order("event_date", { ascending: false })
       .then(async ({ data }) => {
@@ -216,7 +216,7 @@ export const CompletedEventsSection = () => {
                   {ev.image_url ? (
                     <EventPoster
                       src={ev.image_url}
-                      alt={ev.title}
+                      alt={((lang === "en" && ev.title_en) || ev.title)}
                       loading="lazy"
                       className="grayscale-[30%] transition-[filter] duration-500 group-hover:grayscale-0"
                     />
@@ -232,7 +232,7 @@ export const CompletedEventsSection = () => {
                 <div className="flex flex-1 flex-col p-4">
                   <h3 className="font-display text-base font-bold leading-tight">
                     <Link to={`/events/${ev.slug ?? ev.id}`} className="hover:text-primary transition-base">
-                      {ev.title}
+                      {((lang === "en" && ev.title_en) || ev.title)}
                     </Link>
                   </h3>
                   <div className="mt-2 flex flex-col gap-1 text-xs text-muted-foreground">
@@ -243,7 +243,7 @@ export const CompletedEventsSection = () => {
                     {ev.location && (
                       <div className="flex items-center gap-1.5">
                         <MapPin className="h-3.5 w-3.5" />
-                        {ev.location}
+                        {((lang === "en" && ev.location_en) || ev.location)}
                       </div>
                     )}
                   </div>
