@@ -76,7 +76,7 @@ export const Header = () => {
         <nav className="flex lg:hidden min-w-0 flex-1 items-center justify-center gap-1.5 overflow-hidden text-xs sm:text-sm sm:gap-6 [&>a]:text-inherit">
           <Link to="/starts" className="shrink-0 text-xs min-[400px]:text-sm font-medium text-muted-foreground hover:text-foreground transition-base">{L("Старти", "Starts")}</Link>
           <Link to="/calendar" className="shrink-0 text-xs min-[400px]:text-sm font-medium text-muted-foreground hover:text-foreground transition-base">{L("Календар", "Calendar")}</Link>
-          <Link to="/map" className="hidden min-[420px]:inline shrink-0 text-sm font-medium text-muted-foreground hover:text-foreground transition-base">{L("Мапа", "Map")}</Link>
+          <Link to="/map" className="hidden min-[360px]:inline shrink-0 text-xs min-[400px]:text-sm font-medium text-muted-foreground hover:text-foreground transition-base">{L("Мапа", "Map")}</Link>
         </nav>
 
         <div className="flex shrink-0 items-center gap-0 sm:gap-1.5">
