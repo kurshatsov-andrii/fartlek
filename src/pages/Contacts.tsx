@@ -130,6 +130,9 @@ const Contacts = () => {
         <h1 className="font-display text-4xl sm:text-5xl font-bold tracking-tight">{c.title}</h1>
         <p className="mt-3 text-xl font-semibold text-secondary-foreground">{c.subtitle}</p>
         <p className="mt-4 text-base sm:text-lg leading-relaxed text-muted-foreground">{c.intro}</p>
+        <p className="mt-4">
+          <Link to="/results" className="font-semibold text-primary hover:underline">{lang === "uk" ? "Фартлек у цифрах →" : "Fartlek in numbers →"}</Link>
+        </p>
 
         <div className="mt-10 grid gap-4 sm:grid-cols-2">
           <a href="mailto:info@fartlek.com.ua" className="flex items-center gap-4 rounded-2xl border border-border bg-card p-5 transition-base hover:border-primary">

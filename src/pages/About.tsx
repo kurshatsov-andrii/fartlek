@@ -121,6 +121,9 @@ const About = () => {
             <p className="mt-4 text-lg font-semibold text-secondary-foreground">
               {L("Це всі ми разом. ❤️", "It’s all of us together. ❤️")}
             </p>
+            <p className="mt-4">
+              <Link to="/results" className="font-semibold text-primary hover:underline">{L("Фартлек у цифрах →", "Fartlek in numbers →")}</Link>
+            </p>
           </div>
         </section>
 
