@@ -29,6 +29,7 @@ export const TelegramCommunity = ({ showBlog = false }: { showBlog?: boolean }) 
         aboutText: "Ми — бігова спільнота Фартлек: за свободу вибору бігуна, єдність бігунів Харкова та інших міст і бігову культуру без поділу на «наших» і «чужих».",
         aboutCta: "Дізнатися більше про нас",
         statsCta: "Фартлек у цифрах",
+        contactsCta: "Контакти",
         channelTitle: "Телеграм-канал",
         channelText: "Анонси стартів, новини та важливі оновлення.",
         channelCta: "Приєднатися до каналу",
@@ -43,6 +44,7 @@ export const TelegramCommunity = ({ showBlog = false }: { showBlog?: boolean }) 
         aboutText: "We are the Fartlek running community: for the runner's freedom of choice, unity of runners in Kharkiv and beyond, and running culture without division into 'ours' and 'theirs'.",
         aboutCta: "Learn more about us",
         statsCta: "Fartlek in numbers",
+        contactsCta: "Contacts",
         channelTitle: "Telegram channel",
         channelText: "Race announcements, news and important updates.",
         channelCta: "Join the channel",
@@ -67,7 +69,8 @@ export const TelegramCommunity = ({ showBlog = false }: { showBlog?: boolean }) 
             <p className="mt-3 leading-relaxed text-muted-foreground">
               {T.aboutText}{" "}
               <Link to="/about" className="font-semibold text-primary hover:underline">{T.aboutCta}</Link>{" · "}
-              <Link to="/results" className="font-semibold text-primary hover:underline">{T.statsCta}</Link>
+              <Link to="/results" className="font-semibold text-primary hover:underline">{T.statsCta}</Link>{" · "}
+              <Link to="/contacts" className="font-semibold text-primary hover:underline">{T.contactsCta}</Link>
             </p>
           </div>
           <div className="mt-5 grid gap-4 md:grid-cols-2">

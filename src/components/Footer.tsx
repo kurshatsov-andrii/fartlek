@@ -37,6 +37,7 @@ export const Footer = () => {
           <div>© {new Date().getFullYear()} Fartlek. {t.footer.rights}</div>
           <div className="flex flex-wrap gap-3 justify-center md:justify-end">
             <Link to="/about" className="hover:text-primary transition-colors">{L("Про нас", "About")}</Link>
+            <Link to="/contacts" className="hover:text-primary transition-colors">{L("Контакти", "Contacts")}</Link>
             <Link to="/faq" className="hover:text-primary transition-colors">FAQ</Link>
             <Link to="/results" className="hover:text-primary transition-colors">{L("Фартлек у цифрах", "Fartlek in numbers")}</Link>
             <Link to="/for-organizers" className="hover:text-primary transition-colors">{L("Організаторам", "For organizers")}</Link>
