@@ -134,7 +134,7 @@ const StartDetails = () => {
           <MapPin className="h-4 w-4" />{content.city || L("Україна та весь світ", "Ukraine and worldwide")}
         </div>
         <div className="mb-4">
-          <RegistrationStatus info={{
+          <RegistrationStatus uk={lang === "uk"} info={{
             state: regState,
             opensOn: row.registration_opens_on,
             openUntil: row.registration_open_until,

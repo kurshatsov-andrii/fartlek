@@ -119,3 +119,4 @@
 - [ ] Add editable English start fields and an administrator-only automatic translation action
 - [ ] Show saved English title, description, location and metadata on the Starts listing and start details, falling back to Ukrainian when absent
 - [ ] Test translation fallback and verify the administrator translation/edit/save flow and public English page
+- [ ] Do not create a test user; verify without adding accounts (test-user creation failed before creating anything)
