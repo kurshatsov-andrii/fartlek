@@ -31,6 +31,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { EVENT_CATEGORIES, type EventCategory } from "@/lib/i18n";
 import { toast } from "sonner";
+import { translitCity } from "@/lib/translit-city";
 import { calendarLocation } from "@/lib/calendar-location";
 import { StartActions } from "@/components/StartActions";
 
@@ -96,7 +97,13 @@ const CalendarPage = ({ scope = "ukraine" }: { scope?: CalendarScope }) => {
   const [busy, setBusy] = useState(false);
 
   const load = () => queryClient.invalidateQueries({ queryKey: calendarQueryOptions.queryKey });
-  const allRows = useMemo(() => rows.filter((r) => matchesCalendarScope(r.location, scope, r.notes)), [rows, scope]);
+  const allRows = useMemo(() => rows.filter((r) => matchesCalendarScope(r.location, scope, r.notes)).map((r) => lang === "en" ? {
+    ...r,
+    title: r.title_en?.trim() || r.title,
+    location: r.location_en?.trim() || (r.location ? translitCity(r.location).replace(/\boblast\b/gi, "oblast") : null),
+    distances: (r.distances ?? "").replace(/км/g, "km"),
+    organizer_name: r.organizer_name ? (/[а-яіїєґ]/i.test(r.organizer_name) ? translitCity(r.organizer_name) : r.organizer_name) : r.organizer_name,
+  } : r), [rows, scope, lang]);
 
   const monthOptions = useMemo(() => {
     const set = new Set<string>();
@@ -165,7 +172,8 @@ const CalendarPage = ({ scope = "ukraine" }: { scope?: CalendarScope }) => {
   const fmtDate = (iso: string) => calendarDate(iso, lang === "uk" ? "uk-UA" : "en-US");
 
   const openCreate = () => { setForm(emptyForm); setDialogOpen(true); };
-  const openEdit = (r: Row) => {
+  const openEdit = (shown: Row) => {
+    const r = (rows.find((x) => x.id === shown.id) ?? shown) as Row;
     setForm({
       id: r.id,
       title: r.title,
@@ -543,7 +551,7 @@ const CalendarPage = ({ scope = "ukraine" }: { scope?: CalendarScope }) => {
                         <dl className="mt-2 grid grid-cols-1 gap-1 text-sm sm:grid-cols-3 sm:gap-3">
                           <div className="min-w-0">
                             <dt className="text-[10px] uppercase tracking-wider text-muted-foreground">{lang === "uk" ? "Місце" : "Location"}</dt>
-                            <dd className="break-words text-muted-foreground">{r.location || "Україна та весь світ"}</dd>
+                            <dd className="break-words text-muted-foreground">{r.location || (lang === "uk" ? "Україна та весь світ" : "Ukraine and worldwide")}</dd>
                           </div>
                           <div className="min-w-0">
                             <dt className="text-[10px] uppercase tracking-wider text-muted-foreground">{lang === "uk" ? "Дистанції" : "Distances"}</dt>
@@ -580,7 +588,7 @@ const CalendarPage = ({ scope = "ukraine" }: { scope?: CalendarScope }) => {
                         >
                           <TableCell className="whitespace-nowrap text-sm">{fmtDate(r.event_date)}</TableCell>
                           <TableCell className="font-medium">{renderTitle(r)}</TableCell>
-                          <TableCell className="text-sm text-muted-foreground whitespace-normal min-w-40 max-w-80 break-words">{r.location || "Україна та весь світ"}</TableCell>
+                          <TableCell className="text-sm text-muted-foreground whitespace-normal min-w-40 max-w-80 break-words">{r.location || (lang === "uk" ? "Україна та весь світ" : "Ukraine and worldwide")}</TableCell>
                           <TableCell className="text-sm">{calendarDistance(r.distances, lang)}</TableCell>
                           <TableCell className="text-sm text-muted-foreground">{r.organizer_name || "—"}</TableCell>
                           <TableCell className="text-right">{renderActions(r)}</TableCell>

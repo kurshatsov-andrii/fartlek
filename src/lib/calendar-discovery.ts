@@ -16,7 +16,7 @@ export const CITY_CALENDARS: { scope: Exclude<CalendarScope, "ukraine">; uk: str
   { scope: "khust", uk: "Хуст", ukGen: "Хуста", en: "Khust" },
 ];
 export interface CalendarRow {
-  id: string; source: "platform" | "calendar"; title: string; event_date: string;
+  id: string; source: "platform" | "calendar"; title: string; title_en?: string | null; location_en?: string | null; event_date: string;
   location: string | null; distances: string; organizer_name: string | null;
   category: string | null; url: string | null; notes?: string | null; created_by?: string | null;
   registration_status?: string | null; registration_opens_on?: string | null; registration_open_until?: string | null; info_source_url?: string | null; info_checked_on?: string | null;

@@ -133,6 +133,7 @@ export type Database = {
           registration_status: string | null
           telegram_start_id: string | null
           title: string
+          title_en: string | null
           updated_at: string
           url: string | null
         }
@@ -153,6 +154,7 @@ export type Database = {
           registration_status?: string | null
           telegram_start_id?: string | null
           title: string
+          title_en?: string | null
           updated_at?: string
           url?: string | null
         }
@@ -173,6 +175,7 @@ export type Database = {
           registration_status?: string | null
           telegram_start_id?: string | null
           title?: string
+          title_en?: string | null
           updated_at?: string
           url?: string | null
         }

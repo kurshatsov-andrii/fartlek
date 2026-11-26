@@ -15,14 +15,14 @@ export const getPublicCalendar = createServerFn({ method: "GET" }).handler(async
   } } });
   const today = kyivToday();
   const [events, calendar, starts] = await Promise.all([
-    sb.from("events").select("id,slug,title,event_date,location,description,organizer_name,category,distances(distance_km,is_active)").eq("status", "published").gte("event_date", today).order("event_date").limit(1000),
-    sb.from("calendar_events").select("id,title,event_date,location,distances,organizer_name,category,url,notes,created_by,telegram_start_id,registration_status,registration_opens_on,registration_open_until,info_source_url,info_checked_on").gte("event_date", today).order("event_date").limit(1000),
-    sb.from("telegram_starts").select("id,city,region,description").eq("status", "published").limit(1000),
+    sb.from("events").select("id,slug,title,title_en,location_en,event_date,location,description,organizer_name,category,distances(distance_km,is_active)").eq("status", "published").gte("event_date", today).order("event_date").limit(1000),
+    sb.from("calendar_events").select("id,title,title_en,event_date,location,distances,organizer_name,category,url,notes,created_by,telegram_start_id,registration_status,registration_opens_on,registration_open_until,info_source_url,info_checked_on").gte("event_date", today).order("event_date").limit(1000),
+    sb.from("telegram_starts").select("id,title_en,city,region,description,city_en,region_en").eq("status", "published").limit(1000),
   ]);
   if (events.error || calendar.error || starts.error) throw new Error("Calendar unavailable");
   const linked = new Map((starts.data ?? []).map((s) => [s.id, s]));
   return [
-    ...(events.data ?? []).map((e): CalendarRow => ({ id: e.id, source: "platform", title: e.title, event_date: e.event_date, location: calendarLocation(e), distances: (e.distances ?? []).filter((d: { is_active: boolean }) => d.is_active !== false).map((d: { distance_km: number }) => `${d.distance_km} км`).join(", "), organizer_name: e.organizer_name, category: e.category, url: `/events/${e.slug ?? e.id}` })),
-    ...(calendar.data ?? []).map((c): CalendarRow => ({ id: c.id, source: "calendar", title: c.title, event_date: c.event_date, location: calendarLocation({ location: c.location, description: c.notes, ...linked.get(c.telegram_start_id) }), distances: c.distances ?? "", organizer_name: c.organizer_name, category: c.category, url: c.url, notes: c.notes, created_by: c.created_by })),
+    ...(events.data ?? []).map((e): CalendarRow => ({ id: e.id, source: "platform", title: e.title, title_en: e.title_en, location_en: e.location_en, event_date: e.event_date, location: calendarLocation(e), distances: (e.distances ?? []).filter((d: { is_active: boolean }) => d.is_active !== false).map((d: { distance_km: number }) => `${d.distance_km} км`).join(", "), organizer_name: e.organizer_name, category: e.category, url: `/events/${e.slug ?? e.id}` })),
+    ...(calendar.data ?? []).map((c): CalendarRow => ({ id: c.id, source: "calendar", title: c.title, title_en: c.title_en || linked.get(c.telegram_start_id)?.title_en || null, event_date: c.event_date, location: calendarLocation({ location: c.location, description: c.notes, ...linked.get(c.telegram_start_id) }), location_en: (() => { const l = linked.get(c.telegram_start_id); return l?.city_en ? [l.city_en, l.region_en].filter(Boolean).join(", ") : null; })(), distances: c.distances ?? "", organizer_name: c.organizer_name, category: c.category, url: c.url, notes: c.notes, created_by: c.created_by })),
   ];
 });
