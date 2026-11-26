@@ -1756,54 +1756,69 @@ export type Database = {
         Row: {
           category: string
           content: string | null
+          content_en: string | null
           cover_url: string | null
           created_at: string
           created_by: string | null
           excerpt: string | null
+          excerpt_en: string | null
           id: string
           is_published: boolean
           published_on: string
           slug: string
           title: string
+          title_en: string | null
           updated_at: string
           youtube_title: string | null
           youtube_title_2: string | null
+          youtube_title_2_en: string | null
+          youtube_title_en: string | null
           youtube_url: string | null
           youtube_url_2: string | null
         }
         Insert: {
           category: string
           content?: string | null
+          content_en?: string | null
           cover_url?: string | null
           created_at?: string
           created_by?: string | null
           excerpt?: string | null
+          excerpt_en?: string | null
           id?: string
           is_published?: boolean
           published_on?: string
           slug: string
           title: string
+          title_en?: string | null
           updated_at?: string
           youtube_title?: string | null
           youtube_title_2?: string | null
+          youtube_title_2_en?: string | null
+          youtube_title_en?: string | null
           youtube_url?: string | null
           youtube_url_2?: string | null
         }
         Update: {
           category?: string
           content?: string | null
+          content_en?: string | null
           cover_url?: string | null
           created_at?: string
           created_by?: string | null
           excerpt?: string | null
+          excerpt_en?: string | null
           id?: string
           is_published?: boolean
           published_on?: string
           slug?: string
           title?: string
+          title_en?: string | null
           updated_at?: string
           youtube_title?: string | null
           youtube_title_2?: string | null
+          youtube_title_2_en?: string | null
+          youtube_title_en?: string | null
           youtube_url?: string | null
           youtube_url_2?: string | null
         }

@@ -5,7 +5,8 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { supabase } from "@/integrations/supabase/client";
 import { formatBlogDate, youtubeEmbed } from "@/lib/blog";
-import { tipCategory, type RunningTip } from "@/lib/tips";
+import { localizeTip, tipCategory, type RunningTip } from "@/lib/tips";
+import { useApp } from "@/contexts/AppContext";
 import { linkifyText } from "@/lib/linkify";
 
 const Video = ({ url, title, fallback }: { url?: string | null; title?: string | null; fallback: string }) => {
@@ -23,7 +24,11 @@ const Video = ({ url, title, fallback }: { url?: string | null; title?: string |
 
 const TipArticle = ({ initial }: { initial?: RunningTip | null }) => {
   const { slug } = useParams() as { slug: string };
-  const [tip, setTip] = useState<RunningTip | null | undefined>(initial && initial.slug === slug ? initial : undefined);
+  const { lang } = useApp();
+  const [rawTip, setTip] = useState<RunningTip | null | undefined>(initial && initial.slug === slug ? initial : undefined);
+  const tip = rawTip ? localizeTip(rawTip, lang) : rawTip;
+  const en = lang === "en";
+  const TIP_NAMES_EN: Record<string, string> = { ekipiruvannia: "Gear", hodynnyky: "Watches", trenuvannia: "Training", starty: "Races", kharchuvannia: "Nutrition", vidnovlennia: "Recovery" };
 
   useEffect(() => {
     if (initial && initial.slug === slug) { setTip(initial); return; }
@@ -38,19 +43,19 @@ const TipArticle = ({ initial }: { initial?: RunningTip | null }) => {
       <Header />
       <main className="flex-1 container py-8 space-y-8">
         <Link to={cat ? `/tips/${cat.slug}` : "/tips"} className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
-          <ArrowLeft className="h-4 w-4" />{cat ? `Поради: ${cat.name}` : "Поради бігунам"}
+          <ArrowLeft className="h-4 w-4" />{cat ? (en ? `Tips: ${TIP_NAMES_EN[cat.slug] ?? cat.name}` : `Поради: ${cat.name}`) : (en ? "Running tips" : "Поради бігунам")}
         </Link>
         {tip === undefined ? (
           <div className="flex justify-center py-16"><Loader2 className="h-6 w-6 animate-spin" /></div>
         ) : tip === null ? (
-          <p className="text-muted-foreground">Статтю не знайдено.</p>
+          <p className="text-muted-foreground">{en ? "Article not found." : "Статтю не знайдено."}</p>
         ) : (
           <article className="space-y-6">
             <header className="space-y-3">
               <h1 className="font-display text-3xl md:text-4xl font-bold">{tip.title}</h1>
               <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
-                {cat && <Link to={`/tips/${cat.slug}`} className="rounded-full bg-primary/10 px-2 py-0.5 text-primary">{cat.name}</Link>}
-                <span className="flex items-center gap-1"><Calendar className="h-4 w-4" />{formatBlogDate(tip.published_on)}</span>
+                {cat && <Link to={`/tips/${cat.slug}`} className="rounded-full bg-primary/10 px-2 py-0.5 text-primary">{en ? TIP_NAMES_EN[cat.slug] ?? cat.name : cat.name}</Link>}
+                <span className="flex items-center gap-1"><Calendar className="h-4 w-4" />{formatBlogDate(tip.published_on, lang)}</span>
               </div>
             </header>
             {tip.cover_url && <img src={tip.cover_url} alt={tip.title} className="w-full h-auto rounded-2xl object-contain max-h-[520px]" />}

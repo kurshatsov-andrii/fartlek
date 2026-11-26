@@ -9,7 +9,7 @@ import { EventPoster } from "@/components/EventPoster";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { formatBlogDate } from "@/lib/blog";
-import { TIP_CATEGORIES, tipCategory, tipPath, type RunningTip } from "@/lib/tips";
+import { localizeTip, TIP_CATEGORIES, tipCategory, tipPath, type RunningTip } from "@/lib/tips";
 import logo from "@/assets/logo-fartlek.jpg";
 
 const TIP_NAMES_EN: Record<string, string> = {
@@ -70,14 +70,14 @@ const Tips = ({ category }: { category?: string }) => {
           <p className="text-muted-foreground">{L("Статей у цьому розділі поки немає — незабаром з'являться.", "No articles in this section yet — coming soon.")}</p>
         ) : (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {tips.map((t) => (
+            {tips.map((raw) => localizeTip(raw, L("uk", "en"))).map((t) => (
               <Link key={t.id} to={tipPath(t)} className="group rounded-2xl overflow-hidden border border-border bg-card transition-bounce hover:-translate-y-2 hover:shadow-elevated isolate">
                 <div className="aspect-video bg-muted overflow-hidden">
                   <EventPoster src={t.cover_url || logo} alt={t.title} />
                 </div>
                 <div className="p-5 space-y-2">
                   <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
-                    <span className="rounded-full bg-primary/10 px-2 py-0.5 text-primary">{tipCategory(t.category)?.name}</span>
+                    <span className="rounded-full bg-primary/10 px-2 py-0.5 text-primary">{(() => { const c = tipCategory(t.category); return c ? catName(c) : null; })()}</span>
                     <span className="flex items-center gap-1"><Calendar className="h-3.5 w-3.5" />{formatBlogDate(t.published_on, L("uk", "en"))}</span>
                   </div>
                   <h2 className="font-display text-xl font-bold group-hover:text-primary transition-base">{t.title}</h2>

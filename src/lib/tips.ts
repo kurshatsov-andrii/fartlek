@@ -12,6 +12,11 @@ export const TIP_CATEGORIES: TipCategory[] = [
 export const tipCategory = (slug: string) => TIP_CATEGORIES.find((c) => c.slug === slug);
 
 export type RunningTip = {
+  title_en?: string | null;
+  excerpt_en?: string | null;
+  content_en?: string | null;
+  youtube_title_en?: string | null;
+  youtube_title_2_en?: string | null;
   id: string;
   slug: string;
   category: string;
@@ -28,3 +33,13 @@ export type RunningTip = {
 };
 
 export const tipPath = (t: Pick<RunningTip, "category" | "slug">) => `/tips/${t.category}/${t.slug}`;
+
+/** English view of a tip: uses *_en fields when filled, Ukrainian originals otherwise. */
+export const localizeTip = <T extends RunningTip>(t: T, lang: string): T => lang !== "en" ? t : {
+  ...t,
+  title: t.title_en?.trim() || t.title,
+  excerpt: t.excerpt_en?.trim() || t.excerpt,
+  content: t.content_en?.trim() || t.content,
+  youtube_title: t.youtube_title_en?.trim() || (t as { youtube_title?: string | null }).youtube_title,
+  youtube_title_2: t.youtube_title_2_en?.trim() || (t as { youtube_title_2?: string | null }).youtube_title_2,
+};
