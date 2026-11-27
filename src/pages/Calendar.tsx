@@ -73,7 +73,7 @@ const emptyForm = {
   info_checked_on: null as string | null,
 };
 
-const CITY_EXTRA = new Set<string>(["drohobych", "lviv", "varash", "ivano-frankivsk", "kyiv", "zhytomyr", "odesa", "pustomyty", "khust"]);
+const CITY_EXTRA = new Set<string>(["drohobych", "lviv", "varash", "ivano-frankivsk", "kyiv", "zhytomyr", "odesa", "pustomyty", "khust", "kryvyi-rih"]);
 
 const CalendarPage = ({ scope = "ukraine" }: { scope?: CalendarScope }) => {
   const path = (scope === "ukraine" ? "/calendar" : `/calendar/${scope}`) as DiscoveryPath;

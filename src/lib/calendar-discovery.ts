@@ -1,6 +1,6 @@
 import { detectCity } from "@/lib/start-filters";
 
-export type CalendarScope = "ukraine" | "kharkiv" | "vinnytsia" | "uzhhorod" | "drohobych" | "lviv" | "varash" | "ivano-frankivsk" | "kyiv" | "zhytomyr" | "odesa" | "pustomyty" | "khust";
+export type CalendarScope = "ukraine" | "kharkiv" | "vinnytsia" | "uzhhorod" | "drohobych" | "lviv" | "varash" | "ivano-frankivsk" | "kyiv" | "zhytomyr" | "odesa" | "pustomyty" | "khust" | "kryvyi-rih";
 export const CITY_CALENDARS: { scope: Exclude<CalendarScope, "ukraine">; uk: string; ukGen: string; en: string }[] = [
   { scope: "kharkiv", uk: "Харків", ukGen: "Харкова", en: "Kharkiv" },
   { scope: "kyiv", uk: "Київ", ukGen: "Києва", en: "Kyiv" },
@@ -14,6 +14,7 @@ export const CITY_CALENDARS: { scope: Exclude<CalendarScope, "ukraine">; uk: str
   { scope: "odesa", uk: "Одеса", ukGen: "Одеси", en: "Odesa" },
   { scope: "pustomyty", uk: "Пустомити", ukGen: "Пустомит", en: "Pustomyty" },
   { scope: "khust", uk: "Хуст", ukGen: "Хуста", en: "Khust" },
+  { scope: "kryvyi-rih", uk: "Кривий Ріг", ukGen: "Кривого Рогу", en: "Kryvyi Rih" },
 ];
 export interface CalendarRow {
   id: string; source: "platform" | "calendar"; title: string; title_en?: string | null; location_en?: string | null; event_date: string;
