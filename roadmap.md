@@ -122,3 +122,7 @@
 - [x] Translate the currently viewed Dnipro E-RUN start and verify language switching, English metadata, catalog search and Ukrainian restoration in the browser
 - [x] Translate all 87 published starts into English, preserve Ukrainian originals, clean invalid SEO snippets and verify full database coverage
 - [ ] Verify the administrator translation button in the live editor — the existing administrator account was not approved for browser testing; no test user was created
+
+## Features page refresh
+- [x] Add the new participant group «Спільнота, матеріали та цифри» with English site version, tips, blog, reviews, Fartlek in numbers, FAQ, video guide, runner survey and partner offers
+- [x] Add organizer cards for the «For organizers» landing page and the English event version, in both languages; verified both tabs in the browser with no page errors

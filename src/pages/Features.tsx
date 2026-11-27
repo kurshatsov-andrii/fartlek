@@ -7,7 +7,8 @@ import {
   Megaphone, Building2, CheckCircle2, ArrowDown, Truck, Repeat, Send, XCircle,
   History, Lock, Activity, Settings, KeyRound, Upload, Map, Award, Wallet,
   Shirt, Hash, ClipboardCheck, ShieldCheck, Filter, FileDown, RefreshCw,
-  Bookmark, Heart, GitCompareArrows
+  Bookmark, Heart, GitCompareArrows,
+  BookOpen, Star, HelpCircle, Play, ClipboardList, Handshake, Camera
 
 } from "lucide-react";
 import { Header } from "@/components/Header";
@@ -48,11 +49,11 @@ const Features = () => {
   const seo = isUk
     ? {
         title: "Можливості Фартлек — для учасників та організаторів",
-        description: "Збереження та порівняння стартів, нагадування, лайки, календарі забігів 2027, реєстрація, QR-квитки й інструменти організаторів Фартлек.",
+        description: "Збереження та порівняння стартів, нагадування, лайки, календарі забігів 2027, реєстрація, QR-квитки, поради, блог, відгуки, англійська версія та інструменти організаторів Фартлек.",
       }
     : {
         title: "Fartlek Features — for participants and organizers",
-        description: "Save and compare races, opt-in reminders, likes, 2027 race calendars, registration, QR tickets and organizer tools on Fartlek.",
+        description: "Save and compare races, opt-in reminders, likes, 2027 race calendars, registration, QR tickets, running tips, a community blog, reviews, an English version and organizer tools on Fartlek.",
       };
 
   const participantGroups: Group[] = isUk ? [
@@ -132,6 +133,20 @@ const Features = () => {
         { icon: Sparkles, title: "Стати організатором 🆕", desc: "Зареєструвалися через Google або Apple як учасник, а тепер хочете створювати події? Один клік у профілі — і ви отримуєте роль організатора, доступ до створення подій, клубів і публічного профілю." },
       ],
     },
+    {
+      title: "Спільнота, матеріали та цифри 🆕",
+      items: [
+        { icon: Globe, title: "Англійська версія сайту 🆕", desc: "Перемикання мови працює на сторінках стартів, подій, календаря, порад і блогу: назви, описи, місця та SEO-тексти англійською. Назви міст на мапі й у календарях пишуться латиницею — Kharkiv, Kyiv, Ivano-Frankivsk. Український текст лишається оригіналом." },
+        { icon: BookOpen, title: "Поради бігунам 🆕", desc: "Окремий розділ зі статтями у шести категоріях: екіпірування, годинники, тренування, старти, харчування та відновлення. Кожна категорія має власну сторінку, у статтях — практичні поради та посилання на джерела." },
+        { icon: Camera, title: "Блог спільноти 🆕", desc: "Фото, відео й історії з забігів Фартлек у Харкові: Kharkiv Run, Стрілка Run, недільні Fartlek Run. Нові записи з'являються в окремому розділі та на головній сторінці." },
+        { icon: Star, title: "Відгуки учасників 🆕", desc: "Оцінка від 1 до 5, реакції-емодзі та можливість відредагувати чи видалити власний відгук. Розділ «Відгуки» відкритий для всіх." },
+        { icon: BarChart3, title: "Фартлек у цифрах 🆕", desc: "Сторінка з показниками платформи: бігуни, реєстрації, події та старти, організатори, міста й клуби. Цифри оновлюються автоматично, є графіки зростання." },
+        { icon: HelpCircle, title: "FAQ 🆕", desc: "Відповіді на часті питання: де знайти всі забіги, як користуватися календарем і мапою, як реєструватися й отримати квиток, що Фартлек пропонує організаторам." },
+        { icon: Play, title: "Відео-гайд 🆕", desc: "Короткі відеоінструкції на сторінці «Гайд»: як знайти забіг, зареєструвати себе чи дитину, оплатити участь і отримати QR-квиток." },
+        { icon: ClipboardList, title: "Опитування бігунів 🆕", desc: "Коротке опитування про те, якими мають бути старти та реєстрація. Відповіді допомагають вирішувати, що розвивати далі." },
+        { icon: Handshake, title: "Партнерські пропозиції 🆕", desc: "Знижка 5% на спортивне харчування SiS за промокодом fartlek та спортивне страхування від strahovki.kh.ua — блоки з посиланнями показуються на сторінках подій і стартів." },
+      ],
+    },
   ] : [
     {
       title: "Race planning 🆕",
@@ -209,6 +224,20 @@ const Features = () => {
         { icon: Sparkles, title: "Become an organizer 🆕", desc: "Signed up via Google or Apple as a participant but want to create events? One click in your profile grants you the organizer role and unlocks event, club and public-profile creation." },
       ],
     },
+    {
+      title: "Community, content and numbers 🆕",
+      items: [
+        { icon: Globe, title: "English version of the site 🆕", desc: "The language switch works on race, event, calendar, tips and blog pages: titles, descriptions, locations and SEO texts in English. City names on the map and in calendars are written in Latin script — Kharkiv, Kyiv, Ivano-Frankivsk. The Ukrainian text stays the original." },
+        { icon: BookOpen, title: "Tips for runners 🆕", desc: "A dedicated section with articles in six categories: gear, watches, training, races, nutrition and recovery. Each category has its own page, and articles include practical advice and source links." },
+        { icon: Camera, title: "Community blog 🆕", desc: "Photos, videos and stories from Fartlek runs in Kharkiv: Kharkiv Run, Strilka Run, Sunday Fartlek Run. New posts appear in their own section and on the home page." },
+        { icon: Star, title: "Participant reviews 🆕", desc: "A 1–5 rating, emoji reactions and the ability to edit or delete your own review. The «Reviews» section is open to everyone." },
+        { icon: BarChart3, title: "Fartlek in numbers 🆕", desc: "A page with platform figures: runners, registrations, events and races, organizers, cities and clubs. The numbers update automatically and come with growth charts." },
+        { icon: HelpCircle, title: "FAQ 🆕", desc: "Answers to common questions: where to find all races, how the calendar and map work, how to register and get a ticket, and what Fartlek offers organizers." },
+        { icon: Play, title: "Video guide 🆕", desc: "Short video instructions on the Guide page: how to find a race, register yourself or a child, pay and get your QR ticket." },
+        { icon: ClipboardList, title: "Runner survey 🆕", desc: "A short survey about what races and registration should look like. Answers help decide what to build next." },
+        { icon: Handshake, title: "Partner offers 🆕", desc: "5% off SiS sports nutrition with promo code fartlek, plus sports insurance from strahovki.kh.ua — banner blocks with links appear on event and race pages." },
+      ],
+    },
   ];
 
   const organizerGroups: Group[] = isUk ? [
@@ -257,6 +286,8 @@ const Features = () => {
         { icon: CreditCard, title: "Прийом оплат WayForPay та LiqPay (автопідтвердження)", desc: "Підключіть свій акаунт WayForPay або LiqPay — гроші йдуть напряму вам, а статус оплати ✅ ставиться автоматично. Деталі — у блоці «Оплата» нижче." },
         { icon: Megaphone, title: "Профіль клубу/організатора", desc: "Окрема сторінка з усіма вашими подіями та інформацією про клуб." },
         { icon: Building2, title: "Публічний профіль організатора 🆕", desc: "Створіть окрему сторінку організатора: логотип, місто, опис, види активності, соцмережі та контакти. Профіль з'являється у каталозі організаторів і отримує SEO-оптимізацію (заголовки, опис, JSON-LD)." },
+        { icon: Megaphone, title: "Сторінка «Організаторам» 🆕", desc: "Окремий лендінг із покроковим сценарієм: реєстрація акаунту, створення події та дистанцій, оплата, результати — з посиланням на створення акаунту організатора." },
+        { icon: Globe, title: "Англійська версія події 🆕", desc: "У редакторі події та старту є окремі поля англійською (назва, опис, місце), а для стартів — кнопка автоматичного перекладу. Переклад показується в англійській версії сайту, у каталозі й у пошуку; український текст лишається оригіналом." },
       ],
     },
     {
@@ -317,6 +348,8 @@ const Features = () => {
         { icon: CreditCard, title: "WayForPay & LiqPay payments (auto-confirm)", desc: "Connect your WayForPay or LiqPay account — money goes directly to you, payment status ✅ is set automatically. See the «Payments» block below." },
         { icon: Megaphone, title: "Club / organizer page", desc: "A dedicated page with all your events and club information." },
         { icon: Building2, title: "Public organizer profile 🆕", desc: "Create a dedicated organizer page: logo, city, description, activity types, social links and contacts. The profile appears in the organizers catalog and gets full SEO optimization (titles, descriptions, JSON-LD)." },
+        { icon: Megaphone, title: "«For organizers» page 🆕", desc: "A dedicated landing page with a step-by-step scenario: creating an account, building the event and distances, payments, results — with a link to sign up as an organizer." },
+        { icon: Globe, title: "English version of your event 🆕", desc: "The event and race editors have separate English fields (title, description, location), and races have an automatic translation button. The translation shows in the English version of the site, in the catalog and in search; the Ukrainian text stays the original." },
       ],
     },
     {
